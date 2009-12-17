@@ -1,0 +1,50 @@
+{% extends "shop/checkout.html" %}
+
+{% block extrahead %}
+{{ block.super }}
+<script type="text/javascript" 
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+<script type="text/javascript">
+$(function() {
+	
+	// prepopulate shipping fields with billing values if "same as" checkbox 
+	// checked by iterating the billing fields, mapping each billing field name  
+	// to the shipping field name and setting its value
+	$('#checkout_form').submit(function() {
+		if ($('#toggle_shipping').attr('checked')) {
+			$('input[name^=0-billing_]').each(function() {
+				$('input[name=' + this.name.replace('0-billing_', 
+					'0-shipping_') + ']').attr('value', this.value);
+			})
+		}
+	});
+
+	// show/hide shipping fields on change of "same as" checkbox and call on load
+	$('#toggle_shipping').change(function() {
+		$('#shipping_fields')[$('#toggle_shipping').attr('checked') ? 
+			'hide' : 'show']();
+	}).change(); 
+
+});
+</script>
+{% endblock %}
+
+{% block fields %}
+{% if cart.has_items %}
+<fieldset>
+	<legend>Billing Details</legend>
+	<ul>{{ form.fieldset_billing.as_ul }}</ul>
+</fieldset>
+<fieldset>
+	<legend>Delivery Details</legend>
+	<p>
+		<input type="checkbox" id="toggle_shipping" name="toggle_shipping"
+			{% if not request.POST or request.POST.toggle_shipping %}checked{% endif %}  />
+		<label for="toggle_shipping">Deliver to the same address as above</label>
+	</p>
+	<ul id="shipping_fields">{{ form.fieldset_shipping.as_ul }}</ul>
+	<ul>{{ form.fieldset_other.as_ul }}</ul>
+</fieldset>
+{% endif %}
+{% endblock %}
+

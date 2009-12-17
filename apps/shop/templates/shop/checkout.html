@@ -1,0 +1,19 @@
+{% extends "shop/base.html" %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block main %}
+
+<form method="post" id="checkout_form">
+	{% block fields %}{% endblock %}
+	{{ previous_fields|safe }}
+	{% if cart.has_items %}
+	<input type="hidden" name="{{ step_field }}" value="{{ step0 }}" />
+	<input type="submit" value="Next" />
+	{% else %} 
+	<p>Your cart is empty.</p>
+	{% endif %}
+</form>
+
+{% endblock %}
+

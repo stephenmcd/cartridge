@@ -1,0 +1,37 @@
+{% load shop_tags %}
+<html>
+
+<head>
+	<style type="text/css">
+		#menu {float:left; padding:10px; margin:10px; background:#ccc;}
+		#main {float:left; padding:20px; width:600px;}
+		#cart th, #cart td {text-align:right; padding:10px;} 
+		#cart th {background:#ccc; white-space:nowrap;}
+		.cart-item {text-align:left !important; width:100%;}
+		.cart-item form {display:inline;}
+		.row1 {background:#eee;}
+		.row2 {background:#ddd;}
+		textarea {display:block;}
+		.errorlist {color:#f00; font-weight:bold;}
+		form li {list-style-type:none;}
+	</style>
+	{% block extrahead %}{% endblock %}
+</head>
+
+<body>
+	<div id="menu">
+		{% category_menu %}
+		<hr />
+		<a href="{% url shop_cart %}">
+			Cart contains {{ cart.total_items }} 
+			item{{ cart.total_items|pluralize }} 
+			{{ cart.total_value|money }}
+		</a>
+	</div>
+	<div id="main">
+		<h1>{% block title %}{% endblock %}</h1>
+		{% block main %}{% endblock %}
+	</div>
+</body>
+
+</html>

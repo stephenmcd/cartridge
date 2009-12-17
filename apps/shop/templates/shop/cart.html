@@ -1,0 +1,41 @@
+{% extends "shop/base.html" %}
+{% load shop_tags %}
+
+{% block title %}Cart{% endblock %}
+
+{% block main %}
+{% if cart.has_items %}
+<table id="cart" border="0" cellpadding="5" cellspacing=0">
+	<tr>
+		<th class="cart-item">Item</th>
+		<th>Unit Price</th>
+		<th>Qty</th>
+		<th>Price</th>
+	</tr>
+	{% for item in cart %}
+	<tr class="{% cycle 'row1' 'row2' %}">
+		<td class="cart-item">
+			<a href="{{ item.url }}">{{ item.description }}</a>
+			<form method="post">
+				<input type="hidden" name="index" value="{{ item.index }}" />
+				<input type="submit" value="X" />
+			</form>
+		</td>
+		<td>{{ item.unit_price|money }}</td>
+		<td>{{ item.quantity }}</td>
+		<td>{{ item.total_price|money }}</td>
+	</tr>
+	{% endfor %}
+	<tr>
+		<td colspan="3">Total</td>
+		<td>{{ cart.total_value|money }}</td>
+	</tr>
+	<tr>
+		<td colspan="4"><a href="{% url shop_checkout %}">Check out</a></td>
+	</tr>
+</table>
+{% else %}
+<p>Your cart is empty.</p>
+{% endif %}
+{% endblock %}
+

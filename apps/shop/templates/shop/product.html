@@ -1,0 +1,39 @@
+{% extends "shop/base.html" %}
+{% load shop_tags %}
+
+{% block title %}{{ product.title }}{% endblock %}
+
+{% block main %}
+
+<p>{{ product.description }}</p>
+
+{% with product.images as images %}
+{% if images %}
+<div>
+	{% for image in images %}
+	<img src="{{ MEDIA_URL }}{{ image }}" width="100" height="100" />
+	{% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
+{% if product.has_price %}
+	<p>
+	{% if product.on_sale %}
+		<span style="text-decoration: line-through;">{{ product.regular_price|money }}</span>
+		On sale:
+	{% endif %}
+	{{ product.actual_price|money }}
+	</p>
+{% endif %}
+
+{% if product.available %}
+<form method="post">
+	{{ add_cart_form.as_p }}
+	<input type="submit" value="Add to cart" /> 
+</form>
+{% else %}
+<p>This product is currently unavailable</p>
+{% endif %}
+
+{% endblock %}

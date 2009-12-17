@@ -1,0 +1,16 @@
+{% extends "shop/base.html" %}
+
+{% block title %}{{ category.title }}{% endblock %}
+
+{% block main %}
+<ul>
+	{% for child_cat in category.children.active %}
+	<li><a href="{{ child_cat.get_absolute_url }}">Category: {{ child_cat }}</a></li>
+	{% endfor %}
+</ul>
+<ul>
+	{% for product in category.products.active %}
+	<li><a href="{{ product.get_absolute_url }}">Product: {{ product }}</a></li>
+	{% endfor %}
+</ul>
+{% endblock %}

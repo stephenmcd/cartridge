@@ -1,0 +1,5 @@
+syntax: glob
+*.db
+*.pyc
+*.pyo
+site_media/*
