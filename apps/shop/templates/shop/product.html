@@ -11,7 +11,7 @@
 {% if images %}
 <div>
 	{% for image in images %}
-	<img src="{{ MEDIA_URL }}{% thumbnail image 20 20  %}" width="100" height="100" />
+	<img src="{{ MEDIA_URL }}{% thumbnail image 230 120  %}" />
 	{% endfor %}
 </div>
 {% endif %}
