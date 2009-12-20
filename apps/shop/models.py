@@ -1,26 +1,38 @@
 
-from copy import copy
+from copy import deepcopy
 from datetime import datetime
 from decimal import Decimal
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
+from shop.settings import PRODUCT_VARIATION_OPTIONS, NUM_PRODUCT_IMAGE_FIELDS
 
-class _ShopManager(models.Manager):
-	
+ORDER_STATUS_CHOICES = (
+	(1, "Unprocessed"),
+	(2, "Processed"),
+)
+ORDER_STATUS_DEFAULT = 1
+
+OPTION_COLOURS = ("Red","Orange","Yellow","Green","Blue","Indigo","Violet")
+OPTION_COLOURS = zip(OPTION_COLOURS, OPTION_COLOURS)
+OPTION_SIZES = ("Extra Small","Small","Regular","Large","Extra Large")
+OPTION_SIZES = zip(OPTION_SIZES, OPTION_SIZES)
+
+class ShopManager(models.Manager):
 	def active(self, **kwargs):
 		return self.filter(active=True, **kwargs)
-		
-class _ShopModel(models.Model):
+
+class ShopModel(models.Model):
 
 	class Meta:
 		abstract = True
 
 	title = models.CharField(max_length=100)
 	slug = models.SlugField(max_length=100, editable=False)
-	active = models.BooleanField(default=True, 
+	active = models.BooleanField(default=False, 
 		help_text="Check this to make this item visible on the site")
-	objects = _ShopManager()
+
+	objects = ShopManager()
 
 	def __unicode__(self):
 		return self.title
@@ -35,35 +47,25 @@ class _ShopModel(models.Model):
 				if not self.__class__.objects.filter(slug=self.slug):
 					break
 				i += 1
-		super(_ShopModel, self).save(*args, **kwargs)
+		super(ShopModel, self).save(*args, **kwargs)
 
 	def get_absolute_url(self, slugs=None):
 		if slugs is None:
 			slugs = []
 		slugs.append(self.slug)
-		return reverse(self.url_pattern, kwargs={"slugs": "/".join(slugs)})
+		return reverse("shop_%s" % self.__class__.__name__.lower(), 
+			kwargs={"slugs": "/".join(slugs)})
 
-class Category(_ShopModel):
+class Category(ShopModel):
 
 	class Meta:
 		verbose_name_plural = "Categories"
 
-	parent = models.ForeignKey("self", blank=True, null=True,
+	image = models.ImageField(max_length=100, blank=True, upload_to="category")
+	parent = models.ForeignKey("self", blank=True, null=True, 
 		related_name="children")
 
-	url_pattern = "shop_category"
-
-class _OptionModel(models.Model):
-	
-	class Meta:
-		abstract = True
-		
-	name = models.CharField(max_length=50)
-
-class _ProductOption(models.CharField):
-	pass
-
-class Product(_ShopModel):
+class Product(ShopModel):
 
 	description = models.TextField(blank=True)
 	available = models.BooleanField(default=True, 
@@ -77,15 +79,10 @@ class Product(_ShopModel):
 	sale_from = models.DateTimeField("Start", blank=True, null=True)
 	sale_to = models.DateTimeField("Finish", blank=True, null=True)
 
-	sizes = _ProductOption(max_length=200, blank=True)
-	colours = _ProductOption(max_length=200, blank=True)
-	image1 = models.ImageField("First Image", max_length=100, blank=True, upload_to="product")
-	image2 = models.ImageField("Second Image", max_length=100, blank=True, upload_to="product")
-	image3 = models.ImageField("Third Image", max_length=100, blank=True, upload_to="product")
-	image4 = models.ImageField("Fourth Image", max_length=100, blank=True, upload_to="product")
-	image5 = models.ImageField("Fifth Image", max_length=100, blank=True, upload_to="product")
-
-	url_pattern = "shop_product"
+	image_1 = models.ImageField(max_length=100, blank=True, upload_to="product")
+	image_2 = models.ImageField(max_length=100, blank=True, upload_to="product")
+	image_3 = models.ImageField(max_length=100, blank=True, upload_to="product")
+	image_4 = models.ImageField(max_length=100, blank=True, upload_to="product")
 	
 	def on_sale(self):
 		return self.sale_price and self.sale_to > datetime.now() > self.sale_from
@@ -100,81 +97,90 @@ class Product(_ShopModel):
 			return self.regular_price
 		return Decimal("0")
 	
-	@classmethod
-	def option_fields(cls):
-		return tuple([field.name for field in cls._meta.fields 
-			if isinstance(field, _ProductOption)])
-
-	def options(self):
-		choices = lambda field: map(str.strip, 
-			str(getattr(self, field)).split(","))
-		return [{"name": field[:-1], "choices": choices(field)} for field in 
-			Product.option_fields()]
-	
-	@classmethod
-	def image_fields(cls):
-		return tuple([field.name for field in cls._meta.fields 
-			if isinstance(field, models.ImageField)])
-			
-	def images(self):
-		return [getattr(self, field) for field in Product.image_fields()
-			if getattr(self, field)]
-	
 	def save(self, *args, **kwargs):
 		if not self.has_price():
 			self.available = False
 		super(Product, self).save(*args, **kwargs)
-					
-class _Address(models.Model):
+		
+	@classmethod
+	def images(cls):
+		return [field for field in cls._meta.fields 
+			if isinstance(field, models.ImageField)]
+
+class OptionField(models.CharField):
+	pass
+ 
+class ProductVariation(models.Model):
+		
+	sku = models.CharField("SKU", max_length=20)
+	product = models.ForeignKey(Product, related_name="variations")
+	colour = OptionField(max_length=20, choices=OPTION_COLOURS)
+	size = OptionField(max_length=20, choices=OPTION_SIZES)
 	
-	class Meta:
-		abstract = True
+	def __unicode__(self):
+		return ""
+	
+	def save(self, *args, **kwargs):
+		super(ProductVariation, self).save(*args, **kwargs)
+		if not self.sku:
+			self.sku = self.id
+			self.save()
 
-	first_name = models.CharField(max_length=100)
-	last_name = models.CharField(max_length=100)
-	street = models.CharField(max_length=100)
-	city = models.CharField(max_length=100)
-	state = models.CharField(max_length=100)
-	postcode = models.CharField(max_length=10)
-	country = models.CharField(max_length=100)
-	email = models.EmailField()
-	phone = models.CharField(max_length=20)
+	@classmethod
+	def options(cls):
+		return [field for field in cls._meta.fields 
+			if isinstance(field, OptionField)]
 
-def _address(prefix):
-	def clone_model(prefix, model):
-		class Meta:
-			abstract = model._meta.abstract
-		attrs = {"__module__": model.__module__}
-		for field in model._meta.fields:
-			if not isinstance(field, models.AutoField):
-				attrs["%s_%s" % (prefix.lower(), field.name)] = copy(field)
-		return type("%s%s" % (prefix, model.__name__), (models.Model,), attrs)
-	return clone_model(prefix, _Address)
+class Order(models.Model):
 
-class Order(_address("Billing"), _address("Shipping")):
+	shipping_detail_first_name = models.CharField("First name", max_length=100)
+	shipping_detail_last_name = models.CharField("Last name", max_length=100)
+	shipping_detail_street = models.CharField("Street", max_length=100)
+	shipping_detail_city = models.CharField("City/Suburb", max_length=100)
+	shipping_detail_state = models.CharField("State/Region", max_length=100)
+	shipping_detail_postcode = models.CharField("Zip/Postcode", max_length=10)
+	shipping_detail_country = models.CharField("Country", max_length=100)
+	shipping_detail_phone = models.CharField("Phone", max_length=20)
+	shipping_detail_email = models.EmailField("Email")
 
-	ORDER_STATUS_CHOICES = (
-		(1, "Unprocessed"),
-		(2, "Processed"),
-	)
+	billing_detail_first_name = models.CharField("First name", max_length=100)
+	billing_detail_last_name = models.CharField("Last name", max_length=100)
+	billing_detail_street = models.CharField("Street", max_length=100)
+	billing_detail_city = models.CharField("City/Suburb", max_length=100)
+	billing_detail_state = models.CharField("State/Region", max_length=100)
+	billing_detail_postcode = models.CharField("Zip/Postcode", max_length=10)
+	billing_detail_country = models.CharField("Country", max_length=100)
+	billing_detail_phone = models.CharField("Phone", max_length=20)
 
 	additional_instructions = models.TextField()
 	time = models.DateTimeField(auto_now_add=True)
 	shipping_type = models.CharField(max_length=50, blank=True)
-	shipping = models.DecimalField(max_digits=6, decimal_places=2, default=0)
+	shipping_total = models.DecimalField(max_digits=6, decimal_places=2, default=0)
 	total = models.DecimalField(max_digits=6, decimal_places=2)
-	status = models.IntegerField(choices=ORDER_STATUS_CHOICES, default=1)
+	status = models.IntegerField(choices=ORDER_STATUS_CHOICES, 
+		default=ORDER_STATUS_DEFAULT)
 
 	def billing_name(self):
-		return "%s %s" % (self.billing_first_name, self.billing_last_name)
+		return "%s %s" % (self.billing_detail_first_name, 
+			self.billing_detail_last_name)
 
 	def __unicode__(self):
 		return "#%s %s %s" % (self.id, self.billing_name(), self.time)
+		
+	@classmethod
+	def shipping_fields(cls):
+		return [field.name for field in cls._meta.fields 
+			if field.name.startswith("shipping_detail_")]
+		
+	@classmethod
+	def billing_fields(cls):
+		return [field.name for field in cls._meta.fields 
+			if field.name.startswith("billing_detail_")]
 
 class OrderItem(models.Model):
 
 	order = models.ForeignKey(Order, related_name="items")
-	product_id = models.IntegerField(editable=False)
+	sku = models.CharField("SKU", max_length=20)
 	description = models.TextField(blank=True)
 	unit_price = models.DecimalField(blank=True, null=True, 
 		max_digits=6, decimal_places=2)

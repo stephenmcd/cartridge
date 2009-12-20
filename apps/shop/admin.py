@@ -1,6 +1,8 @@
 
 from django.contrib import admin
-from shop.models import Category, Product, Order, OrderItem, _Address
+from django.forms import MultipleChoiceField, CheckboxSelectMultiple, ModelForm
+from django.utils.safestring import mark_safe
+from shop.models import Category, Product, ProductVariation, Order, OrderItem
 
 class CategoryAdmin(admin.ModelAdmin):
 
@@ -10,34 +12,69 @@ class CategoryAdmin(admin.ModelAdmin):
 	list_filter = ("parent",)
 	search_fields = ("title","parent__title","product_set__title")	
 
+class ProductVariationAdmin(admin.TabularInline):
+	model = ProductVariation
+	extra = 0
+
+class ProductOptionField(MultipleChoiceField):
+	
+	def __init__(self, *args, **kwargs):
+		class ProductOptionWidget(CheckboxSelectMultiple):
+			def render(self, name, value, **kwargs):
+				if value and hasattr(value, "strip"):
+					value = eval(value.strip("\""))
+				rendered = super(ProductOptionWidget, self).render(name, 
+					value, **kwargs)
+				return mark_safe(rendered.replace("<li", 
+					"<li style='list-style-type:none;float:left;margin-right:10px;'"
+					).replace("<label", "<label style='width:auto;'"))
+		self.widget = ProductOptionWidget()
+		super(ProductOptionField, self).__init__(*args, **kwargs)
+
+	def clean(self, value):
+		return "\"%s\"" % value
+
+class ProductAdminForm(ModelForm):
+	class Meta:
+		model = Product
+option_fields = dict([(field.name, ProductOptionField(choices=field.choices,
+	required=False)) for field in ProductVariation.options()])
+ProductAdminForm = type("ProductAdminForm", (ProductAdminForm,), option_fields)
+	
 class ProductAdmin(admin.ModelAdmin):
 
-	list_display = ("title","regular_price","active")
-	list_editable = ("regular_price","active")
+	list_display = ("title","regular_price","active","available")
+	list_editable = ("regular_price","active","available")
 	list_filter = ("categories",)
 	filter_horizontal = ("categories",)
 	search_fields = ("title","categories__title",)
+	inlines = (ProductVariationAdmin,)
+	form = ProductAdminForm
 
 	fieldsets = (
-		(None, {"fields": ("title", "description", ("active", "available"),
-			"categories")}),
-		("Images", {"fields": (Product.image_fields(),)}),
-		("Pricing", {"fields": ("regular_price", 
-			("sale_price","sale_from","sale_to"))}),
-		("Options", {"fields": (Product.option_fields(),)}),
+		(None, {"fields": 
+			("title", "description", ("active", "available"), "categories")}),
+		("Pricing", {"fields": 
+			("regular_price", ("sale_price", "sale_from", "sale_to"))}),
+		("Images", {"fields": 
+			(tuple([field.name for field in Product.images()]),)}),
+		("Available options", {"fields": 
+			[field.name for field in ProductVariation.options()]}),
 	)
 
-class OrderItemInline(admin.TabularInline):
+	def save_model(self, request, product, form, change):
+		product.save()
+		option_names = [field.name for field in ProductVariation.options()]
+		option_values = [request.POST.getlist(name) for name in option_names]
+		variations = [[]]
+		for values in option_values:
+			variations = [x+[y] for x in variations for y in values]
+		for variation in variations:
+			product.variations.get_or_create(**dict(zip(option_names, variation)))
 
+class OrderItemInline(admin.TabularInline):
 	model = OrderItem
 	extra = 0
-
-_fields = {}
-for fieldset in ("billing", "shipping"):
-	_fields[fieldset] = [order_field.name for order_field in Order._meta.fields 
-		if order_field.name.startswith(fieldset) and order_field.name in 
-		["%s_%s" % (fieldset, address_field.name) for address_field in 
-		_Address._meta.fields]]
 
 class OrderAdmin(admin.ModelAdmin):
 
@@ -46,15 +83,16 @@ class OrderAdmin(admin.ModelAdmin):
 	list_editable = ("status",)
 	list_filter = ("status","time")
 	list_display_links = ("id","billing_name",)
-	search_fields = ["id","status"] + _fields["shipping"] + _fields["billing"]
+	search_fields = (["id","status"] + 
+		Order.shipping_fields() + Order.billing_fields())
 	date_hierarchy = "time"
 	radio_fields = {"status": admin.HORIZONTAL}
 
 	fieldsets = (
-		("Shipping details", {"fields": (tuple(_fields["shipping"]),)}),
-		("Billing details", {"fields": (tuple(_fields["billing"]),)}),
+		("Shipping details", {"fields": (tuple(Order.shipping_fields()),)}),
+		("Billing details", {"fields": (tuple(Order.billing_fields()),)}),
 		(None, {"fields": ("additional_instructions",
-			("shipping","shipping_type"),("total","status"))}),
+			("shipping_total","shipping_type"),("total","status"))}),
 	)
 	inlines = (OrderItemInline,)
 
