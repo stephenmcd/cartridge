@@ -51,11 +51,11 @@ def thumbnail(image_url, width=0, height=0):
 	if image.mode not in ("L", "RGB"):
 		image = image.convert("RGB")
 	image_dir, image_name = os.path.split(image_path)
-	thumb_name = "%s.%s.%s.jpg" % (image_name, width, height)
+	thumb_name = "%s-%sx%s.jpg" % (os.path.splitext(image_name)[0], width, height)
 	try:
 		image = image.resize((width, height), Image.ANTIALIAS)
-		if crop:
-			image = image.crop((x1, y1, x2, y2))
+		#if crop:
+		#	image = image.crop((x1, y1, x2, y2))
 		image.save(os.path.join(image_dir, thumb_name), "JPEG")
 	except:
 		return image_url
