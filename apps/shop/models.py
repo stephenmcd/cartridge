@@ -1,11 +1,9 @@
 
-from copy import deepcopy
 from datetime import datetime
 from decimal import Decimal
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
-from shop.settings import PRODUCT_VARIATION_OPTIONS, NUM_PRODUCT_IMAGE_FIELDS
 
 ORDER_STATUS_CHOICES = (
 	(1, "Unprocessed"),
