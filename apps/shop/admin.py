@@ -4,13 +4,24 @@ from django.forms import MultipleChoiceField, CheckboxSelectMultiple, ModelForm
 from django.utils.safestring import mark_safe
 from shop.models import Category, Product, ProductVariation, Order, OrderItem
 
+class CategoryAdminForm(ModelForm):
+	
+	class Meta:
+		model = Category
+		
+	def __init__(self, *args, **kwargs):
+		super(CategoryAdminForm, self).__init__(*args, **kwargs)
+		# disable this until it can also be applied to list_editable
+		# self.fields["parent"].queryset = Category.objects.exclude(id=self.instance.id)
+		
 class CategoryAdmin(admin.ModelAdmin):
 
 	ordering = ("parent","title")
-	list_display = ("title","parent","active")
+	list_display = ("title","parent","active","admin_link")
 	list_editable = ("parent","active")
 	list_filter = ("parent",)
 	search_fields = ("title","parent__title","product_set__title")	
+	form = CategoryAdminForm
 
 class ProductVariationAdmin(admin.TabularInline):
 	model = ProductVariation
@@ -46,7 +57,7 @@ ProductAdminForm = type("ProductAdminForm", (ProductAdminForm,), option_fields)
 	
 class ProductAdmin(admin.ModelAdmin):
 
-	list_display = ("title","regular_price","active","available")
+	list_display = ("title","regular_price","active","available","admin_link")
 	list_editable = ("regular_price","active","available")
 	list_filter = ("categories",)
 	filter_horizontal = ("categories",)

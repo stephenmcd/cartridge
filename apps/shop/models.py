@@ -53,6 +53,11 @@ class ShopModel(models.Model):
 		slugs.append(self.slug)
 		return reverse("shop_%s" % self.__class__.__name__.lower(), 
 			kwargs={"slugs": "/".join(slugs)})
+	
+	def admin_link(self):
+		return "<a href='%s'>View on site</a>" % self.get_absolute_url()
+	admin_link.allow_tags = True
+	admin_link.short_description = " "
 
 class Category(ShopModel):
 
@@ -131,16 +136,6 @@ class ProductVariation(models.Model):
 
 class Order(models.Model):
 
-	shipping_detail_first_name = models.CharField("First name", max_length=100)
-	shipping_detail_last_name = models.CharField("Last name", max_length=100)
-	shipping_detail_street = models.CharField("Street", max_length=100)
-	shipping_detail_city = models.CharField("City/Suburb", max_length=100)
-	shipping_detail_state = models.CharField("State/Region", max_length=100)
-	shipping_detail_postcode = models.CharField("Zip/Postcode", max_length=10)
-	shipping_detail_country = models.CharField("Country", max_length=100)
-	shipping_detail_phone = models.CharField("Phone", max_length=20)
-	shipping_detail_email = models.EmailField("Email")
-
 	billing_detail_first_name = models.CharField("First name", max_length=100)
 	billing_detail_last_name = models.CharField("Last name", max_length=100)
 	billing_detail_street = models.CharField("Street", max_length=100)
@@ -149,8 +144,18 @@ class Order(models.Model):
 	billing_detail_postcode = models.CharField("Zip/Postcode", max_length=10)
 	billing_detail_country = models.CharField("Country", max_length=100)
 	billing_detail_phone = models.CharField("Phone", max_length=20)
+	billing_detail_email = models.EmailField("Email")
 
-	additional_instructions = models.TextField()
+	shipping_detail_first_name = models.CharField("First name", max_length=100)
+	shipping_detail_last_name = models.CharField("Last name", max_length=100)
+	shipping_detail_street = models.CharField("Street", max_length=100)
+	shipping_detail_city = models.CharField("City/Suburb", max_length=100)
+	shipping_detail_state = models.CharField("State/Region", max_length=100)
+	shipping_detail_postcode = models.CharField("Zip/Postcode", max_length=10)
+	shipping_detail_country = models.CharField("Country", max_length=100)
+	shipping_detail_phone = models.CharField("Phone", max_length=20)
+
+	additional_instructions = models.TextField(blank=True)
 	time = models.DateTimeField(auto_now_add=True)
 	shipping_type = models.CharField(max_length=50, blank=True)
 	shipping_total = models.DecimalField(max_digits=6, decimal_places=2, default=0)
