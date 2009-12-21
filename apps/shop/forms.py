@@ -1,11 +1,17 @@
 
 from copy import copy
+from datetime import datetime
 from django import forms
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.utils.datastructures import SortedDict
 from django.contrib.formtools.wizard import FormWizard
 from shop.models import Order
+
+CARD_TYPE_CHOICES = ("Mastercard", "Visa", "Diners", "Amex")
+CARD_TYPE_CHOICES = zip(CARD_TYPE_CHOICES, CARD_TYPE_CHOICES)
+CARD_MONTHS = ["%02d" % i for i in range(1, 13)]
+CARD_MONTHS = zip(CARD_MONTHS, CARD_MONTHS)
 
 class AddCartForm(forms.Form):
 	quantity = forms.IntegerField(min_value=1)
@@ -16,13 +22,13 @@ def get_add_cart_form(product):
 		if len(option["choices"]) > 1:
 			choices = zip(option["choices"], option["choices"])
 			option_fields[option["name"]] = forms.ChoiceField(choices=choices)
-	return type("AddCartFormProduct", (AddCartForm,), option_fields)
+	return type("AddCartForm", (AddCartForm,), option_fields)
 
 class OrderForm(forms.ModelForm):
 
 	class Meta:
 		model = Order
-		exclude = ("shipping_type", "shipping", "total", "status")
+		exclude = ("shipping_type", "shipping_total", "total", "status")
 	
 	def _fieldset(self, prefix):
 		other = prefix == "other"
@@ -42,20 +48,21 @@ class OrderForm(forms.ModelForm):
 			raise AttributeError, name
 		return self._fieldset(name.split("fieldset_", 1)[1])
 
-CARD_TYPE_CHOICES = ("Mastercard", "Visa", "Diners", "Amex")
-CARD_TYPE_CHOICES = zip(CARD_TYPE_CHOICES, CARD_TYPE_CHOICES)
-CARD_MONTHS = range(1, 12)
-CARD_MONTHS = zip(CARD_MONTHS, CARD_MONTHS)
-CARD_YEARS = ("2009", "2010")
-CARD_YEARS = zip(CARD_YEARS, CARD_YEARS)
+class ExpiryYearField(forms.ChoiceField):
 
+	def __init__(self, *args, **kwargs):
+		year = datetime.now().year
+		years = range(year, year + 21)
+		kwargs["choices"] = zip(years, years)
+		super(ExpiryYearField, self).__init__(*args, **kwargs)
+		
 class PaymentForm(forms.Form):
 	
 	card_name = forms.CharField()
 	card_type = forms.ChoiceField(choices=CARD_TYPE_CHOICES)
 	card_number = forms.CharField()
 	card_expiry_month = forms.ChoiceField(choices=CARD_MONTHS)
-	card_expiry_year = forms.ChoiceField(choices=CARD_YEARS)
+	card_expiry_year = ExpiryYearField()
 	card_ccv = forms.CharField()
 
 class CheckoutWizard(FormWizard):
