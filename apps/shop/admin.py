@@ -16,18 +16,20 @@ class ProductVariationAdmin(admin.TabularInline):
 	model = ProductVariation
 	extra = 0
 
+class ProductOptionWidget(CheckboxSelectMultiple):
+
+	def render(self, name, value, **kwargs):
+		if value and hasattr(value, "strip"):
+			value = eval(value.strip("\""))
+		rendered = super(ProductOptionWidget, self).render(name, value, **kwargs)
+		rendered = rendered.replace("<li", "<li style='list-style-type:none;" \
+			"float:left;margin-right:10px;'")
+		rendered = rendered.replace("<label", "<label style='width:auto;'")
+		return mark_safe(rendered)
+
 class ProductOptionField(MultipleChoiceField):
 	
 	def __init__(self, *args, **kwargs):
-		class ProductOptionWidget(CheckboxSelectMultiple):
-			def render(self, name, value, **kwargs):
-				if value and hasattr(value, "strip"):
-					value = eval(value.strip("\""))
-				rendered = super(ProductOptionWidget, self).render(name, 
-					value, **kwargs)
-				return mark_safe(rendered.replace("<li", 
-					"<li style='list-style-type:none;float:left;margin-right:10px;'"
-					).replace("<label", "<label style='width:auto;'"))
 		self.widget = ProductOptionWidget()
 		super(ProductOptionField, self).__init__(*args, **kwargs)
 
@@ -37,6 +39,7 @@ class ProductOptionField(MultipleChoiceField):
 class ProductAdminForm(ModelForm):
 	class Meta:
 		model = Product
+
 option_fields = dict([(field.name, ProductOptionField(choices=field.choices,
 	required=False)) for field in ProductVariation.options()])
 ProductAdminForm = type("ProductAdminForm", (ProductAdminForm,), option_fields)
