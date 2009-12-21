@@ -4,7 +4,9 @@ from django import template
 from django.conf import settings
 from shop.models import Category
 
+
 register = template.Library()
+
 
 @register.inclusion_tag("shop/category_menu.html", takes_context=True)
 def category_menu(context, parent_category=None):

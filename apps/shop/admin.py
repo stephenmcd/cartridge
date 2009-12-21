@@ -4,6 +4,7 @@ from django.forms import MultipleChoiceField, CheckboxSelectMultiple, ModelForm
 from django.utils.safestring import mark_safe
 from shop.models import Category, Product, ProductVariation, Order, OrderItem
 
+
 class CategoryAdminForm(ModelForm):
 	
 	class Meta:

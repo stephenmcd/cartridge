@@ -2,4 +2,5 @@ syntax: glob
 *.db
 *.pyc
 *.pyo
+*.kpf
 site_media/*
