@@ -20,10 +20,10 @@
 {% if product.has_price %}
 	<p>
 	{% if product.on_sale %}
-		<span style="text-decoration: line-through;">{{ product.regular_price|money }}</span>
+		<span style="text-decoration: line-through;">{{ product.unit_price|money }}</span>
 		On sale:
 	{% endif %}
-	{{ product.actual_price|money }}
+	{{ product.price|money }}
 	</p>
 {% endif %}
 

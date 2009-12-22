@@ -12,8 +12,8 @@ class CategoryAdminForm(ModelForm):
 		
 	def __init__(self, *args, **kwargs):
 		super(CategoryAdminForm, self).__init__(*args, **kwargs)
-		# disable this until it can also be applied to list_editable
-		# self.fields["parent"].queryset = Category.objects.exclude(id=self.instance.id)
+		self.fields["parent"].queryset = Category.objects.exclude(
+			id=self.instance.id)
 		
 class CategoryAdmin(admin.ModelAdmin):
 
@@ -22,10 +22,12 @@ class CategoryAdmin(admin.ModelAdmin):
 	list_editable = ("parent","active")
 	list_filter = ("parent",)
 	search_fields = ("title","parent__title","product_set__title")	
-	form = CategoryAdminForm
+	# this isn't used since it doesn't apply to list_editable
+	# form = CategoryAdminForm
 
 class ProductVariationAdmin(admin.TabularInline):
 	model = ProductVariation
+	exclude = [field.name for field in ProductVariation.options()]
 	extra = 0
 
 class ProductOptionWidget(CheckboxSelectMultiple):
@@ -58,8 +60,8 @@ ProductAdminForm = type("ProductAdminForm", (ProductAdminForm,), option_fields)
 	
 class ProductAdmin(admin.ModelAdmin):
 
-	list_display = ("title","regular_price","active","available","admin_link")
-	list_editable = ("regular_price","active","available")
+	list_display = ("title","unit_price","active","available","admin_link")
+	list_editable = ("unit_price","active","available")
 	list_filter = ("categories",)
 	filter_horizontal = ("categories",)
 	search_fields = ("title","categories__title",)
@@ -70,7 +72,7 @@ class ProductAdmin(admin.ModelAdmin):
 		(None, {"fields": 
 			("title", "description", ("active", "available"), "categories")}),
 		("Pricing", {"fields": 
-			("regular_price", ("sale_price", "sale_from", "sale_to"))}),
+			("unit_price", ("sale_price", "sale_from", "sale_to"))}),
 		("Images", {"fields": 
 			(tuple([field.name for field in Product.images()]),)}),
 		("Available options", {"fields": 
@@ -99,16 +101,17 @@ class OrderAdmin(admin.ModelAdmin):
 	list_filter = ("status","time")
 	list_display_links = ("id","billing_name",)
 	search_fields = (["id","status"] + 
-		Order.shipping_fields() + Order.billing_fields())
+		Order.billing_fields() + Order.shipping_fields())
 	date_hierarchy = "time"
 	radio_fields = {"status": admin.HORIZONTAL}
 
 	fieldsets = (
-		("Shipping details", {"fields": (tuple(Order.shipping_fields()),)}),
 		("Billing details", {"fields": (tuple(Order.billing_fields()),)}),
+		("Shipping details", {"fields": (tuple(Order.shipping_fields()),)}),
 		(None, {"fields": ("additional_instructions",
 			("shipping_total","shipping_type"),("total","status"))}),
 	)
+
 	inlines = (OrderItemInline,)
 
 admin.site.register(Category, CategoryAdmin)

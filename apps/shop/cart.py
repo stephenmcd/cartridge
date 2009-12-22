@@ -42,7 +42,7 @@ class Cart(object):
 		"""
 		template helper function - sum of all costs of item quantities
 		"""
-		return sum([item["quantity"] * item["unit_price"] for item in self])
+		return sum([item["quantity"] * item["price"] for item in self])
 		
 	def add_item(self, product, options):
 		"""
@@ -56,15 +56,14 @@ class Cart(object):
 			"quantity": quantity,
 			"sku": product.id,
 			"url": product.get_absolute_url(),
-			"unit_price": product.actual_price(),
+			"price": product.price(),
 			"total_price": quantity * product.actual_price(),
 		}
 		# if options are selected determine the sku for the variation
 		if options:
-			new_item["sku"] = product.variations.get(**options).sku
-			options = ", ".join(["%s: %s" % option for option in 
-				sorted(options.items())])
-			new_item["description"] += " - %s" % options
+			variation = product.variations.get(**options)
+			new_item["sku"] = variation.sku
+			new_item["description"] += " - %s" % variation
 		# if the sku exists in the cart, increase the existing item's quantity
 		for i, item in enumerate(self):
 			if item["sku"] == new_item["sku"]:

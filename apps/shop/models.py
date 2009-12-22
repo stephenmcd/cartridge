@@ -75,7 +75,7 @@ class Product(ShopModel):
 		help_text="Check this to make this item available for purchase when it is visible on the site")
 	categories = models.ManyToManyField(Category, blank=True, 
 		related_name="products")
-	regular_price = models.DecimalField(blank=True, null=True, 
+	unit_price = models.DecimalField(blank=True, null=True, 
 		max_digits=6, decimal_places=2)
 	sale_price = models.DecimalField(blank=True, null=True,
 		max_digits=6, decimal_places=2)
@@ -91,13 +91,13 @@ class Product(ShopModel):
 		return self.sale_price and self.sale_to > datetime.now() > self.sale_from
 
 	def has_price(self):
-		return self.on_sale() or self.regular_price is not None
+		return self.on_sale() or self.unit_price is not None
 	
 	def actual_price(self):
 		if self.on_sale():
 			return self.sale_price
 		elif self.has_price():
-			return self.regular_price
+			return self.unit_price
 		return Decimal("0")
 	
 	def save(self, *args, **kwargs):
@@ -115,13 +115,15 @@ class OptionField(models.CharField):
  
 class ProductVariation(models.Model):
 		
-	sku = models.CharField("SKU", max_length=20)
+	sku = models.CharField("SKU", max_length=20, unique=True)
 	product = models.ForeignKey(Product, related_name="variations")
+	
 	colour = OptionField(max_length=20, choices=OPTION_COLOURS)
 	size = OptionField(max_length=20, choices=OPTION_SIZES)
 	
 	def __unicode__(self):
-		return ""
+		return ", ".join(["%s: %s" % (field.name.title(), 
+			getattr(self, field.name)) for field in self.options()])
 	
 	def save(self, *args, **kwargs):
 		super(ProductVariation, self).save(*args, **kwargs)
@@ -185,7 +187,7 @@ class OrderItem(models.Model):
 	order = models.ForeignKey(Order, related_name="items")
 	sku = models.CharField("SKU", max_length=20)
 	description = models.TextField(blank=True)
-	unit_price = models.DecimalField(blank=True, null=True, 
+	price = models.DecimalField(blank=True, null=True, 
 		max_digits=6, decimal_places=2)
 	quantity = models.IntegerField()
 
