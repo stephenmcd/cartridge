@@ -30,7 +30,7 @@ class Cart(object):
 		"""
 		template helper function - does the cart have items
 		"""
-		return len(self) > 0 
+		return len(self._items) > 0 
 	
 	def total_items(self):
 		"""
@@ -57,7 +57,7 @@ class Cart(object):
 			"sku": product.id,
 			"url": product.get_absolute_url(),
 			"price": product.price(),
-			"total_price": quantity * product.actual_price(),
+			"total_price": quantity * product.price(),
 		}
 		# if options are selected determine the sku for the variation
 		if options:

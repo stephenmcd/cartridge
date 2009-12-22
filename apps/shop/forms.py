@@ -43,7 +43,7 @@ def get_add_cart_form(product):
 			return self.cleaned_data
 
 	# list of option names
-	option_names = [field.name for field in ProductVariation.options()]
+	option_names = [field.name for field in ProductVariation.option_fields()]
 	# list of variation sequences containing only option values
 	option_values = product.variations.values_list(*option_names)
 	# unzip the option value sequences and zip them up with the option names
@@ -62,25 +62,24 @@ class OrderForm(forms.ModelForm):
 
 	class Meta:
 		model = Order
-		exclude = ("shipping_type", "shipping_total", "total", "status")
-	
+		fields = (Order.shipping_field_names() + Order.shipping_field_names() + 
+			"additional_instructions")
+			
 	def _fieldset(self, prefix):
 		"""
-		return a copy of itself containing only the fields with the given prefix 
-		storing the supplied prefixes each time it's called, finally returning
-		a last copy with all the fields that have not yet been return
+		return a subset of fields by making a copy of itself containing only 
+		the fields with the given prefix, storing the given prefix each time 
+		it's called and when finally called with the prefix "other", returning 
+		a copy with all the fields that have not yet been returned
 		"""
 		
-		other = prefix == "other"
-		self._prefixes_done = getattr(self, "_prefixes_done", [])
+		if not hasattr(self, "_fields_done"):
+			self._fields_done = []
 		fieldset = copy(self)
-		def is_fieldset_field(name):
-			return (not other and name.startswith(prefix)) or (other and 
-				not [done for done in self._prefixes_done if name.startswith(done)])
-		fieldset.fields = SortedDict([field for field in self.fields.items() 
-			if is_fieldset_field(field[0])])
-		if not other:
-			self._prefixes_done.append(prefix)
+		fieldset.fields = [field for field in self.fields.items() if 
+			(prefix != "other" and field.name.startswith(prefix) or 
+			(prefix == "other" and field not in self._fields_done)]
+		self._fields_done.extend(fieldset.fields)
 		return fieldset
 	
 	def __getattr__(self, name):
@@ -88,9 +87,10 @@ class OrderForm(forms.ModelForm):
 		dynamic fieldset caller
 		"""
 		
-		if not name.startswith("fieldset_"):
-			raise AttributeError, name
-		return self._fieldset(name.split("fieldset_", 1)[1])
+		if name.startswith("fieldset_"):
+			return self._fieldset(name.split("fieldset_", 1)[1])
+		raise AttributeError, name
+		
 
 class ExpiryYearField(forms.ChoiceField):
 	"""

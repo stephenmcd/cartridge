@@ -106,9 +106,13 @@ class Product(ShopModel):
 		super(Product, self).save(*args, **kwargs)
 		
 	@classmethod
-	def images(cls):
+	def image_fields(cls):
 		return [field for field in cls._meta.fields 
 			if isinstance(field, models.ImageField)]
+	
+	def images(self):
+		return [getattr(self, field.name) for field in self.image_fields()
+			if getattr(self, field.name)]
 
 class OptionField(models.CharField):
 	pass
@@ -132,9 +136,12 @@ class ProductVariation(models.Model):
 			self.save()
 
 	@classmethod
-	def options(cls):
+	def option_fields(cls):
 		return [field for field in cls._meta.fields 
 			if isinstance(field, OptionField)]
+	
+	def options(self):
+		return [getattr(self, field.name) for field in self.option_fields()]
 
 class Order(models.Model):
 
@@ -173,12 +180,12 @@ class Order(models.Model):
 		return "#%s %s %s" % (self.id, self.billing_name(), self.time)
 		
 	@classmethod
-	def shipping_fields(cls):
+	def shipping_field_names(cls):
 		return [field.name for field in cls._meta.fields 
 			if field.name.startswith("shipping_detail_")]
 		
 	@classmethod
-	def billing_fields(cls):
+	def billing_field_names(cls):
 		return [field.name for field in cls._meta.fields 
 			if field.name.startswith("billing_detail_")]
 

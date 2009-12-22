@@ -29,7 +29,15 @@ def money(value):
 @register.simple_tag
 def thumbnail(image_url, width=0, height=0):
 	
-	image_path = os.path.join(settings.MEDIA_ROOT, unicode(image_url))
+	image_url = unicode(image_url)
+	image_path = os.path.join(settings.MEDIA_ROOT, image_url)
+	image_dir, image_name = os.path.split(image_path)
+	thumb_name = "%s-%sx%s.jpg" % (os.path.splitext(image_name)[0], width, height)
+	thumb_path = os.path.join(image_dir, thumb_name)
+	thumb_url = "%s/%s" % (os.path.dirname(image_url), thumb_name)
+
+	if os.path.exists(thumb_path):
+		return thumb_url
 	try:
 		width = int(width)
 		height = int(height)
@@ -52,16 +60,14 @@ def thumbnail(image_url, width=0, height=0):
 		crop = True
 	if image.mode not in ("L", "RGB"):
 		image = image.convert("RGB")
-	image_dir, image_name = os.path.split(image_path)
-	thumb_name = "%s-%sx%s.jpg" % (os.path.splitext(image_name)[0], width, height)
 	try:
 		image = image.resize((width, height), Image.ANTIALIAS)
 		#if crop:
 		#	image = image.crop((x1, y1, x2, y2))
-		image.save(os.path.join(image_dir, thumb_name), "JPEG")
+		image.save(thumb_path, "JPEG")
 	except:
 		return image_url
-	return "%s/%s" % (os.path.dirname(unicode(image_url)), thumb_name)
+	return thumb_url
 
 def breadcrumb_menu():
 	pass

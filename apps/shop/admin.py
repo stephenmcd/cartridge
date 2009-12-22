@@ -5,6 +5,13 @@ from django.utils.safestring import mark_safe
 from shop.models import Category, Product, ProductVariation, Order, OrderItem
 
 
+# lists of field names
+option_fields = [field.name for field in ProductVariation.option_fields()]
+image_fields = [field.name for field in Product.image_fields()]
+billing_fields = Order.billing_field_names()
+shipping_fields = Order.shipping_field_names()
+
+
 class CategoryAdminForm(ModelForm):
 	
 	class Meta:
@@ -27,7 +34,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 class ProductVariationAdmin(admin.TabularInline):
 	model = ProductVariation
-	exclude = [field.name for field in ProductVariation.options()]
+	exclude = option_fields
 	extra = 0
 
 class ProductOptionWidget(CheckboxSelectMultiple):
@@ -55,7 +62,7 @@ class ProductAdminForm(ModelForm):
 		model = Product
 
 option_fields = dict([(field.name, ProductOptionField(choices=field.choices,
-	required=False)) for field in ProductVariation.options()])
+	required=False)) for field in ProductVariation.option_fields()])
 ProductAdminForm = type("ProductAdminForm", (ProductAdminForm,), option_fields)
 	
 class ProductAdmin(admin.ModelAdmin):
@@ -73,21 +80,18 @@ class ProductAdmin(admin.ModelAdmin):
 			("title", "description", ("active", "available"), "categories")}),
 		("Pricing", {"fields": 
 			("unit_price", ("sale_price", "sale_from", "sale_to"))}),
-		("Images", {"fields": 
-			(tuple([field.name for field in Product.images()]),)}),
-		("Available options", {"fields": 
-			[field.name for field in ProductVariation.options()]}),
+		("Images", {"fields": image_fields}),
+		("Available options", {"fields": option_fields}),
 	)
 
 	def save_model(self, request, product, form, change):
 		product.save()
-		option_names = [field.name for field in ProductVariation.options()]
-		option_values = [request.POST.getlist(name) for name in option_names]
+		option_values = [request.POST.getlist(name) for name in option_fields]
 		variations = [[]]
 		for values in option_values:
 			variations = [x+[y] for x in variations for y in values]
 		for variation in variations:
-			product.variations.get_or_create(**dict(zip(option_names, variation)))
+			product.variations.get_or_create(**dict(zip(option_fields, variation)))
 
 class OrderItemInline(admin.TabularInline):
 	model = OrderItem
@@ -100,14 +104,13 @@ class OrderAdmin(admin.ModelAdmin):
 	list_editable = ("status",)
 	list_filter = ("status","time")
 	list_display_links = ("id","billing_name",)
-	search_fields = (["id","status"] + 
-		Order.billing_fields() + Order.shipping_fields())
+	search_fields = ["id","status"] + billing_fields + shipping_fields
 	date_hierarchy = "time"
 	radio_fields = {"status": admin.HORIZONTAL}
 
 	fieldsets = (
-		("Billing details", {"fields": (tuple(Order.billing_fields()),)}),
-		("Shipping details", {"fields": (tuple(Order.shipping_fields()),)}),
+		("Billing details", {"fields": (tuple(billing_fields),)}),
+		("Shipping details", {"fields": (tuple(shipping_fields),)}),
 		(None, {"fields": ("additional_instructions",
 			("shipping_total","shipping_type"),("total","status"))}),
 	)
