@@ -64,10 +64,12 @@ class Cart(object):
 			variation = product.variations.get(**options)
 			new_item["sku"] = variation.sku
 			new_item["description"] += " - %s" % variation
-		# if the sku exists in the cart, increase the existing item's quantity
+		# if the sku exists in the cart, increase the quantity and update item
 		for i, item in enumerate(self):
 			if item["sku"] == new_item["sku"]:
-				self._items[i]["quantity"] += new_item["quantity"]
+				new_item["quantity"] += self._items[i]["quantity"]
+				new_item["total_price"] = new_item["quantity"] * new_item["price"]
+				self._items[i].update(new_item)
 				break
 		else:
 			self._items.insert(0, new_item)

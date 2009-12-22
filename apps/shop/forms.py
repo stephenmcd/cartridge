@@ -62,8 +62,8 @@ class OrderForm(forms.ModelForm):
 
 	class Meta:
 		model = Order
-		fields = (Order.shipping_field_names() + Order.shipping_field_names() + 
-			"additional_instructions")
+		fields = (Order.billing_field_names() + Order.shipping_field_names() + 
+			["additional_instructions"])
 			
 	def _fieldset(self, prefix):
 		"""
@@ -74,12 +74,12 @@ class OrderForm(forms.ModelForm):
 		"""
 		
 		if not hasattr(self, "_fields_done"):
-			self._fields_done = []
+			self._fields_done = {}
 		fieldset = copy(self)
-		fieldset.fields = [field for field in self.fields.items() if 
-			(prefix != "other" and field.name.startswith(prefix) or 
-			(prefix == "other" and field not in self._fields_done)]
-		self._fields_done.extend(fieldset.fields)
+		fieldset.fields = SortedDict([field for field in self.fields.items() if 
+			(prefix != "other" and field[0].startswith(prefix)) or 
+			(prefix == "other" and field[0] not in self._fields_done.keys())])
+		self._fields_done.update(fieldset.fields)
 		return fieldset
 	
 	def __getattr__(self, name):
