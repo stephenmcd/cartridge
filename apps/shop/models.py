@@ -93,7 +93,7 @@ class Product(ShopModel):
 	def has_price(self):
 		return self.on_sale() or self.unit_price is not None
 	
-	def actual_price(self):
+	def price(self):
 		if self.on_sale():
 			return self.sale_price
 		elif self.has_price():
