@@ -12,7 +12,7 @@
 <div>
 	{% for image in images %}
 	<a href="{{ MEDIA_URL }}{{ image }}"><img 
-		src="{{ MEDIA_URL }}{% thumbnail image 120 160  %}" /></a>
+		src="{{ MEDIA_URL }}{% thumbnail image 0 160  %}" /></a>
 	{% endfor %}
 </div>
 {% endif %}
