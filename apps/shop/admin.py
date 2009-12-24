@@ -33,6 +33,8 @@ class CategoryAdmin(admin.ModelAdmin):
 	# form = CategoryAdminForm
 
 class ProductVariationAdmin(admin.TabularInline):
+
+	verbose_name_plural = "Current variations"
 	model = ProductVariation
 	exclude = option_fields
 	extra = 0
@@ -61,9 +63,9 @@ class ProductAdminForm(ModelForm):
 	class Meta:
 		model = Product
 
-option_fields = dict([(field.name, ProductOptionField(choices=field.choices,
+_option_fields = dict([(field.name, ProductOptionField(choices=field.choices,
 	required=False)) for field in ProductVariation.option_fields()])
-ProductAdminForm = type("ProductAdminForm", (ProductAdminForm,), option_fields)
+ProductAdminForm = type("ProductAdminForm", (ProductAdminForm,), _option_fields)
 	
 class ProductAdmin(admin.ModelAdmin):
 
@@ -81,7 +83,7 @@ class ProductAdmin(admin.ModelAdmin):
 		("Pricing", {"fields": 
 			("unit_price", ("sale_price", "sale_from", "sale_to"))}),
 		("Images", {"fields": image_fields}),
-		("Available options", {"fields": option_fields}),
+		("Create new variations", {"fields": option_fields}),
 	)
 
 	def save_model(self, request, product, form, change):

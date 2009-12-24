@@ -127,7 +127,7 @@ class ProductVariation(models.Model):
 	
 	def __unicode__(self):
 		return ", ".join(["%s: %s" % (field.name.title(), 
-			getattr(self, field.name)) for field in self.options()])
+			getattr(self, field.name)) for field in self.option_fields()])
 	
 	def save(self, *args, **kwargs):
 		super(ProductVariation, self).save(*args, **kwargs)
