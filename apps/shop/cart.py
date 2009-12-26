@@ -54,7 +54,7 @@ class Cart(object):
 		new_item = {
 			"description": product.title,
 			"quantity": quantity,
-			"sku": product.id,
+			"sku": product.sku if product.sku else product.id,
 			"url": product.get_absolute_url(),
 			"price": product.price(),
 			"total_price": quantity * product.price(),
@@ -81,7 +81,7 @@ class Cart(object):
 		"""
 		
 		for i, item in list(enumerate(self)):
-			if str(item["sku"]) == sku:
+			if str(item["sku"]) == str(sku):
 				del self._items[i]
 				self._save()
 				break

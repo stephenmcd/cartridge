@@ -87,7 +87,7 @@ class ProductAdmin(admin.ModelAdmin):
 	)
 
 	def save_model(self, request, product, form, change):
-		product.save()
+		super(ProductAdmin, self).save_model(request, product, form, change)
 		option_values = [request.POST.getlist(name) for name in option_fields]
 		variations = [[]]
 		for values in option_values:

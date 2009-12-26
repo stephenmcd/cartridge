@@ -5,6 +5,7 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
 
+
 ORDER_STATUS_CHOICES = (
 	(1, "Unprocessed"),
 	(2, "Processed"),
@@ -15,6 +16,7 @@ OPTION_COLOURS = ("Red","Orange","Yellow","Green","Blue","Indigo","Violet")
 OPTION_COLOURS = zip(OPTION_COLOURS, OPTION_COLOURS)
 OPTION_SIZES = ("Extra Small","Small","Regular","Large","Extra Large")
 OPTION_SIZES = zip(OPTION_SIZES, OPTION_SIZES)
+
 
 class ShopManager(models.Manager):
 	def active(self, **kwargs):
@@ -46,13 +48,17 @@ class ShopModel(models.Model):
 					break
 				i += 1
 		super(ShopModel, self).save(*args, **kwargs)
-
-	def get_absolute_url(self, slugs=None):
-		if slugs is None:
-			slugs = []
+		
+	def slugs(self):
+		slugs = []
+		if getattr(self, "_category", None) is not None:
+			slugs = self._category.slugs()
 		slugs.append(self.slug)
+		return slugs
+
+	def get_absolute_url(self):
 		return reverse("shop_%s" % self.__class__.__name__.lower(), 
-			kwargs={"slugs": "/".join(slugs)})
+			kwargs={"slugs": "/".join(self.slugs())})
 	
 	def admin_link(self):
 		return "<a href='%s'>View on site</a>" % self.get_absolute_url()
@@ -71,6 +77,7 @@ class Category(ShopModel):
 class Product(ShopModel):
 
 	description = models.TextField(blank=True)
+	sku = models.CharField("SKU", max_length=20, unique=True, blank=True)
 	available = models.BooleanField(default=True, 
 		help_text="Check this to make this item available for purchase when it is visible on the site")
 	categories = models.ManyToManyField(Category, blank=True, 
