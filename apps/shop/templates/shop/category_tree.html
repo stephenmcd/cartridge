@@ -4,7 +4,7 @@
 	{% for category in category_branch %}
 	<li>
 		<a href="{{ category.get_absolute_url }}">{{ category }}</a>
-		{% category_menu category %}
+		{% category_tree category %}
 	</li>
 	{% endfor %}
 </ul>
