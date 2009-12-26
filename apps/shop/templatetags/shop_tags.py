@@ -1,5 +1,6 @@
 
 import os
+from copy import copy
 from django import template
 from django.conf import settings
 from shop.models import Category
@@ -8,22 +9,41 @@ from shop.models import Category
 register = template.Library()
 
 
-@register.inclusion_tag("shop/category_menu.html", takes_context=True)
-def category_menu(context, parent_category=None):
+@register.inclusion_tag("shop/category_tree.html", takes_context=True)
+def category_tree(context, parent_category=None):
 	"""
 	return a list of child categories for the given parent, storing all 
 	categories in the context when first called for retrieval on subsequent 
-	recursive calls when building a category tree at the template level
+	recursive calls from the menu template
 	"""
-	if "category_menu_categories" not in context:
-		context["category_menu_categories"] = Category.objects.active(
-			).select_related(depth=1)
-	category_branch = []
-	for category in context["category_menu_categories"]:
+	categories = []
+	for category in context["shop_categories"][:]:
 		if category.parent == parent_category:
-			category_branch.append(category)
-	return {"category_branch": category_branch}
+			category._category = parent_category
+			categories.append(category)
+	context["category_branch"] = categories
+	return context
 
+class BreadcrumbNode(template.Node):
+
+	def __init__(self, var_name):
+		self.var_name = var_name
+
+	def render(self, context):
+		slugs = context["request"].path.split("/")
+		categories = []
+		for category in context["shop_categories"][:]:
+			if category.slug in slugs:
+				if categories:
+					category._category = categories[-1]
+				categories.append(category)
+		context[self.var_name] = categories[:-1]
+		return ""
+
+@register.tag
+def category_breadcrumbs(parser, token):
+	return BreadcrumbNode(token.split_contents()[2])
+	
 @register.filter
 def money(value):
 	"""
@@ -36,7 +56,7 @@ def money(value):
 	return "$%.2f" % value
 
 @register.simple_tag
-def thumbnail(image_url, width=0, height=0):
+def thumbnail(image_url, width, height):
 	"""
 	given the url to an image, resizes the image using the given width and 
 	height on the first time it is requested, and returns the url to the new 
@@ -79,9 +99,4 @@ def thumbnail(image_url, width=0, height=0):
 	except:
 		return image_url
 	return thumb_url
-
-def breadcrumb_menu():
-	pass
-#	categories = sorted(Category.objects.filter(slug__in=slugs), 
-#		key=slugs.index)
 
