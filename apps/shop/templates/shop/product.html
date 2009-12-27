@@ -29,12 +29,13 @@
 {% endif %}
 
 {% if product.available %}
-<form method="post">
-	{{ add_cart_form.as_p }}
-	<input type="submit" value="Add to cart" /> 
+<form method="post" id="add-cart">
+	<ul>
+		{{ add_cart_form.as_ul }}
+		<li><input type="submit" value="Add to cart" /></li>
+	</ul>
 </form>
 {% else %}
 <p>This product is currently unavailable</p>
 {% endif %}
-
 {% endblock %}
