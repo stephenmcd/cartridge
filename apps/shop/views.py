@@ -3,22 +3,20 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from shop.models import Category, Product, Order
+from shop.models import Category, Product
 from shop.forms import get_add_cart_form, OrderForm
 from shop.cart import Cart
 
 
-def category(request, slugs, template="shop/category.html"):
+def category(request, slug, template="shop/category.html"):
 
-	category = get_object_or_404(Category.objects.active(), 
-		slug=slugs.split("/")[-1])
+	category = get_object_or_404(Category.objects.active(), slug=slug)
 	return render_to_response(template, {"category": category}, 
 		RequestContext(request))
 	
-def product(request, slugs, template="shop/product.html"):
+def product(request, slug, template="shop/product.html"):
 
-	product = get_object_or_404(Product.objects.active(), 
-		slug=slugs.split("/")[-1])
+	product = get_object_or_404(Product.objects.active(), slug=slug)
 	AddCartForm = get_add_cart_form(product)
 	add_cart_form = AddCartForm(initial={"quantity": 1})
 	if request.method == "POST":

@@ -4,16 +4,9 @@
 {% block title %}{{ category.title }}{% endblock %}
 
 {% block main %}
-
-{% category_breadcrumbs as breadcrumbs %}
-{% for category in breadcrumbs %}
-<a href="{{ category.get_absolute_url }}">{{ category }}</a> &gt; 
-{% endfor %}
-{{ category.title }}
-
 <ul>
-	{% for child_cat in category.children.active %}
-	<li><a href="{{ child_cat.get_absolute_url }}">Category: {{ child_cat }}</a></li>
+	{% for category in category.children.active %}
+	<li><a href="{{ category.get_absolute_url }}">Category: {{ category }}</a></li>
 	{% endfor %}
 </ul>
 <ul>

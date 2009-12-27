@@ -49,16 +49,9 @@ class ShopModel(models.Model):
 				i += 1
 		super(ShopModel, self).save(*args, **kwargs)
 		
-	def slugs(self):
-		slugs = []
-		if getattr(self, "_category", None) is not None:
-			slugs = self._category.slugs()
-		slugs.append(self.slug)
-		return slugs
-
 	def get_absolute_url(self):
 		return reverse("shop_%s" % self.__class__.__name__.lower(), 
-			kwargs={"slugs": "/".join(self.slugs())})
+			kwargs={"slug": self.slug})
 	
 	def admin_link(self):
 		return "<a href='%s'>View on site</a>" % self.get_absolute_url()

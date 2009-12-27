@@ -9,46 +9,26 @@ from shop.models import Category
 register = template.Library()
 
 
-@register.inclusion_tag("shop/category_tree.html", takes_context=True)
-def category_tree(context, parent_category=None):
+@register.inclusion_tag("shop/category_menu.html", takes_context=True)
+def category_menu(context, parent_category=None):
 	"""
 	return a list of child categories for the given parent, storing all 
 	categories in the context when first called for retrieval on subsequent 
 	recursive calls from the menu template
 	"""
-	categories = []
-	for category in context["shop_categories"][:]:
-		if category.parent == parent_category:
-			category._category = parent_category
-			categories.append(category)
-	context["category_branch"] = categories
+
+	if "menu_cats" not in context:
+		context["menu_cats"] = list(Category.objects.active())
+	context["category_branch"] = [category for category in context["menu_cats"] 
+		if category.parent == parent_category]
 	return context
 
-class BreadcrumbNode(template.Node):
-
-	def __init__(self, var_name):
-		self.var_name = var_name
-
-	def render(self, context):
-		slugs = context["request"].path.split("/")
-		categories = []
-		for category in context["shop_categories"][:]:
-			if category.slug in slugs:
-				if categories:
-					category._category = categories[-1]
-				categories.append(category)
-		context[self.var_name] = categories[:-1]
-		return ""
-
-@register.tag
-def category_breadcrumbs(parser, token):
-	return BreadcrumbNode(token.split_contents()[2])
-	
 @register.filter
 def money(value):
 	"""
 	format a value as money with dollar sign and two decimal places
 	"""
+
 	try:
 		value = float(value)
 	except:
