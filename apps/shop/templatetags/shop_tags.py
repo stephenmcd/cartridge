@@ -75,7 +75,8 @@ def thumbnail(image_url, width, height):
 	if image.mode not in ("L", "RGB"):
 		image = image.convert("RGB")
 	try:
-		image = ImageOps.fit(image, (width, height)).save(thumb_path, "JPEG")
+		image = ImageOps.fit(image, (width, height), 
+			Image.ANTIALIAS).save(thumb_path, "JPEG", quality=100)
 	except:
 		return image_url
 	return thumb_url
