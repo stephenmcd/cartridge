@@ -26,12 +26,11 @@ DATABASE_PORT = ""
 
 # apps
 INSTALLED_APPS = (
+	"django.contrib.admin",
 	"django.contrib.auth",
 	"django.contrib.contenttypes",
 	"django.contrib.sessions",
 	"django.contrib.sites",
-	"django.contrib.admin",
-	"django.contrib.redirects",
 	"shop",
 )
 
@@ -49,7 +48,6 @@ MIDDLEWARE_CLASSES = (
 	"django.contrib.auth.middleware.AuthenticationMiddleware",
 	"django.middleware.cache.UpdateCacheMiddleware",
 	"django.middleware.common.CommonMiddleware",
-	"django.contrib.redirects.middleware.RedirectFallbackMiddleware",
 	"django.middleware.cache.FetchFromCacheMiddleware",
     "shop.middleware.SSLRedirect",
 )
@@ -64,7 +62,7 @@ except ImportError:
 	try:
 		import memcache
 	except ImportError:
-		CACHE_BACKEND = "dummy:///"
+		CACHE_BACKEND = "locmem:///"
 if not CACHE_BACKEND:
 	CACHE_TIMEOUT = CACHE_MIDDLEWARE_SECONDS = 180
 	CACHE_BACKEND = "memcached://127.0.0.1:11211/?timeout=%s" % CACHE_MIDDLEWARE_SECONDS
