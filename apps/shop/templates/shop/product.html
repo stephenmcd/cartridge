@@ -5,37 +5,38 @@
 
 {% block main %}
 
-<p>{{ product.description }}</p>
-
 {% with product.images as images %}
 {% if images %}
-<div>
+<div class="product-images">
 	{% for image in images %}
-	<a href="{{ MEDIA_URL }}{{ image }}"><img 
+	<a href="{{ MEDIA_URL }}{{ image }}"><img alt="{{ product.title }}"
 		src="{{ MEDIA_URL }}{% thumbnail image 0 160  %}" /></a>
 	{% endfor %}
 </div>
 {% endif %}
 {% endwith %}
 
+<div>{{ product.description }}</div>
+
 {% if product.has_price %}
-	<p>
+<div>
 	{% if product.on_sale %}
-		<span style="text-decoration: line-through;">{{ product.unit_price|money }}</span>
+		<span class="old-price">{{ product.unit_price|money }}</span>
 		On sale:
 	{% endif %}
 	{{ product.price|money }}
-	</p>
+</div>
 {% endif %}
 
 {% if product.available %}
 <form method="post" id="add-cart">
 	<ul>
 		{{ add_cart_form.as_ul }}
-		<li><input type="submit" value="Add to cart" /></li>
+		<li><input type="submit" class="button" value="Buy" /></li>
 	</ul>
 </form>
 {% else %}
-<p>This product is currently unavailable</p>
+<div>This product is currently unavailable</div>
 {% endif %}
+
 {% endblock %}

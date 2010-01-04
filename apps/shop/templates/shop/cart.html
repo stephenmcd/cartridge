@@ -15,6 +15,10 @@
 	{% for item in cart %}
 	<tr class="{% cycle 'row1' 'row2' %}">
 		<td class="cart-item">
+			{% if item.image %}
+			<a href="{{ item.url }}"><img alt="{{ item.description }}"
+				src="{{ MEDIA_URL }}{% thumbnail item.image 30 30 %}" /></a>
+			{% endif %}
 			<a href="{{ item.url }}">{{ item.description }}</a>
 			<form method="post">
 				<input type="hidden" name="sku" value="{{ item.sku }}" />
@@ -31,11 +35,15 @@
 		<td>{{ cart.total_value|money }}</td>
 	</tr>
 	<tr>
-		<td colspan="4"><a href="{% url shop_checkout %}">Check out</a></td>
+		<td colspan="4">
+			<form action="{% url shop_checkout %}">
+				<input type="submit" class="button" value="Go to Checkout" />
+			</form>
+		</td>
 	</tr>
 </table>
 {% else %}
-<p>Your cart is empty.</p>
+<div>Your cart is empty.</div>
 {% endif %}
 {% endblock %}
 

@@ -37,11 +37,9 @@ $(function() {
 </fieldset>
 <fieldset>
 	<legend>Delivery Details</legend>
-	<p>
-		<input type="checkbox" id="toggle_shipping" name="toggle_shipping"
-			{% if not request.POST or request.POST.toggle_shipping %}checked{% endif %}  />
-		<label for="toggle_shipping">Deliver to the same address as above</label>
-	</p>
+	<input type="checkbox" id="toggle_shipping" name="toggle_shipping"
+		{% if not request.POST or request.POST.toggle_shipping %}checked{% endif %}  />
+	<label for="toggle_shipping">Deliver to the same address as above</label>
 	<ul id="shipping_fields">{{ form.fieldset_shipping.as_ul }}</ul>
 	<ul>{{ form.fieldset_other.as_ul }}</ul>
 </fieldset>

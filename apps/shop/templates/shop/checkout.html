@@ -9,9 +9,9 @@
 	{{ previous_fields|safe }}
 	{% if cart.has_items %}
 	<input type="hidden" name="{{ step_field }}" value="{{ step0 }}" />
-	<input type="submit" value="Next" />
+	<input type="submit" class="button" value="Next" />
 	{% else %} 
-	<p>Your cart is empty.</p>
+	<div>Your cart is empty.</div>
 	{% endif %}
 </form>
 

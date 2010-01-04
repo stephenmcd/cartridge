@@ -1,53 +1,27 @@
 {% load shop_tags %}
-{% spaceless %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" 
    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 
 <head>
-	<style type="text/css">
-		body {font:1.2em sans-serif; background:#fff; color:#000;}
-		#menu, #main {position:absolute; float:left; padding:20px; 
-			top:0; bottom:0; margin:20px;}
-		#menu {background:#ddd; width:210px; border-radius:30px; font-size:.8em;}
-		#main {left:260px; padding-top:10px;}
-		h1 {margin-top:0;}
-		h1 a {color:#000;}
-		#cart-link {text-align:center; padding-top:20px; border-top:1px solid #333;}
-		#cart th, #cart td {text-align:right; padding:10px;}
-		#cart th {background:#ccc; white-space:nowrap;}
-		.cart-item {text-align:left !important; width:100%;}
-		.cart-item form {display:inline;}
-		.row1 {background:#eee;}
-		.row2 {background:#ddd;}
-		textarea {display:block;}
-		.errorlist {color:#f00; font-weight:bold;}
-		form li {list-style-type:none;}
-		input, select {margin:0 10px;}
-		#add-cart {background:#ddd; padding:10px 20px; width:auto;}
-		#add-cart ul {margin:0; padding:0;}
-		#add-cart li {display:inline;}
-		#id_quantity {width:40px;}
-	</style>
+	<link rel="stylesheet" href="{{ MEDIA_URL }}css/main.css" />
 	{% block extrahead %}{% endblock %}
 </head>
 
 <body>
-	<div id="menu">
-		{% category_menu %}
-		<div id="cart-link">
-			<a href="{% url shop_cart %}">
-				Cart contains {{ cart.total_items }} 
-				item{{ cart.total_items|pluralize }} 
-				{{ cart.total_value|money }}
-			</a>
-		</div>
+	<h1>Cartridge Demo</h1>
+	<div id="cart-panel">
+		<a href="{% url shop_cart %}">
+			Cart contains {{ cart.total_items }} 
+			item{{ cart.total_items|pluralize }}: {{ cart.total_value|money }}
+		</a>
 	</div>
+	<div id="menu">{% category_menu %}</div>
 	<div id="main">
-		<h1><a href="{{ request.path }}">{% block title %}{% endblock %}</a></h1>
+		<h2><a href="{{ request.path }}">{% block title %}{% endblock %}</a></h2>
 		{% block main %}{% endblock %}
+		<div id="footer">Built with <a href="#">Cartridge</a></div>
 	</div>
 </body>
 
 </html>
-{% endspaceless %}
