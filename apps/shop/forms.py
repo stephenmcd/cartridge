@@ -30,29 +30,36 @@ def get_add_cart_form(product):
 	
 		def clean(self):
 			"""
-			strip out the quantity from the data leaving only the options
-			and if there are any use them to validation the variation
+			set the form's selected variation if the selected options and
+			quantity are valid
 			"""
 			options = self.cleaned_data.copy()
-			options.pop("quantity")
-			if options:
-				try:
-					product.variations.get(**options)
-				except ProductVariation.DoesNotExist:
-					raise forms.ValidationError("Selected options are unavailable")
+			quantity = options.pop("quantity")
+			error = None
+			try:
+				variation = product.variations.get(**options)
+			except ProductVariation.DoesNotExist:
+				error = "The selected options are unavailable"
+			else:
+				if variation.quantity is not None:
+					if variation.quantity < quantity:
+						error = "The selected quantity is currently unavailable"
+					elif variation.quantity <= 0:
+						error = "The selected options are currently not in stock"
+			if error:
+				raise forms.ValidationError(error)
+			self.variation = variation
 			return self.cleaned_data
 
-	# list of option names
+	# create the dict of form fields for the product's selected options and 
+	# add them to a newly created form type 
 	option_names = [field.name for field in ProductVariation.option_fields()]
-	# list of variation sequences containing only option values
-	option_values = product.variations.values_list(*option_names)
-	# unzip the option value sequences and zip them up with the option names
-	option_fields = dict(zip(option_names, zip(*option_values)))
-	# create the actual form fields using distinct option values as choices
-	for name, values in option_fields.items():
-		values = set(values)
-		option_fields[name] = forms.ChoiceField(choices=zip(values, values))
-	# create the new form type to return
+	option_values = zip(*product.variations.values_list(*option_names))
+	option_fields = {}
+	for i, name in enumerate(option_names):
+		values = filter(None, set(option_values[i]))
+		if values:
+			option_fields[name] = forms.ChoiceField(choices=zip(values, values))
 	return type("AddCartForm", (AddCartForm,), option_fields)
 
 class OrderForm(forms.ModelForm):

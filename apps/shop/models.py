@@ -4,6 +4,8 @@ from decimal import Decimal
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
+from shop.managers import ShopManager, CartManager
+from shop.fields import OptionField, MoneyField, SKUField
 
 
 ORDER_STATUS_CHOICES = (
@@ -18,10 +20,6 @@ OPTION_SIZES = ("Extra Small","Small","Regular","Large","Extra Large")
 OPTION_SIZES = zip(OPTION_SIZES, OPTION_SIZES)
 
 
-class ShopManager(models.Manager):
-	def active(self, **kwargs):
-		return self.filter(active=True, **kwargs)
-
 class ShopModel(models.Model):
 
 	class Meta:
@@ -29,7 +27,7 @@ class ShopModel(models.Model):
 
 	title = models.CharField(max_length=100)
 	slug = models.SlugField(max_length=100, editable=False)
-	active = models.BooleanField(default=False, 
+	active = models.BooleanField(default=True, 
 		help_text="Check this to make this item visible on the site")
 
 	objects = ShopManager()
@@ -56,7 +54,7 @@ class ShopModel(models.Model):
 	def admin_link(self):
 		return "<a href='%s'>View on site</a>" % self.get_absolute_url()
 	admin_link.allow_tags = True
-	admin_link.short_description = " "
+	admin_link.short_description = ""
 
 class Category(ShopModel):
 
@@ -70,15 +68,12 @@ class Category(ShopModel):
 class Product(ShopModel):
 
 	description = models.TextField(blank=True)
-	sku = models.CharField("SKU", max_length=20, unique=True, blank=True)
 	available = models.BooleanField(default=True, 
 		help_text="Check this to make this item available for purchase when it is visible on the site")
 	categories = models.ManyToManyField(Category, blank=True, 
 		related_name="products")
-	unit_price = models.DecimalField(blank=True, null=True, 
-		max_digits=6, decimal_places=2)
-	sale_price = models.DecimalField(blank=True, null=True,
-		max_digits=6, decimal_places=2)
+	unit_price = MoneyField()
+	sale_price = MoneyField()
 	sale_from = models.DateTimeField("Start", blank=True, null=True)
 	sale_to = models.DateTimeField("Finish", blank=True, null=True)
 
@@ -113,21 +108,20 @@ class Product(ShopModel):
 	def images(self):
 		return [getattr(self, field.name) for field in self.image_fields()
 			if getattr(self, field.name)]
-
-class OptionField(models.CharField):
-	pass
  
 class ProductVariation(models.Model):
 		
-	sku = models.CharField("SKU", max_length=20, unique=True)
 	product = models.ForeignKey(Product, related_name="variations")
-	
-	colour = OptionField(max_length=20, choices=OPTION_COLOURS)
-	size = OptionField(max_length=20, choices=OPTION_SIZES)
+	sku = SKUField(unique=True)
+	quantity = models.IntegerField("Number in stock", blank=True, null=True) 
+
+	colour = OptionField(choices=OPTION_COLOURS)
+	size = OptionField(choices=OPTION_SIZES)
 	
 	def __unicode__(self):
-		return ", ".join(["%s: %s" % (field.name.title(), 
-			getattr(self, field.name)) for field in self.option_fields()])
+		return "%s %s" % (self.product, ", ".join(["%s: %s" % 
+			(field.name.title(), getattr(self, field.name)) for field in 
+			self.option_fields() if getattr(self, field.name) is not None]))
 	
 	def save(self, *args, **kwargs):
 		super(ProductVariation, self).save(*args, **kwargs)
@@ -142,6 +136,9 @@ class ProductVariation(models.Model):
 	
 	def options(self):
 		return [getattr(self, field.name) for field in self.option_fields()]
+
+	def has_stock(self, quantity=1):
+		return self.quantity is None or self.quantity >= quantity
 
 class Order(models.Model):
 
@@ -189,12 +186,81 @@ class Order(models.Model):
 		return [field.name for field in cls._meta.fields 
 			if field.name.startswith("billing_detail_")]
 
-class OrderItem(models.Model):
+class Cart(models.Model):
 
+	timestamp = models.DateTimeField(auto_now=True)
+	objects = CartManager()
+
+	def __iter__(self):
+		"""
+		allow the cart to be iterated giving access to the cart's items, 
+		ensuring the items are only retrieved once and cached
+		"""
+		if not hasattr(self, "_cached_items"):
+			self._cached_items = self.items.all()
+		return iter(self._cached_items)
+		
+	def add_item(self, variation, quantity):
+		"""
+		increase quantity of existing item if sku matches, otherwise create new
+		"""
+		item, created = self.items.get_or_create(sku=variation.sku)
+		if created:
+			product = variation.product
+			images = product.images()
+			item.description = str(variation)
+			item.price = product.price()
+			item.url = product.get_absolute_url()
+			if images:
+				item.image = str(images[0])
+		item.quantity += quantity
+		item.save()
+				
+	def remove_item(self, sku):
+		"""
+		remove item by sku
+		"""
+		self.items.filter(sku=sku).delete()
+		
+	def has_items(self):
+		"""
+		template helper function - does the cart have items
+		"""
+		return len(list(self)) > 0 
+	
+	def total_items(self):
+		"""
+		template helper function - sum of all item quantities
+		"""
+		return sum([item.quantity for item in self])
+		
+	def total_value(self):
+		"""
+		template helper function - sum of all costs of item quantities
+		"""
+		return sum([item.quantity * item.price for item in self])
+	
+class SelectedProduct(models.Model):
+	"""
+	a product and selected variation in a cart or order
+	"""
+
+	class Meta:
+		abstract = True
+		
+	sku = SKUField()
+	description = models.CharField(max_length=200)
+	price = MoneyField()
+	quantity = models.IntegerField(default=0)
+	
+	def total_price(self):
+		return self.price * self.quantity
+
+class CartItem(SelectedProduct):
+	cart = models.ForeignKey(Cart, related_name="items")
+	url = models.CharField(max_length=200)
+	image = models.CharField(max_length=200)
+
+class OrderItem(SelectedProduct):
 	order = models.ForeignKey(Order, related_name="items")
-	sku = models.CharField("SKU", max_length=20)
-	description = models.TextField(blank=True)
-	price = models.DecimalField(blank=True, null=True, 
-		max_digits=6, decimal_places=2)
-	quantity = models.IntegerField()
 

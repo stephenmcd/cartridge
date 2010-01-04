@@ -44,27 +44,19 @@ class Cart(object):
 		"""
 		return sum([item["quantity"] * item["price"] for item in self])
 		
-	def add_item(self, product, options):
+	def add_item(self, product, variation, quantity):
 		"""
-		add the given product and options to the cart - options is cleaned_data
-		dict from shop.forms.AddCartForm
+		add the given product variation to the cart, increasing the quantity of 
+		an existing item if the sku matches
 		"""
-
-		quantity = options.pop("quantity")
 		new_item = {
-			"description": product.title,
+			"description": "%s %s" % (product.title, variation),
 			"quantity": quantity,
-			"sku": product.sku if product.sku else product.id,
+			"sku": variation.sku,
 			"url": product.get_absolute_url(),
 			"price": product.price(),
 			"total_price": quantity * product.price(),
 		}
-		# if options are selected determine the sku for the variation
-		if options:
-			variation = product.variations.get(**options)
-			new_item["sku"] = variation.sku
-			new_item["description"] += " - %s" % variation
-		# if the sku exists in the cart, increase the quantity and update item
 		for i, item in enumerate(self):
 			if item["sku"] == new_item["sku"]:
 				new_item["quantity"] += self._items[i]["quantity"]
@@ -79,7 +71,6 @@ class Cart(object):
 		"""
 		remove the given sku from the cart
 		"""
-		
 		for i, item in list(enumerate(self)):
 			if str(item["sku"]) == str(sku):
 				del self._items[i]
