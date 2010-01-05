@@ -138,7 +138,12 @@ class ProductVariation(models.Model):
 		return [getattr(self, field.name) for field in self.option_fields()]
 
 	def has_stock(self, quantity=1):
-		return self.quantity is None or self.quantity >= quantity
+		if self.quantity is None:
+			return True
+		if not hasattr(self, "_num_available"):
+			self._num_available = (self.quantity + 
+				CartItem.objects.filter(sku=self.sku).count())
+		return self._num_available >= quantity
 
 class Order(models.Model):
 
