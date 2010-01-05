@@ -25,14 +25,14 @@
 				<input type="submit" value="X" />
 			</form>
 		</td>
-		<td>{{ item.price|money }}</td>
+		<td>{{ item.unit_price|money }}</td>
 		<td>{{ item.quantity }}</td>
 		<td>{{ item.total_price|money }}</td>
 	</tr>
 	{% endfor %}
 	<tr>
 		<td colspan="3">Total</td>
-		<td>{{ cart.total_value|money }}</td>
+		<td>{{ cart.total_price|money }}</td>
 	</tr>
 	<tr>
 		<td colspan="4">

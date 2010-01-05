@@ -146,7 +146,7 @@ class OrderAdmin(admin.ModelAdmin):
 		("Billing details", {"fields": (tuple(billing_fields),)}),
 		("Shipping details", {"fields": (tuple(shipping_fields),)}),
 		(None, {"fields": ("additional_instructions",
-			("shipping_total","shipping_type"),("total","status"))}),
+			("shipping_total","shipping_type"),"item_total",("total","status"))}),
 	)
 
 	inlines = (OrderItemInline,)

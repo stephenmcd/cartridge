@@ -169,8 +169,9 @@ class Order(models.Model):
 	additional_instructions = models.TextField(blank=True)
 	time = models.DateTimeField(auto_now_add=True)
 	shipping_type = models.CharField(max_length=50, blank=True)
-	shipping_total = models.DecimalField(max_digits=6, decimal_places=2, default=0)
-	total = models.DecimalField(max_digits=6, decimal_places=2)
+	shipping_total = MoneyField()
+	item_total = MoneyField()
+	total = MoneyField()
 	status = models.IntegerField(choices=ORDER_STATUS_CHOICES, 
 		default=ORDER_STATUS_DEFAULT)
 
@@ -190,6 +191,12 @@ class Order(models.Model):
 	def billing_field_names(cls):
 		return [field.name for field in cls._meta.fields 
 			if field.name.startswith("billing_detail_")]
+
+	def save(self, *args, **kwargs):
+		self.total = self.item_total
+		if self.shipping_total is not None:
+			self.total += self.shipping_total
+		super(Order, self).save(*args, **kwargs)
 
 class Cart(models.Model):
 
@@ -211,11 +218,10 @@ class Cart(models.Model):
 		"""
 		item, created = self.items.get_or_create(sku=variation.sku)
 		if created:
-			product = variation.product
-			images = product.images()
 			item.description = str(variation)
-			item.price = product.price()
-			item.url = product.get_absolute_url()
+			item.unit_price = variation.product.price()
+			item.url = variation.product.get_absolute_url()
+			images = variation.product.images()
 			if images:
 				item.image = str(images[0])
 		item.quantity += quantity
@@ -233,17 +239,17 @@ class Cart(models.Model):
 		"""
 		return len(list(self)) > 0 
 	
-	def total_items(self):
+	def total_quantity(self):
 		"""
 		template helper function - sum of all item quantities
 		"""
 		return sum([item.quantity for item in self])
 		
-	def total_value(self):
+	def total_price(self):
 		"""
 		template helper function - sum of all costs of item quantities
 		"""
-		return sum([item.quantity * item.price for item in self])
+		return sum([item.total_price for item in self])
 	
 class SelectedProduct(models.Model):
 	"""
@@ -255,11 +261,16 @@ class SelectedProduct(models.Model):
 		
 	sku = SKUField()
 	description = models.CharField(max_length=200)
-	price = MoneyField()
 	quantity = models.IntegerField(default=0)
+	unit_price = MoneyField(default=Decimal("0"))
+	total_price = MoneyField(default=Decimal("0"))
 	
-	def total_price(self):
-		return self.price * self.quantity
+	def __unicode__(self):
+		return ""
+	
+	def save(self, *args, **kwargs):
+		self.total_price = self.unit_price * self.quantity
+		super(SelectedProduct, self).save(*args, **kwargs)
 
 class CartItem(SelectedProduct):
 	cart = models.ForeignKey(Cart, related_name="items")
