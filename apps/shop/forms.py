@@ -6,7 +6,9 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.utils.datastructures import SortedDict
 from django.contrib.formtools.wizard import FormWizard
-from shop.models import Order, ProductVariation
+from shop.models import Order, ProductVariation, SelectedProduct, Cart
+from shop.exceptions import CheckoutError
+from shop.utils import shipping, payment
 
 
 CARD_TYPE_CHOICES = ("Mastercard", "Visa", "Diners", "Amex")
@@ -79,7 +81,6 @@ class OrderForm(forms.ModelForm):
 		it's called and when finally called with the prefix "other", returning 
 		a copy with all the fields that have not yet been returned
 		"""
-		
 		if not hasattr(self, "_fields_done"):
 			self._fields_done = {}
 		fieldset = copy(self)
@@ -93,15 +94,13 @@ class OrderForm(forms.ModelForm):
 		"""
 		dynamic fieldset caller
 		"""
-		
 		if name.startswith("fieldset_"):
 			return self._fieldset(name.split("fieldset_", 1)[1])
 		raise AttributeError, name
 		
-
 class ExpiryYearField(forms.ChoiceField):
 	"""
-	choice field for credit card expiry with 20 years from now as choices
+	choice field for credit card expiry with years from now as choices
 	"""
 
 	def __init__(self, *args, **kwargs):
@@ -113,28 +112,61 @@ class ExpiryYearField(forms.ChoiceField):
 class PaymentForm(forms.Form):
 	"""
 	credit card details form - step 2 of checkout
-	"""
-	
+	"""	
+
 	card_name = forms.CharField()
 	card_type = forms.ChoiceField(choices=CARD_TYPE_CHOICES)
 	card_number = forms.CharField()
 	card_expiry_month = forms.ChoiceField(choices=CARD_MONTHS)
 	card_expiry_year = ExpiryYearField()
 	card_ccv = forms.CharField()
+	
+	def clean(self):
+		try:
+			payment(self)
+		except CheckoutError, e:
+			raise forms.ValidationError(e)
+		return self.cleaned_data
 
 class CheckoutWizard(FormWizard):
 	"""
-	combine the 2 checkout step forms into a form wizard
+	combine the two checkout step forms into a form wizard - using parse_params
+	and get_form, pass the request object to each form so that in the payment 
+	form's clean method the request object can be passed to utils.payment
 	"""
 
+	def parse_params(self, request, *args, **kwargs):
+		"""
+		store the request for passing to each form
+		"""
+		self._request = request
+		
+	def get_form(self, *args, **kwargs):
+		"""
+		store the request against each form
+		"""
+		form = super(CheckoutWizard, self).get_form(*args, **kwargs)
+		form._request = self._request
+		return form
+		
 	def get_template(self, step):
 		return "shop/%s.html" % ("billing_shipping", "payment")[int(step)]
 
 	def done(self, request, form_list):
 		"""
-		payment integreation goes here
+		create the order and remove the cart
 		"""
-		
+		cart = Cart.objects.from_request(request)
+		order = form_list[0].save(commit=False)
+		order.shipping_total = shipping(request)
+		order.item_total = cart.total_price()
+		order.save()
+		for item in cart:
+			fields = [field.name for field in SelectedProduct._meta.fields]
+			item = dict([(field, getattr(item, field)) for field in fields])
+			order.items.create(**item)
+		cart.delete()
 		return HttpResponseRedirect(reverse("shop_complete"))
 
 checkout_wizard = CheckoutWizard([OrderForm, PaymentForm])
+
