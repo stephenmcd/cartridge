@@ -1,9 +1,8 @@
 
 from django.contrib import admin
-from django.forms import MultipleChoiceField, CheckboxSelectMultiple, ModelForm
-from django.utils.safestring import mark_safe
 from shop.models import Category, Product, ProductVariation, Order, OrderItem
-
+from shop.fields import MoneyField
+from shop.forms import MoneyWidget, ProductAdminForm
 
 # lists of field names
 option_fields = [field.name for field in ProductVariation.option_fields()]
@@ -11,61 +10,19 @@ image_fields = [field.name for field in Product.image_fields()]
 billing_fields = Order.billing_field_names()
 shipping_fields = Order.shipping_field_names()
 
-
-class CategoryAdminForm(ModelForm):
-	
-	class Meta:
-		model = Category
-		
-	def __init__(self, *args, **kwargs):
-		super(CategoryAdminForm, self).__init__(*args, **kwargs)
-		self.fields["parent"].queryset = Category.objects.exclude(
-			id=self.instance.id)
 		
 class CategoryAdmin(admin.ModelAdmin):
-
 	ordering = ("parent","title")
 	list_display = ("title","parent","active","admin_link")
 	list_editable = ("parent","active")
 	list_filter = ("parent",)
 	search_fields = ("title","parent__title","product_set__title")	
-	# this isn't used yet since the filtering won't apply to list_editable
-	# form = CategoryAdminForm
 
 class ProductVariationAdmin(admin.TabularInline):
-
 	verbose_name_plural = "Current variations"
 	model = ProductVariation
 	exclude = option_fields
 	extra = 0
-
-class ProductOptionWidget(CheckboxSelectMultiple):
-
-	def render(self, name, value, **kwargs):
-		if value and hasattr(value, "strip"):
-			value = eval(value.strip("\""))
-		rendered = super(ProductOptionWidget, self).render(name, value, **kwargs)
-		rendered = rendered.replace("<li", "<li style='list-style-type:none;" \
-			"float:left;margin-right:10px;'")
-		rendered = rendered.replace("<label", "<label style='width:auto;'")
-		return mark_safe(rendered)
-
-class ProductOptionField(MultipleChoiceField):
-	
-	def __init__(self, *args, **kwargs):
-		self.widget = ProductOptionWidget()
-		super(ProductOptionField, self).__init__(*args, **kwargs)
-
-	def clean(self, value):
-		return "\"%s\"" % value
-
-class ProductAdminForm(ModelForm):
-	class Meta:
-		model = Product
-
-_option_fields = dict([(field.name, ProductOptionField(choices=field.choices,
-	required=False)) for field in ProductVariation.option_fields()])
-ProductAdminForm = type("ProductAdminForm", (ProductAdminForm,), _option_fields)
 	
 class ProductAdmin(admin.ModelAdmin):
 
@@ -76,6 +33,7 @@ class ProductAdmin(admin.ModelAdmin):
 	search_fields = ("title","categories__title","variations_sku")
 	inlines = (ProductVariationAdmin,)
 	form = ProductAdminForm
+	formfield_overrides = {MoneyField: {"widget": MoneyWidget}}
 
 	fieldsets = (
 		(None, {"fields": 
@@ -87,6 +45,9 @@ class ProductAdmin(admin.ModelAdmin):
 	)
 
 	def save_model(self, request, obj, form, change):
+		"""
+		store the product object for creating variations in save_formset
+		"""
 		super(ProductAdmin, self).save_model(request, obj, form, change)
 		self._product = obj
 
@@ -141,7 +102,8 @@ class OrderAdmin(admin.ModelAdmin):
 	search_fields = ["id","status"] + billing_fields + shipping_fields
 	date_hierarchy = "time"
 	radio_fields = {"status": admin.HORIZONTAL}
-
+	inlines = (OrderItemInline,)
+	formfield_overrides = {MoneyField: {"widget": MoneyWidget}}
 	fieldsets = (
 		("Billing details", {"fields": (tuple(billing_fields),)}),
 		("Shipping details", {"fields": (tuple(shipping_fields),)}),
@@ -149,7 +111,6 @@ class OrderAdmin(admin.ModelAdmin):
 			("shipping_total","shipping_type"),"item_total",("total","status"))}),
 	)
 
-	inlines = (OrderItemInline,)
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)

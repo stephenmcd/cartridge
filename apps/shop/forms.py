@@ -2,11 +2,12 @@
 from copy import copy
 from datetime import datetime
 from django import forms
+from django.contrib.formtools.wizard import FormWizard
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.utils.datastructures import SortedDict
-from django.contrib.formtools.wizard import FormWizard
-from shop.models import Order, ProductVariation, SelectedProduct, Cart
+from django.utils.safestring import mark_safe
+from shop.models import Product, ProductVariation, SelectedProduct, Cart, Order
 from shop.exceptions import CheckoutError
 from shop.utils import shipping, payment
 
@@ -169,4 +170,43 @@ class CheckoutWizard(FormWizard):
 		return HttpResponseRedirect(reverse("shop_complete"))
 
 checkout_wizard = CheckoutWizard([OrderForm, PaymentForm])
+
+#####################
+#    admin widgets 
+#####################
+
+class MoneyWidget(forms.TextInput):
+	"""
+	renders missing decimal places for money fields
+	"""
+	def render(self, name, value, attrs):
+		if value is not None:
+			value = "%.2f" % value
+		return super(MoneyWidget, self).render(name, value, attrs)
+
+class ProductOptionWidget(forms.CheckboxSelectMultiple):
+	"""
+	renders some extra styling on product option checkboxes
+	"""
+	def render(self, name, value, **kwargs):
+		rendered = super(ProductOptionWidget, self).render(name, value, **kwargs)
+		rendered = rendered.replace("<li", "<li style='list-style-type:none;" \
+			"float:left;margin-right:10px;'")
+		rendered = rendered.replace("<label", "<label style='width:auto;'")
+		return mark_safe(rendered)
+
+class _BaseProductAdminForm(forms.ModelForm):
+	"""
+	base ModelForm for ProductAdminForm that is dynamically subclassed with 
+	option fields below
+	"""
+	class Meta:
+		model = Product
+
+# build a dict of option fields for creating the final ProductAdminForm type
+_fields = dict([(field.name, forms.MultipleChoiceField(
+	choices=field.choices, widget=ProductOptionWidget, required=False)) 
+	for field in ProductVariation.option_fields()])
+ProductAdminForm = type("ProductAdminForm", (_BaseProductAdminForm,), _fields)
+
 

@@ -68,8 +68,8 @@ class Category(ShopModel):
 class Product(ShopModel):
 
 	description = models.TextField(blank=True)
-	available = models.BooleanField(default=True, 
-		help_text="Check this to make this item available for purchase when it is visible on the site")
+	available = models.BooleanField(default=True, help_text="Check this to " \
+		"make this item available for purchase when it is visible on the site")
 	categories = models.ManyToManyField(Category, blank=True, 
 		related_name="products")
 	unit_price = MoneyField()
