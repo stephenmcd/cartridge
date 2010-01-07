@@ -81,3 +81,15 @@ def thumbnail(image_url, width, height):
 		return image_url
 	return thumb_url
 
+@register.inclusion_tag("shop/order_totals.html", takes_context=True)
+def order_totals(context):
+	"""
+	add the cart and order totals to the context - if a shipping total has been 
+	put into the session then add it to the context and the order total
+	"""
+	context["cart_total"] = context["order_total"] = context["cart"].total_price()
+	if "shipping_total" in context["request"].session:
+		context["shipping_total"] = context["request"].session["shipping_total"]
+		context["order_total"] += context["shipping_total"]
+	return context
+

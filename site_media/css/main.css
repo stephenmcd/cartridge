@@ -53,3 +53,6 @@ fieldset ul label, fieldset ul input {display:block; float:left; width:150px;}
 fieldset ul {padding:0;}
 fieldset li {clear:both; padding:3px;}
 
+/* checkout totals */
+.order-totals {list-style-type:none; text-align:right;}
+

@@ -1,8 +1,11 @@
 {% extends "shop/base.html" %}
+{% load shop_tags %}
 
 {% block title %}Checkout{% endblock %}
 
 {% block main %}
+
+{% order_totals %}
 
 <form method="post" id="checkout_form">
 	{% block fields %}{% endblock %}
