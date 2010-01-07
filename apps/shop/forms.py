@@ -9,14 +9,12 @@ from django.utils.datastructures import SortedDict
 from django.utils.safestring import mark_safe
 from shop.models import Product, ProductVariation, SelectedProduct, Cart, Order
 from shop.exceptions import CheckoutError
-from shop.utils import shipping, payment
+from shop.settings import CARD_TYPES
+from shop import checkout
 
+# zips a list with itself for field choices
+make_choices = lambda choices: zip(choices, choices)
 
-CARD_TYPE_CHOICES = ("Mastercard", "Visa", "Diners", "Amex")
-CARD_TYPE_CHOICES = zip(CARD_TYPE_CHOICES, CARD_TYPE_CHOICES)
-CARD_MONTHS = ["%02d" % i for i in range(1, 13)]
-CARD_MONTHS = zip(CARD_MONTHS, CARD_MONTHS)
-		
 
 def get_add_cart_form(product):
 	"""
@@ -65,16 +63,29 @@ def get_add_cart_form(product):
 			option_fields[name] = forms.ChoiceField(choices=zip(values, values))
 	return type("AddCartForm", (AddCartForm,), option_fields)
 
-class OrderForm(forms.ModelForm):
+class CheckoutForm(object):
+	"""
+	checkout form mixin for calling custom handlers 
+	"""
+	def clean(self):
+		try:
+			self._checkout_handler(self._request, self)
+		except CheckoutError, e:
+			raise forms.ValidationError(e)
+		return self.cleaned_data
+
+class OrderForm(CheckoutForm, forms.ModelForm):
 	"""
 	model form for order with billing and shipping details - step 1 of checkout
 	"""
+	
+	step_name = "billing_shipping" 
 
 	class Meta:
 		model = Order
-		fields = (Order.billing_field_names() + Order.shipping_field_names() + 
-			["additional_instructions"])
-			
+		fields = (Order.billing_detail_field_names() + 
+			Order.shipping_detail_field_names() + ["additional_instructions"])
+
 	def _fieldset(self, prefix):
 		"""
 		return a subset of fields by making a copy of itself containing only 
@@ -82,12 +93,15 @@ class OrderForm(forms.ModelForm):
 		it's called and when finally called with the prefix "other", returning 
 		a copy with all the fields that have not yet been returned
 		"""
+		fieldset = copy(self)
 		if not hasattr(self, "_fields_done"):
 			self._fields_done = {}
-		fieldset = copy(self)
-		fieldset.fields = SortedDict([field for field in self.fields.items() if 
-			(prefix != "other" and field[0].startswith(prefix)) or 
-			(prefix == "other" and field[0] not in self._fields_done.keys())])
+		else:
+			# ensures non-field errors only appear in the first fieldset
+			fieldset.non_field_errors = lambda *args: None
+		fieldset.fields = SortedDict([f for f in self.fields.items() if 
+			(prefix != "other" and f[0].startswith(prefix)) or 
+			(prefix == "other" and f[0] not in self._fields_done)])
 		self._fields_done.update(fieldset.fields)
 		return fieldset
 	
@@ -99,6 +113,10 @@ class OrderForm(forms.ModelForm):
 			return self._fieldset(name.split("fieldset_", 1)[1])
 		raise AttributeError, name
 		
+	def set_shipping(self, shipping_type, shipping_total):
+		self._request.session["shipping_type"] = shipping_type
+		self._request.session["shipping_total"] = shipping_total
+		
 class ExpiryYearField(forms.ChoiceField):
 	"""
 	choice field for credit card expiry with years from now as choices
@@ -106,35 +124,31 @@ class ExpiryYearField(forms.ChoiceField):
 
 	def __init__(self, *args, **kwargs):
 		year = datetime.now().year
-		years = range(year, year + 21)
-		kwargs["choices"] = zip(years, years)
+		kwargs["choices"] = make_choices(range(year, year + 21))
 		super(ExpiryYearField, self).__init__(*args, **kwargs)
 		
-class PaymentForm(forms.Form):
+class PaymentForm(CheckoutForm, forms.Form):
 	"""
 	credit card details form - step 2 of checkout
 	"""	
-
 	card_name = forms.CharField()
-	card_type = forms.ChoiceField(choices=CARD_TYPE_CHOICES)
+	card_type = forms.ChoiceField(choices=make_choices(CARD_TYPES))
 	card_number = forms.CharField()
-	card_expiry_month = forms.ChoiceField(choices=CARD_MONTHS)
+	card_expiry_month = forms.ChoiceField(
+		choices=make_choices(["%02d" % i for i in range(1, 13)]))
 	card_expiry_year = ExpiryYearField()
 	card_ccv = forms.CharField()
-	
-	def clean(self):
-		try:
-			payment(self)
-		except CheckoutError, e:
-			raise forms.ValidationError(e)
-		return self.cleaned_data
 
 class CheckoutWizard(FormWizard):
 	"""
 	combine the two checkout step forms into a form wizard - using parse_params
-	and get_form, pass the request object to each form so that in the payment 
-	form's clean method the request object can be passed to utils.payment
+	and get_form, pass the request object to each form so that it can be sent 
+	on to each of the custom handlers in the checkout module
 	"""
+	
+	# these correspond to the custom checkout handler names in the checkout
+	# module for each step as well as the template names for each step
+	step_names = ("billing_shipping", "payment")
 
 	def parse_params(self, request, *args, **kwargs):
 		"""
@@ -144,14 +158,15 @@ class CheckoutWizard(FormWizard):
 		
 	def get_form(self, *args, **kwargs):
 		"""
-		store the request against each form
+		store the request and checkout handler against each form
 		"""
 		form = super(CheckoutWizard, self).get_form(*args, **kwargs)
+		form._checkout_handler = getattr(checkout, self.step_names[int(args[0])])
 		form._request = self._request
 		return form
 		
 	def get_template(self, step):
-		return "shop/%s.html" % ("billing_shipping", "payment")[int(step)]
+		return "shop/%s.html" % self.step_names[int(step)]
 
 	def done(self, request, form_list):
 		"""
@@ -159,7 +174,10 @@ class CheckoutWizard(FormWizard):
 		"""
 		cart = Cart.objects.from_request(request)
 		order = form_list[0].save(commit=False)
-		order.shipping_total = shipping(request)
+		for shipping_field in ("shipping_type", "shipping_total"):
+			if shipping_field in request.session:
+				setattr(order, shipping_field, request.session[shipping_field])
+				del request.session[shipping_field]
 		order.item_total = cart.total_price()
 		order.save()
 		for item in cart:

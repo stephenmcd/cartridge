@@ -7,8 +7,8 @@ from shop.forms import MoneyWidget, ProductAdminForm
 # lists of field names
 option_fields = [field.name for field in ProductVariation.option_fields()]
 image_fields = [field.name for field in Product.image_fields()]
-billing_fields = Order.billing_field_names()
-shipping_fields = Order.shipping_field_names()
+billing_fields = Order.billing_detail_field_names()
+shipping_fields = Order.shipping_detail_field_names()
 
 		
 class CategoryAdmin(admin.ModelAdmin):

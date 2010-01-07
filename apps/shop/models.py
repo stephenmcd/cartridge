@@ -1,4 +1,5 @@
 
+from copy import copy
 from datetime import datetime
 from decimal import Decimal
 from django.db import models
@@ -6,21 +7,15 @@ from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
 from shop.managers import ShopManager, CartManager
 from shop.fields import OptionField, MoneyField, SKUField
-
-
-ORDER_STATUS_CHOICES = (
-	(1, "Unprocessed"),
-	(2, "Processed"),
-)
-ORDER_STATUS_DEFAULT = 1
-
-OPTION_COLOURS = ("Red","Orange","Yellow","Green","Blue","Indigo","Violet")
-OPTION_COLOURS = zip(OPTION_COLOURS, OPTION_COLOURS)
-OPTION_SIZES = ("Extra Small","Small","Regular","Large","Extra Large")
-OPTION_SIZES = zip(OPTION_SIZES, OPTION_SIZES)
+from shop.settings import ORDER_STATUSES, ORDER_STATUS_DEFAULT, PRODUCT_OPTIONS
 
 
 class ShopModel(models.Model):
+	"""
+	abstract model representing a visible object on the website - Category and 
+	Product are derived from this. contains common functionality like auto slug 
+	creation and active (toggle visibility) fields
+	"""
 
 	class Meta:
 		abstract = True
@@ -29,7 +24,6 @@ class ShopModel(models.Model):
 	slug = models.SlugField(max_length=100, editable=False)
 	active = models.BooleanField(default=True, 
 		help_text="Check this to make this item visible on the site")
-
 	objects = ShopManager()
 
 	def __unicode__(self):
@@ -109,14 +103,18 @@ class Product(ShopModel):
 		return [getattr(self, field.name) for field in self.image_fields()
 			if getattr(self, field.name)]
  
-class ProductVariation(models.Model):
+class BaseProductVariation(models.Model):
+	"""
+	abstract model used to create the ProductVariation model below using 
+	dynamically created set of option fields from shop.settings.PRODUCT_OPTIONS
+	"""
+	
+	class Meta:
+		abstract = True
 		
 	product = models.ForeignKey(Product, related_name="variations")
 	sku = SKUField(unique=True)
 	quantity = models.IntegerField("Number in stock", blank=True, null=True) 
-
-	colour = OptionField(choices=OPTION_COLOURS)
-	size = OptionField(choices=OPTION_SIZES)
 	
 	def __unicode__(self):
 		return "%s %s" % (self.product, ", ".join(["%s: %s" % 
@@ -124,7 +122,7 @@ class ProductVariation(models.Model):
 			self.option_fields() if getattr(self, field.name) is not None]))
 	
 	def save(self, *args, **kwargs):
-		super(ProductVariation, self).save(*args, **kwargs)
+		super(BaseProductVariation, self).save(*args, **kwargs)
 		if not self.sku:
 			self.sku = self.id
 			self.save()
@@ -145,34 +143,60 @@ class ProductVariation(models.Model):
 				CartItem.objects.filter(sku=self.sku).count())
 		return self._num_available >= quantity
 
-class Order(models.Model):
+# build the ProductVariation model from the BaseProductVariation model by
+# adding each option in shop.settings.PRODUCT_OPTIONS as an OptionField
+_options = {"Meta": object, "__module__": BaseProductVariation.__module__}
+for _name, _choices in PRODUCT_OPTIONS:
+	_options[_name] = OptionField(choices=zip(_choices, _choices))
+ProductVariation = type("ProductVariation", (BaseProductVariation,), _options)
 
-	billing_detail_first_name = models.CharField("First name", max_length=100)
-	billing_detail_last_name = models.CharField("Last name", max_length=100)
-	billing_detail_street = models.CharField("Street", max_length=100)
-	billing_detail_city = models.CharField("City/Suburb", max_length=100)
-	billing_detail_state = models.CharField("State/Region", max_length=100)
-	billing_detail_postcode = models.CharField("Zip/Postcode", max_length=10)
-	billing_detail_country = models.CharField("Country", max_length=100)
-	billing_detail_phone = models.CharField("Phone", max_length=20)
+class Address(models.Model):
+	"""
+	abstract model used to create new models via Address.make() - new models
+	are billing and shipping with the Order model inherits from below 
+	"""
+	
+	class Meta:
+		abstract = True
+
+	first_name = models.CharField("First name", max_length=100)
+	last_name = models.CharField("Last name", max_length=100)
+	street = models.CharField("Street", max_length=100)
+	city = models.CharField("City/Suburb", max_length=100)
+	state = models.CharField("State/Region", max_length=100)
+	postcode = models.CharField("Zip/Postcode", max_length=10)
+	country = models.CharField("Country", max_length=100)
+	phone = models.CharField("Phone", max_length=20)
+	
+	@classmethod
+	def make(cls, field_prefix):
+		"""
+		return a new model with the same fields as Address as well as a 
+		PREFIX_field_names method for accessing the address fields by prefix
+		"""
+		class Meta:
+			abstract = True
+		def fields_by_prefix(cls):
+			return [f.name for f in cls._meta.fields 
+				if f.name.startswith(field_prefix)]
+		fields = {"Meta": Meta, "__module__": cls.__module__, 
+			"%s_field_names" % field_prefix: classmethod(fields_by_prefix)}
+		for field in cls._meta.fields:
+			if not isinstance(field, models.AutoField):
+				fields["%s_%s" % (field_prefix, field.name)] = copy(field)
+		cls_name = "".join(s.title() for s in field_prefix.split("_"))
+		return type(cls_name, (models.Model,), fields)
+
+class Order(Address.make("billing_detail"), Address.make("shipping_detail")):
+
 	billing_detail_email = models.EmailField("Email")
-
-	shipping_detail_first_name = models.CharField("First name", max_length=100)
-	shipping_detail_last_name = models.CharField("Last name", max_length=100)
-	shipping_detail_street = models.CharField("Street", max_length=100)
-	shipping_detail_city = models.CharField("City/Suburb", max_length=100)
-	shipping_detail_state = models.CharField("State/Region", max_length=100)
-	shipping_detail_postcode = models.CharField("Zip/Postcode", max_length=10)
-	shipping_detail_country = models.CharField("Country", max_length=100)
-	shipping_detail_phone = models.CharField("Phone", max_length=20)
-
 	additional_instructions = models.TextField(blank=True)
 	time = models.DateTimeField(auto_now_add=True)
 	shipping_type = models.CharField(max_length=50, blank=True)
 	shipping_total = MoneyField()
 	item_total = MoneyField()
 	total = MoneyField()
-	status = models.IntegerField(choices=ORDER_STATUS_CHOICES, 
+	status = models.IntegerField(choices=ORDER_STATUSES, 
 		default=ORDER_STATUS_DEFAULT)
 
 	def billing_name(self):
@@ -181,16 +205,6 @@ class Order(models.Model):
 
 	def __unicode__(self):
 		return "#%s %s %s" % (self.id, self.billing_name(), self.time)
-		
-	@classmethod
-	def shipping_field_names(cls):
-		return [field.name for field in cls._meta.fields 
-			if field.name.startswith("shipping_detail_")]
-		
-	@classmethod
-	def billing_field_names(cls):
-		return [field.name for field in cls._meta.fields 
-			if field.name.startswith("billing_detail_")]
 
 	def save(self, *args, **kwargs):
 		self.total = self.item_total
@@ -253,7 +267,7 @@ class Cart(models.Model):
 	
 class SelectedProduct(models.Model):
 	"""
-	a product and selected variation in a cart or order
+	abstract model representing a "selected" product in a cart or order
 	"""
 
 	class Meta:
