@@ -75,8 +75,8 @@ def thumbnail(image_url, width, height):
 	if image.mode not in ("L", "RGB"):
 		image = image.convert("RGB")
 	try:
-		image = ImageOps.fit(image, (width, height), 
-			Image.ANTIALIAS).save(thumb_path, "JPEG", quality=100)
+		image = ImageOps.fit(image, (width, height), Image.ANTIALIAS).save(
+			thumb_path, "JPEG", quality=100)
 	except:
 		return image_url
 	return thumb_url
@@ -84,12 +84,18 @@ def thumbnail(image_url, width, height):
 @register.inclusion_tag("shop/order_totals.html", takes_context=True)
 def order_totals(context):
 	"""
-	add the cart and order totals to the context - if a shipping total has been 
-	put into the session then add it to the context and the order total
+	add item_total, shipping_total and order_total to include context
+	use order object (email receipt) or cart object (checkout templates)
 	"""
-	context["cart_total"] = context["order_total"] = context["cart"].total_price()
-	if "shipping_total" in context["request"].session:
-		context["shipping_total"] = context["request"].session["shipping_total"]
+	if "order" in context:
+		context["item_total"] = context["order"].total
+		context["shipping_total"] = context["order"].shipping_total
+	elif "cart" in context:
+		context["item_total"] = context["cart"].total_price()
+		context["shipping_total"] = context["request"].session.get(
+			"shipping_total", None)
+	context["order_total"] = context.get("item_total", None)
+	if context.get("shipping_total", None) is not None:
 		context["order_total"] += context["shipping_total"]
 	return context
 

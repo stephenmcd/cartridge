@@ -1,0 +1,26 @@
+{% load shop_tags %}
+
+Dear {{ order.billing_detail_first_name }},<br /><br />
+
+Your order has been successful, details are below.<br /><br />
+
+Order ID: #{{ order.id }}<br /><br />
+
+Billing Details:<br />
+{% for field in order.billing_detail_fields %}
+{{ field.name }}: {{ field.value }}<br />
+{% endfor %}<br /><br />
+
+Shipping Details:<br />
+{% for field in order.shipping_detail_fields %}
+{{ field.name }}: {{ field.value }}<br />
+{% endfor %}<br /><br />
+
+Items Ordered:<br />
+{% for item in order_items %}
+{{ item.quantity }} x {{ item.description }} {{ item.unit_price|money }} each<br />
+{% endfor %}<br /><br />
+
+{% order_totals %}<br /><br />
+
+<a href="http://{{ request.get_host }}">http://{{ request.get_host }}</a>

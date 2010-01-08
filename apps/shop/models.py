@@ -172,15 +172,20 @@ class Address(models.Model):
 	def make(cls, field_prefix):
 		"""
 		return a new model with the same fields as Address as well as a 
-		PREFIX_field_names method for accessing the address fields by prefix
+		PREFIX_fields and PREFIX_field_names methods for accessing the address 
+		fields and field names by prefix
 		"""
 		class Meta:
 			abstract = True
-		def fields_by_prefix(cls):
+		def field_names_by_prefix(cls):
 			return [f.name for f in cls._meta.fields 
 				if f.name.startswith(field_prefix)]
+		def fields_by_prefix(instance):
+			return [{"name": f.verbose_name, "value": getattr(instance, f.name)} 
+				for f in instance._meta.fields if f.name.startswith(field_prefix)]
 		fields = {"Meta": Meta, "__module__": cls.__module__, 
-			"%s_field_names" % field_prefix: classmethod(fields_by_prefix)}
+			"%s_field_names" % field_prefix: classmethod(field_names_by_prefix),
+			"%s_fields" % field_prefix: fields_by_prefix}
 		for field in cls._meta.fields:
 			if not isinstance(field, models.AutoField):
 				fields["%s_%s" % (field_prefix, field.name)] = copy(field)

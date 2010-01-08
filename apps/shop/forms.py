@@ -5,15 +5,14 @@ from django import forms
 from django.contrib.formtools.wizard import FormWizard
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
+from django.template import RequestContext
 from django.utils.datastructures import SortedDict
 from django.utils.safestring import mark_safe
 from shop.models import Product, ProductVariation, SelectedProduct, Cart, Order
 from shop.exceptions import CheckoutError
-from shop.settings import CARD_TYPES
+from shop.settings import CARD_TYPES, ORDER_FROM_EMAIL
 from shop import checkout
-
-# zips a list with itself for field choices
-make_choices = lambda choices: zip(choices, choices)
+from shop.utils import make_choices, send_mail_template
 
 
 def get_add_cart_form(product):
@@ -113,10 +112,6 @@ class OrderForm(CheckoutForm, forms.ModelForm):
 			return self._fieldset(name.split("fieldset_", 1)[1])
 		raise AttributeError, name
 		
-	def set_shipping(self, shipping_type, shipping_total):
-		self._request.session["shipping_type"] = shipping_type
-		self._request.session["shipping_total"] = shipping_total
-		
 class ExpiryYearField(forms.ChoiceField):
 	"""
 	choice field for credit card expiry with years from now as choices
@@ -170,7 +165,7 @@ class CheckoutWizard(FormWizard):
 
 	def done(self, request, form_list):
 		"""
-		create the order and remove the cart
+		create the order, remove the cart and email receipt
 		"""
 		cart = Cart.objects.from_request(request)
 		order = form_list[0].save(commit=False)
@@ -185,6 +180,12 @@ class CheckoutWizard(FormWizard):
 			item = dict([(field, getattr(item, field)) for field in fields])
 			order.items.create(**item)
 		cart.delete()
+		from_email = ORDER_FROM_EMAIL
+		if from_email is None:
+			from_email = "do_not_reply@%s" % request.get_host()
+		send_mail_template("Order Receipt", "shop/email/order_receipt", 
+			from_email, order.billing_detail_email, context={"order": order, 
+			"order_items": order.items.all(), "request": request})
 		return HttpResponseRedirect(reverse("shop_complete"))
 
 checkout_wizard = CheckoutWizard([OrderForm, PaymentForm])

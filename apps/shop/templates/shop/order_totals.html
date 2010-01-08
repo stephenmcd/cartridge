@@ -2,7 +2,7 @@
 
 <ul class="order-totals">
 	{% if shipping_total %}
-	<li>Sub total: {{ cart_total|money }}</li>
+	<li>Sub total: {{ item_total|money }}</li>
 	<li>Shipping: {{ shipping_total|money }}</li>
 	{% endif %}
 	<li>Total: {{ order_total|money }}</li>
