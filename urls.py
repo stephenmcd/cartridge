@@ -11,12 +11,13 @@ if settings.DEV_SERVER:
 	import os.path
 	media_url = settings.MEDIA_URL.strip("/")
 	urlpatterns += patterns("",
-		(r"^%s/(?P<path>.*)$" % media_url, "django.views.static.serve",
+		("^%s/(?P<path>.*)$" % media_url, "django.views.static.serve",
 			{"document_root": 
 			os.path.join(os.path.dirname(__file__), media_url)}),)
 
 
 urlpatterns += patterns("",
-	(r"^admin/(.*)", admin.site.root),
-	(r"^shop/", include("shop.urls")),
+	("^admin/(.*)", admin.site.root),
+	("^shop/", include("shop.urls")),
+	("^$", direct_to_template, {"template": "index.html"}),
 )

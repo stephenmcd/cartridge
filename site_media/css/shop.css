@@ -14,11 +14,11 @@ body {font:1.2em sans-serif; background:#fff; color:#000;}
 a {color:#000;}
 #menu a:visited {color:#666;}
 .old-price {text-decoration: line-through;}
-#footer {padding:20px; font-size:.8em; text-align:center; color:#333;}
+#footer {margin:40px; padding:20px; font-size:.8em; text-align:center; color:#333;}
 
 /* headings */
 h1 {margin:20px; padding:20px 100px; line-height:60px; border-radius:10px; height:60px;
-	background:#eee url('../img/cartridge-logo.png') center left no-repeat;}
+	background:#eee url('../img/cartridge-demo-logo.png') center left no-repeat;}
 h1 img {width:70px; height:70px; vertical-align:middle; padding:0 10px;}
 h2 {margin-top:0;}
 
