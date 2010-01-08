@@ -5,7 +5,6 @@ from django import forms
 from django.contrib.formtools.wizard import FormWizard
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.template import RequestContext
 from django.utils.datastructures import SortedDict
 from django.utils.safestring import mark_safe
 from shop.models import Product, ProductVariation, SelectedProduct, Cart, Order
@@ -78,8 +77,6 @@ class OrderForm(CheckoutForm, forms.ModelForm):
 	model form for order with billing and shipping details - step 1 of checkout
 	"""
 	
-	step_name = "billing_shipping" 
-
 	class Meta:
 		model = Order
 		fields = (Order.billing_detail_field_names() + 
@@ -116,7 +113,6 @@ class ExpiryYearField(forms.ChoiceField):
 	"""
 	choice field for credit card expiry with years from now as choices
 	"""
-
 	def __init__(self, *args, **kwargs):
 		year = datetime.now().year
 		kwargs["choices"] = make_choices(range(year, year + 21))
