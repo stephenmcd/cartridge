@@ -5,7 +5,7 @@ from decimal import Decimal
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
-from shop.managers import ShopManager, CartManager
+from shop.managers import ShopManager, CartManager, ProductVariationManager
 from shop.fields import OptionField, MoneyField, SKUField
 from shop.settings import ORDER_STATUSES, ORDER_STATUS_DEFAULT, PRODUCT_OPTIONS
 
@@ -115,6 +115,7 @@ class BaseProductVariation(models.Model):
 	product = models.ForeignKey(Product, related_name="variations")
 	sku = SKUField(unique=True)
 	quantity = models.IntegerField("Number in stock", blank=True, null=True) 
+	objects = ProductVariationManager()
 	
 	def __unicode__(self):
 		return "%s %s" % (self.product, ", ".join(["%s: %s" % 

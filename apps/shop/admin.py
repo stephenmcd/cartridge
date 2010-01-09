@@ -58,35 +58,10 @@ class ProductAdmin(admin.ModelAdmin):
 		or removing it if multiple variations exist 
 		"""
 		super(ProductAdmin, self).save_formset(request, form, formset, change)
-		# build a list of field names for options that are selected, and a list 
-		# of field values containing the lists of selected options aligned to 
-		# the list of field names, and then create all unique variations from
-		# the selected options
-		option_names = [f for f in option_fields if request.POST.getlist(f)]
-		if option_names:
-			option_values = [request.POST.getlist(f) for f in option_names] 
-			variations = [[]]
-			# cartesian product of selected options
-			for values_list in option_values:
-				variations = [x + [y] for x in variations for y in values_list]
-			for v in variations:
-				# lookup unselected options as null to ensure a unique filter
-				variation = dict(zip(option_names, v))
-				lookup = dict(variation)
-				lookup.update(dict([("%s__isnull" % field, True) 
-					for field in option_fields if field not in variation]))
-				try:
-					self._product.variations.get(**lookup)
-				except ProductVariation.DoesNotExist:
-					self._product.variations.create(**variation)
-		# create an empty variation (no options) if none exist, otherwise if 
-		# multiple variations exist ensure there is no redundant empty variation
-		total_variations = self._product.variations.count()
-		if total_variations == 0:
-			self._product.variations.create()
-		elif total_variations > 1:
-			no_options = dict([("%s__isnull" % f, True) for f in option_fields])
-			self._product.variations.filter(**no_options).delete()
+		options = dict([(f, request.POST.getlist(f)) for f in option_fields 
+			if request.POST.getlist(f)])
+		self._product.variations.create_from_options(options)
+		self._product.variations.manage_empty()
 
 class OrderItemInline(admin.TabularInline):
 	model = OrderItem
@@ -110,7 +85,6 @@ class OrderAdmin(admin.ModelAdmin):
 		(None, {"fields": ("additional_instructions",
 			("shipping_total","shipping_type"),"item_total",("total","status"))}),
 	)
-
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)

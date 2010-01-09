@@ -1,6 +1,7 @@
 
 from datetime import datetime, timedelta
 from django.db.models import Manager
+from django.utils.datastructures import SortedDict
 from shop.settings import CART_EXPIRY_MINUTES
 
 
@@ -27,4 +28,49 @@ class CartManager(Manager):
 		else:
 			cart.save() # update timestamp
 		return cart
+
+class ProductVariationManager(Manager):
+
+	use_for_related_fields = True
+	
+	def _empty_options_lookup(self, exclude=None):
+		"""
+		create a lookup dict of field__isnull for options fields
+		"""
+		if not exclude:
+			exclude = {}
+		return dict([("%s__isnull" % f.name, True) 
+			for f in self.model.option_fields() if f.name not in exclude])
+
+	def create_from_options(self, options):
+		"""
+		create all unique variations from the selected options
+		"""
+		if options:
+			options = SortedDict(options)
+			# product of options
+			variations = [[]]
+			for values_list in options.values():
+				variations = [x + [y] for x in variations for y in values_list]
+			for variation in variations:
+				# lookup unspecified options as null to ensure a unique filter
+				variation = dict(zip(options.keys(), variation))
+				lookup = dict(variation)
+				lookup.update(self._empty_options_lookup(exclude=variation))
+				try:
+					self.get(**lookup)
+				except self.model.DoesNotExist:
+					self.create(**variation)
+					
+	def manage_empty(self):
+		"""
+		create an empty variation (no options) if none exist, otherwise if 
+		multiple variations exist ensure there is no redundant empty variation
+		"""
+		total_variations = self.count()
+		if total_variations == 0:
+			self.create()
+		elif total_variations > 1:
+			self.filter(**self._empty_options_lookup()).delete()
+
 
