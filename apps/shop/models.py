@@ -137,12 +137,31 @@ class BaseProductVariation(models.Model):
 		return [getattr(self, field.name) for field in self.option_fields()]
 
 	def has_stock(self, quantity=1):
+		"""
+		check the given quantity is in stock taking carts into account and 
+		caching the number in carts
+		"""
 		if self.quantity is None:
 			return True
-		if not hasattr(self, "_num_available"):
-			self._num_available = (self.quantity + 
-				CartItem.objects.filter(sku=self.sku).count())
-		return self._num_available >= quantity
+		if not hasattr(self, "_cached_num_available"):
+			num_available = self.quantity
+			in_carts = CartItem.objects.filter(sku=self.sku).aggregate(
+				total_quantity=models.Sum("quantity"))["total_quantity"]
+			if in_carts is not None:
+				num_available = num_available - in_carts
+			self._cached_num_available = num_available
+		return self._cached_num_available >= quantity
+
+	def set_quantity(self, quantity=None):
+		"""
+		update the available quantity ensuring the cached num available is 
+		removed - only used in testing
+		"""
+		if quantity is not None:
+			self.quantity = quantity
+			self.save()
+		if hasattr(self, "_cached_num_available"):
+			delattr(self, "_cached_num_available")
 
 # build the ProductVariation model from the BaseProductVariation model by
 # adding each option in shop.settings.PRODUCT_OPTIONS as an OptionField
@@ -246,12 +265,16 @@ class Cart(models.Model):
 				item.image = str(images[0])
 		item.quantity += quantity
 		item.save()
-				
+		if hasattr(self, "_cached_items"):
+			delattr(self, "_cached_items")
+			
 	def remove_item(self, sku):
 		"""
 		remove item by sku
 		"""
 		self.items.filter(sku=sku).delete()
+		if hasattr(self, "_cached_items"):
+			delattr(self, "_cached_items")
 		
 	def has_items(self):
 		"""
