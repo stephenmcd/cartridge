@@ -55,10 +55,12 @@ def get_add_cart_form(product):
 	option_names = [field.name for field in ProductVariation.option_fields()]
 	option_values = zip(*product.variations.values_list(*option_names))
 	option_fields = {}
-	for i, name in enumerate(option_names):
-		values = filter(None, set(option_values[i]))
-		if values:
-			option_fields[name] = forms.ChoiceField(choices=zip(values, values))
+	if option_values:
+		for i, name in enumerate(option_names):
+			values = filter(None, set(option_values[i]))
+			if values:
+				option_fields[name] = forms.ChoiceField(
+					choices=make_choices(values))
 	return type("AddCartForm", (AddCartForm,), option_fields)
 
 class CheckoutForm(object):
