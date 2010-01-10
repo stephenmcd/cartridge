@@ -1,5 +1,5 @@
 
-from django.conf.urls.defaults import patterns, url
+from django.conf.urls.defaults import *
 from shop.forms import checkout_wizard
 
 
