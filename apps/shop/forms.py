@@ -41,9 +41,9 @@ def get_add_cart_form(product):
 				error = "The selected options are unavailable"
 			else:
 				if variation.quantity is not None:
-					if not variation.in_stock(quantity):
+					if not variation.has_stock(quantity):
 						error = "The selected quantity is currently unavailable"
-					elif not variation.in_stock():
+					elif not variation.has_stock():
 						error = "The selected options are currently not in stock"
 			if error:
 				raise forms.ValidationError(error)
