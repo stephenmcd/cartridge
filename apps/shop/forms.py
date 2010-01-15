@@ -1,17 +1,26 @@
 
 from copy import copy
 from datetime import datetime
+from locale import localeconv
 from django import forms
 from django.contrib.formtools.wizard import FormWizard
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.utils.datastructures import SortedDict
 from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext_lazy as _
 from shop.models import Product, ProductVariation, SelectedProduct, Cart, Order
 from shop.exceptions import CheckoutError
 from shop.settings import CARD_TYPES, ORDER_FROM_EMAIL
 from shop import checkout
-from shop.utils import make_choices, send_mail_template
+from shop.utils import make_choices, send_mail_template, set_locale
+
+
+ADD_CART_ERRORS = {
+	"invalid_options": _("The selected options are unavailable"),
+	"no_stock": _("The selected options are currently not in stock"),
+	"no_stock_quantity": _("The selected quantity is currently unavailable"),
+}
 
 
 def get_add_cart_form(product):
@@ -38,15 +47,15 @@ def get_add_cart_form(product):
 			try:
 				variation = product.variations.get(**options)
 			except ProductVariation.DoesNotExist:
-				error = "The selected options are unavailable"
+				error = "invalid_options"
 			else:
 				if variation.quantity is not None:
 					if not variation.has_stock(quantity):
-						error = "The selected quantity is currently unavailable"
+						error = "no_stock_quantity"
 					elif not variation.has_stock():
-						error = "The selected options are currently not in stock"
+						error = "no_stock"
 			if error:
-				raise forms.ValidationError(error)
+				raise forms.ValidationError(ADD_CART_ERRORS[error])
 			self.variation = variation
 			return self.cleaned_data
 
@@ -181,7 +190,7 @@ class CheckoutWizard(FormWizard):
 		from_email = ORDER_FROM_EMAIL
 		if from_email is None:
 			from_email = "do_not_reply@%s" % request.get_host()
-		send_mail_template("Order Receipt", "shop/email/order_receipt", 
+		send_mail_template(_("Order Receipt"), "shop/email/order_receipt", 
 			from_email, order.billing_detail_email, context={"order": order, 
 			"order_items": order.items.all(), "request": request})
 		return HttpResponseRedirect(reverse("shop_complete"))
@@ -198,7 +207,8 @@ class MoneyWidget(forms.TextInput):
 	"""
 	def render(self, name, value, attrs):
 		if value is not None:
-			value = "%.2f" % value
+			set_locale()
+			value = ("%%.%sf" % localeconv()["frac_digits"]) % value
 		return super(MoneyWidget, self).render(name, value, attrs)
 
 class ProductOptionWidget(forms.CheckboxSelectMultiple):

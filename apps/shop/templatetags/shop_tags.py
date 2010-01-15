@@ -1,9 +1,10 @@
 
 import os
-from copy import copy
+import locale
 from django import template
 from django.conf import settings
 from shop.models import Category
+from shop.utils import set_locale
 
 
 register = template.Library()
@@ -24,16 +25,23 @@ def category_menu(context, parent_category=None):
 	return context
 
 @register.filter
-def money(value):
+def currency(value):
 	"""
-	format a value as money with dollar sign and two decimal places
+	format a value as currency according to locale
 	"""
-
-	try:
-		value = float(value)
-	except:
-		value = 0.
-	return "$%.2f" % value
+	set_locale()
+	if hasattr(locale, "currency"):
+		value = locale.currency(value)
+	else:
+		# based on locale.currency() in python >= 2.5
+		conv = locale.localeconv()
+		value = [conv["currency_symbol"], conv["p_sep_by_space"] and " "  or "", 
+			(("%%.%sf" % conv["frac_digits"]) % value).replace(".", 
+			conv["mon_decimal_point"])]
+		if not conv["p_cs_precedes"]:
+			value.reverse()
+		value = "".join(value)
+	return value
 
 @register.simple_tag
 def thumbnail(image_url, width, height):

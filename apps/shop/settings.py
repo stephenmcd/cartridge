@@ -5,6 +5,7 @@ prefix SHOP_setting_name eg: SHOP_PRODUCT_OPTIONS
 """
 
 from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
 
 # number of minutes of inactivity for carts until they're abandoned
 CART_EXPIRY_MINUTES = getattr(settings, "SHOP_CART_EXPIRY_MINUTES", 30) 
@@ -14,10 +15,14 @@ CARD_TYPES = getattr(settings, "SHOP_CARD_TYPES",
 	("Mastercard", "Visa", "Diners", "Amex")
 )
 
+# controls the display formatting of monetary values accord to the locale 
+# module in the python standard library
+CURRENCY_LOCALE = getattr(settings, "SHOP_CURRENCY_LOCALE", "")
+
 # sequence of pairs for order statuses
 ORDER_STATUSES = getattr(settings, "SHOP_ORDER_STATUSES", (
-	(1, "Unprocessed"),
-	(2, "Processed"),
+	(1, _("Unprocessed")),
+	(2, _("Processed")),
 ))
 
 # default order status for new orders
@@ -37,3 +42,4 @@ SSL_ENABLED = getattr(settings, "SHOP_SSL_ENABLED", not settings.DEBUG)
 
 # host name matching the ssl cert that the site should always be accessed via
 FORCE_HOST = getattr(settings, "SHOP_FORCE_HOST", None)
+

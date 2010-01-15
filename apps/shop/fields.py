@@ -1,5 +1,7 @@
 
+from locale import localeconv
 from django.db.models import CharField, DecimalField
+from shop.utils import set_locale
 
 
 class OptionField(CharField):
@@ -19,8 +21,9 @@ class OptionField(CharField):
 class MoneyField(DecimalField):
 
 	def __init__(self, *args, **kwargs):
+		set_locale()
 		defaults = {"null": True, "blank": True, 
-			"max_digits": 10, "decimal_places": 2}
+			"max_digits": 10, "decimal_places": localeconv()["frac_digits"]}
 		defaults.update(kwargs)
 		super(MoneyField, self).__init__(*args, **defaults)
 

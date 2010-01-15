@@ -2,11 +2,12 @@
 from copy import copy
 from datetime import datetime
 from decimal import Decimal
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.template.defaultfilters import slugify
-from django.core.urlresolvers import reverse
-from shop.managers import ShopManager, CartManager, ProductVariationManager
+from django.utils.translation import ugettext_lazy as _
 from shop.fields import OptionField, MoneyField, SKUField
+from shop.managers import ShopManager, CartManager, ProductVariationManager
 from shop.settings import ORDER_STATUSES, ORDER_STATUS_DEFAULT, PRODUCT_OPTIONS
 
 
@@ -23,7 +24,7 @@ class ShopModel(models.Model):
 	title = models.CharField(max_length=100)
 	slug = models.SlugField(max_length=100, editable=False)
 	active = models.BooleanField(default=True, 
-		help_text="Check this to make this item visible on the site")
+		help_text=_("Check this to make this item visible on the site"))
 	objects = ShopManager()
 
 	def __unicode__(self):
@@ -46,14 +47,15 @@ class ShopModel(models.Model):
 			kwargs={"slug": self.slug})
 	
 	def admin_link(self):
-		return "<a href='%s'>View on site</a>" % self.get_absolute_url()
+		return "<a href='%s'>%s</a>" % (self.get_absolute_url(), _("View on site"))
 	admin_link.allow_tags = True
 	admin_link.short_description = ""
 
 class Category(ShopModel):
 
 	class Meta:
-		verbose_name_plural = "Categories"
+		verbose_name = _("Category")
+		verbose_name_plural = _("Categories")
 
 	image = models.ImageField(max_length=100, blank=True, upload_to="category")
 	parent = models.ForeignKey("self", blank=True, null=True, 
@@ -61,15 +63,19 @@ class Category(ShopModel):
 
 class Product(ShopModel):
 
+	class Meta:
+		verbose_name = _("Product")
+		verbose_name_plural = _("Products")
+
 	description = models.TextField(blank=True)
-	available = models.BooleanField(default=True, help_text="Check this to " \
-		"make this item available for purchase when it is visible on the site")
+	available = models.BooleanField(default=True, help_text=_("Check this to " \
+		"make this item available for purchase when it is visible on the site"))
 	categories = models.ManyToManyField(Category, blank=True, 
 		related_name="products")
 	unit_price = MoneyField()
 	sale_price = MoneyField()
-	sale_from = models.DateTimeField("Start", blank=True, null=True)
-	sale_to = models.DateTimeField("Finish", blank=True, null=True)
+	sale_from = models.DateTimeField(_("Start"), blank=True, null=True)
+	sale_to = models.DateTimeField(_("Finish"), blank=True, null=True)
 
 	image_1 = models.ImageField(max_length=100, blank=True, upload_to="product")
 	image_2 = models.ImageField(max_length=100, blank=True, upload_to="product")
@@ -111,10 +117,12 @@ class BaseProductVariation(models.Model):
 	
 	class Meta:
 		abstract = True
+		verbose_name = _("Product variation")
+		verbose_name_plural = _("Product variations")
 		
 	product = models.ForeignKey(Product, related_name="variations")
 	sku = SKUField(unique=True)
-	quantity = models.IntegerField("Number in stock", blank=True, null=True) 
+	quantity = models.IntegerField(_("Number in stock"), blank=True, null=True) 
 	objects = ProductVariationManager()
 	
 	def __unicode__(self):
@@ -168,14 +176,14 @@ class Address(models.Model):
 	class Meta:
 		abstract = True
 
-	first_name = models.CharField("First name", max_length=100)
-	last_name = models.CharField("Last name", max_length=100)
-	street = models.CharField("Street", max_length=100)
-	city = models.CharField("City/Suburb", max_length=100)
-	state = models.CharField("State/Region", max_length=100)
-	postcode = models.CharField("Zip/Postcode", max_length=10)
-	country = models.CharField("Country", max_length=100)
-	phone = models.CharField("Phone", max_length=20)
+	first_name = models.CharField(_("First name"), max_length=100)
+	last_name = models.CharField(_("Last name"), max_length=100)
+	street = models.CharField(_("Street"), max_length=100)
+	city = models.CharField(_("City/Suburb"), max_length=100)
+	state = models.CharField(_("State/Region"), max_length=100)
+	postcode = models.CharField(_("Zip/Postcode"), max_length=10)
+	country = models.CharField(_("Country"), max_length=100)
+	phone = models.CharField(_("Phone"), max_length=20)
 	
 	@classmethod
 	def make(cls, field_prefix):
@@ -203,7 +211,11 @@ class Address(models.Model):
 
 class Order(Address.make("billing_detail"), Address.make("shipping_detail")):
 
-	billing_detail_email = models.EmailField("Email")
+	class Meta:
+		verbose_name = _("Order")
+		verbose_name_plural = _("Orders")
+
+	billing_detail_email = models.EmailField(_("Email"))
 	additional_instructions = models.TextField(blank=True)
 	time = models.DateTimeField(auto_now_add=True)
 	shipping_type = models.CharField(max_length=50, blank=True)
@@ -227,6 +239,10 @@ class Order(Address.make("billing_detail"), Address.make("shipping_detail")):
 		super(Order, self).save(*args, **kwargs)
 
 class Cart(models.Model):
+
+	class Meta:
+		verbose_name = _("Cart")
+		verbose_name_plural = _("Carts")
 
 	timestamp = models.DateTimeField(auto_now=True)
 	objects = CartManager()
@@ -285,6 +301,8 @@ class SelectedProduct(models.Model):
 	"""
 
 	class Meta:
+		verbose_name = _("Product")
+		verbose_name_plural = _("Products")
 		abstract = True
 		
 	sku = SKUField()

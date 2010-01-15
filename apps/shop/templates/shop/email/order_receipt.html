@@ -18,7 +18,7 @@ Shipping Details:<br />
 
 Items Ordered:<br />
 {% for item in order_items %}
-{{ item.quantity }} x {{ item.description }} {{ item.unit_price|money }} each<br />
+{{ item.quantity }} x {{ item.description }} {{ item.unit_price|currency }} each<br />
 {% endfor %}<br /><br />
 
 {% order_totals %}<br /><br />

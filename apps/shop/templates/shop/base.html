@@ -17,7 +17,7 @@
 	<div id="cart-panel">
 		<a href="{% url shop_cart %}">
 			Cart contains {{ cart.total_quantity }} 
-			item{{ cart.total_quantity|pluralize }}: {{ cart.total_price|money }}
+			item{{ cart.total_quantity|pluralize }}: {{ cart.total_price|currency }}
 		</a>
 	</div>
 	<div id="menu">{% category_menu %}</div>

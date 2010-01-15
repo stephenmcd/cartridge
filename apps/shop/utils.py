@@ -1,7 +1,9 @@
 
+import locale
 from os.path import basename
 from django.template import loader, Context
 from django.core.mail import EmailMultiAlternatives
+from shop.settings import CURRENCY_LOCALE
 
 
 def make_choices(choices):
@@ -40,4 +42,15 @@ def send_mail_template(subject, template, addr_from, addr_to, context=None,
 		msg.attach(attachment)
 	msg.send(fail_silently=fail_silently)
 
-
+def set_locale():
+	"""
+	sets the locale for currency formatting defined in shop.settings
+	"""
+	try:
+		locale.setlocale(locale.LC_MONETARY, CURRENCY_LOCALE)
+	except:
+		from django.core.exceptions import ImproperlyConfigured
+		from django.utils.translation import ugettext_lazy as _
+		raise ImproperlyConfigured(_("Invalid currency locale specified: %s") % 
+			CURRENCY_LOCALE)
+	

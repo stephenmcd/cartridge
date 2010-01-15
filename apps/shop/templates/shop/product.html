@@ -21,10 +21,10 @@
 {% if product.has_price %}
 <div>
 	{% if product.on_sale %}
-		<span class="old-price">{{ product.unit_price|money }}</span>
+		<span class="old-price">{{ product.unit_price|currency }}</span>
 		On sale:
 	{% endif %}
-	{{ product.price|money }}
+	{{ product.price|currency }}
 </div>
 {% endif %}
 
