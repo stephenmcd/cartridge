@@ -36,6 +36,7 @@ input, select {font-size:.8em; margin:0 10px;}
 #add-cart li {display:inline;}
 #add-cart .button {margin-bottom:0;}
 #id_quantity {width:40px;}
+#variations li {list-style-type:none;}
 
 /* cart items table */
 #cart {width:100%;}

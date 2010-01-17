@@ -1,4 +1,5 @@
 {% extends "shop/checkout.html" %}
+{% load i18n %}
 
 {% block extrahead %}
 {{ block.super }}
@@ -32,14 +33,14 @@ $(function() {
 {% block fields %}
 {% if cart.has_items %}
 <fieldset>
-	<legend>Billing Details</legend>
+	<legend>{% trans "Billing Details" %}</legend>
 	<ul>{{ form.fieldset_billing.as_ul }}</ul>
 </fieldset>
 <fieldset>
-	<legend>Delivery Details</legend>
+	<legend>{% trans "Delivery Details" %}</legend>
 	<input type="checkbox" id="toggle_shipping" name="toggle_shipping"
 		{% if not request.POST or request.POST.toggle_shipping %}checked{% endif %}  />
-	<label for="toggle_shipping">Deliver to the same address as above</label>
+	<label for="toggle_shipping">{% trans "Deliver to the same address as above" %}</label>
 	<ul id="shipping_fields">{{ form.fieldset_shipping.as_ul }}</ul>
 	<ul>{{ form.fieldset_other.as_ul }}</ul>
 </fieldset>

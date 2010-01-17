@@ -1,9 +1,10 @@
 {% extends "shop/checkout.html" %}
+{% load i18n %}
 
 {% block fields %}
 {% if cart.has_items %}
 <fieldset>
-	<legend>Payment Details</legend>
+	<legend>{% trans "Payment Details" %}</legend>
 	<ul>{{ form.as_ul }}</ul>
 </fieldset>
 {% endif %}

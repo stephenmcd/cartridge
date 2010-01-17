@@ -3,6 +3,7 @@ import locale
 from os.path import basename
 from django.template import loader, Context
 from django.core.mail import EmailMultiAlternatives
+from django.db.models import Model
 from shop.settings import CURRENCY_LOCALE
 
 
@@ -18,6 +19,13 @@ def set_shipping(request, shipping_type, shipping_total):
 	"""
 	request.session["shipping_type"] = shipping_type
 	request.session["shipping_total"] = shipping_total
+
+def clone_model(name, model, fields, abstract=False):
+	"""
+	construct a new model
+	"""
+	return type(name, (model,), dict({"__module__": model.__module__, 
+		"Meta": type("Meta", (object,), {"abstract": abstract})}, **fields))
 
 def send_mail_template(subject, template, addr_from, addr_to, context=None,
 	attachments=None, fail_silently=False):

@@ -1,26 +1,28 @@
-{% load shop_tags %}
+{% load shop_tags i18n %}
 
-Dear {{ order.billing_detail_first_name }},<br /><br />
+<p>{% trans "Dear" %} {{ order.billing_detail_first_name }},</p>
 
-Your order has been successful, details are below.<br /><br />
+<p>{% trans "Your order has been successful, details are below." %}</p>
 
-Order ID: #{{ order.id }}<br /><br />
+<p>{% trans "Order ID:" %} #{{ order.id }}</p>
 
-Billing Details:<br />
+<p><span style="font-weight:bold;">{% trans "Billing Details:" %}</span><br />
 {% for field in order.billing_detail_fields %}
 {{ field.name }}: {{ field.value }}<br />
-{% endfor %}<br /><br />
+{% endfor %}</p>
 
-Shipping Details:<br />
+<p><span style="font-weight:bold;">{% trans "Shipping Details:" %}</span><br />
 {% for field in order.shipping_detail_fields %}
 {{ field.name }}: {{ field.value }}<br />
-{% endfor %}<br /><br />
+{% endfor %}</p>
 
-Items Ordered:<br />
-{% for item in order_items %}
-{{ item.quantity }} x {{ item.description }} {{ item.unit_price|currency }} each<br />
-{% endfor %}<br /><br />
+<p><span style="font-weight:bold;">{% trans "Items Ordered:" %}</span></p>
+<ul>
+	{% for item in order_items %}
+	<li>{{ item.quantity }} x {{ item.description }} {{ item.unit_price|currency }} {% trans "each" %}</li>
+	{% endfor %}
+</ul>
 
-{% order_totals %}<br /><br />
+{% order_totals %}
 
 <a href="http://{{ request.get_host }}">http://{{ request.get_host }}</a>

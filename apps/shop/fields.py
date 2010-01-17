@@ -1,6 +1,7 @@
 
 from locale import localeconv
 from django.db.models import CharField, DecimalField
+from django.utils.translation import ugettext_lazy as _
 from shop.utils import set_locale
 
 
@@ -31,7 +32,7 @@ class SKUField(CharField):
 	
 	def __init__(self, *args, **kwargs):
 		if not args:
-			args = ("SKU",)
+			args = (_("SKU"),)
 		defaults = {"max_length": 20}
 		defaults.update(kwargs)
 		super(SKUField, self).__init__(*args, **defaults)

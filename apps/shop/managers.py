@@ -19,10 +19,10 @@ class CartManager(Manager):
 		"""
 		expiry_time = datetime.now() - timedelta(minutes=CART_EXPIRY_MINUTES)
 		try:
-			cart = self.select_related().get(timestamp__gte=expiry_time, 
+			cart = self.select_related().get(last_updated__gte=expiry_time, 
 				id=request.session.get("cart", None))
 		except self.model.DoesNotExist:
-			self.filter(timestamp__lt=expiry_time).delete()
+			self.filter(last_updated__lt=expiry_time).delete()
 			cart = self.create()
 			request.session["cart"] = cart.id
 		else:
@@ -65,12 +65,18 @@ class ProductVariationManager(Manager):
 	def manage_empty(self):
 		"""
 		create an empty variation (no options) if none exist, otherwise if 
-		multiple variations exist ensure there is no redundant empty variation
+		multiple variations exist ensure there is no redundant empty variation.
+		also ensure there is at least one default variation
 		"""
 		total_variations = self.count()
 		if total_variations == 0:
 			self.create()
 		elif total_variations > 1:
 			self.filter(**self._empty_options_lookup()).delete()
-
+		try:
+			self.get(default=True)
+		except self.model.DoesNotExist:
+			first_variation = self.all()[0]
+			first_variation.default = True
+			first_variation.save()
 

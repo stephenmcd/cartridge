@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from shop.models import Category, Product, ProductVariation, Order, OrderItem
 from shop.fields import MoneyField
-from shop.forms import MoneyWidget, ProductAdminForm
+from shop import forms
 
 
 # lists of field names
@@ -23,25 +23,25 @@ class CategoryAdmin(admin.ModelAdmin):
 class ProductVariationAdmin(admin.TabularInline):
 	verbose_name_plural = _("Current variations")
 	model = ProductVariation
-	exclude = option_fields
+	fields = ("sku", "default", "quantity", "unit_price", "sale_price", 
+		"sale_from", "sale_to")
 	extra = 0
+	formset = forms.ProductVariationAdminFormset
 	
 class ProductAdmin(admin.ModelAdmin):
 
-	list_display = ("title", "unit_price", "active", "available", "admin_link")
-	list_editable = ("unit_price", "active", "available")
+	list_display = ("title", "active", "available", "admin_link")
+	list_editable = ("active", "available")
 	list_filter = ("categories", "active", "available")
 	filter_horizontal = ("categories",)
 	search_fields = ("title", "categories__title", "variations_sku")
 	inlines = (ProductVariationAdmin,)
-	form = ProductAdminForm
-	formfield_overrides = {MoneyField: {"widget": MoneyWidget}}
+	form = forms.ProductAdminForm
+	formfield_overrides = {MoneyField: {"widget": forms.MoneyWidget}}
 
 	fieldsets = (
 		(None, {"fields": 
 			("title", "description", ("active", "available"), "categories")}),
-		(_("Pricing"), {"fields": 
-			("unit_price", ("sale_price", "sale_from", "sale_to"))}),
 		(_("Images"), {"fields": image_fields}),
 		(_("Create new variations"), {"fields": option_fields}),
 	)
@@ -66,6 +66,7 @@ class ProductAdmin(admin.ModelAdmin):
 		self._product.variations.manage_empty()
 
 class OrderItemInline(admin.TabularInline):
+	verbose_name_plural = _("Items")
 	model = OrderItem
 	extra = 0
 
@@ -80,7 +81,7 @@ class OrderAdmin(admin.ModelAdmin):
 	date_hierarchy = "time"
 	radio_fields = {"status": admin.HORIZONTAL}
 	inlines = (OrderItemInline,)
-	formfield_overrides = {MoneyField: {"widget": MoneyWidget}}
+	formfield_overrides = {MoneyField: {"widget": forms.MoneyWidget}}
 	fieldsets = (
 		(_("Billing details"), {"fields": (tuple(billing_fields),)}),
 		(_("Shipping details"), {"fields": (tuple(shipping_fields),)}),

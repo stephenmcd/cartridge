@@ -3,6 +3,7 @@ from copy import copy
 from datetime import datetime
 from locale import localeconv
 from django import forms
+from django.forms.models import BaseInlineFormSet
 from django.contrib.formtools.wizard import FormWizard
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -17,7 +18,7 @@ from shop.utils import make_choices, send_mail_template, set_locale
 
 
 ADD_CART_ERRORS = {
-	"invalid_options": _("The selected options are unavailable"),
+	"invalid_options": _("The selected options are currently unavailable"),
 	"no_stock": _("The selected options are currently not in stock"),
 	"no_stock_quantity": _("The selected quantity is currently unavailable"),
 }
@@ -45,7 +46,8 @@ def get_add_cart_form(product):
 			quantity = options.pop("quantity")
 			error = None
 			try:
-				variation = product.variations.get(**options)
+				variation = product.variations.get(unit_price__isnull=False,
+					**options)
 			except ProductVariation.DoesNotExist:
 				error = "invalid_options"
 			else:
@@ -62,7 +64,8 @@ def get_add_cart_form(product):
 	# create the dict of form fields for the product's selected options and 
 	# add them to a newly created form type 
 	option_names = [field.name for field in ProductVariation.option_fields()]
-	option_values = zip(*product.variations.values_list(*option_names))
+	option_values = zip(*product.variations.filter(
+		unit_price__isnull=False).values_list(*option_names))
 	option_fields = {}
 	if option_values:
 		for i, name in enumerate(option_names):
@@ -197,9 +200,9 @@ class CheckoutWizard(FormWizard):
 
 checkout_wizard = CheckoutWizard([OrderForm, PaymentForm])
 
-#####################
-#    admin widgets 
-#####################
+#######################
+#    admin widgets    
+#######################
 
 class MoneyWidget(forms.TextInput):
 	"""
@@ -236,4 +239,13 @@ _fields = dict([(field.name, forms.MultipleChoiceField(
 	for field in ProductVariation.option_fields()])
 ProductAdminForm = type("ProductAdminForm", (_BaseProductAdminForm,), _fields)
 
+class ProductVariationAdminFormset(BaseInlineFormSet):
+	"""
+	ensures no more than one variation is checked as default
+	"""
+	def clean(self):
+		if len([f for f in self.forms if hasattr(f, "cleaned_data") and
+			f.cleaned_data["default"]]) > 1:
+			raise forms.ValidationError(
+				_("Only one variation can be checked as the default"))
 

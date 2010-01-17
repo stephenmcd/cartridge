@@ -3,7 +3,8 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from shop.models import Category, Product, Cart
+from django.utils import simplejson
+from shop.models import Category, Product, ProductVariation, Cart
 from shop.forms import get_add_cart_form, OrderForm
 
 
@@ -19,7 +20,8 @@ def product(request, slug, template="shop/product.html"):
 	"""
 	display a product - redirect to cart if product added
 	"""
-	product = get_object_or_404(Product.objects.active(), slug=slug)
+	product = get_object_or_404(Product.objects.active().select_related(), 
+		slug=slug)
 	AddCartForm = get_add_cart_form(product)
 	add_cart_form = AddCartForm(initial={"quantity": 1})
 	if request.method == "POST":
@@ -28,8 +30,12 @@ def product(request, slug, template="shop/product.html"):
 			Cart.objects.from_request(request).add_item(add_cart_form.variation, 
 				add_cart_form.cleaned_data["quantity"])
 			return HttpResponseRedirect(reverse("shop_cart"))
-	return render_to_response(template, {"product": product, 
-		"add_cart_form": add_cart_form}, RequestContext(request))
+	variations = product.variations.all()
+	variations_json = simplejson.dumps(list(variations.values("sku", 
+		*[f.name for f in ProductVariation.option_fields()]))) 
+	return render_to_response(template, {"product": product, "variations_json":
+		variations_json, "variations": variations, "add_cart_form": 
+		add_cart_form}, RequestContext(request))
 
 def cart(request, template="shop/cart.html"):
 	"""

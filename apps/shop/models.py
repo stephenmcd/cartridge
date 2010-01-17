@@ -5,10 +5,11 @@ from decimal import Decimal
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.template.defaultfilters import slugify
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext, ugettext_lazy as _
 from shop.fields import OptionField, MoneyField, SKUField
 from shop.managers import ShopManager, CartManager, ProductVariationManager
 from shop.settings import ORDER_STATUSES, ORDER_STATUS_DEFAULT, PRODUCT_OPTIONS
+from shop.utils import clone_model, make_choices
 
 
 class ShopModel(models.Model):
@@ -21,10 +22,9 @@ class ShopModel(models.Model):
 	class Meta:
 		abstract = True
 
-	title = models.CharField(max_length=100)
+	title = models.CharField(_("Title"), max_length=100)
 	slug = models.SlugField(max_length=100, editable=False)
-	active = models.BooleanField(default=True, 
-		help_text=_("Check this to make this item visible on the site"))
+	active = models.BooleanField(_("Visible on the site"), default=False)
 	objects = ShopManager()
 
 	def __unicode__(self):
@@ -47,7 +47,8 @@ class ShopModel(models.Model):
 			kwargs={"slug": self.slug})
 	
 	def admin_link(self):
-		return "<a href='%s'>%s</a>" % (self.get_absolute_url(), _("View on site"))
+		return "<a href='%s'>%s</a>" % (self.get_absolute_url(), 
+			ugettext("View on site"))
 	admin_link.allow_tags = True
 	admin_link.short_description = ""
 
@@ -57,36 +58,30 @@ class Category(ShopModel):
 		verbose_name = _("Category")
 		verbose_name_plural = _("Categories")
 
-	image = models.ImageField(max_length=100, blank=True, upload_to="category")
+	image = models.ImageField(_("Image"), max_length=100, blank=True, 
+		upload_to="category")
 	parent = models.ForeignKey("self", blank=True, null=True, 
 		related_name="children")
 
-class Product(ShopModel):
+class PricedModel(models.Model):
+	"""
+	abstract model with unit and sale price fields - for product and variation
+	"""
 
 	class Meta:
-		verbose_name = _("Product")
-		verbose_name_plural = _("Products")
+		abstract = True
 
-	description = models.TextField(blank=True)
-	available = models.BooleanField(default=True, help_text=_("Check this to " \
-		"make this item available for purchase when it is visible on the site"))
-	categories = models.ManyToManyField(Category, blank=True, 
-		related_name="products")
-	unit_price = MoneyField()
-	sale_price = MoneyField()
-	sale_from = models.DateTimeField(_("Start"), blank=True, null=True)
-	sale_to = models.DateTimeField(_("Finish"), blank=True, null=True)
+	unit_price = MoneyField(_("Unit price"))
+	sale_id = models.IntegerField(null=True)
+	sale_price = MoneyField(_("Sale price"))
+	sale_from = models.DateTimeField(_("Sale start"), blank=True, null=True)
+	sale_to = models.DateTimeField(_("Sale end"), blank=True, null=True)
 
-	image_1 = models.ImageField(max_length=100, blank=True, upload_to="product")
-	image_2 = models.ImageField(max_length=100, blank=True, upload_to="product")
-	image_3 = models.ImageField(max_length=100, blank=True, upload_to="product")
-	image_4 = models.ImageField(max_length=100, blank=True, upload_to="product")
-	
 	def on_sale(self):
 		return self.sale_price and self.sale_to > datetime.now() > self.sale_from
 
 	def has_price(self):
-		return self.on_sale() or self.unit_price is not None
+		return self.on_sale() or self.unit_price is not None 
 	
 	def price(self):
 		if self.on_sale():
@@ -94,12 +89,23 @@ class Product(ShopModel):
 		elif self.has_price():
 			return self.unit_price
 		return Decimal("0")
+
+class Product(ShopModel, PricedModel):
+
+	class Meta:
+		verbose_name = _("Product")
+		verbose_name_plural = _("Products")
+
+	description = models.TextField(_("Description"), blank=True)
+	available = models.BooleanField(_("Available for purchase"), default=False)
+	categories = models.ManyToManyField(Category, blank=True, 
+		related_name="products")
+
+	image_1 = models.ImageField(max_length=100, blank=True, upload_to="product")
+	image_2 = models.ImageField(max_length=100, blank=True, upload_to="product")
+	image_3 = models.ImageField(max_length=100, blank=True, upload_to="product")
+	image_4 = models.ImageField(max_length=100, blank=True, upload_to="product")
 	
-	def save(self, *args, **kwargs):
-		if not self.has_price():
-			self.available = False
-		super(Product, self).save(*args, **kwargs)
-		
 	@classmethod
 	def image_fields(cls):
 		return [field for field in cls._meta.fields 
@@ -109,7 +115,7 @@ class Product(ShopModel):
 		return [getattr(self, field.name) for field in self.image_fields()
 			if getattr(self, field.name)]
  
-class BaseProductVariation(models.Model):
+class BaseProductVariation(PricedModel):
 	"""
 	abstract model used to create the ProductVariation model below using 
 	dynamically created set of option fields from shop.settings.PRODUCT_OPTIONS
@@ -117,14 +123,14 @@ class BaseProductVariation(models.Model):
 	
 	class Meta:
 		abstract = True
-		verbose_name = _("Product variation")
-		verbose_name_plural = _("Product variations")
+		ordering = ("default",)
 		
 	product = models.ForeignKey(Product, related_name="variations")
 	sku = SKUField(unique=True)
 	quantity = models.IntegerField(_("Number in stock"), blank=True, null=True) 
+	default = models.BooleanField(_("Default"))
 	objects = ProductVariationManager()
-	
+
 	def __unicode__(self):
 		return "%s %s" % (self.product, ", ".join(["%s: %s" % 
 			(field.name.title(), getattr(self, field.name)) for field in 
@@ -135,6 +141,11 @@ class BaseProductVariation(models.Model):
 		if not self.sku:
 			self.sku = self.id
 			self.save()
+		if self.default:
+			product = self.product
+			for field in ("unit_price", "sale_price", "sale_from", "sale_to"):
+				setattr(product, field, getattr(self, field))
+			product.save()
 
 	@classmethod
 	def option_fields(cls):
@@ -146,15 +157,15 @@ class BaseProductVariation(models.Model):
 
 	def has_stock(self, quantity=1):
 		"""
-		check the given quantity is in stock taking carts into account and 
-		caching the number in carts
+		check the given quantity is in stock taking carts into account the 
+		number in carts, and cache the number
 		"""
 		if self.quantity is None:
 			return True
 		if not hasattr(self, "_cached_num_available"):
 			num_available = self.quantity
 			in_carts = CartItem.objects.filter(sku=self.sku).aggregate(
-				total_quantity=models.Sum("quantity"))["total_quantity"]
+				quantity_sum=models.Sum("quantity"))["quantity_sum"]
 			if in_carts is not None:
 				num_available = num_available - in_carts
 			self._cached_num_available = num_available
@@ -162,10 +173,9 @@ class BaseProductVariation(models.Model):
 
 # build the ProductVariation model from the BaseProductVariation model by
 # adding each option in shop.settings.PRODUCT_OPTIONS as an OptionField
-_options = {"Meta": object, "__module__": BaseProductVariation.__module__}
-for _name, _choices in PRODUCT_OPTIONS:
-	_options[_name] = OptionField(choices=zip(_choices, _choices))
-ProductVariation = type("ProductVariation", (BaseProductVariation,), _options)
+ProductVariation = clone_model("ProductVariation", BaseProductVariation, 
+	dict([(option[0], OptionField(choices=make_choices(option[1]))) 
+	for option in PRODUCT_OPTIONS]))
 
 class Address(models.Model):
 	"""
@@ -186,43 +196,41 @@ class Address(models.Model):
 	phone = models.CharField(_("Phone"), max_length=20)
 	
 	@classmethod
-	def make(cls, field_prefix):
+	def clone(cls, field_prefix):
 		"""
-		return a new model with the same fields as Address as well as a 
-		PREFIX_fields and PREFIX_field_names methods for accessing the address 
-		fields and field names by prefix
+		return a new model with the same fields as Address named using the 
+		given PREFIX, as well as a PREFIX_fields and PREFIX_field_names methods 
+		for accessing the address fields and field names by prefix
 		"""
-		class Meta:
-			abstract = True
 		def field_names_by_prefix(cls):
 			return [f.name for f in cls._meta.fields 
 				if f.name.startswith(field_prefix)]
 		def fields_by_prefix(instance):
 			return [{"name": f.verbose_name, "value": getattr(instance, f.name)} 
 				for f in instance._meta.fields if f.name.startswith(field_prefix)]
-		fields = {"Meta": Meta, "__module__": cls.__module__, 
-			"%s_field_names" % field_prefix: classmethod(field_names_by_prefix),
-			"%s_fields" % field_prefix: fields_by_prefix}
-		for field in cls._meta.fields:
-			if not isinstance(field, models.AutoField):
-				fields["%s_%s" % (field_prefix, field.name)] = copy(field)
-		cls_name = "".join(s.title() for s in field_prefix.split("_"))
-		return type(cls_name, (models.Model,), fields)
+		fields = dict([("%s_%s" % (field_prefix, f.name), copy(f)) 
+			for f in cls._meta.fields if not isinstance(f, models.AutoField)])
+		fields.update({"%s_fields" % field_prefix: fields_by_prefix, 
+			"%s_field_names" % field_prefix: classmethod(field_names_by_prefix)})
+		name = "".join(s.title() for s in field_prefix.split("_"))
+		return clone_model(name, models.Model, fields, abstract=True)
 
-class Order(Address.make("billing_detail"), Address.make("shipping_detail")):
+class Order(Address.clone("billing_detail"), Address.clone("shipping_detail")):
 
 	class Meta:
 		verbose_name = _("Order")
 		verbose_name_plural = _("Orders")
 
 	billing_detail_email = models.EmailField(_("Email"))
-	additional_instructions = models.TextField(blank=True)
-	time = models.DateTimeField(auto_now_add=True)
-	shipping_type = models.CharField(max_length=50, blank=True)
-	shipping_total = MoneyField()
-	item_total = MoneyField()
-	total = MoneyField()
-	status = models.IntegerField(choices=ORDER_STATUSES, 
+	additional_instructions = models.TextField(_("Additional instructions"), 
+		blank=True)
+	time = models.DateTimeField(_("Time"), auto_now_add=True)
+	shipping_type = models.CharField(_("Shipping type"), max_length=50, 
+		blank=True)
+	shipping_total = MoneyField(_("Shipping total"))
+	item_total = MoneyField(_("Item total"))
+	total = MoneyField(_("Order total"))
+	status = models.IntegerField(_("Status"), choices=ORDER_STATUSES, 
 		default=ORDER_STATUS_DEFAULT)
 
 	def billing_name(self):
@@ -240,11 +248,7 @@ class Order(Address.make("billing_detail"), Address.make("shipping_detail")):
 
 class Cart(models.Model):
 
-	class Meta:
-		verbose_name = _("Cart")
-		verbose_name_plural = _("Carts")
-
-	timestamp = models.DateTimeField(auto_now=True)
+	last_updated = models.DateTimeField(_("Last updated"), auto_now=True)
 	objects = CartManager()
 
 	def __iter__(self):
@@ -263,7 +267,7 @@ class Cart(models.Model):
 		item, created = self.items.get_or_create(sku=variation.sku)
 		if created:
 			item.description = str(variation)
-			item.unit_price = variation.product.price()
+			item.unit_price = variation.price()
 			item.url = variation.product.get_absolute_url()
 			images = variation.product.images()
 			if images:
@@ -301,15 +305,13 @@ class SelectedProduct(models.Model):
 	"""
 
 	class Meta:
-		verbose_name = _("Product")
-		verbose_name_plural = _("Products")
 		abstract = True
 		
 	sku = SKUField()
-	description = models.CharField(max_length=200)
-	quantity = models.IntegerField(default=0)
-	unit_price = MoneyField(default=Decimal("0"))
-	total_price = MoneyField(default=Decimal("0"))
+	description = models.CharField(_("Description"), max_length=200)
+	quantity = models.IntegerField(_("Quantity"), default=0)
+	unit_price = MoneyField(_("Unit price"), default=Decimal("0"))
+	total_price = MoneyField(_("Total price"), default=Decimal("0"))
 	
 	def __unicode__(self):
 		return ""

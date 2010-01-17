@@ -1,16 +1,16 @@
 {% extends "shop/base.html" %}
-{% load shop_tags %}
+{% load shop_tags i18n %}
 
-{% block title %}Cart{% endblock %}
+{% block title %}{% trans "Cart" %}{% endblock %}
 
 {% block main %}
 {% if cart.has_items %}
 <table id="cart" border="0" cellpadding="5" cellspacing=0">
 	<tr>
-		<th class="cart-item">Item</th>
-		<th>Unit Price</th>
-		<th>Qty</th>
-		<th>Price</th>
+		<th class="cart-item">{% trans "Item" %}</th>
+		<th>{% trans "Unit Price" %}</th>
+		<th>{% trans "Qty" %}</th>
+		<th>{% trans "Price" %}</th>
 	</tr>
 	{% for item in cart %}
 	<tr class="{% cycle 'row1' 'row2' %}">
@@ -31,19 +31,20 @@
 	</tr>
 	{% endfor %}
 	<tr>
-		<td colspan="3">Total</td>
+		<td colspan="3">{% trans "Total" %}</td>
 		<td>{{ cart.total_price|currency }}</td>
 	</tr>
 	<tr>
 		<td colspan="4">
 			<form action="{% url shop_checkout %}">
-				<input type="submit" class="button" value="Go to Checkout" />
+				<input type="submit" class="button" 
+					value="{% trans "Go to Checkout" %}" />
 			</form>
 		</td>
 	</tr>
 </table>
 {% else %}
-<div>Your cart is empty.</div>
+<div>{% trans "Your cart is empty." %}</div>
 {% endif %}
 {% endblock %}
 

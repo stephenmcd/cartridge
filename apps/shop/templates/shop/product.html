@@ -1,5 +1,37 @@
 {% extends "shop/base.html" %}
-{% load shop_tags %}
+{% load shop_tags i18n %}
+
+{% block extrahead %}
+{{ block.super }}
+<script type="text/javascript" 
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+<script type="text/javascript">
+$(function() {
+
+	var variations = {{ variations_json|safe }};
+	var selections = $('#add-cart select');
+	
+	// on selection of an option, reduce the list of variations to the one 
+	// matching all the selected options - if there is one, show it and hide 
+	// the others 
+	selections.change(function() {
+		var variation = $.grep(variations, function(v) {
+			var valid = true;
+			$.each(selections, function() {
+				valid = valid && v[this.name] == this[this.selectedIndex].value;
+			});
+			return valid;
+		});
+		if (variation.length == 1) {
+			$('#variations li').hide();
+			$('#variation-' + variation[0].sku).show();
+		}
+	});
+	selections.change();
+	
+});
+</script>
+{% endblock %}
 
 {% block title %}{{ product.title }}{% endblock %}
 
@@ -18,25 +50,31 @@
 
 <div>{{ product.description }}</div>
 
-{% if product.has_price %}
-<div>
-	{% if product.on_sale %}
-		<span class="old-price">{{ product.unit_price|currency }}</span>
-		On sale:
-	{% endif %}
-	{{ product.price|currency }}
-</div>
-{% endif %}
+<ul id="variations">
+	{% for variation in variations %}
+	<li id="variation-{{ variation.sku }}">
+		{% if variation.has_price %}
+			{% if variation.on_sale %}
+				<span class="old-price">{{ variation.unit_price|currency }}</span>
+				{% trans "On sale:" %}
+			{% endif %}
+			{{ variation.price|currency }}
+		{% else %}
+		{% trans "The selected options are currently unavailable." %} 
+		{% endif %}
+	</li>
+	{% endfor %}
+</ul>
 
 {% if product.available %}
 <form method="post" id="add-cart">
 	<ul>
 		{{ add_cart_form.as_ul }}
-		<li><input type="submit" class="button" value="Buy" /></li>
+		<li><input type="submit" class="button" value="{% trans "Buy" %}" /></li>
 	</ul>
 </form>
 {% else %}
-<div>This product is currently unavailable</div>
+<div>{% trans "This product is currently unavailable." %}</div>
 {% endif %}
 
 {% endblock %}

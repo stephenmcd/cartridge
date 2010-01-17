@@ -77,13 +77,12 @@ class ShopTests(TestCase):
 		"""
 		test the cart object and cart add/remove forms
 		"""
-		price = Decimal("20")
-		self._product.unit_price = price
-		self._product.save()
 		self._product.variations.all().delete()
-		self._product.variations.manage_empty()
+		self._product.variations.create_from_options(PRODUCT_OPTIONS)
+		price = Decimal("20")
 		quantity = 5
 		variation = self._product.variations.all()[0]
+		variation.unit_price = price
 		variation.quantity = quantity * 2
 		variation.save()
 
@@ -94,8 +93,8 @@ class ShopTests(TestCase):
 		self.assertEqual(cart.total_price(), Decimal("0"))
 
 		# add quantity and check stock levels / cart totals
-		data = dict(zip(variation.options(), 
-			[field.name for field in ProductVariation.option_fields()]))
+		data = dict(zip([field.name for field in 
+			ProductVariation.option_fields()], variation.options()))
 		data["quantity"] = quantity
 		self.client.post(self._product.get_absolute_url(), data)
 		cart = Cart.objects.from_request(self.client)

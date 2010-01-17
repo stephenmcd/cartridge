@@ -30,8 +30,8 @@ ORDER_STATUS_DEFAULT = getattr(settings, "SHOP_ORDER_STATUS_DEFAULT", 1)
 
 # sequence of name/sequence pairs defining the selectable options for products
 PRODUCT_OPTIONS = getattr(settings, "SHOP_PRODUCT_OPTIONS", (
-	("Size", ("Extra Small","Small","Regular","Large","Extra Large")),
-	("Colour", ("Red","Orange","Yellow","Green","Blue","Indigo","Violet")),
+	("size", ("Extra Small","Small","Regular","Large","Extra Large")),
+	("colour", ("Red","Orange","Yellow","Green","Blue","Indigo","Violet")),
 ))
 
 # email address that order receipts should be emailed from

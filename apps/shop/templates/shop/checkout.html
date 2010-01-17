@@ -1,7 +1,7 @@
 {% extends "shop/base.html" %}
-{% load shop_tags %}
+{% load shop_tags i18n %}
 
-{% block title %}Checkout{% endblock %}
+{% block title %}{% trans "Checkout" %}{% endblock %}
 
 {% block main %}
 
@@ -14,7 +14,7 @@
 	<input type="hidden" name="{{ step_field }}" value="{{ step0 }}" />
 	<input type="submit" class="button" value="Next" />
 	{% else %} 
-	<div>Your cart is empty.</div>
+	<div>{% trans "Your cart is empty." %}</div>
 	{% endif %}
 </form>
 
