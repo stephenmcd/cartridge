@@ -90,11 +90,12 @@ def thumbnail(image_url, width, height):
 	return thumb_url
 
 @register.inclusion_tag("shop/order_totals.html", takes_context=True)
-def order_totals(context):
+def order_totals(context, text_only=False):
 	"""
-	add item_total, shipping_total and order_total to the include context
+	add item_total, shipping_total and order_total to the include context.
 	use the order object for email receipts, or the cart object for checkout
 	"""
+	context["text_only"] = text_only
 	if "order" in context:
 		context["item_total"] = context["order"].total
 		context["shipping_total"] = context["order"].shipping_total

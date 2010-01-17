@@ -1,9 +1,15 @@
-{% load shop_tags %}
-
+{% load shop_tags i18n %}
+{% if text_only %}{% if shipping_total %}
+{% trans "Sub total:" %} {{ item_total|currency }}
+{% trans "Shipping:" %} {{ shipping_total|currency }}
+{% endif %}{% trans "Total:" %} {{ order_total|currency }}
+{% else %}
 <ul class="order-totals">
 	{% if shipping_total %}
-	<li>Sub total: {{ item_total|currency }}</li>
-	<li>Shipping: {{ shipping_total|currency }}</li>
+	<li>{% trans "Sub total:" %} {{ item_total|currency }}</li>
+	<li>{% trans "Shipping:" %} {{ shipping_total|currency }}</li>
 	{% endif %}
-	<li>Total: {{ order_total|currency }}</li>
+	<li>{% trans "Total:" %} {{ order_total|currency }}</li>
 </ul>
+{% endif %}
+

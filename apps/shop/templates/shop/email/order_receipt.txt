@@ -1,26 +1,26 @@
-{% load shop_tags %}
+{% load shop_tags i18n %}
 
-Dear {{ order.billing_detail_first_name }},
+{% trans "Dear" %} {{ order.billing_detail_first_name }},
 
-Your order has been successful, details are below.
+{% trans "Your order has been successful, details are below." %}
 
-Order ID: #{{ order.id }}
+{% trans "Order ID:" %} #{{ order.id }}
 
-Billing Details:
+{% trans "Billing Details:" %}
 {% for field in order.billing_detail_fields %}
 {{ field.name }}: {{ field.value }}
 {% endfor %}
 
-Shipping Details:
+{% trans "Shipping Details:" %}
 {% for field in order.shipping_detail_fields %}
 {{ field.name }}: {{ field.value }}
 {% endfor %}
 
-Items Ordered:
+{% trans "Items Ordered:" %}
 {% for item in order_items %}
-{{ item.quantity }} x {{ item.description }} {{ item.unit_price|currency }} each
+{{ item.quantity }} x {{ item.description }} {{ item.unit_price|currency }} {% trans "each" %}
 {% endfor %}
 
-{% order_totals %}
+{% order_totals "True" %}
 
 http://{{ request.get_host }}
