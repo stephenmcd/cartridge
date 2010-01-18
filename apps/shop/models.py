@@ -91,6 +91,9 @@ class PricedModel(models.Model):
 		return Decimal("0")
 
 class Product(ShopModel, PricedModel):
+	"""
+	container model for a product
+	"""
 
 	class Meta:
 		verbose_name = _("Product")
@@ -98,23 +101,27 @@ class Product(ShopModel, PricedModel):
 
 	description = models.TextField(_("Description"), blank=True)
 	available = models.BooleanField(_("Available for purchase"), default=False)
+	image = models.CharField(max_length=100, blank=True)
 	categories = models.ManyToManyField(Category, blank=True, 
 		related_name="products")
 
-	image_1 = models.ImageField(max_length=100, blank=True, upload_to="product")
-	image_2 = models.ImageField(max_length=100, blank=True, upload_to="product")
-	image_3 = models.ImageField(max_length=100, blank=True, upload_to="product")
-	image_4 = models.ImageField(max_length=100, blank=True, upload_to="product")
+class ProductImage(models.Model):
+	"""
+	images related to a product - also given a 1to1 relationship with variations
+	"""
 	
-	@classmethod
-	def image_fields(cls):
-		return [field for field in cls._meta.fields 
-			if isinstance(field, models.ImageField)]
+	class Meta:
+		verbose_name = _("Image")
+		verbose_name_plural = _("Images")
 	
-	def images(self):
-		return [getattr(self, field.name) for field in self.image_fields()
-			if getattr(self, field.name)]
- 
+	description = models.CharField(_("Description"), max_length=100, unique=True)
+	file = models.ImageField(_("Image"), max_length=100, blank=True, 
+		upload_to="product")
+	product = models.ForeignKey(Product, related_name="images")
+	
+	def __unicode__(self):
+		return self.description
+
 class BaseProductVariation(PricedModel):
 	"""
 	abstract model used to create the ProductVariation model below using 
@@ -129,6 +136,7 @@ class BaseProductVariation(PricedModel):
 	sku = SKUField(unique=True)
 	quantity = models.IntegerField(_("Number in stock"), blank=True, null=True) 
 	default = models.BooleanField(_("Default"))
+	image = models.OneToOneField(ProductImage, null=True, blank=True)
 	objects = ProductVariationManager()
 
 	def __unicode__(self):
@@ -269,9 +277,9 @@ class Cart(models.Model):
 			item.description = str(variation)
 			item.unit_price = variation.price()
 			item.url = variation.product.get_absolute_url()
-			images = variation.product.images()
-			if images:
-				item.image = str(images[0])
+			image = variation.image
+			if image is not None:
+				item.image = image.file.name
 		item.quantity += quantity
 		item.save()
 			

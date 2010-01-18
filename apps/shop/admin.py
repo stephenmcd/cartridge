@@ -1,14 +1,14 @@
 
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-from shop.models import Category, Product, ProductVariation, Order, OrderItem
+from shop.models import (Category, Product, ProductImage, 
+	ProductVariation, Order, OrderItem)
 from shop.fields import MoneyField
 from shop import forms
 
 
 # lists of field names
 option_fields = [field.name for field in ProductVariation.option_fields()]
-image_fields = [field.name for field in Product.image_fields()]
 billing_fields = Order.billing_detail_field_names()
 shipping_fields = Order.shipping_detail_field_names()
 
@@ -24,9 +24,14 @@ class ProductVariationAdmin(admin.TabularInline):
 	verbose_name_plural = _("Current variations")
 	model = ProductVariation
 	fields = ("sku", "default", "quantity", "unit_price", "sale_price", 
-		"sale_from", "sale_to")
+		"sale_from", "sale_to", "image")
 	extra = 0
+	form = forms.ProductVariationAdminForm
 	formset = forms.ProductVariationAdminFormset
+
+class ProductImageAdmin(admin.TabularInline):
+	model = ProductImage
+	extra = 5
 	
 class ProductAdmin(admin.ModelAdmin):
 
@@ -35,14 +40,12 @@ class ProductAdmin(admin.ModelAdmin):
 	list_filter = ("categories", "active", "available")
 	filter_horizontal = ("categories",)
 	search_fields = ("title", "categories__title", "variations_sku")
-	inlines = (ProductVariationAdmin,)
+	inlines = (ProductVariationAdmin, ProductImageAdmin)
 	form = forms.ProductAdminForm
 	formfield_overrides = {MoneyField: {"widget": forms.MoneyWidget}}
-
 	fieldsets = (
 		(None, {"fields": 
 			("title", "description", ("active", "available"), "categories")}),
-		(_("Images"), {"fields": image_fields}),
 		(_("Create new variations"), {"fields": option_fields}),
 	)
 

@@ -37,22 +37,21 @@ $(function() {
 
 {% block main %}
 
-{% with product.images as images %}
 {% if images %}
 <div class="product-images">
 	{% for image in images %}
-	<a href="{{ MEDIA_URL }}{{ image }}"><img alt="{{ product.title }}"
-		src="{{ MEDIA_URL }}{% thumbnail image 0 160  %}" /></a>
+	<a href="{{ MEDIA_URL }}{{ image.file}}"><img alt="{{ image.description }}"
+		src="{{ MEDIA_URL }}{% thumbnail image.file 0 160  %}" /></a>
 	{% endfor %}
 </div>
 {% endif %}
-{% endwith %}
 
 <div>{{ product.description }}</div>
 
 <ul id="variations">
 	{% for variation in variations %}
-	<li id="variation-{{ variation.sku }}">
+	<li id="variation-{{ variation.sku }}"
+		{% if not variation.default %}" style="display:none;"{% endif %}>
 		{% if variation.has_price %}
 			{% if variation.on_sale %}
 				<span class="old-price">{{ variation.unit_price|currency }}</span>

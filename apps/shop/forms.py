@@ -3,7 +3,7 @@ from copy import copy
 from datetime import datetime
 from locale import localeconv
 from django import forms
-from django.forms.models import BaseInlineFormSet
+from django.forms.models import BaseModelForm, BaseInlineFormSet
 from django.contrib.formtools.wizard import FormWizard
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -201,7 +201,7 @@ class CheckoutWizard(FormWizard):
 checkout_wizard = CheckoutWizard([OrderForm, PaymentForm])
 
 #######################
-#    admin widgets    
+#	admin widgets	
 #######################
 
 class MoneyWidget(forms.TextInput):
@@ -239,6 +239,16 @@ _fields = dict([(field.name, forms.MultipleChoiceField(
 	for field in ProductVariation.option_fields()])
 ProductAdminForm = type("ProductAdminForm", (_BaseProductAdminForm,), _fields)
 
+class ProductVariationAdminForm(forms.ModelForm):
+	"""
+	ensures the list of images for the variation are specific to the variation's 
+	product
+	"""
+	def __init__(self, *args, **kwargs):
+		super(ProductVariationAdminForm, self).__init__(*args, **kwargs)
+		self.fields["image"].queryset = self.fields["image"].queryset.filter(
+			product=kwargs["instance"].product)
+	
 class ProductVariationAdminFormset(BaseInlineFormSet):
 	"""
 	ensures no more than one variation is checked as default

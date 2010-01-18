@@ -31,11 +31,11 @@ def product(request, slug, template="shop/product.html"):
 				add_cart_form.cleaned_data["quantity"])
 			return HttpResponseRedirect(reverse("shop_cart"))
 	variations = product.variations.all()
-	variations_json = simplejson.dumps(list(variations.values("sku", 
+	variations_json = simplejson.dumps(list(variations.values("sku", "image",
 		*[f.name for f in ProductVariation.option_fields()]))) 
 	return render_to_response(template, {"product": product, "variations_json":
-		variations_json, "variations": variations, "add_cart_form": 
-		add_cart_form}, RequestContext(request))
+		variations_json, "variations": variations, "images": product.images.all(),
+		"add_cart_form": add_cart_form}, RequestContext(request))
 
 def cart(request, template="shop/cart.html"):
 	"""
