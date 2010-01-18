@@ -1,8 +1,8 @@
 
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-from shop.models import (Category, Product, ProductImage, 
-	ProductVariation, Order, OrderItem)
+from shop.models import Category, Product, ProductVariation, ProductImage, \
+	Order, OrderItem
 from shop.fields import MoneyField
 from shop import forms
 
@@ -44,9 +44,10 @@ class ProductAdmin(admin.ModelAdmin):
 	form = forms.ProductAdminForm
 	formfield_overrides = {MoneyField: {"widget": forms.MoneyWidget}}
 	fieldsets = (
-		(None, {"fields": 
-			("title", "description", ("active", "available"), "categories")}),
-		(_("Create new variations"), {"fields": option_fields}),
+		(None, {"fields": ("title", "description", ("active", "available"))}),
+		(_("Categories"), {"classes": ("collapse",), "fields": ("categories",)}),
+		(_("Create new variations"), {"classes": ("collapse",), "fields": 
+			option_fields}),
 	)
 
 	def save_model(self, request, obj, form, change):
