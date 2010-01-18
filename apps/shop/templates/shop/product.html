@@ -11,6 +11,14 @@ $(function() {
 	var variations = {{ variations_json|safe }};
 	var selections = $('#add-cart select');
 	
+	var showImage = function(id) {
+		var image = $(id);
+		if (image.length == 1) {
+			$('#product-images-large li').hide();
+			image.show();
+		}
+	}
+	
 	// on selection of an option, reduce the list of variations to the one 
 	// matching all the selected options - if there is one, show it and hide 
 	// the others 
@@ -25,9 +33,16 @@ $(function() {
 		if (variation.length == 1) {
 			$('#variations li').hide();
 			$('#variation-' + variation[0].sku).show();
+			showImage('#image-' + variation[0].image + '-large');
 		}
 	});
 	selections.change();
+	
+	// show enlarged image on thumbnail click
+	$('#product-images-thumb a').click(function() {
+		showImage('#' + $(this).attr('id') + '-large');
+		return false;
+	});
 	
 });
 </script>
@@ -38,12 +53,21 @@ $(function() {
 {% block main %}
 
 {% if images %}
-<div class="product-images">
+<ul id="product-images-large">
 	{% for image in images %}
-	<a href="{{ MEDIA_URL }}{{ image.file}}"><img alt="{{ image.description }}"
-		src="{{ MEDIA_URL }}{% thumbnail image.file 0 160  %}" /></a>
+	<li id="image-{{ image.id }}-large"{% if not forloop.first %} 
+		style="display:none;"{% endif %}>
+		<a href="{{ MEDIA_URL }}{{ image.file }}"><img alt="{{ image.description }}"
+			src="{{ MEDIA_URL }}{% thumbnail image.file 0 300  %}" /></a></li>
 	{% endfor %}
-</div>
+</ul>
+<ul id="product-images-thumb">
+	{% for image in images %}
+	<li><a id="image-{{ image.id }}" 
+		href="{{ MEDIA_URL }}{{ image.file }}"><img alt="{{ image.description }}"
+		src="{{ MEDIA_URL }}{% thumbnail image.file 75 75  %}" /></a></li>
+	{% endfor %}
+</ul>
 {% endif %}
 
 <div>{{ product.description }}</div>

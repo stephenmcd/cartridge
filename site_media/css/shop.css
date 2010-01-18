@@ -8,12 +8,14 @@ body {font:1.2em sans-serif; background:#fff; color:#000;}
 #main div {padding:10px 0;}
 #cart-panel {right:0; margin:20px 25px; padding:10px; background:#ddd; 
 	border-radius:5px; text-align:center; z-index:2;}
-.product-images img {width:100px; height:100px; border:10px solid #ddd;}
-.row1 {background:#eee;}
-.row2 {background:#ddd;}
-a {color:#000;}
-#menu a:visited {color:#666;}
+#product-images-large img, #product-images-thumb img {border:10px solid #ddd;}
+#product-images-thumb img {margin-right:15px;}
 .old-price {text-decoration: line-through;}
+a {color:#000;}
+ul {list-style-type:none; padding:0;}
+li {display:inline;}
+#menu a:visited {color:#666;}
+#menu li {list-style-type:circle;}
 #footer {margin:40px; padding:20px; font-size:.8em; text-align:center; color:#333;}
 
 /* headings */
@@ -22,21 +24,16 @@ h1 {margin:20px; padding:20px 100px; line-height:60px; border-radius:10px; heigh
 h1 img {width:70px; height:70px; vertical-align:middle; padding:0 10px;}
 h2 {margin-top:0;}
 
-
 /* forms */
 textarea {display:block;}
-form li {list-style-type:none;}
 input, select {font-size:.8em; margin:0 10px;}
 .button {font-size:1.1em; padding:2px 20px; cursor:pointer; margin-bottom:20px;}
 .errorlist {color:#f00; font-size:.8em; font-weight:bold;}
 
 /* add to cart form */
 #add-cart {background:#ddd; padding:10px 20px; width:auto; white-space:nowrap;}
-#add-cart ul {margin:0; padding:0;}
-#add-cart li {display:inline;}
 #add-cart .button {margin-bottom:0;}
 #id_quantity {width:40px;}
-#variations li {list-style-type:none;}
 
 /* cart items table */
 #cart {width:100%;}
@@ -47,13 +44,15 @@ input, select {font-size:.8em; margin:0 10px;}
 .cart-item form {display:inline;}
 .cart-item input {cursor:pointer; padding:0;}
 .cart-item img {width:30px; height:30px; vertical-align:middle; margin-right:5px;}
+.row1 {background:#eee;}
+.row2 {background:#ddd;}
 
 /* checkout form fieldsets */
 fieldset {margin-bottom:20px;}
 fieldset ul label, fieldset ul input {display:block; float:left; width:150px;}
 fieldset ul {padding:0;}
-fieldset li {clear:both; padding:3px;}
+fieldset li {display:block; clear:both; padding:3px;}
 
 /* checkout totals */
-.order-totals {list-style-type:none; text-align:right;}
+.order-totals {text-align:right;}
 
