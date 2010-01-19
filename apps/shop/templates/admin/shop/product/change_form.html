@@ -19,12 +19,12 @@ $(function() {
 	var variationDefaults = variationsFieldset + ' td.default input:checkbox';
 	var addButtonID = 'show-image-row';
 	
-	// hide all the unused "extra" image field table rows
-	$(imagesFieldset + ' tr[class^=row]:not(.has_original)').hide();
+	// hide all the unused "extra" image field table rows apart from the first
+	$(imagesFieldset + ' tr[class^=row]:not(:first):not(.has_original)').hide();
 	
 	// add the add button for showing the next hidden field image field table row
 	$(imagesFieldset).append('<p id="' + addButtonID + '"><a href="#">+ ' + 
-		gettext('Add new image') + '</a></p>');
+		gettext('Add another image') + '</a></p>');
 		
 	// add button click handler - show the next hidden field image table row
 	$('#' + addButtonID).click(function() {
