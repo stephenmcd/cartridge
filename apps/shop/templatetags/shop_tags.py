@@ -17,7 +17,6 @@ def category_menu(context, parent_category=None):
 	categories in the context when first called for retrieval on subsequent 
 	recursive calls from the menu template
 	"""
-
 	if "menu_cats" not in context:
 		context["menu_cats"] = list(Category.objects.active())
 	context["category_branch"] = [category for category in context["menu_cats"] 
@@ -60,6 +59,8 @@ def thumbnail(image_url, width, height):
 
 	# abort if thumbnail exists, original image doesn't exist, invalid width or 
 	# height are given, or PIL not installed
+	if not image_url:
+		return ""
 	if os.path.exists(thumb_path):
 		return thumb_url
 	try:
