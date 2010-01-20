@@ -2,17 +2,21 @@
 from copy import copy
 from datetime import datetime
 from locale import localeconv
+
 from django import forms
 from django.forms.models import BaseModelForm, BaseInlineFormSet
 from django.contrib.formtools.wizard import FormWizard
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.utils.datastructures import SortedDict
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
+
 from shop.models import Product, ProductVariation, SelectedProduct, Cart, Order
 from shop.exceptions import CheckoutError
 from shop.settings import CARD_TYPES, ORDER_FROM_EMAIL
+from shop.templatetags.shop_tags import thumbnail
 from shop import checkout
 from shop.utils import make_choices, send_mail_template, set_locale
 
@@ -203,6 +207,20 @@ checkout_wizard = CheckoutWizard([OrderForm, PaymentForm])
 #######################
 #	admin widgets	
 #######################
+
+class ImageWidget(forms.FileInput):
+	"""
+	renders a visible thumbnail for image fields
+	"""
+	def render(self, name, value, attrs):
+		rendered = super(ImageWidget, self).render(name, value, attrs)
+		if value is not None:
+			orig_url = "%s%s" % (settings.MEDIA_URL, value)
+			thumb_url = "%s%s" % (settings.MEDIA_URL, thumbnail(value, 48, 48))
+			rendered = "<a target='_blank' href='%s'><img " \
+				"style='margin-right:6px;' src='%s' />%s</a>" % (orig_url, 
+				thumb_url, rendered)
+		return mark_safe(rendered)
 
 class MoneyWidget(forms.TextInput):
 	"""

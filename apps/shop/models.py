@@ -2,10 +2,13 @@
 from copy import copy
 from datetime import datetime
 from decimal import Decimal
+
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext, ugettext_lazy as _
+
 from shop.fields import OptionField, MoneyField, SKUField
 from shop.managers import ShopManager, CartManager, ProductVariationManager
 from shop.settings import ORDER_STATUSES, ORDER_STATUS_DEFAULT, PRODUCT_OPTIONS
@@ -51,6 +54,15 @@ class ShopModel(models.Model):
 			ugettext("View on site"))
 	admin_link.allow_tags = True
 	admin_link.short_description = ""
+	
+	def admin_thumb(self):
+		if self.image is None:
+			return ""
+		from shop.templatetags.shop_tags import thumbnail
+		thumb_url = "%s%s" % (settings.MEDIA_URL, thumbnail(self.image, 24, 24))
+		return "<img src='%s' />" % thumb_url
+	admin_thumb.allow_tags = True
+	admin_thumb.short_description = ""
 
 class Category(ShopModel):
 
@@ -101,9 +113,25 @@ class Product(ShopModel, PricedModel):
 
 	description = models.TextField(_("Description"), blank=True)
 	available = models.BooleanField(_("Available for purchase"), default=False)
-	image = models.CharField(max_length=100, blank=True)
+	image = models.CharField(max_length=100, blank=True, null=True)
 	categories = models.ManyToManyField(Category, blank=True, 
 		related_name="products")
+	
+	def set_image(self):
+		"""
+		stores the main image against the image field for direct access
+		"""
+		image = self._product.variations.get(default=True).image
+		if image is None:
+			image = self._product.images.all()[:1]
+			if len(image) == 1:
+				image = image[0]
+		if image:
+			image = image.file.name
+		else:
+			image = None
+		self.image = image
+		self.save()
 
 class ProductImage(models.Model):
 	"""
@@ -114,9 +142,9 @@ class ProductImage(models.Model):
 		verbose_name = _("Image")
 		verbose_name_plural = _("Images")
 	
-	description = models.CharField(_("Description"), max_length=100, unique=True)
 	file = models.ImageField(_("Image"), max_length=100, blank=True, 
 		upload_to="product")
+	description = models.CharField(_("Description"), max_length=100, unique=True)
 	product = models.ForeignKey(Product, related_name="images")
 	
 	def __unicode__(self):

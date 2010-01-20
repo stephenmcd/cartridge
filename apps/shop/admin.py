@@ -1,5 +1,6 @@
 
 from django.contrib import admin
+from django.db.models import ImageField
 from django.utils.translation import ugettext_lazy as _
 from shop.models import Category, Product, ProductVariation, ProductImage, \
 	Order, OrderItem
@@ -15,10 +16,12 @@ shipping_fields = Order.shipping_detail_field_names()
 		
 class CategoryAdmin(admin.ModelAdmin):
 	ordering = ("parent", "title")
-	list_display = ("title", "parent", "active", "admin_link")
+	list_display = ("admin_thumb", "title", "parent", "active", "admin_link")
+	list_display_links = ("admin_thumb", "title")
 	list_editable = ("parent", "active")
 	list_filter = ("parent",)
 	search_fields = ("title", "parent__title", "product_set__title")	
+	formfield_overrides = {ImageField: {"widget": forms.ImageWidget}}
 
 class ProductVariationAdmin(admin.TabularInline):
 	verbose_name_plural = _("Current variations")
@@ -32,11 +35,12 @@ class ProductVariationAdmin(admin.TabularInline):
 class ProductImageAdmin(admin.TabularInline):
 	model = ProductImage
 	extra = 20 
-			
+	formfield_overrides = {ImageField: {"widget": forms.ImageWidget}}
 	
 class ProductAdmin(admin.ModelAdmin):
 
-	list_display = ("title", "active", "available", "admin_link")
+	list_display = ("admin_thumb", "title", "active", "available", "admin_link")
+	list_display_links = ("admin_thumb", "title")
 	list_editable = ("active", "available")
 	list_filter = ("categories", "active", "available")
 	filter_horizontal = ("categories",)
@@ -68,7 +72,8 @@ class ProductAdmin(admin.ModelAdmin):
 		options = dict([(f, request.POST.getlist(f)) for f in option_fields 
 			if request.POST.getlist(f)])
 		self._product.variations.create_from_options(options)
-		self._product.variations.manage_empty()			
+		self._product.variations.manage_empty()
+		self._product.set_image()
 
 class OrderItemInline(admin.TabularInline):
 	verbose_name_plural = _("Items")
