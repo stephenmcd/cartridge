@@ -121,9 +121,9 @@ class Product(ShopModel, PricedModel):
 		"""
 		stores the main image against the image field for direct access
 		"""
-		image = self._product.variations.get(default=True).image
+		image = self.variations.get(default=True).image
 		if image is None:
-			image = self._product.images.all()[:1]
+			image = self.images.all()[:1]
 			if len(image) == 1:
 				image = image[0]
 		if image:
