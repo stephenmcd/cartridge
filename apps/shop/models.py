@@ -50,6 +50,8 @@ class ShopModel(models.Model):
 			kwargs={"slug": self.slug})
 	
 	def admin_link(self):
+		if not self.active:
+			return ""
 		return "<a href='%s'>%s</a>" % (self.get_absolute_url(), 
 			ugettext("View on site"))
 	admin_link.allow_tags = True
@@ -116,21 +118,12 @@ class Product(ShopModel, PricedModel):
 	image = models.CharField(max_length=100, blank=True, null=True)
 	categories = models.ManyToManyField(Category, blank=True, 
 		related_name="products")
-	
+
 	def set_image(self):
 		"""
 		stores the main image against the image field for direct access
 		"""
-		image = self.variations.get(default=True).image
-		if image is None:
-			image = self.images.all()[:1]
-			if len(image) == 1:
-				image = image[0]
-		if image:
-			image = image.file.name
-		else:
-			image = None
-		self.image = image
+		self.image = self.variations.get(default=True).get_image()
 		self.save()
 
 class ProductImage(models.Model):
@@ -164,7 +157,7 @@ class BaseProductVariation(PricedModel):
 	sku = SKUField(unique=True)
 	quantity = models.IntegerField(_("Number in stock"), blank=True, null=True) 
 	default = models.BooleanField(_("Default"))
-	image = models.OneToOneField(ProductImage, null=True, blank=True)
+	image = models.ForeignKey(ProductImage, null=True, blank=True)
 	objects = ProductVariationManager()
 
 	def __unicode__(self):
@@ -206,6 +199,22 @@ class BaseProductVariation(PricedModel):
 				num_available = num_available - in_carts
 			self._cached_num_available = num_available
 		return self._cached_num_available >= quantity
+
+	def get_image(self):
+		"""
+		return either the image for the variation, or the first image for the 
+		variation's product
+		"""
+		image = self.image
+		if image is None:
+			image = self.product.images.all()[:1]
+			if len(image) == 1:
+				image = image[0]
+		if image:
+			image = image.file.name
+		else:
+			image = None
+		return image
 
 # build the ProductVariation model from the BaseProductVariation model by
 # adding each option in shop.settings.PRODUCT_OPTIONS as an OptionField
@@ -305,9 +314,7 @@ class Cart(models.Model):
 			item.description = str(variation)
 			item.unit_price = variation.price()
 			item.url = variation.product.get_absolute_url()
-			image = variation.image
-			if image is not None:
-				item.image = image.file.name
+			item.image = variation.get_image()
 		item.quantity += quantity
 		item.save()
 			
