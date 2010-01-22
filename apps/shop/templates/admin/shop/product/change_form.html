@@ -25,6 +25,15 @@ $(function() {
 	
 	// hide all the unused "extra" image field table rows apart from the first
 	$(imagesFieldset + ' tr[class^=row]:not(:first):not(.has_original)').hide();
+	// if a description was entered for the image the fieldset will be invalid 
+	// and not contain the 'has_original' class, so the above will hide it,
+	// therefore show it again as well as removing the invalid image name that's
+	// used in the img tag for displaying the image, and replacing it with a 
+	// reminder to the user to select the image again as django fails to maintain
+	// a reference to the uploaded image when another field is invalid 
+	$(imagesFieldset + ' ul[class=errorlist]').parent().parent().show().find(
+		'a').replaceWith('<ul class="errorlist"><li>' + 
+		gettext('Please select the image again') + '</li></ul>');
 	
 	// add the add button for showing the next hidden field image field table row
 	$(imagesFieldset).append('<p id="' + addButtonID + '"><img src="' +
