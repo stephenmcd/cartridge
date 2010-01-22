@@ -1,8 +1,10 @@
 
 import os
 import locale
+
 from django import template
 from django.conf import settings
+
 from shop.models import Category
 from shop.utils import set_locale
 

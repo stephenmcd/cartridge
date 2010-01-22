@@ -218,7 +218,7 @@ class ImageWidget(forms.FileInput):
 			orig_url = "%s%s" % (settings.MEDIA_URL, value)
 			thumb_url = "%s%s" % (settings.MEDIA_URL, thumbnail(value, 48, 48))
 			rendered = "<a target='_blank' href='%s'><img " \
-				"style='margin-right:6px;' src='%s' />%s</a>" % (orig_url, 
+				"style='margin-right:6px;' src='%s' /></a>%s" % (orig_url, 
 				thumb_url, rendered)
 		return mark_safe(rendered)
 

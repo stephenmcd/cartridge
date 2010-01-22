@@ -2,10 +2,11 @@
 from django.contrib import admin
 from django.db.models import ImageField
 from django.utils.translation import ugettext_lazy as _
-from shop.models import Category, Product, ProductVariation, ProductImage, \
-	Order, OrderItem
+
 from shop.fields import MoneyField
 from shop import forms
+from shop.models import Category, Product, ProductVariation, ProductImage, \
+	Order, OrderItem
 
 
 # lists of field names

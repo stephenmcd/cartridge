@@ -1,8 +1,10 @@
 
 from decimal import Decimal
 from operator import mul
+
 from django.test import TestCase
 from django.core.urlresolvers import reverse
+
 from shop.models import Product, ProductVariation, Category, Cart, CartItem
 from shop.settings import PRODUCT_OPTIONS
 

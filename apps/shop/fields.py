@@ -1,7 +1,9 @@
 
 from locale import localeconv
+
 from django.db.models import CharField, DecimalField
 from django.utils.translation import ugettext_lazy as _
+
 from shop.utils import set_locale
 
 

@@ -4,6 +4,7 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.utils import simplejson
+
 from shop.models import Category, Product, ProductVariation, Cart
 from shop.forms import get_add_cart_form, OrderForm
 

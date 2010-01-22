@@ -1,7 +1,9 @@
 
 from datetime import datetime, timedelta
+
 from django.db.models import Manager
 from django.utils.datastructures import SortedDict
+
 from shop.settings import CART_EXPIRY_MINUTES
 
 

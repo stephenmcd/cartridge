@@ -1,9 +1,11 @@
 
 import locale
 from os.path import basename
+
 from django.template import loader, Context
 from django.core.mail import EmailMultiAlternatives
 from django.db.models import Model
+
 from shop.settings import CURRENCY_LOCALE
 
 
