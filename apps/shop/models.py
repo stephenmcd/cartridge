@@ -366,7 +366,7 @@ class SelectedProduct(models.Model):
 class CartItem(SelectedProduct):
 	cart = models.ForeignKey(Cart, related_name="items")
 	url = models.CharField(max_length=200)
-	image = models.CharField(max_length=200)
+	image = models.CharField(max_length=200, null=True)
 
 class OrderItem(SelectedProduct):
 	order = models.ForeignKey(Order, related_name="items")
