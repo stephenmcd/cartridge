@@ -16,12 +16,6 @@ shipping_fields = Order.shipping_detail_field_names()
 
 		
 class CategoryAdmin(admin.ModelAdmin):
-	ordering = ("parent", "title")
-	list_display = ("admin_thumb", "title", "parent", "active", "admin_link")
-	list_display_links = ("admin_thumb", "title")
-	list_editable = ("parent", "active")
-	list_filter = ("parent",)
-	search_fields = ("title", "parent__title", "product_set__title")	
 	formfield_overrides = {ImageField: {"widget": forms.ImageWidget}}
 
 class ProductVariationAdmin(admin.TabularInline):
