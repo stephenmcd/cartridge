@@ -8,7 +8,7 @@ from django.views.generic.simple import direct_to_template
 admin.autodiscover()
 
 urlpatterns = patterns("",
-	("^admin/(.*)", admin.site.root),
+	("^admin/", include(admin.site.urls)),
 	("^shop/", include("shop.urls")),
 	("^$", direct_to_template, {"template": "index.html"}),
 )

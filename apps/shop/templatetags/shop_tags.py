@@ -12,18 +12,36 @@ from shop.utils import set_locale
 register = template.Library()
 
 
+def _category_menu(context, parent_category, category_qs):
+	"""
+	return a list of child categories for the given parent, storing all 
+	categories in a dict in the context when first called using parents as keys 
+	for retrieval on subsequent recursive calls from the menu template
+	"""
+	if "menu_cats" not in context:
+		categories = {}
+		for category in category_qs:
+			if category.parent not in categories:
+				categories[category.parent] = []
+			categories[category.parent].append(category)
+		context["menu_cats"] = categories
+	context["category_branch"] = context["menu_cats"].get(parent_category, [])
+	return context
+
 @register.inclusion_tag("shop/category_menu.html", takes_context=True)
 def category_menu(context, parent_category=None):
 	"""
-	return a list of child categories for the given parent, storing all 
-	categories in the context when first called for retrieval on subsequent 
-	recursive calls from the menu template
+	public shop category menu
 	"""
-	if "menu_cats" not in context:
-		context["menu_cats"] = list(Category.objects.active())
-	context["category_branch"] = [category for category in context["menu_cats"] 
-		if category.parent == parent_category]
-	return context
+	return _category_menu(context, parent_category, Category.objects.active())
+
+@register.inclusion_tag("admin/shop/category/category_menu.html", 
+	takes_context=True)
+def category_menu_admin(context, parent_category=None):
+	"""
+	admin category menu
+	"""
+	return _category_menu(context, parent_category, Category.objects.all())
 
 @register.filter
 def currency(value):

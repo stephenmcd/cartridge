@@ -1,0 +1,97 @@
+{% extends "admin/change_list.html" %}
+{% load shop_tags i18n %}
+
+{% block extrahead %}{{ block.super }}
+<style type="text/css">
+
+	#tree {margin-top:10px; width:600px;}
+	#tree div {border:solid #ccc; border-width:0 0 1px 1px; padding:7px; 
+		float:left; width:100%;}
+	#tree ul {padding:0;}
+	/*#tree ul .row1, #tree ul .row2 {background:#EDF3FE;}*/
+	#tree ul ul {padding-left:40px; }
+	#tree ul ul .row1, #tree ul ul .row2 {background:#fff;}
+	#tree li {list-style-type:none;}
+	#tree .category-name {float:left; font-weight:bold; font-size:12px;}
+	#tree a {margin-right:10px; float:right;}
+	#tree a .icon {display:block; float:left; width:16px; color:#fff; 
+		text-align:center; background:#999; margin:0 8px 0 4px;}
+	#tree a .close {display:none;}
+	#tree a:hover .icon {color:#fff; background:#5B80B2;}
+	
+</style>
+<script type="text/javascript" 
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+<script type="text/javascript">
+
+	var cookie = 'cartridge-admin-tree';
+	var at = ('; ' + document.cookie).indexOf('; ' + cookie + '=');
+	var ids = '';
+
+	if (at > -1) {
+		ids = document.cookie.substr(at + cookie.length + 1).split(';')[0];
+	}
+
+	var toggleID = function(opened, id) {
+		// add or remove the id from the cookie ids string
+		var pad = function(s) {return ',' + s + ',';};
+		if (opened) {
+			if (pad(ids).indexOf(pad(id)) == -1) {
+				if (ids) {ids += ',';}
+				ids += id;
+			}
+		} else { 
+			ids = pad(ids).split(pad(id)).join('');
+			ids = ids.substr(1, ids.length - 2);
+		}
+		document.cookie = cookie + '=' + ids + '; path=/';
+	};
+	
+	$(function() {
+		// hide all branches
+		$('#tree ul ul').hide();
+		$('#tree .category-name').click(function() {
+			// show/hide the branch and toggle the icon
+			var categoryLink = $(this);
+			categoryLink.parent().parent().find('ul').toggle();
+			categoryLink.find('.icon').toggle();
+			// add or remove the category id from the cookie
+			var opened = categoryLink.find('.close:visible').length == 1;
+			var id = categoryLink.attr('id').split('-')[1];
+			toggleID(opened, id);
+			return false;
+		});
+		// show previously opened branches
+		if (ids) {
+			$('#category-' + ids.split(',').join(', #category-')).click();
+		}
+		// ensure the branch is saved as open when adding to it so that the 
+		// new branch will be visible directly after saving
+		$('.addlink').click(function() {
+			toggleID(true, $(this).attr('id').split('-')[1]);
+			return true;
+		});
+	});
+
+</script>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+
+	{% if has_add_permission %}
+	<ul class="object-tools">
+	  <li>
+		<a href="add/{% if is_popup %}?_popup=1{% endif %}" class="addlink">
+		  {% blocktrans with cl.opts.verbose_name as name %}Add Primary {{ name }}{% endblocktrans %}
+		</a>
+	  </li>
+	</ul>
+	{% endif %}
+
+	<div id="tree">
+	{% category_menu_admin %}
+	</div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% load shop_tags i18n %}
+
+<ul>
+	{% for category in category_branch %}
+	<li>
+		<div class="{% cycle 'row1' 'row2' %}">
+			<a href="#" class="category-name" id="category-{{ category.id }}">
+				<span class="icon open">+</span>
+				<span class="icon close">-</span>
+				{{ category }}
+			</a>
+			<a href="{% url admin:shop_category_change category.id %}"
+				class="changelink">{% trans "Change" %}</a>
+			{% if has_add_permission %}
+			<a href="{% url admin:shop_category_add %}?parent={{ category.id }}"
+				class="addlink" id="addlink-{{ category.id }}">
+				{% trans "Add Sub-Category" %}</a>
+			{% endif %}
+		</div>
+		<br clear="all" />
+		{% category_menu_admin category %}
+	</li>
+	{% endfor %}
+</ul>
+
