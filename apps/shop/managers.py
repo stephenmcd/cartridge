@@ -21,7 +21,7 @@ class CartManager(Manager):
 		"""
 		expiry_time = datetime.now() - timedelta(minutes=CART_EXPIRY_MINUTES)
 		try:
-			cart = self.select_related().get(last_updated__gte=expiry_time, 
+			cart = self.get(last_updated__gte=expiry_time, 
 				id=request.session.get("cart", None))
 		except self.model.DoesNotExist:
 			self.filter(last_updated__lt=expiry_time).delete()

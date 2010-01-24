@@ -21,8 +21,7 @@ def product(request, slug, template="shop/product.html"):
 	"""
 	display a product - redirect to cart if product added
 	"""
-	product = get_object_or_404(Product.objects.active().select_related(), 
-		slug=slug)
+	product = get_object_or_404(Product.objects.active(slug=slug))
 	AddCartForm = get_add_cart_form(product)
 	add_cart_form = AddCartForm(initial={"quantity": 1})
 	if request.method == "POST":
@@ -32,8 +31,9 @@ def product(request, slug, template="shop/product.html"):
 				add_cart_form.cleaned_data["quantity"])
 			return HttpResponseRedirect(reverse("shop_cart"))
 	variations = product.variations.all()
-	variations_json = simplejson.dumps(list(variations.values("sku", "image",
-		*[f.name for f in ProductVariation.option_fields()]))) 
+	variations_json = simplejson.dumps([dict([(f, getattr(v, f)) for f in 
+		["sku", "image_id"] + [f.name for f in ProductVariation.option_fields()]]) 
+		for v in variations])
 	return render_to_response(template, {"product": product, "variations_json":
 		variations_json, "variations": variations, "images": product.images.all(),
 		"add_cart_form": add_cart_form}, RequestContext(request))

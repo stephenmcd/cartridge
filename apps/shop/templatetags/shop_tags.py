@@ -21,10 +21,12 @@ def _category_menu(context, parent_category, category_qs):
 	if "menu_cats" not in context:
 		categories = {}
 		for category in category_qs:
-			if category.parent not in categories:
-				categories[category.parent] = []
-			categories[category.parent].append(category)
+			if category.parent_id not in categories:
+				categories[category.parent_id] = []
+			categories[category.parent_id].append(category)
 		context["menu_cats"] = categories
+	if parent_category is not None:
+		parent_category = parent_category.id
 	context["category_branch"] = context["menu_cats"].get(parent_category, [])
 	return context
 
