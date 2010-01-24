@@ -18,8 +18,8 @@ li {display:inline;}
 #menu ul {list-style-type:disc; padding-left:20px;}
 #menu li {display:block; float:none;}
 #footer {margin:40px; padding:20px; font-size:.8em; text-align:center; color:#333;}
-.category ul {clear:both;}
-.category li {list-style-type:none; width:140px; margin:10px; display:inline; float:left; text-align:center;}
+.category li {list-style-type:none; width:140px; height:140px; margin:10px; 
+	text-align:center; float:left; background:#ddd; padding:15px 10px;}
 
 /* headings */
 h1 {margin:20px; padding:20px 100px; line-height:60px; border-radius:10px; height:60px;

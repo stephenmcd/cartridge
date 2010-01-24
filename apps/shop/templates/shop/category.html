@@ -14,7 +14,7 @@
 		{{ category }}
 	</a></li>
 	{% endfor %}
-</ul>
+</ul><br clear="both" />
 <ul class="products">
 	{% for product in category.products.active %}
 	<li><a href="{{ product.get_absolute_url }}">
@@ -24,7 +24,7 @@
 		{{ product }}
 	</a></li>
 	{% endfor %}
-</ul>
+</ul><br clear="both" />
 </div>
 {% endblock %}
 
