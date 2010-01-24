@@ -52,6 +52,14 @@ MIDDLEWARE_CLASSES = (
     "shop.middleware.SSLRedirect",
 )
 
+try:
+	import debug_toolbar
+except ImportError:
+	pass
+else:
+	INSTALLED_APPS = list(INSTALLED_APPS) + ["debug_toolbar"]
+	MIDDLEWARE_CLASSES = list(MIDDLEWARE_CLASSES) + \
+		["debug_toolbar.middleware.DebugToolbarMiddleware"]
 
 # caching
 CACHE_BACKEND = ""
