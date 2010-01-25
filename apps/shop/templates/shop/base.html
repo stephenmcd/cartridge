@@ -1,4 +1,4 @@
-{% load shop_tags %}
+{% load shop_tags i18n %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" 
    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
@@ -15,10 +15,18 @@
 
 <body>
 	<h1>Cartridge Demo</h1>
+	<form id="search-form" method="post" action="{% url shop_search %}">
+		<input type="text" name="query" value="{{ request.REQUEST.query }}" />
+		<input type="submit" value="{% trans "Search" %}" />
+	</form>
 	<div id="cart-panel">
 		<a href="{% url shop_cart %}">
-			Cart contains {{ cart.total_quantity }} 
-			item{{ cart.total_quantity|pluralize }}: {{ cart.total_price|currency }}
+			{% blocktrans count cart.total_quantity|length as cart_quantity %}
+			Cart contains 1 item:
+			{% plural %}
+			Cart contains {{ cart_quantity }} items:
+			{% endblocktrans %}
+			{{ cart.total_price|currency }}
 		</a>
 	</div>
 	<div id="menu">{% category_menu %}</div>

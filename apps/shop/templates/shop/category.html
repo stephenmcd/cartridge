@@ -7,20 +7,24 @@
 <div class="category">
 <ul>
 	{% for category in category.children.active %}
-	<li><a href="{{ category.get_absolute_url }}">
-		{% if category.image %}
-		<img src="{{ MEDIA_URL }}{% thumbnail category.image 120 120  %}" /><br />
-		{% endif %}
+	<li>
+		<a href="{{ category.get_absolute_url }}">
+		<div class="img">
+			{% if category.image %}
+			<img src="{{ MEDIA_URL }}{% thumbnail category.image 120 120  %}" />
+			{% endif %}
+		</div>
 		{{ category }}
 	</a></li>
 	{% endfor %}
-</ul><br clear="both" />
-<ul class="products">
 	{% for product in category.products.active %}
-	<li><a href="{{ product.get_absolute_url }}">
-		{% if product.image %}
-		<img src="{{ MEDIA_URL }}{% thumbnail product.image 120 120  %}" /><br />
-		{% endif %}
+	<li>
+		<a href="{{ product.get_absolute_url }}">
+		<div class="img">
+			{% if product.image %}
+			<img src="{{ MEDIA_URL }}{% thumbnail product.image 120 120  %}" />
+			{% endif %}
+		</div>
 		{{ product }}
 	</a></li>
 	{% endfor %}

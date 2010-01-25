@@ -125,6 +125,35 @@ class ShopTests(TestCase):
 		self.assertEqual(cart.total_quantity(), 0)
 		self.assertEqual(cart.total_price(), Decimal("0"))
 
+	def test_search(self):
+		"""
+		test product search
+		"""
+		first = Product.objects.create(title="test product", active=True).id
+		second = Product.objects.create(title="test another test product", 
+			active=True).id
+		# either word
+		results = Product.objects.search("another test")
+		self.assertEqual(len(results), 2)
+		# must include first word
+		results = Product.objects.search("+another test")
+		self.assertEqual(len(results), 1)
+		# mustn't include first word
+		results = Product.objects.search("-another test")
+		self.assertEqual(len(results), 1)
+		if results:
+			self.assertEqual(results[0].id, first)
+		# exact phrase
+		results = Product.objects.search('"another test"')
+		self.assertEqual(len(results), 1)
+		if results:
+			self.assertEqual(results[0].id, second)
+		# test relevance
+		results = Product.objects.search("test")
+		self.assertEqual(len(results), 2)
+		if results:
+			self.assertEqual(results[0].id, second)
+
 	def test_checkout(self):
 		"""
 		test the checkout process

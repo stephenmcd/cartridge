@@ -1,0 +1,32 @@
+{% extends "shop/base.html" %}
+{% load shop_tags i18n %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block main %}
+{% if query %}
+<p>
+	{% blocktrans count results|length as num_results %}
+	1 product was found matching your query:
+	{% plural %}
+	{{ num_results }} products were found matching your query:
+	{% endblocktrans %}
+	<em>{{ query }}</em>
+</p>
+<ul id="search-results">
+	{% for product in results %}
+	<li>
+		<div class="img">
+			{% if product.image %}
+			<a href="{{ product.get_absolute_url }}"><img 
+				src="{{ MEDIA_URL }}{% thumbnail product.image 64 64 %}" /></a>
+			{% endif %}
+		</div>
+		<p><a href="{{ product.get_absolute_url }}">{{ product }}</a><br />
+			{{ product.description|striptags|truncatewords:20 }}</p>
+	</li>
+	{% endfor %}
+</ul>
+{% endif %}
+{% endblock %}
+

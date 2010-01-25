@@ -38,6 +38,14 @@ def product(request, slug, template="shop/product.html"):
 		variations_json, "variations": variations, "images": product.images.all(),
 		"add_cart_form": add_cart_form}, RequestContext(request))
 
+def search(request, template="shop/search_results.html"):
+	"""
+	display product search results
+	"""
+	query = request.REQUEST.get("query", "")
+	return render_to_response(template, {"query": query, "results": 
+		Product.objects.search(query)}, RequestContext(request))
+	
 def cart(request, template="shop/cart.html"):
 	"""
 	display cart - handle removing items

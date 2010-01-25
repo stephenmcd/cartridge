@@ -39,13 +39,13 @@ class ProductAdmin(admin.ModelAdmin):
 	list_editable = ("active", "available")
 	list_filter = ("categories", "active", "available")
 	filter_horizontal = ("categories",)
-	search_fields = ("title", "categories__title", "variations_sku")
+	search_fields = ("title", "categories__title", "variations__sku")
 	inlines = (ProductImageAdmin, ProductVariationAdmin)
 	form = forms.ProductAdminForm
 	formfield_overrides = {MoneyField: {"widget": forms.MoneyWidget}}
 	fieldsets = (
 		(None, {"fields": ("title", "description", ("active", "available"), 
-			"categories")}),
+			"keywords", "categories")}),
 		(_("Create new variations"), {"classes": ("create-variations",), 
 			"fields": option_fields}),
 	)

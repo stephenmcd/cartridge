@@ -1,7 +1,10 @@
 
 from datetime import datetime, timedelta
+from operator import ior
+from string import punctuation
 
-from django.db.models import Manager
+from django.conf import settings
+from django.db.models import Manager, Q
 from django.utils.datastructures import SortedDict
 
 from shop.settings import CART_EXPIRY_MINUTES
@@ -11,6 +14,43 @@ class ShopManager(Manager):
 
 	def active(self, **kwargs):
 		return self.filter(active=True, **kwargs)
+
+class ProductManager(ShopManager):
+	
+	def search(self, query):
+		"""
+		build a queryset matching words in the given search query. treat quoted 
+		terms as exact phrases and take into account + and - symbols as 
+		modifiers controlling which terms to require and exclude
+		"""
+		if max([len(t) for t in "".join([c for c in query 
+			if c == " " or c.isalnum()]).split(" ")]) < 3:
+			return []
+		_p = lambda s: s.strip(punctuation)
+		_Q = lambda s: Q(search_text__icontains=_p(s))
+		queryset = self.active()
+		# remove extra spaces, put modifiers inside quoted terms and create 
+		# search term list from exact phrases and then remaning words
+		terms = " ".join(filter(None, query.split(" "))).replace("+ ", "+"
+			).replace('+"', '"+').replace("- ", "-").replace('-"', '"-').split('"')
+		terms = terms[1::2] + "".join(terms[::2]).split(" ")
+		# for mysql use django search filter, for others manually create filters 
+		if settings.DATABASE_ENGINE == "mysql":
+			queryset = queryset.filter(search_text__search=query)
+		else:
+			# filter queryset by terms to require and exclude
+			required = [_Q(t[1:]) for t in terms if _p(t[1:]) and t[0] == "+"]
+			exclude = [~_Q(t[1:]) for t in terms if _p(t[1:]) and t[0] == "-"]
+			if required or exclude:
+				queryset = queryset.filter(*required + exclude)
+			# filter queryset by remaining unmodified terms
+			remaining = [_Q(t) for t in terms if _p(t) and t[0] not in "+-"]
+			if remaining:
+				queryset = queryset.filter(reduce(ior, remaining))
+		# sort results by number of occurrences
+		terms = set([_p(t.lower()) for t in terms])
+		rank = lambda p: sum([p.search_text.lower().count(t) for t in terms])
+		return sorted(queryset, key=rank, reverse=True)
 
 class CartManager(Manager):
 
