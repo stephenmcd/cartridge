@@ -4,9 +4,18 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.utils import simplejson
+from django.utils.translation import ugettext
 
 from shop.models import Category, Product, ProductVariation, Cart
 from shop.forms import get_add_cart_form, OrderForm
+
+
+try:
+	from django.contrib.messages import info 
+except ImportError:
+	def info(request, message, fail_silently=True):
+		if request.user.is_authenticated():
+			request.user.message_set.create(message=message)
 
 
 def category(request, slug, template="shop/category.html"):
@@ -29,6 +38,7 @@ def product(request, slug, template="shop/product.html"):
 		if add_cart_form.is_valid():
 			Cart.objects.from_request(request).add_item(add_cart_form.variation, 
 				add_cart_form.cleaned_data["quantity"])
+			info(request, _("Item added to cart"), fail_silently=True)
 			return HttpResponseRedirect(reverse("shop_cart"))
 	variations = product.variations.all()
 	variations_json = simplejson.dumps([dict([(f, getattr(v, f)) for f in 
@@ -52,6 +62,7 @@ def cart(request, template="shop/cart.html"):
 	"""
 	if request.method == "POST":
 		Cart.objects.from_request(request).remove_item(request.POST.get("sku", ""))
+		info(request, _("Item removed from cart"), fail_silently=True)
 		return HttpResponseRedirect(reverse("shop_cart"))
 	return render_to_response(template, {}, RequestContext(request))
 

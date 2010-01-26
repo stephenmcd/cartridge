@@ -13,6 +13,9 @@ from shop.settings import CART_EXPIRY_MINUTES
 class ShopManager(Manager):
 
 	def active(self, **kwargs):
+		"""
+		items flagged as active
+		"""
 		return self.filter(active=True, **kwargs)
 
 class ProductManager(ShopManager):
@@ -30,7 +33,7 @@ class ProductManager(ShopManager):
 		_Q = lambda s: Q(search_text__icontains=_p(s))
 		queryset = self.active()
 		# remove extra spaces, put modifiers inside quoted terms and create 
-		# search term list from exact phrases and then remaning words
+		# search term list from exact phrases and then remaining words
 		terms = " ".join(filter(None, query.split(" "))).replace("+ ", "+"
 			).replace('+"', '"+').replace("- ", "-").replace('-"', '"-').split('"')
 		terms = terms[1::2] + "".join(terms[::2]).split(" ")
