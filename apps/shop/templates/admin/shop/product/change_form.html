@@ -1,5 +1,5 @@
 {% extends "admin/change_form.html" %}
-{% load adminmedia %}
+{% load adminmedia i18n %}
 
 {% block extrahead %}{{ block.super }}
 <style type="text/css">
@@ -33,12 +33,12 @@ $(function() {
 	// a reference to the uploaded image when another field is invalid 
 	$(imagesFieldset + ' ul[class=errorlist]').parent().parent().show().find(
 		'a').replaceWith('<ul class="errorlist"><li>' + 
-		gettext('Please select the image again') + '</li></ul>');
+		'{% trans "Please select the image again" %}</li></ul>');
 	
 	// add the add button for showing the next hidden field image field table row
 	$(imagesFieldset).append('<p id="' + addButtonID + '"><img src="' +
 		'{% admin_media_prefix %}img/admin/icon_addlink.gif" /><a href="#">' + 
-		gettext('Add another image') + '</a></p>');
+		'{% trans "Add another image" %}</a></p>');
 		
 	// add button click handler - show the next hidden field image table row
 	$('#' + addButtonID).click(function() {
@@ -50,7 +50,7 @@ $(function() {
 		return false;
 	});
 	
-	// move the "create variations" fieldset to under the current variations
+	// move the "create variations" fieldset to under current variations
 	$('.create-variations').insertAfter($(variationsFieldset).parent().parent());
 	
 	// deselect default variation when another is selected as default
