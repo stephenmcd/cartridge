@@ -2,12 +2,14 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.http import HttpResponseRedirect
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
 
 from shop.models import Category, Product, ProductVariation, Cart
 from shop.forms import get_add_cart_form, OrderForm
+from shop.settings import SEARCH_RESULTS_PER_PAGE
 
 
 try:
@@ -17,6 +19,21 @@ except ImportError:
 		if request.user.is_authenticated():
 			request.user.message_set.create(message=message)
 
+def paginate(objects, page_num, per_page):
+	"""
+	pagination 
+	"""
+	paginator = Paginator(objects, per_page)
+	try:
+		page_num = int(page_num)
+	except ValueError:
+		page_num = 1
+	try:
+		objects = paginator.page(page_num)
+	except (EmptyPage, InvalidPage):
+		objects = paginator.page(paginator.num_pages)
+	return objects
+
 
 def category(request, slug, template="shop/category.html"):
 	"""
@@ -25,7 +42,7 @@ def category(request, slug, template="shop/category.html"):
 	category = get_object_or_404(Category.objects.active(), slug=slug)
 	return render_to_response(template, {"category": category}, 
 		RequestContext(request))
-	
+
 def product(request, slug, template="shop/product.html"):
 	"""
 	display a product - redirect to cart if product added
@@ -53,8 +70,10 @@ def search(request, template="shop/search_results.html"):
 	display product search results
 	"""
 	query = request.REQUEST.get("query", "")
-	return render_to_response(template, {"query": query, "results": 
-		Product.objects.search(query)}, RequestContext(request))
+	results = paginate(Product.objects.search(query), request.GET.get("page", 1), 
+		SEARCH_RESULTS_PER_PAGE)
+	return render_to_response(template, {"query": query, "results": results},
+		RequestContext(request))
 	
 def cart(request, template="shop/cart.html"):
 	"""

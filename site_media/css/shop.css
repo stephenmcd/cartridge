@@ -22,6 +22,8 @@ li {display:inline;}
 	  background:#ddd;}
 .category li .img {width:120px; height:120px; margin:0; padding:0;}
 .img img {margin:0;}
+.paging {display:block; float:left; margin:10px 0;}
+.paging li {padding:0 5px;}
 
 /* headings */
 h1 {margin:20px; padding:20px 100px; line-height:60px; border-radius:10px; height:60px;
@@ -52,9 +54,9 @@ input, select {font-size:.8em; margin:0 10px;}
 #id_quantity {width:40px;}
 
 /* search */
-#search-results li {display:block; padding:3px; margin:10px 0; font-size:80%;
-	border-top:1px solid #ccc;}
-#search-results .img {width:78px; height:78px; float:left; margin:10px 10px 0 0; 
+#search-results li {display:block; padding:10px 0; margin:0; font-size:80%;
+	border-bottom:1px solid #ccc; float:left; clear:both; width:100%;}
+#search-results .img {width:78px; height:78px; float:left; margin:0 10px 0 0; 
 	padding:0; background:#eee;}
 #search-results img {margin:7px;}
 

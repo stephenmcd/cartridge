@@ -6,15 +6,11 @@
 {% block main %}
 {% if query %}
 <p>
-	{% blocktrans count results|length as num_results %}
-	1 product was found matching your query:
-	{% plural %}
-	{{ num_results }} products were found matching your query:
-	{% endblocktrans %}
-	<em>{{ query }}</em>
+	Showing {{ results.start_index }} to {{ results.end_index }} of
+	{{ results.paginator.count }} products matching your query: <em>{{ query }}</em>
 </p>
 <ul id="search-results">
-	{% for product in results %}
+	{% for product in results.object_list %}
 	<li>
 		<div class="img">
 			{% if product.image %}
@@ -27,6 +23,26 @@
 	</li>
 	{% endfor %}
 </ul>
+{% ifnotequal results.paginator.num_pages 1 %}
+<ul class="paging">
+	{% if results.has_previous %}
+	<a href="?page={{ results.previous_page_number }}&query={{ query|urlencode }}">&lt;</a>
+	{% endif %}
+	{% for page in results.paginator.page_range %}
+	<li>
+		{% ifequal page results.number %}
+	   	{{ page }}
+		{% else %}
+	   	<a href="?page={{ page }}&query={{ query|urlencode }}">{{ page }}</a>
+		{% endifequal %}
+	</li>
+	{% endfor %} 
+	{% if results.has_next %}
+	<a href="?page={{ results.next_page_number }}&query={{ query|urlencode }}">&gt;</a>
+	{% endif %}
+</ul>
+{% endifnotequal %}
+
 {% endif %}
 {% endblock %}
 

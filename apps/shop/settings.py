@@ -43,3 +43,5 @@ SSL_ENABLED = getattr(settings, "SHOP_SSL_ENABLED", not settings.DEBUG)
 # host name matching the ssl cert that the site should always be accessed via
 FORCE_HOST = getattr(settings, "SHOP_FORCE_HOST", None)
 
+# number of search results to display per page
+SEARCH_RESULTS_PER_PAGE = getattr(settings, "SHOP_SEARCH_RESULTS_PER_PAGE", 10)
