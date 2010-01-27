@@ -89,9 +89,11 @@
 	</ul>
 	{% endif %}
 
-	<div id="tree">
-	{% category_menu_admin %}
-	</div>
+	{% ifequal cl.result_count 0 %}
+	<p class="paginator">0 {{ cl.opts.verbose_name_plural }}</p>
+	{% else %}
+	<div id="tree">{% category_menu_admin %}</div>
+	{% endifequal %}
 
 </div>
 {% endblock %}
