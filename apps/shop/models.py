@@ -10,8 +10,7 @@ from django.template.defaultfilters import slugify, striptags
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 from shop.fields import OptionField, MoneyField, SKUField
-from shop.managers import ShopManager, ProductManager, CartManager, \
-	ProductVariationManager
+from shop import managers
 from shop.settings import ORDER_STATUSES, ORDER_STATUS_DEFAULT, PRODUCT_OPTIONS
 from shop.utils import clone_model, make_choices
 
@@ -29,7 +28,7 @@ class ShopModel(models.Model):
 	title = models.CharField(_("Title"), max_length=100)
 	slug = models.SlugField(max_length=100, editable=False)
 	active = models.BooleanField(_("Visible on the site"), default=False)
-	objects = ShopManager()
+	objects = managers.ShopManager()
 
 	def __unicode__(self):
 		return self.title
@@ -125,7 +124,7 @@ class Product(ShopModel, PricedModel):
 	image = models.CharField(max_length=100, blank=True, null=True)
 	categories = models.ManyToManyField(Category, blank=True, 
 		related_name="products")
-	objects = ProductManager()
+	objects = managers.ProductManager()
 	
 	def save(self, *args, **kwargs):
 		"""
@@ -173,7 +172,7 @@ class BaseProductVariation(PricedModel):
 	quantity = models.IntegerField(_("Number in stock"), blank=True, null=True) 
 	default = models.BooleanField(_("Default"))
 	image = models.ForeignKey(ProductImage, null=True, blank=True)
-	objects = ProductVariationManager()
+	objects = managers.ProductVariationManager()
 
 	def __unicode__(self):
 		return "%s %s" % (self.product, ", ".join(["%s: %s" % 
@@ -309,7 +308,7 @@ class Order(Address.clone("billing_detail"), Address.clone("shipping_detail")):
 class Cart(models.Model):
 
 	last_updated = models.DateTimeField(_("Last updated"), auto_now=True)
-	objects = CartManager()
+	objects = managers.CartManager()
 
 	def __iter__(self):
 		"""
@@ -330,6 +329,7 @@ class Cart(models.Model):
 			item.unit_price = variation.price()
 			item.url = variation.product.get_absolute_url()
 			item.image = variation.get_image()
+			variation.product.actions.added_to_cart()
 		item.quantity += quantity
 		item.save()
 			
@@ -386,3 +386,9 @@ class CartItem(SelectedProduct):
 class OrderItem(SelectedProduct):
 	order = models.ForeignKey(Order, related_name="items")
 
+class ProductAction(models.Model):
+	product = models.ForeignKey(Product, related_name="actions")
+	timestamp = models.IntegerField(unique=True)
+	total_cart = models.IntegerField(default=0)
+	total_purchase = models.IntegerField(default=0)
+	objects = managers.ProductActionManager()

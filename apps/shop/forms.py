@@ -190,6 +190,18 @@ class CheckoutWizard(FormWizard):
 		order.item_total = cart.total_price()
 		order.save()
 		for item in cart:
+			# decrease the product's quantity and set the purchase action
+			try:
+				variation = ProductVariation.objects.get(sku=item.sku)
+			except ProductVariation.DoesNotExist:
+				pass
+			else:
+				product = variation.product
+				if product.quantity is not None:
+					product.quantity -= item.quantity
+					product.save()
+				product.actions.purchased()
+			# copy the cart item to the order
 			fields = [field.name for field in SelectedProduct._meta.fields]
 			item = dict([(field, getattr(item, field)) for field in fields])
 			order.items.create(**item)

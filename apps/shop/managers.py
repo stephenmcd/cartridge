@@ -125,3 +125,28 @@ class ProductVariationManager(Manager):
 			first_variation.default = True
 			first_variation.save()
 
+class ProductActionManager(Manager):
+	
+	use_for_related_fields = True
+
+	def _action_for_field(self, field):
+		"""
+		increases the given field by datetime.today().toordinal() which provides 
+		a time scaling value we can order by to determine popularity over time
+		"""
+		action, created = self.get_or_create(
+			timestamp=datetime.today().toordinal())
+		setattr(action, field, getattr(action, field) + 1)
+		action.save()
+	
+	def added_to_cart(self):
+		"""
+		increase total_cart when product is added to cart
+		"""
+		self._action_for_field("total_cart")
+
+	def purchased(self):
+		"""
+		increase total_purchased when product is purchased
+		"""
+		self._action_for_field("total_purchase")
