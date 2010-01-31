@@ -13,7 +13,8 @@ from django.utils.datastructures import SortedDict
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
-from shop.models import Product, ProductVariation, SelectedProduct, Cart, Order
+from shop.models import Product, ProductVariation, SelectedProduct, Cart, \
+	Order, Sale
 from shop.exceptions import CheckoutError
 from shop.settings import CARD_TYPES, ORDER_FROM_EMAIL
 from shop.templatetags.shop_tags import thumbnail
@@ -22,9 +23,9 @@ from shop.utils import make_choices, send_mail_template, set_locale
 
 
 ADD_CART_ERRORS = {
-	"invalid_options": _("The selected options are currently unavailable"),
-	"no_stock": _("The selected options are currently not in stock"),
-	"no_stock_quantity": _("The selected quantity is currently unavailable"),
+	"invalid_options": _("The selected options are currently unavailable."),
+	"no_stock": _("The selected options are currently not in stock."),
+	"no_stock_quantity": _("The selected quantity is currently unavailable."),
 }
 
 
@@ -239,7 +240,11 @@ class MoneyWidget(forms.TextInput):
 	renders missing decimal places for money fields
 	"""
 	def render(self, name, value, attrs):
-		if value is not None:
+		try:
+			value = float(value)
+		except (TypeError, ValueError):
+			pass
+		else:
 			set_locale()
 			value = ("%%.%sf" % localeconv()["frac_digits"]) % value
 		return super(MoneyWidget, self).render(name, value, attrs)
@@ -269,5 +274,17 @@ class ProductVariationAdminFormset(BaseInlineFormSet):
 		if len([f for f in self.forms if hasattr(f, "cleaned_data") and
 			f.cleaned_data["default"]]) > 1:
 			raise forms.ValidationError(
-				_("Only one variation can be checked as the default"))
+				_("Only one variation can be checked as the default."))
+
+class SaleAdminForm(forms.ModelForm):
+	"""
+	ensures only one price field is given a value
+	"""
+	def clean_sale_price_exact(self):
+		reductions = filter(None, [self.cleaned_data.get(f, None) for f in 
+			("sale_price_deduct","sale_price_percent","sale_price_exact")])
+		if len(reductions) > 1:
+			error = _("Please enter a value for only one type of reduction.")
+			raise forms.ValidationError(error)
+		return self.cleaned_data["sale_price_exact"]
 

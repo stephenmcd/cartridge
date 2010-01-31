@@ -150,3 +150,4 @@ class ProductActionManager(Manager):
 		increase total_purchased when product is purchased
 		"""
 		self._action_for_field("total_purchase")
+

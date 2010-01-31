@@ -154,6 +154,12 @@ class ShopTests(TestCase):
 		if results:
 			self.assertEqual(results[0].id, second)
 
+	def test_sales(self):
+		"""
+		test sales
+		"""
+		pass
+
 	def test_checkout(self):
 		"""
 		test the checkout process

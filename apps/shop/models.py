@@ -10,7 +10,8 @@ from django.template.defaultfilters import slugify, striptags
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 from shop.fields import OptionField, MoneyField, SKUField
-from shop import managers
+from shop.managers import ShopManager, ProductManager, CartManager, \
+	ProductVariationManager, ProductActionManager
 from shop.settings import ORDER_STATUSES, ORDER_STATUS_DEFAULT, PRODUCT_OPTIONS
 from shop.utils import clone_model, make_choices
 
@@ -28,7 +29,7 @@ class ShopModel(models.Model):
 	title = models.CharField(_("Title"), max_length=100)
 	slug = models.SlugField(max_length=100, editable=False)
 	active = models.BooleanField(_("Visible on the site"), default=False)
-	objects = managers.ShopManager()
+	objects = ShopManager()
 
 	def __unicode__(self):
 		return self.title
@@ -95,18 +96,29 @@ class PricedModel(models.Model):
 	sale_to = models.DateTimeField(_("Sale end"), blank=True, null=True)
 
 	def on_sale(self):
-		return self.sale_price and self.sale_to > datetime.now() > self.sale_from
+		"""
+		is the sale price applicable
+		"""
+		from_valid = self.sale_from is None or self.sale_from < datetime.now()
+		to_valid = self.sale_to is None or self.sale_to > datetime.now()
+		return self.sale_price is not None and from_valid and to_valid
 
 	def has_price(self):
+		"""
+		is there a valid price
+		"""
 		return self.on_sale() or self.unit_price is not None 
 	
 	def price(self):
+		"""
+		actual price, sale price if applicable, otherwise unit price
+		"""
 		if self.on_sale():
 			return self.sale_price
 		elif self.has_price():
 			return self.unit_price
 		return Decimal("0")
-
+	
 class Product(ShopModel, PricedModel):
 	"""
 	container model for a product
@@ -124,7 +136,7 @@ class Product(ShopModel, PricedModel):
 	image = models.CharField(max_length=100, blank=True, null=True)
 	categories = models.ManyToManyField(Category, blank=True, 
 		related_name="products")
-	objects = managers.ProductManager()
+	objects = ProductManager()
 	
 	def save(self, *args, **kwargs):
 		"""
@@ -134,11 +146,11 @@ class Product(ShopModel, PricedModel):
 			self.title, self.keywords)
 		super(Product, self).save(*args, **kwargs)
 	
-	def set_image(self):
+	def _set_image(self):
 		"""
 		stores the main image against the image field for direct access
 		"""
-		self.image = self.variations.get(default=True).get_image()
+		self.image = self.variations.get(default=True)._get_image()
 		self.save()
 
 class ProductImage(models.Model):
@@ -172,7 +184,7 @@ class BaseProductVariation(PricedModel):
 	quantity = models.IntegerField(_("Number in stock"), blank=True, null=True) 
 	default = models.BooleanField(_("Default"))
 	image = models.ForeignKey(ProductImage, null=True, blank=True)
-	objects = managers.ProductVariationManager()
+	objects = ProductVariationManager()
 
 	def __unicode__(self):
 		return "%s %s" % (self.product, ", ".join(["%s: %s" % 
@@ -186,8 +198,9 @@ class BaseProductVariation(PricedModel):
 			self.save()
 		if self.default:
 			product = self.product
-			for field in ("unit_price", "sale_price", "sale_from", "sale_to"):
-				setattr(product, field, getattr(self, field))
+			for field in PricedModel._meta.fields:
+				if not isinstance(field, models.AutoField):
+					setattr(product, field.name, getattr(self, field.name))
 			product.save()
 
 	@classmethod
@@ -200,8 +213,8 @@ class BaseProductVariation(PricedModel):
 
 	def has_stock(self, quantity=1):
 		"""
-		check the given quantity is in stock taking carts into account the 
-		number in carts, and cache the number
+		check the given quantity is in stock taking into account the number in 
+		carts, and cache the number
 		"""
 		if self.quantity is None:
 			return True
@@ -214,9 +227,9 @@ class BaseProductVariation(PricedModel):
 			self._cached_num_available = num_available
 		return self._cached_num_available >= quantity
 
-	def get_image(self):
+	def _get_image(self):
 		"""
-		return either the image for the variation, or the first image for the 
+		return either the image for the variation or the first image for the 
 		variation's product
 		"""
 		image = self.image
@@ -308,7 +321,7 @@ class Order(Address.clone("billing_detail"), Address.clone("shipping_detail")):
 class Cart(models.Model):
 
 	last_updated = models.DateTimeField(_("Last updated"), auto_now=True)
-	objects = managers.CartManager()
+	objects = CartManager()
 
 	def __iter__(self):
 		"""
@@ -328,7 +341,7 @@ class Cart(models.Model):
 			item.description = str(variation)
 			item.unit_price = variation.price()
 			item.url = variation.product.get_absolute_url()
-			item.image = variation.get_image()
+			item.image = variation._get_image()
 			variation.product.actions.added_to_cart()
 		item.quantity += quantity
 		item.save()
@@ -387,8 +400,82 @@ class OrderItem(SelectedProduct):
 	order = models.ForeignKey(Order, related_name="items")
 
 class ProductAction(models.Model):
+	"""
+	records an incremental value for an action against a product such as adding 
+	to cart or purchasing, for sales reporting and calculating popularity
+	"""
 	product = models.ForeignKey(Product, related_name="actions")
 	timestamp = models.IntegerField(unique=True)
 	total_cart = models.IntegerField(default=0)
 	total_purchase = models.IntegerField(default=0)
-	objects = managers.ProductActionManager()
+	objects = ProductActionManager()
+	
+class Sale(models.Model):
+	"""
+	stores sales field values for price and date range which when saved are 
+	then applied across products and variations according to the selected 
+	categories and products for the sale
+	"""
+	
+	class Meta:
+		verbose_name = _("Sale")
+		verbose_name_plural = _("Sales")
+
+	title = models.CharField(max_length=100)
+	active = models.BooleanField(_("Active"))
+	products = models.ManyToManyField(Product, blank=True)
+	categories = models.ManyToManyField(Category, blank=True)
+	sale_price_deduct = MoneyField(_("Reduce by amount"))
+	sale_price_percent = models.DecimalField(_("Reduce by percent"),
+		max_digits=4, decimal_places=2, blank=True, null=True)
+	sale_price_exact = MoneyField(_("Reduce to amount"))
+	sale_from = models.DateTimeField(_("Sale start"), blank=True, null=True)
+	sale_to = models.DateTimeField(_("Sale end"), blank=True, null=True)
+	
+	def _clear(self):
+		"""
+		clears previously applied sale field values from products prior to 
+		updating the sale, when deactivating it or deleting it
+		"""
+		for priced_model in (Product, ProductVariation):
+			priced_model.objects.filter(sale_id=self.id).update(sale_id=None, 
+				sale_from=None, sale_to=None, sale_price=None)
+	
+	def save(self, *args, **kwargs):
+		"""
+		apply sales field value to products and variations according to the 
+		selected categories and products for the sale 
+		"""
+		super(Sale, self).save(*args, **kwargs)
+		self._clear()
+		if self.active:
+			products = Product.objects.filter(
+				models.Q(categories__in=self.categories.all()) | 
+				models.Q(id__in=self.products.all()))
+			variations = ProductVariation.objects.filter(product__in=products)
+			extra_filter = {}
+			if self.sale_price_deduct is not None:
+				# don't apply to prices that would be negative after deduction
+				extra_filter["unit_price__gt"] = self.sale_price_deduct
+				sale_price = models.F("unit_price") - self.sale_price_deduct
+			elif self.sale_price_percent is not None:
+				sale_price = models.F("unit_price") - (models.F("unit_price") 
+					/ "100.0" * self.sale_price_percent)
+			elif self.sale_price_exact is not None:
+				# don't apply to prices that are cheaper than the sale amount
+				extra_filter["unit_price__gt"] = self.sale_price_exact
+				sale_price = self.sale_price_exact
+			else:
+				return
+			for priced_objects in (products, variations):
+				priced_objects.filter(**extra_filter).update(sale_id=self.id, 
+					sale_to=self.sale_to, sale_from=self.sale_from, 
+					sale_price=sale_price)
+
+	def __unicode__(self):
+		return self.title
+	
+	def delete(self, *args, **kwargs):
+		self._clear()
+		super(Sale, self).delete(*args, **kwargs)
+
