@@ -404,8 +404,12 @@ class ProductAction(models.Model):
 	records an incremental value for an action against a product such as adding 
 	to cart or purchasing, for sales reporting and calculating popularity
 	"""
+
+	class Meta:
+		unique_together = ("product", "timestamp")
+		
 	product = models.ForeignKey(Product, related_name="actions")
-	timestamp = models.IntegerField(unique=True)
+	timestamp = models.IntegerField()
 	total_cart = models.IntegerField(default=0)
 	total_purchase = models.IntegerField(default=0)
 	objects = ProductActionManager()
