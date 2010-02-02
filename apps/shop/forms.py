@@ -227,7 +227,7 @@ class ImageWidget(forms.FileInput):
 	"""
 	def render(self, name, value, attrs):
 		rendered = super(ImageWidget, self).render(name, value, attrs)
-		if value is not None:
+		if value:
 			orig_url = "%s%s" % (settings.MEDIA_URL, value)
 			thumb_url = "%s%s" % (settings.MEDIA_URL, thumbnail(value, 48, 48))
 			rendered = "<a target='_blank' href='%s'><img " \
