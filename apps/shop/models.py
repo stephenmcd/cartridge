@@ -341,7 +341,7 @@ class Cart(models.Model):
 			item.description = str(variation)
 			item.unit_price = variation.price()
 			item.url = variation.product.get_absolute_url()
-			item.image = variation._get_image()
+			item.image = str(variation._get_image())
 			variation.product.actions.added_to_cart()
 		item.quantity += quantity
 		item.save()
