@@ -15,7 +15,7 @@ $(function() {
 			$('#product-images-large li').hide();
 			image.show();
 		}
-	}
+	};
 	
 	// on selection of an option, reduce the list of variations to the one 
 	// matching all the selected options - if there is one, show it and hide 
@@ -31,7 +31,7 @@ $(function() {
 		if (variation.length == 1) {
 			$('#variations li').hide();
 			$('#variation-' + variation[0].sku).show();
-			showImage('#image-' + variation[0].image + '-large');
+			showImage('#image-' + variation[0].image_id + '-large');
 		}
 	});
 	selections.change();
