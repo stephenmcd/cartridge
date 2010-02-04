@@ -56,11 +56,10 @@ def get_add_cart_form(product):
 			except ProductVariation.DoesNotExist:
 				error = "invalid_options"
 			else:
-				if variation.quantity is not None:
-					if not variation.has_stock(quantity):
-						error = "no_stock_quantity"
-					elif not variation.has_stock():
-						error = "no_stock"
+				if not variation.has_stock(quantity):
+					error = "no_stock_quantity"
+				elif not variation.has_stock():
+					error = "no_stock"
 			if error:
 				raise forms.ValidationError(ADD_CART_ERRORS[error])
 			self.variation = variation
@@ -99,11 +98,12 @@ class OrderForm(CheckoutForm, forms.ModelForm):
 	class Meta:
 		model = Order
 		fields = (Order.billing_detail_field_names() + 
-			Order.shipping_detail_field_names() + ["additional_instructions"])
+			Order.shipping_detail_field_names() + ["additional_instructions", 
+			"discount_code"])
 			
 	def __init__(self, *args, **kwargs):
 		super(OrderForm, self).__init__(*args, **kwargs)
-		if not DiscountCode.objects.active().exists():
+		if DiscountCode.objects.active().count() == 0:
 			self.fields["discount_code"].widget = forms.HiddenInput()
 
 	def _fieldset(self, prefix):
@@ -134,7 +134,7 @@ class OrderForm(CheckoutForm, forms.ModelForm):
 		raise AttributeError, name
 	
 	def clean_discount_code(self):
-		code = self.cleaned_data.get("code", "")
+		code = self.cleaned_data.get("discount_code", "")
 		if code:
 			cart = Cart.objects.from_request(self._request)
 			if not DiscountCode.objects.valid(code=code, cart=cart):

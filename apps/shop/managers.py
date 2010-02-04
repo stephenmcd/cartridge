@@ -10,16 +10,19 @@ from django.utils.datastructures import SortedDict
 from shop.settings import CART_EXPIRY_MINUTES
 
 
-class ShopManager(Manager):
+class ActiveManager(Manager):
 
-	def active(self, **kwargs):
+	def active(self, *args, **kwargs):
 		"""
 		items flagged as active
 		"""
 		kwargs["active"] = True
-		return self.filter(**kwargs)
+		return self.filter(*args, **kwargs)
 
-class ProductManager(ShopManager):
+class CategoryManager(ActiveManager):
+	pass
+
+class ProductManager(ActiveManager):
 	
 	def search(self, query):
 		"""
@@ -152,19 +155,25 @@ class ProductActionManager(Manager):
 		"""
 		self._action_for_field("total_purchase")
 
-class DiscountCodeManager(Manager):
+class DiscountCodeManager(ActiveManager):
+
+	def active(self, *args, **kwargs):
+		"""
+		items flagged as active and in valid date range if date(s) are specified
+		"""
+		valid_from = Q(valid_from__isnull=True) | Q(valid_from__lte=datetime.now())
+		valid_to = Q(valid_to__isnull=True) | Q(valid_from__gte=datetime.now())
+		return super(DiscountCodeManager, self).active(valid_from, valid_to)
 	
-	def valid(self, code, cart, **kwargs):
+	def valid(self, code, cart):
 		"""
-		items flagged as active and within date range as well checking 
+		items flagged as active and within date range as well checking that 
+		the given cart contains items that the code is valid for
 		"""
-		kwargs.update({"code": code, "active": True})
 		try:
-			discount = self.get(**kwargs)
+			discount = self.active().get(code=code)
 		except self.model.DoesNotExist:
 			return False
-		skus = [item.sku for item in cart]
-		if not discount.products().filter(variations__sku__in=skus).exists():
-			return False
-		else:
-			return valid_date_range(discount.sale_from, discount.sale_to)
+		return discount.products().filter(
+			variations__sku__in=[item.sku for item in cart]).count() > 0
+

@@ -9,11 +9,11 @@ from django.db import models
 from django.template.defaultfilters import slugify, striptags
 from django.utils.translation import ugettext, ugettext_lazy as _
 
-from shop.fields import OptionField, MoneyField, SKUField
-from shop.managers import ShopManager, ProductManager, CartManager, \
+from shop.fields import OptionField, MoneyField, SKUField, DiscountCodeField
+from shop.managers import CategoryManager, ProductManager, CartManager, \
 	ProductVariationManager, ProductActionManager, DiscountCodeManager
 from shop.settings import ORDER_STATUSES, ORDER_STATUS_DEFAULT, PRODUCT_OPTIONS
-from shop.utils import clone_model, make_choices, valid_date_range
+from shop.utils import clone_model, make_choices
 
 
 class ShopModel(models.Model):
@@ -29,7 +29,6 @@ class ShopModel(models.Model):
 	title = models.CharField(_("Title"), max_length=100)
 	slug = models.SlugField(max_length=100, editable=False)
 	active = models.BooleanField(_("Visible on the site"), default=False)
-	objects = ShopManager()
 
 	def __unicode__(self):
 		return self.title
@@ -80,6 +79,7 @@ class Category(ShopModel):
 		upload_to="category")
 	parent = models.ForeignKey("self", blank=True, null=True, 
 		related_name="children")
+	objects = CategoryManager()
 
 class PricedModel(models.Model):
 	"""
@@ -99,8 +99,9 @@ class PricedModel(models.Model):
 		"""
 		is the sale price applicable
 		"""
-		return self.sale_price is not None and valid_date_range(self.sale_from, 
-			self.sale_to)
+		valid_from = self.sale_from is None or self.sale_from < datetime.now()
+		valid_to = self.sale_to is None or self.sale_to > datetime.now()
+		return self.sale_price is not None and valid_from and valid_to
 
 	def has_price(self):
 		"""
@@ -180,7 +181,8 @@ class ProductVariationModel(PricedModel):
 		
 	product = models.ForeignKey(Product, related_name="variations")
 	sku = SKUField(unique=True)
-	quantity = models.IntegerField(_("Number in stock"), blank=True, null=True) 
+	num_in_stock = models.IntegerField(_("Number in stock"), blank=True, 
+		null=True) 
 	default = models.BooleanField(_("Default"))
 	image = models.ForeignKey(ProductImage, null=True, blank=True)
 	objects = ProductVariationManager()
@@ -191,7 +193,7 @@ class ProductVariationModel(PricedModel):
 			self.option_fields() if getattr(self, field.name) is not None]))
 	
 	def save(self, *args, **kwargs):
-		super(BaseProductVariation, self).save(*args, **kwargs)
+		super(ProductVariationModel, self).save(*args, **kwargs)
 		if not self.sku:
 			self.sku = self.id
 			self.save()
@@ -215,16 +217,16 @@ class ProductVariationModel(PricedModel):
 		check the given quantity is in stock taking into account the number in 
 		carts, and cache the number
 		"""
-		if self.quantity is None:
+		if self.num_in_stock is None:
 			return True
-		if not hasattr(self, "_cached_num_available"):
-			num_available = self.quantity
-			in_carts = CartItem.objects.filter(sku=self.sku).aggregate(
+		if not hasattr(self, "_cached_num_in_stock"):
+			num_in_stock = self.num_in_stock
+			num_in_carts = CartItem.objects.filter(sku=self.sku).aggregate(
 				quantity_sum=models.Sum("quantity"))["quantity_sum"]
-			if in_carts is not None:
-				num_available = num_available - in_carts
-			self._cached_num_available = num_available
-		return self._cached_num_available >= quantity
+			if num_in_carts is not None:
+				num_in_stock = num_in_stock - num_in_carts
+			self._cached_num_in_stock = num_in_stock
+		return self._cached_num_in_stock >= quantity
 
 	def _get_image(self):
 		"""
@@ -304,7 +306,7 @@ class Order(AddressModel.clone("billing_detail"),
 	total = MoneyField(_("Order total"))
 	status = models.IntegerField(_("Status"), choices=ORDER_STATUSES, 
 		default=ORDER_STATUS_DEFAULT)
-	code = DiscountCodeField(_("Discount code"), blank=True)
+	discount_code = DiscountCodeField(_("Discount code"), blank=True)
 
 	def billing_name(self):
 		return "%s %s" % (self.billing_detail_first_name, 
@@ -429,12 +431,12 @@ class DiscountModel(models.Model):
 	active = models.BooleanField(_("Active"))
 	products = models.ManyToManyField(Product, blank=True)
 	categories = models.ManyToManyField(Category, blank=True)
-	sale_price_deduct = MoneyField(_("Reduce by amount"))
-	sale_price_percent = models.DecimalField(_("Reduce by percent"),
-		max_digits=4, decimal_places=2, blank=True, null=True)
-	sale_price_exact = MoneyField(_("Reduce to amount"))
-	sale_from = models.DateTimeField(_("Valid from"), blank=True, null=True)
-	sale_to = models.DateTimeField(_("Valid to"), blank=True, null=True)
+	discount_deduct = MoneyField(_("Reduce by amount"))
+	discount_percent = models.DecimalField(_("Reduce by percent"), max_digits=4, 
+		decimal_places=2, blank=True, null=True)
+	discount_exact = MoneyField(_("Reduce to amount"))
+	valid_from = models.DateTimeField(_("Valid from"), blank=True, null=True)
+	valid_to = models.DateTimeField(_("Valid to"), blank=True, null=True)
 
 	def __unicode__(self):
 		return self.title
@@ -476,24 +478,24 @@ class Sale(DiscountModel):
 		self._clear()
 		if self.active:
 			extra_filter = {}
-			if self.sale_price_deduct is not None:
+			if self.discount_deduct is not None:
 				# don't apply to prices that would be negative after deduction
-				extra_filter["unit_price__gt"] = self.sale_price_deduct
-				sale_price = models.F("unit_price") - self.sale_price_deduct
-			elif self.sale_price_percent is not None:
-				sale_price = models.F("unit_price") - (models.F("unit_price") 
-					/ "100.0" * self.sale_price_percent)
-			elif self.sale_price_exact is not None:
+				extra_filter["unit_price__gt"] = self.discount_deduct
+				sale_price = models.F("unit_price") - self.discount_deduct
+			elif self.discount_percent is not None:
+				sale_price = models.F("unit_price") - (models.F("unit_price") / 
+					"100.0" * self.discount_percent)
+			elif self.discount_exact is not None:
 				# don't apply to prices that are cheaper than the sale amount
-				extra_filter["unit_price__gt"] = self.sale_price_exact
-				sale_price = self.sale_price_exact
+				extra_filter["unit_price__gt"] = self.discount_exact
+				sale_price = self.discount_exact
 			else:
 				return
 			products = self.all_products()
 			variations = ProductVariation.objects.filter(product__in=products)
 			for priced_objects in (products, variations):
 				priced_objects.filter(**extra_filter).update(sale_id=self.id, 
-					sale_to=self.sale_to, sale_from=self.sale_from, 
+					sale_to=self.valid_to, sale_from=self.valid_from, 
 					sale_price=sale_price)
 	
 	def delete(self, *args, **kwargs):
@@ -506,7 +508,8 @@ class DiscountCode(DiscountModel):
 	applied to the total purchase amount
 	"""
 	
-	code = DiscountCodeField(_("Code"))
+	code = DiscountCodeField(_("Code"), unique=True)
 	min_purchase = MoneyField(_("Minimum purchase total"))
 	free_shipping = models.BooleanField(_("Free shipping"))
 	objects = DiscountCodeManager()
+

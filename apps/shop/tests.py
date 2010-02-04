@@ -62,17 +62,17 @@ class ShopTests(TestCase):
 		"""
 		self._product.variations.all().delete()
 		self._product.variations.manage_empty()
-		quantity = 10
+		num_in_stock = 10
 		variation = self._product.variations.all()[0]
-		variation.quantity = quantity
+		variation.num_in_stock = num_in_stock
 		# check stock field not in use
 		self.assertTrue(variation.has_stock())
 		# check available and unavailable quantities
-		self.assertTrue(variation.has_stock(quantity))
-		self.assertFalse(variation.has_stock(quantity + 1))
+		self.assertTrue(variation.has_stock(num_in_stock))
+		self.assertFalse(variation.has_stock(num_in_stock + 1))
 		# check sold out
 		variation = self._product.variations.all()[0]
-		variation.quantity = 0
+		variation.num_in_stock = 0
 		self.assertFalse(variation.has_stock())
 
 	def test_cart(self):
@@ -82,10 +82,10 @@ class ShopTests(TestCase):
 		self._product.variations.all().delete()
 		self._product.variations.create_from_options(PRODUCT_OPTIONS)
 		price = Decimal("20")
-		quantity = 5
+		num_in_stock = 5
 		variation = self._product.variations.all()[0]
 		variation.unit_price = price
-		variation.quantity = quantity * 2
+		variation.num_in_stock = num_in_stock * 2
 		variation.save()
 
 		# test initial cart
@@ -97,15 +97,15 @@ class ShopTests(TestCase):
 		# add quantity and check stock levels / cart totals
 		data = dict(zip([field.name for field in 
 			ProductVariation.option_fields()], variation.options()))
-		data["quantity"] = quantity
+		data["quantity"] = num_in_stock
 		self.client.post(self._product.get_absolute_url(), data)
 		cart = Cart.objects.from_request(self.client)
 		variation = self._product.variations.all()[0]
-		self.assertTrue(variation.has_stock(quantity))
-		self.assertFalse(variation.has_stock(quantity * 2))
+		self.assertTrue(variation.has_stock(num_in_stock))
+		self.assertFalse(variation.has_stock(num_in_stock * 2))
 		self.assertTrue(cart.has_items())
-		self.assertEqual(cart.total_quantity(), quantity)
-		self.assertEqual(cart.total_price(), price * quantity)
+		self.assertEqual(cart.total_quantity(), num_in_stock)
+		self.assertEqual(cart.total_price(), price * num_in_stock)
 
 		# add remaining quantity and check again
 		self.client.post(self._product.get_absolute_url(), data)
@@ -113,14 +113,14 @@ class ShopTests(TestCase):
 		variation = self._product.variations.all()[0]
 		self.assertFalse(variation.has_stock())
 		self.assertTrue(cart.has_items())
-		self.assertEqual(cart.total_quantity(), quantity * 2)
-		self.assertEqual(cart.total_price(), price * quantity * 2)
+		self.assertEqual(cart.total_quantity(), num_in_stock * 2)
+		self.assertEqual(cart.total_price(), price * num_in_stock * 2)
 
 		# remove from cart
 		self.client.post(reverse("shop_cart"), {"sku": variation.sku})
 		cart = Cart.objects.from_request(self.client)
 		variation = self._product.variations.all()[0]
-		self.assertTrue(variation.has_stock(quantity * 2))
+		self.assertTrue(variation.has_stock(num_in_stock * 2))
 		self.assertFalse(cart.has_items())
 		self.assertEqual(cart.total_quantity(), 0)
 		self.assertEqual(cart.total_price(), Decimal("0"))
