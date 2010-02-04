@@ -16,7 +16,8 @@ class ShopManager(Manager):
 		"""
 		items flagged as active
 		"""
-		return self.filter(active=True, **kwargs)
+		kwargs["active"] = True
+		return self.filter(**kwargs)
 
 class ProductManager(ShopManager):
 	
@@ -151,3 +152,19 @@ class ProductActionManager(Manager):
 		"""
 		self._action_for_field("total_purchase")
 
+class DiscountCodeManager(Manager):
+	
+	def valid(self, code, cart, **kwargs):
+		"""
+		items flagged as active and within date range as well checking 
+		"""
+		kwargs.update({"code": code, "active": True})
+		try:
+			discount = self.get(**kwargs)
+		except self.model.DoesNotExist:
+			return False
+		skus = [item.sku for item in cart]
+		if not discount.products().filter(variations__sku__in=skus).exists():
+			return False
+		else:
+			return valid_date_range(discount.sale_from, discount.sale_to)

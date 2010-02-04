@@ -64,3 +64,11 @@ def set_locale():
 		raise ImproperlyConfigured(_("Invalid currency locale specified: %s") % 
 			CURRENCY_LOCALE)
 	
+def valid_date_range(date_from, date_to):
+	"""
+	allows for null dates by only returning false if either date is specified 
+	and outside of the current time
+	"""
+	return (date_from is None or date_from < datetime.now()) and (date_to is None 
+		or date_to > datetime.now())
+	

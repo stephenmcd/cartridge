@@ -11,9 +11,9 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 
 from shop.fields import OptionField, MoneyField, SKUField
 from shop.managers import ShopManager, ProductManager, CartManager, \
-	ProductVariationManager, ProductActionManager
+	ProductVariationManager, ProductActionManager, DiscountCodeManager
 from shop.settings import ORDER_STATUSES, ORDER_STATUS_DEFAULT, PRODUCT_OPTIONS
-from shop.utils import clone_model, make_choices
+from shop.utils import clone_model, make_choices, valid_date_range
 
 
 class ShopModel(models.Model):
@@ -99,9 +99,8 @@ class PricedModel(models.Model):
 		"""
 		is the sale price applicable
 		"""
-		from_valid = self.sale_from is None or self.sale_from < datetime.now()
-		to_valid = self.sale_to is None or self.sale_to > datetime.now()
-		return self.sale_price is not None and from_valid and to_valid
+		return self.sale_price is not None and valid_date_range(self.sale_from, 
+			self.sale_to)
 
 	def has_price(self):
 		"""
@@ -169,7 +168,7 @@ class ProductImage(models.Model):
 	def __unicode__(self):
 		return self.description
 
-class BaseProductVariation(PricedModel):
+class ProductVariationModel(PricedModel):
 	"""
 	abstract model used to create the ProductVariation model below using 
 	dynamically created set of option fields from shop.settings.PRODUCT_OPTIONS
@@ -245,11 +244,11 @@ class BaseProductVariation(PricedModel):
 
 # build the ProductVariation model from the BaseProductVariation model by
 # adding each option in shop.settings.PRODUCT_OPTIONS as an OptionField
-ProductVariation = clone_model("ProductVariation", BaseProductVariation, 
+ProductVariation = clone_model("ProductVariation", ProductVariationModel, 
 	dict([(option[0], OptionField(choices=make_choices(option[1]))) 
 	for option in PRODUCT_OPTIONS]))
 
-class Address(models.Model):
+class AddressModel(models.Model):
 	"""
 	abstract model used to create new models via Address.make() - new models
 	are billing and shipping with the Order model inherits from below 
@@ -287,7 +286,8 @@ class Address(models.Model):
 		name = "".join(s.title() for s in field_prefix.split("_"))
 		return clone_model(name, models.Model, fields, abstract=True)
 
-class Order(Address.clone("billing_detail"), Address.clone("shipping_detail")):
+class Order(AddressModel.clone("billing_detail"), 
+	AddressModel.clone("shipping_detail")):
 
 	class Meta:
 		verbose_name = _("Order")
@@ -304,6 +304,7 @@ class Order(Address.clone("billing_detail"), Address.clone("shipping_detail")):
 	total = MoneyField(_("Order total"))
 	status = models.IntegerField(_("Status"), choices=ORDER_STATUSES, 
 		default=ORDER_STATUS_DEFAULT)
+	code = DiscountCodeField(_("Discount code"), blank=True)
 
 	def billing_name(self):
 		return "%s %s" % (self.billing_detail_first_name, 
@@ -370,7 +371,7 @@ class Cart(models.Model):
 		"""
 		return sum([item.total_price for item in self])
 	
-class SelectedProduct(models.Model):
+class SelectedProductModel(models.Model):
 	"""
 	abstract model representing a "selected" product in a cart or order
 	"""
@@ -389,14 +390,14 @@ class SelectedProduct(models.Model):
 	
 	def save(self, *args, **kwargs):
 		self.total_price = self.unit_price * self.quantity
-		super(SelectedProduct, self).save(*args, **kwargs)
+		super(SelectedProductModel, self).save(*args, **kwargs)
 
-class CartItem(SelectedProduct):
+class CartItem(SelectedProductModel):
 	cart = models.ForeignKey(Cart, related_name="items")
 	url = models.CharField(max_length=200)
 	image = models.CharField(max_length=200, null=True)
 
-class OrderItem(SelectedProduct):
+class OrderItem(SelectedProductModel):
 	order = models.ForeignKey(Order, related_name="items")
 
 class ProductAction(models.Model):
@@ -413,17 +414,16 @@ class ProductAction(models.Model):
 	total_cart = models.IntegerField(default=0)
 	total_purchase = models.IntegerField(default=0)
 	objects = ProductActionManager()
-	
-class Sale(models.Model):
+
+class DiscountModel(models.Model):
 	"""
-	stores sales field values for price and date range which when saved are 
-	then applied across products and variations according to the selected 
-	categories and products for the sale
+	abstract model representing one of several types of monetary reductions as 
+	well as a date range they're applicable for, and the products and products 
+	in categories that the reduction is applicable for
 	"""
 	
 	class Meta:
-		verbose_name = _("Sale")
-		verbose_name_plural = _("Sales")
+		abstract = True
 
 	title = models.CharField(max_length=100)
 	active = models.BooleanField(_("Active"))
@@ -433,8 +433,30 @@ class Sale(models.Model):
 	sale_price_percent = models.DecimalField(_("Reduce by percent"),
 		max_digits=4, decimal_places=2, blank=True, null=True)
 	sale_price_exact = MoneyField(_("Reduce to amount"))
-	sale_from = models.DateTimeField(_("Sale start"), blank=True, null=True)
-	sale_to = models.DateTimeField(_("Sale end"), blank=True, null=True)
+	sale_from = models.DateTimeField(_("Valid from"), blank=True, null=True)
+	sale_to = models.DateTimeField(_("Valid to"), blank=True, null=True)
+
+	def __unicode__(self):
+		return self.title
+		
+	def all_products(self):
+		"""
+		return the selected products as well as the products in the selected 
+		categories
+		"""
+		return Product.objects.filter(models.Q(id__in=self.products.all()) | 
+			models.Q(categories__in=self.categories.all()))
+
+class Sale(DiscountModel):
+	"""
+	stores sales field values for price and date range which when saved are 
+	then applied across products and variations according to the selected 
+	categories and products for the sale
+	"""
+	
+	class Meta:
+		verbose_name = _("Sale")
+		verbose_name_plural = _("Sales")
 	
 	def _clear(self):
 		"""
@@ -453,10 +475,6 @@ class Sale(models.Model):
 		super(Sale, self).save(*args, **kwargs)
 		self._clear()
 		if self.active:
-			products = Product.objects.filter(
-				models.Q(categories__in=self.categories.all()) | 
-				models.Q(id__in=self.products.all()))
-			variations = ProductVariation.objects.filter(product__in=products)
 			extra_filter = {}
 			if self.sale_price_deduct is not None:
 				# don't apply to prices that would be negative after deduction
@@ -471,15 +489,24 @@ class Sale(models.Model):
 				sale_price = self.sale_price_exact
 			else:
 				return
+			products = self.all_products()
+			variations = ProductVariation.objects.filter(product__in=products)
 			for priced_objects in (products, variations):
 				priced_objects.filter(**extra_filter).update(sale_id=self.id, 
 					sale_to=self.sale_to, sale_from=self.sale_from, 
 					sale_price=sale_price)
-
-	def __unicode__(self):
-		return self.title
 	
 	def delete(self, *args, **kwargs):
 		self._clear()
 		super(Sale, self).delete(*args, **kwargs)
 
+class DiscountCode(DiscountModel):
+	"""
+	a code that can be entered at the checkout process to have a discount 
+	applied to the total purchase amount
+	"""
+	
+	code = DiscountCodeField(_("Code"))
+	min_purchase = MoneyField(_("Minimum purchase total"))
+	free_shipping = models.BooleanField(_("Free shipping"))
+	objects = DiscountCodeManager()

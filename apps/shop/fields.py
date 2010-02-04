@@ -39,3 +39,9 @@ class SKUField(CharField):
 		defaults.update(kwargs)
 		super(SKUField, self).__init__(*args, **defaults)
 
+class DiscountCodeField(CharField):
+	
+	def __init__(self, *args, **kwargs):
+		defaults = {"max_length": 20}
+		defaults.update(kwargs)
+		super(DiscountCodeField, self).__init__(*args, **defaults)

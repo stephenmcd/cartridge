@@ -13,8 +13,8 @@ from django.utils.datastructures import SortedDict
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
-from shop.models import Product, ProductVariation, SelectedProduct, Cart, \
-	Order, Sale
+from shop.models import Product, ProductVariation, SelectedProductModel, \
+	Cart, Order, DiscountCode
 from shop.exceptions import CheckoutError
 from shop.settings import CARD_TYPES, ORDER_FROM_EMAIL
 from shop.templatetags.shop_tags import thumbnail
@@ -100,6 +100,11 @@ class OrderForm(CheckoutForm, forms.ModelForm):
 		model = Order
 		fields = (Order.billing_detail_field_names() + 
 			Order.shipping_detail_field_names() + ["additional_instructions"])
+			
+	def __init__(self, *args, **kwargs):
+		super(OrderForm, self).__init__(*args, **kwargs)
+		if not DiscountCode.objects.active().exists():
+			self.fields["discount_code"].widget = forms.HiddenInput()
 
 	def _fieldset(self, prefix):
 		"""
@@ -127,7 +132,15 @@ class OrderForm(CheckoutForm, forms.ModelForm):
 		if name.startswith("fieldset_"):
 			return self._fieldset(name.split("fieldset_", 1)[1])
 		raise AttributeError, name
-		
+	
+	def clean_discount_code(self):
+		code = self.cleaned_data.get("code", "")
+		if code:
+			cart = Cart.objects.from_request(self._request)
+			if not DiscountCode.objects.valid(code=code, cart=cart):
+				raise forms.ValidationError("The discount code entered is invalid.")
+		return code
+
 class ExpiryYearField(forms.ChoiceField):
 	"""
 	choice field for credit card expiry with years from now as choices
@@ -203,7 +216,7 @@ class CheckoutWizard(FormWizard):
 					product.save()
 				product.actions.purchased()
 			# copy the cart item to the order
-			fields = [field.name for field in SelectedProduct._meta.fields]
+			fields = [field.name for field in SelectedProductModel._meta.fields]
 			item = dict([(field, getattr(item, field)) for field in fields])
 			order.items.create(**item)
 		cart.delete()
