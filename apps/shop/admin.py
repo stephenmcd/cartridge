@@ -5,9 +5,9 @@ from django.utils.translation import ugettext_lazy as _
 
 from shop.fields import MoneyField
 from shop.forms import ProductAdminForm, ProductVariationAdminForm, \
-	ProductVariationAdminFormset, SaleAdminForm, ImageWidget, MoneyWidget
+	ProductVariationAdminFormset, DiscountAdminForm, ImageWidget, MoneyWidget
 from shop.models import Category, Product, ProductImage, ProductVariation, \
-	Order, OrderItem, Sale
+	Order, OrderItem, Sale, DiscountCode
 
 
 # lists of field names
@@ -22,7 +22,7 @@ class CategoryAdmin(admin.ModelAdmin):
 class ProductVariationAdmin(admin.TabularInline):
 	verbose_name_plural = _("Current varisations")
 	model = ProductVariation
-	fields = ("sku", "default", "quantity", "unit_price", "sale_price", 
+	fields = ("sku", "default", "num_in_stock", "unit_price", "sale_price", 
 		"sale_from", "sale_to", "image")
 	extra = 0
 	formfield_overrides = {MoneyField: {"widget": MoneyWidget}}
@@ -91,27 +91,50 @@ class OrderAdmin(admin.ModelAdmin):
 		(_("Billing details"), {"fields": (tuple(billing_fields),)}),
 		(_("Shipping details"), {"fields": (tuple(shipping_fields),)}),
 		(None, {"fields": ("additional_instructions", ("shipping_total", 
-			"shipping_type"), "item_total",("total", "status"))}),
+			"shipping_type"), ("discount_code", "discount_total"), 
+			"item_total",("total", "status"))}),
 	)
 
 class SaleAdmin(admin.ModelAdmin):
-	list_display = ("title", "active")
-	list_editable = ("active",)
+	list_display = ("title", "active", "discount_deduct", "discount_percent", 
+		"discount_exact", "valid_from", "valid_to")
+	list_editable = ("active", "discount_deduct", "discount_percent", 
+		"discount_exact", "valid_from", "valid_to")
 	filter_horizontal = ("categories", "products")
 	formfield_overrides = {MoneyField: {"widget": MoneyWidget}}
-	form = SaleAdminForm
+	form = DiscountAdminForm
 	fieldsets = (
 		(None, {"fields": ("title", "active")}),
 		(_("Apply to product and/or products in categories"), 
 			{"fields": ("products", "categories")}),
 		(_("Reduce unit price by"), 
-			{"fields": (("sale_price_deduct", "sale_price_percent", 
-			"sale_price_exact"),)}),
-		(_("Sale period"), {"fields": (("sale_from", "sale_to"),)}),
+			{"fields": (("discount_deduct", "discount_percent", 
+			"discount_exact"),)}),
+		(_("Sale period"), {"fields": (("valid_from", "valid_to"),)}),
+	)
+
+class DiscountCodeAdmin(admin.ModelAdmin):
+	list_display = ("title", "active", "code", "discount_deduct", 
+		"discount_percent", "min_purchase", "free_shipping", "valid_from", 
+		"valid_to")
+	list_editable = ("active", "code", "discount_deduct", "discount_percent", 
+		"min_purchase", "free_shipping", "valid_from", "valid_to")
+	filter_horizontal = ("categories", "products")
+	formfield_overrides = {MoneyField: {"widget": MoneyWidget}}
+	form = DiscountAdminForm
+	fieldsets = (
+		(None, {"fields": ("title", "active", "code")}),
+		(_("Apply to product and/or products in categories"), 
+			{"fields": ("products", "categories")}),
+		(_("Reduce unit price by"), 
+			{"fields": (("discount_deduct", "discount_percent"),)}),
+		(None, {"fields": (("min_purchase", "free_shipping"),)}),
+		(_("Valid for"), {"fields": (("valid_from", "valid_to"),)}),
 	)
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Sale, SaleAdmin)
+admin.site.register(DiscountCode, DiscountCodeAdmin)
 

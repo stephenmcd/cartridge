@@ -303,10 +303,11 @@ class Order(AddressModel.clone("billing_detail"),
 		blank=True)
 	shipping_total = MoneyField(_("Shipping total"))
 	item_total = MoneyField(_("Item total"))
+	discount_code = DiscountCodeField(_("Discount code"), blank=True)
+	discount_total = MoneyField(_("Discount total"))
 	total = MoneyField(_("Order total"))
 	status = models.IntegerField(_("Status"), choices=ORDER_STATUSES, 
 		default=ORDER_STATUS_DEFAULT)
-	discount_code = DiscountCodeField(_("Discount code"), blank=True)
 
 	def billing_name(self):
 		return "%s %s" % (self.billing_detail_first_name, 
@@ -509,7 +510,7 @@ class DiscountCode(DiscountModel):
 	"""
 	
 	code = DiscountCodeField(_("Code"), unique=True)
-	min_purchase = MoneyField(_("Minimum purchase total"))
+	min_purchase = MoneyField(_("Minimum total purchase"))
 	free_shipping = models.BooleanField(_("Free shipping"))
 	objects = DiscountCodeManager()
 

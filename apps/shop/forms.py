@@ -289,15 +289,20 @@ class ProductVariationAdminFormset(BaseInlineFormSet):
 			raise forms.ValidationError(
 				_("Only one variation can be checked as the default."))
 
-class SaleAdminForm(forms.ModelForm):
-	"""
-	ensures only one price field is given a value
-	"""
-	def clean_sale_price_exact(self):
-		reductions = filter(None, [self.cleaned_data.get(f, None) for f in 
-			("sale_price_deduct","sale_price_percent","sale_price_exact")])
-		if len(reductions) > 1:
-			error = _("Please enter a value for only one type of reduction.")
-			raise forms.ValidationError(error)
-		return self.cleaned_data["sale_price_exact"]
+class DiscountAdminForm(forms.ModelForm):
 
+	def __init__(self, *args, **kwargs):
+		"""
+		build a clean method that validates the last discount field ensuring 
+		only one discount field is given a value
+		"""
+		super(DiscountAdminForm, self).__init__(*args, **kwargs)
+		fields = [f for f in self.fields.keys() if f.startswith("discount_")]
+		def clean_last_discount_field():
+			reductions = filter(None, [self.cleaned_data.get(f, None) 
+				for f in fields])
+			if len(reductions) > 1:
+				error = _("Please enter a value for only one type of reduction.")
+				raise forms.ValidationError(error)
+			return self.cleaned_data[fields[-1]]
+		self.__dict__["clean_%s" % fields[-1]] = clean_last_discount_field
