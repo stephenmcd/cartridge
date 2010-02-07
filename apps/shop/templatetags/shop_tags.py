@@ -4,9 +4,11 @@ import locale
 
 from django import template
 from django.conf import settings
+from django.utils.datastructures import SortedDict
 
 from shop.models import Category
 from shop.utils import set_locale
+from shop.settings import ADMIN_REORDER
 
 
 register = template.Library()
@@ -115,19 +117,53 @@ def thumbnail(image_url, width, height):
 @register.inclusion_tag("shop/order_totals.html", takes_context=True)
 def order_totals(context, text_only=False):
 	"""
-	add item_total, shipping_total and order_total to the include context.
-	use the order object for email receipts, or the cart object for checkout
+	add item_total, shipping_total, discount and order_total to the include 
+	context. use the order object for email receipts, or the cart object for 
+	checkout
 	"""
 	context["text_only"] = text_only
 	if "order" in context:
 		context["item_total"] = context["order"].total
 		context["shipping_total"] = context["order"].shipping_total
+		context["discount_total"] = context["order"].discount_total
 	elif "cart" in context:
 		context["item_total"] = context["cart"].total_price()
-		context["shipping_total"] = context["request"].session.get(
-			"shipping_total", None)
+		if context["item_total"] == 0:
+			# ignore session if cart has no items as cart may have expired
+			# sooner than session
+			context["discount_total"] = context["shipping_total"] = 0
+		else:
+			context["shipping_total"] = context["request"].session.get(
+				"shipping_total", None)
+			context["discount_total"] = context["request"].session.get(
+				"discount_total", None)
 	context["order_total"] = context.get("item_total", None)
 	if context.get("shipping_total", None) is not None:
 		context["order_total"] += context["shipping_total"]
+	if context.get("discount_total", None) is not None:
+		context["order_total"] -= context["discount_total"]
 	return context
+
+@register.simple_tag
+def admin_reorder(path, app_list):
+	"""
+	called in shop/templates/admin/base_site.html template override and applies 
+	custom ordering of apps/models defined by settings.ADMIN_REORDER
+	"""
+	# sort key function - use index of item in order if exists, otherwise item
+	sort = lambda order, item: (order.index(item), "") if item in order else (
+		len(order), item) 
+	if app_list is not None:
+		# sort the app list
+		order = SortedDict(ADMIN_REORDER)
+		app_list.sort(key=lambda app: sort(order.keys(), app["app_url"][:-1]))
+		for i, app in enumerate(app_list):
+			# sort the model list for each app
+			app_name = app["app_url"][:-1]
+			if not app_name:
+				app_name = path.strip("/").split("/")[-1]
+			model_order = [m.lower() for m in order.get(app_name, [])]
+			app_list[i]["models"].sort(key=lambda model: sort(model_order,
+				model["admin_url"].strip("/").split("/")[-1]))
+	return ""
 

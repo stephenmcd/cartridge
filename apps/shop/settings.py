@@ -45,3 +45,9 @@ FORCE_HOST = getattr(settings, "SHOP_FORCE_HOST", None)
 
 # number of search results to display per page
 SEARCH_RESULTS_PER_PAGE = getattr(settings, "SHOP_SEARCH_RESULTS_PER_PAGE", 10)
+
+ADMIN_REORDER = tuple(getattr(settings, "ADMIN_REORDER", ()))
+if "shop" not in dict(ADMIN_REORDER):
+	ADMIN_REORDER += (("shop", ("Category", "Product", "Sale", "DiscountCode",
+		"Order")),)
+
