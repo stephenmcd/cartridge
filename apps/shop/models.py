@@ -320,6 +320,8 @@ class Order(AddressModel.clone("billing_detail"),
 		self.total = self.item_total
 		if self.shipping_total is not None:
 			self.total += self.shipping_total
+		if self.discount_total is not None:
+			self.total -= self.discount_total
 		super(Order, self).save(*args, **kwargs)
 
 class Cart(models.Model):
@@ -345,7 +347,9 @@ class Cart(models.Model):
 			item.description = str(variation)
 			item.unit_price = variation.price()
 			item.url = variation.product.get_absolute_url()
-			item.image = str(variation._get_image())
+			image = variation._get_image()
+			if image is not None:
+				item.image = str(image)
 			variation.product.actions.added_to_cart()
 		item.quantity += quantity
 		item.save()
@@ -513,4 +517,16 @@ class DiscountCode(DiscountModel):
 	min_purchase = MoneyField(_("Minimum total purchase"))
 	free_shipping = models.BooleanField(_("Free shipping"))
 	objects = DiscountCodeManager()
+	
+	def calculate(self, amount):
+		"""
+		calculates the discount for the given amount
+		"""
+		if self.discount_deduct is not None:
+			# don't apply to amounts that would be negative after deduction
+			if self.discount_deduct < amount:
+				return self.discount_deduct
+		elif self.discount_percent is not None:
+			return amount / Decimal("100") * self.discount_percent
+		return 0
 

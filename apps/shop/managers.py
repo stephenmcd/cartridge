@@ -165,15 +165,16 @@ class DiscountCodeManager(ActiveManager):
 		valid_to = Q(valid_to__isnull=True) | Q(valid_from__gte=datetime.now())
 		return super(DiscountCodeManager, self).active(valid_from, valid_to)
 	
-	def valid(self, code, cart):
+	def get_valid(self, code, cart):
 		"""
 		items flagged as active and within date range as well checking that 
 		the given cart contains items that the code is valid for
 		"""
-		try:
-			discount = self.active().get(code=code)
-		except self.model.DoesNotExist:
-			return False
-		return discount.products().filter(
-			variations__sku__in=[item.sku for item in cart]).count() > 0
+		discount = self.active().get(Q(min_purchase__isnull=True) | 
+			Q(min_purchase__lte=cart.total_price()), code=code)
+		products = discount.products.all()
+		if products.count() > 0 and products.filter(variations__sku__in=
+			[item.sku for item in cart]).count() == 0:
+			raise self.model.DoesNotExist
+		return discount
 

@@ -131,14 +131,25 @@ class OrderForm(CheckoutForm, forms.ModelForm):
 		"""
 		if name.startswith("fieldset_"):
 			return self._fieldset(name.split("fieldset_", 1)[1])
-		raise AttributeError, name
+		elif name == "errors":
+			return None
+		raise AttributeError(name)
 	
 	def clean_discount_code(self):
+		"""
+		validate the discount code if given and update the session with free 
+		shipping and/or the discount amount
+		"""
 		code = self.cleaned_data.get("discount_code", "")
 		if code:
 			cart = Cart.objects.from_request(self._request)
-			if not DiscountCode.objects.valid(code=code, cart=cart):
+			try:
+				discount = DiscountCode.objects.get_valid(code=code, cart=cart)
+			except DiscountCode.DoesNotExist:
 				raise forms.ValidationError("The discount code entered is invalid.")
+			self._request.session["free_shipping"] = discount.free_shipping
+			self._request.session["discount_total"] = discount.calculate(
+				cart.total_price())
 		return code
 
 class ExpiryYearField(forms.ChoiceField):
@@ -197,24 +208,24 @@ class CheckoutWizard(FormWizard):
 		"""
 		cart = Cart.objects.from_request(request)
 		order = form_list[0].save(commit=False)
-		for shipping_field in ("shipping_type", "shipping_total"):
-			if shipping_field in request.session:
-				setattr(order, shipping_field, request.session[shipping_field])
-				del request.session[shipping_field]
+		# push session persisted fields onto the order
+		for field in ("shipping_type", "shipping_total", "discount_total"):
+			if field in request.session:
+				setattr(order, field, request.session[field])
+				del request.session[field]
 		order.item_total = cart.total_price()
 		order.save()
 		for item in cart:
-			# decrease the product's quantity and set the purchase action
+			# decrease the item's quantity and set the purchase action
 			try:
 				variation = ProductVariation.objects.get(sku=item.sku)
 			except ProductVariation.DoesNotExist:
 				pass
 			else:
-				product = variation.product
-				if product.quantity is not None:
-					product.quantity -= item.quantity
-					product.save()
-				product.actions.purchased()
+				if variation.num_in_stock is not None:
+					variation.num_in_stock -= item.quantity
+					variation.save()
+				variation.product.actions.purchased()
 			# copy the cart item to the order
 			fields = [field.name for field in SelectedProductModel._meta.fields]
 			item = dict([(field, getattr(item, field)) for field in fields])
@@ -260,6 +271,7 @@ class MoneyWidget(forms.TextInput):
 		else:
 			set_locale()
 			value = ("%%.%sf" % localeconv()["frac_digits"]) % value
+			attrs["style"] = "text-align:right;"
 		return super(MoneyWidget, self).render(name, value, attrs)
 
 # build a dict of option fields for creating the ProductAdminForm type
@@ -306,3 +318,4 @@ class DiscountAdminForm(forms.ModelForm):
 				raise forms.ValidationError(error)
 			return self.cleaned_data[fields[-1]]
 		self.__dict__["clean_%s" % fields[-1]] = clean_last_discount_field
+

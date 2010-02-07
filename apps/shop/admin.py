@@ -75,6 +75,7 @@ class OrderItemInline(admin.TabularInline):
 	verbose_name_plural = _("Items")
 	model = OrderItem
 	extra = 0
+	formfield_overrides = {MoneyField: {"widget": MoneyWidget}}
 
 class OrderAdmin(admin.ModelAdmin):
 	ordering = ("status", "-id")
@@ -91,7 +92,7 @@ class OrderAdmin(admin.ModelAdmin):
 		(_("Billing details"), {"fields": (tuple(billing_fields),)}),
 		(_("Shipping details"), {"fields": (tuple(shipping_fields),)}),
 		(None, {"fields": ("additional_instructions", ("shipping_total", 
-			"shipping_type"), ("discount_code", "discount_total"), 
+			"shipping_type"), ("discount_total", "discount_code"), 
 			"item_total",("total", "status"))}),
 	)
 
