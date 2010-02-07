@@ -16,7 +16,7 @@ from shop.settings import ORDER_STATUSES, ORDER_STATUS_DEFAULT, PRODUCT_OPTIONS
 from shop.utils import clone_model, make_choices
 
 
-class ShopModel(models.Model):
+class Displayable(models.Model):
 	"""
 	abstract model representing a visible object on the website - Category and 
 	Product are derived from this. contains common functionality like auto slug 
@@ -46,7 +46,7 @@ class ShopModel(models.Model):
 				if not self.__class__.objects.filter(slug=self.slug):
 					break
 				i += 1
-		super(ShopModel, self).save(*args, **kwargs)
+		super(Displayable, self).save(*args, **kwargs)
 		
 	def get_absolute_url(self):
 		return reverse("shop_%s" % self.__class__.__name__.lower(), 
@@ -69,7 +69,7 @@ class ShopModel(models.Model):
 	admin_thumb.allow_tags = True
 	admin_thumb.short_description = ""
 
-class Category(ShopModel):
+class Category(Displayable):
 
 	class Meta:
 		verbose_name = _("Category")
@@ -81,7 +81,7 @@ class Category(ShopModel):
 		related_name="children")
 	objects = CategoryManager()
 
-class PricedModel(models.Model):
+class Priced(models.Model):
 	"""
 	abstract model with unit and sale price fields - for product and variation
 	"""
@@ -119,7 +119,7 @@ class PricedModel(models.Model):
 			return self.unit_price
 		return Decimal("0")
 	
-class Product(ShopModel, PricedModel):
+class Product(Displayable, Priced):
 	"""
 	container model for a product
 	"""
@@ -169,7 +169,7 @@ class ProductImage(models.Model):
 	def __unicode__(self):
 		return self.description
 
-class ProductVariationModel(PricedModel):
+class BaseProductVariation(Priced):
 	"""
 	abstract model used to create the ProductVariation model below using 
 	dynamically created set of option fields from shop.settings.PRODUCT_OPTIONS
@@ -193,13 +193,13 @@ class ProductVariationModel(PricedModel):
 			self.option_fields() if getattr(self, field.name) is not None]))
 	
 	def save(self, *args, **kwargs):
-		super(ProductVariationModel, self).save(*args, **kwargs)
+		super(BaseProductVariation, self).save(*args, **kwargs)
 		if not self.sku:
 			self.sku = self.id
 			self.save()
 		if self.default:
 			product = self.product
-			for field in PricedModel._meta.fields:
+			for field in Priced._meta.fields:
 				if not isinstance(field, models.AutoField):
 					setattr(product, field.name, getattr(self, field.name))
 			product.save()
@@ -246,11 +246,11 @@ class ProductVariationModel(PricedModel):
 
 # build the ProductVariation model from the BaseProductVariation model by
 # adding each option in shop.settings.PRODUCT_OPTIONS as an OptionField
-ProductVariation = clone_model("ProductVariation", ProductVariationModel, 
+ProductVariation = clone_model("ProductVariation", BaseProductVariation, 
 	dict([(option[0], OptionField(choices=make_choices(option[1]))) 
 	for option in PRODUCT_OPTIONS]))
 
-class AddressModel(models.Model):
+class Address(models.Model):
 	"""
 	abstract model used to create new models via Address.make() - new models
 	are billing and shipping with the Order model inherits from below 
@@ -288,8 +288,7 @@ class AddressModel(models.Model):
 		name = "".join(s.title() for s in field_prefix.split("_"))
 		return clone_model(name, models.Model, fields, abstract=True)
 
-class Order(AddressModel.clone("billing_detail"), 
-	AddressModel.clone("shipping_detail")):
+class Order(Address.clone("billing_detail"), Address.clone("shipping_detail")):
 
 	class Meta:
 		verbose_name = _("Order")
@@ -378,7 +377,7 @@ class Cart(models.Model):
 		"""
 		return sum([item.total_price for item in self])
 	
-class SelectedProductModel(models.Model):
+class SelectedProduct(models.Model):
 	"""
 	abstract model representing a "selected" product in a cart or order
 	"""
@@ -397,14 +396,14 @@ class SelectedProductModel(models.Model):
 	
 	def save(self, *args, **kwargs):
 		self.total_price = self.unit_price * self.quantity
-		super(SelectedProductModel, self).save(*args, **kwargs)
+		super(SelectedProduct, self).save(*args, **kwargs)
 
-class CartItem(SelectedProductModel):
+class CartItem(SelectedProduct):
 	cart = models.ForeignKey(Cart, related_name="items")
 	url = models.CharField(max_length=200)
 	image = models.CharField(max_length=200, null=True)
 
-class OrderItem(SelectedProductModel):
+class OrderItem(SelectedProduct):
 	order = models.ForeignKey(Order, related_name="items")
 
 class ProductAction(models.Model):
@@ -422,7 +421,7 @@ class ProductAction(models.Model):
 	total_purchase = models.IntegerField(default=0)
 	objects = ProductActionManager()
 
-class DiscountModel(models.Model):
+class Discount(models.Model):
 	"""
 	abstract model representing one of several types of monetary reductions as 
 	well as a date range they're applicable for, and the products and products 
@@ -454,7 +453,7 @@ class DiscountModel(models.Model):
 		return Product.objects.filter(models.Q(id__in=self.products.all()) | 
 			models.Q(categories__in=self.categories.all()))
 
-class Sale(DiscountModel):
+class Sale(Discount):
 	"""
 	stores sales field values for price and date range which when saved are 
 	then applied across products and variations according to the selected 
@@ -507,7 +506,7 @@ class Sale(DiscountModel):
 		self._clear()
 		super(Sale, self).delete(*args, **kwargs)
 
-class DiscountCode(DiscountModel):
+class DiscountCode(Discount):
 	"""
 	a code that can be entered at the checkout process to have a discount 
 	applied to the total purchase amount
