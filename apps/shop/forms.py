@@ -13,7 +13,7 @@ from django.utils.datastructures import SortedDict
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
-from shop.models import Product, ProductVariation, SelectedProductModel, \
+from shop.models import Product, ProductVariation, SelectedProduct, \
 	Cart, Order, DiscountCode
 from shop.exceptions import CheckoutError
 from shop.settings import CARD_TYPES, ORDER_FROM_EMAIL
@@ -227,7 +227,7 @@ class CheckoutWizard(FormWizard):
 					variation.save()
 				variation.product.actions.purchased()
 			# copy the cart item to the order
-			fields = [field.name for field in SelectedProductModel._meta.fields]
+			fields = [field.name for field in SelectedProduct._meta.fields]
 			item = dict([(field, getattr(item, field)) for field in fields])
 			order.items.create(**item)
 		cart.delete()
