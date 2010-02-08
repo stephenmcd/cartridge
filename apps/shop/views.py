@@ -75,6 +75,26 @@ def search(request, template="shop/search_results.html"):
 	return render_to_response(template, {"query": query, "results": results},
 		RequestContext(request))
 	
+def wishlist(request, template="shop/wishlist.html"):
+	"""
+	display wishlist - handle removing items
+	"""
+	skus = request.COOKIES.get("wishlist", "").split(",")
+	if request.method == "POST":
+		sku = request.POST.get("sku", "")
+		if sku in skus:
+			skus.remove(sku)
+		info(request, _("Item removed from wishlist"), fail_silently=True)
+		response = HttpResponseRedirect(reverse("shop_wishlist"))
+		return set_wishlist(response, skus)
+	variations = []
+	if "wishlist" in request.COOKIES:
+		variations = ProductVariations.objects.filter(product__active=True
+			sku__in=skus).select_related()
+		variations.sort(key=lambda v: skus.index(v.sku))
+	return render_to_response(template, {"wishlist": variations}, 
+		RequestContext(request))
+
 def cart(request, template="shop/cart.html"):
 	"""
 	display cart - handle removing items

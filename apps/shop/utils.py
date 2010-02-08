@@ -1,5 +1,6 @@
 
 import locale
+from datetime import datetime, timedelta
 from os.path import basename
 
 from django.core.exceptions import ImproperlyConfigured
@@ -26,6 +27,15 @@ def set_shipping(request, shipping_type, shipping_total):
 		shipping_total = 0
 	request.session["shipping_type"] = shipping_type
 	request.session["shipping_total"] = shipping_total
+	
+def set_wishlist(response, wishlist):
+	"""
+	stores the list of wishlist skus in a cookie
+	"""
+	expires = datetime.strftime(datetime.datetime.utcnow() + 
+		datetime.timedelta(seconds=365*24*60*60), "%a, %d-%b-%Y %H:%M:%S GMT")
+	response.set_cookie("wishlist", ",".join(wishlist), expires=expires)
+	return response
 
 def clone_model(name, model, fields, abstract=False):
 	"""
