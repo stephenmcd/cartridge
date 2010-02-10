@@ -63,10 +63,10 @@ def get_add_product_form(product):
 				error = "invalid_options"
 			else:
 				if self._to_cart:
-					if not variation.has_stock(quantity):
-						error = "no_stock_quantity"
-					elif not variation.has_stock():
+					if not variation.has_stock():
 						error = "no_stock"
+					elif not variation.has_stock(quantity):
+						error = "no_stock_quantity"
 			if error is not None:
 				raise forms.ValidationError(ADD_PRODUCT_ERRORS[error])
 			self.variation = variation
