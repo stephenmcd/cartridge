@@ -91,7 +91,8 @@ $(function() {
 <form method="post" id="add-cart">
 	<ul>
 		{{ add_cart_form.as_ul }}
-		<li><input type="submit" class="button" value="{% trans "Buy" %}" /></li>
+		<li><input type="submit" class="button" name="add_cart" value="{% trans "Buy" %}" /></li>
+		<li><input type="submit" class="button" name="add_wishlist" value="{% trans "Save for later" %}" /></li>
 	</ul>
 </form>
 {% else %}

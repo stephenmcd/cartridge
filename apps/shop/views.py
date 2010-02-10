@@ -8,7 +8,7 @@ from django.utils import simplejson
 from django.utils.translation import ugettext as _
 
 from shop.models import Category, Product, ProductVariation, Cart
-from shop.forms import get_add_cart_form, OrderForm
+from shop.forms import get_add_product_form, OrderForm
 from shop.settings import SEARCH_RESULTS_PER_PAGE
 
 
@@ -45,16 +45,16 @@ def category(request, slug, template="shop/category.html"):
 
 def product(request, slug, template="shop/product.html"):
 	"""
-	display a product - redirect to cart if product added
+	display a product - redirect to wishlist or cart if product added to either
 	"""
 	product = get_object_or_404(Product.objects.active(slug=slug))
-	AddCartForm = get_add_cart_form(product)
-	add_cart_form = AddCartForm(initial={"quantity": 1})
+	AddProductForm = get_add_product_form(product)
+	add_product_form = AddProductForm(initial={"quantity": 1})
 	if request.method == "POST":
-		add_cart_form = AddCartForm(request.POST)
-		if add_cart_form.is_valid():
-			Cart.objects.from_request(request).add_item(add_cart_form.variation, 
-				add_cart_form.cleaned_data["quantity"])
+		add_product_form = AddProductForm(request.POST)
+		if add_product_form.is_valid():
+			Cart.objects.from_request(request).add_item(add_product_form.variation, 
+				add_product_form.cleaned_data["quantity"])
 			info(request, _("Item added to cart"), fail_silently=True)
 			return HttpResponseRedirect(reverse("shop_cart"))
 	variations = product.variations.all()
@@ -63,7 +63,7 @@ def product(request, slug, template="shop/product.html"):
 		for v in variations])
 	return render_to_response(template, {"product": product, "variations_json":
 		variations_json, "variations": variations, "images": product.images.all(),
-		"add_cart_form": add_cart_form}, RequestContext(request))
+		"add_product_form": add_product_form}, RequestContext(request))
 
 def search(request, template="shop/search_results.html"):
 	"""
@@ -89,7 +89,7 @@ def wishlist(request, template="shop/wishlist.html"):
 		return set_wishlist(response, skus)
 	variations = []
 	if "wishlist" in request.COOKIES:
-		variations = ProductVariations.objects.filter(product__active=True
+		variations = ProductVariations.objects.filter(product__active=True,
 			sku__in=skus).select_related()
 		variations.sort(key=lambda v: skus.index(v.sku))
 	return render_to_response(template, {"wishlist": variations}, 

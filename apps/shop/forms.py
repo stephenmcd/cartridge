@@ -29,18 +29,19 @@ ADD_CART_ERRORS = {
 }
 
 
-def get_add_cart_form(product):
+def get_add_product_form(product, min_quantity=1):
 	"""
-	return the add to cart form dynamically adding the options to it using the 
-	variations of the given product
+	return the add product form dynamically adding the options to it using the 
+	variations of the given product and setting the minimum quantity based on 
+	whether the product is being added to the cart or the wishlist
 	"""
 
-	class AddCartForm(forms.Form):
+	class BaseAddCartForm(forms.Form):
 		"""
 		add to cart form for product
 		"""
 
-		quantity = forms.IntegerField(min_value=1)
+		quantity = forms.IntegerField(min_value=min_quantity)
 	
 		def clean(self):
 			"""
@@ -49,10 +50,11 @@ def get_add_cart_form(product):
 			"""
 			options = self.cleaned_data.copy()
 			quantity = options.pop("quantity")
+			if min_quantity > 0: # ensure the product has a price if adding to cart
+				options["unit_price__isnull"] = False
 			error = None
 			try:
-				variation = product.variations.get(unit_price__isnull=False,
-					**options)
+				variation = product.variations.get(**options)
 			except ProductVariation.DoesNotExist:
 				error = "invalid_options"
 			else:
@@ -77,7 +79,7 @@ def get_add_cart_form(product):
 			if values:
 				option_fields[name] = forms.ChoiceField(
 					choices=make_choices(values))
-	return type("AddCartForm", (AddCartForm,), option_fields)
+	return type("AddProductForm", (BaseAddCartForm,), option_fields)
 
 class CheckoutForm(object):
 	"""
