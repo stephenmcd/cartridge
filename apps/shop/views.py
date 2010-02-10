@@ -52,7 +52,7 @@ def product(request, slug, template="shop/product.html"):
 	AddProductForm = get_add_product_form(product)
 	add_product_form = AddProductForm(initial={"quantity": 1})
 	if request.method == "POST":
-		to_cart = len(request.POST.get("add_cart", "")) > 0
+		to_cart = len(request.POST.get("add_wishlist", "")) == 0
 		add_product_form = AddProductForm(request.POST, to_cart=to_cart)
 		if add_product_form.is_valid():
 			if to_cart:
