@@ -184,9 +184,9 @@ class BaseProductVariation(Priced):
 		"""
 		display the option name/values for the variation
 		"""
-		return "%s %s" % (self.product, ", ".join(["%s: %s" % 
-			(field.name.title(), getattr(self, field.name)) for field in 
-			self.option_fields() if getattr(self, field.name) is not None]))
+		options = ", ".join(["%s: %s" % (f.name.title(), getattr(self, f.name)) 
+			for f in self.option_fields() if getattr(self, f.name) is not None])
+		return ("%s %s" % (self.product, options)).strip()
 	
 	def save(self, *args, **kwargs):
 		"""
