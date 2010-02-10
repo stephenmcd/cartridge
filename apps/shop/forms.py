@@ -22,26 +22,30 @@ from shop import checkout
 from shop.utils import make_choices, send_mail_template, set_locale
 
 
-ADD_CART_ERRORS = {
+ADD_PRODUCT_ERRORS = {
 	"invalid_options": _("The selected options are currently unavailable."),
 	"no_stock": _("The selected options are currently not in stock."),
 	"no_stock_quantity": _("The selected quantity is currently unavailable."),
 }
 
 
-def get_add_product_form(product, min_quantity=1):
+def get_add_product_form(product):
 	"""
 	return the add product form dynamically adding the options to it using the 
 	variations of the given product and setting the minimum quantity based on 
 	whether the product is being added to the cart or the wishlist
 	"""
 
-	class BaseAddCartForm(forms.Form):
+	class BaseAddProductForm(forms.Form):
 		"""
-		add to cart form for product
+		add product form for cart and wishlist
 		"""
 
-		quantity = forms.IntegerField(min_value=min_quantity)
+		quantity = forms.IntegerField(min_value=1)
+		
+		def __init__(self, *args, **kwargs):
+			self._to_cart = kwargs.pop("to_cart", True)
+			super(BaseAddProductForm, self).__init__(*args, **kwargs)
 	
 		def clean(self):
 			"""
@@ -49,8 +53,8 @@ def get_add_product_form(product, min_quantity=1):
 			quantity are valid
 			"""
 			options = self.cleaned_data.copy()
-			quantity = options.pop("quantity")
-			if min_quantity > 0: # ensure the product has a price if adding to cart
+			quantity = options.pop("quantity", 0)
+			if self._to_cart: # ensure the product has a price if adding to cart
 				options["unit_price__isnull"] = False
 			error = None
 			try:
@@ -58,12 +62,13 @@ def get_add_product_form(product, min_quantity=1):
 			except ProductVariation.DoesNotExist:
 				error = "invalid_options"
 			else:
-				if not variation.has_stock(quantity):
-					error = "no_stock_quantity"
-				elif not variation.has_stock():
-					error = "no_stock"
-			if error:
-				raise forms.ValidationError(ADD_CART_ERRORS[error])
+				if self._to_cart:
+					if not variation.has_stock(quantity):
+						error = "no_stock_quantity"
+					elif not variation.has_stock():
+						error = "no_stock"
+			if error is not None:
+				raise forms.ValidationError(ADD_PRODUCT_ERRORS[error])
 			self.variation = variation
 			return self.cleaned_data
 
@@ -79,7 +84,7 @@ def get_add_product_form(product, min_quantity=1):
 			if values:
 				option_fields[name] = forms.ChoiceField(
 					choices=make_choices(values))
-	return type("AddProductForm", (BaseAddCartForm,), option_fields)
+	return type("AddProductForm", (BaseAddProductForm,), option_fields)
 
 class CheckoutForm(object):
 	"""

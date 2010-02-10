@@ -10,6 +10,7 @@ from django.utils.translation import ugettext as _
 from shop.models import Category, Product, ProductVariation, Cart
 from shop.forms import get_add_product_form, OrderForm
 from shop.settings import SEARCH_RESULTS_PER_PAGE
+from shop.utils import set_wishlist
 
 
 try:
@@ -51,12 +52,21 @@ def product(request, slug, template="shop/product.html"):
 	AddProductForm = get_add_product_form(product)
 	add_product_form = AddProductForm(initial={"quantity": 1})
 	if request.method == "POST":
-		add_product_form = AddProductForm(request.POST)
+		to_cart = len(request.POST.get("add_cart", "")) > 0
+		add_product_form = AddProductForm(request.POST, to_cart=to_cart)
 		if add_product_form.is_valid():
-			Cart.objects.from_request(request).add_item(add_product_form.variation, 
-				add_product_form.cleaned_data["quantity"])
-			info(request, _("Item added to cart"), fail_silently=True)
-			return HttpResponseRedirect(reverse("shop_cart"))
+			if to_cart:
+				Cart.objects.from_request(request).add_item(
+					add_product_form.variation, 
+					add_product_form.cleaned_data["quantity"])
+				info(request, _("Item added to cart"), fail_silently=True)
+				return HttpResponseRedirect(reverse("shop_cart"))
+			else:
+				skus = request.COOKIES.get("wishlist", "").split(",")
+				skus.append(add_product_form.variation.sku)
+				info(request, _("Item added to wishlist"), fail_silently=True)
+				response = HttpResponseRedirect(reverse("shop_wishlist"))
+				return set_wishlist(response, skus)
 	variations = product.variations.all()
 	variations_json = simplejson.dumps([dict([(f, getattr(v, f)) for f in 
 		["sku", "image_id"] + [f.name for f in ProductVariation.option_fields()]]) 
@@ -89,8 +99,8 @@ def wishlist(request, template="shop/wishlist.html"):
 		return set_wishlist(response, skus)
 	variations = []
 	if "wishlist" in request.COOKIES:
-		variations = ProductVariations.objects.filter(product__active=True,
-			sku__in=skus).select_related()
+		variations = list(ProductVariation.objects.filter(product__active=True,
+			sku__in=skus).select_related())
 		variations.sort(key=lambda v: skus.index(v.sku))
 	return render_to_response(template, {"wishlist": variations}, 
 		RequestContext(request))

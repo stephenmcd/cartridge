@@ -32,8 +32,8 @@ def set_wishlist(response, wishlist):
 	"""
 	stores the list of wishlist skus in a cookie
 	"""
-	expires = datetime.strftime(datetime.datetime.utcnow() + 
-		datetime.timedelta(seconds=365*24*60*60), "%a, %d-%b-%Y %H:%M:%S GMT")
+	expires = datetime.strftime(datetime.utcnow() + 
+		timedelta(seconds=365*24*60*60), "%a, %d-%b-%Y %H:%M:%S GMT")
 	response.set_cookie("wishlist", ",".join(wishlist), expires=expires)
 	return response
 
