@@ -145,13 +145,6 @@ class Product(Displayable, Priced):
 		self.search_text = "%s %s %s" % (striptags(self.description), 
 			self.title, self.keywords)
 		super(Product, self).save(*args, **kwargs)
-	
-	def _set_image(self):
-		"""
-		stores the main image against the image field for direct access
-		"""
-		self.image = self.variations.get(default=True)._get_image()
-		self.save()
 
 class ProductImage(models.Model):
 	"""
@@ -188,20 +181,37 @@ class BaseProductVariation(Priced):
 	objects = ProductVariationManager()
 
 	def __unicode__(self):
+		"""
+		display the option name/values for the variation
+		"""
 		return "%s %s" % (self.product, ", ".join(["%s: %s" % 
 			(field.name.title(), getattr(self, field.name)) for field in 
 			self.option_fields() if getattr(self, field.name) is not None]))
 	
 	def save(self, *args, **kwargs):
+		"""
+		use the id as the sku, set the first image if none chosen, and if set 
+		as the default then copy price and image fields to the product
+		"""
 		super(BaseProductVariation, self).save(*args, **kwargs)
+		save = False
 		if not self.sku:
 			self.sku = self.id
+			save = True
+		if not self.image:
+			image = self.product.images.all()[:1]
+			if len(image) == 1:
+				self.image = image[0]
+				save = True
+		if save:
 			self.save()
 		if self.default:
 			product = self.product
 			for field in Priced._meta.fields:
 				if not isinstance(field, models.AutoField):
 					setattr(product, field.name, getattr(self, field.name))
+			if self.image:
+				product.image = self.image.file.name
 			product.save()
 
 	@classmethod
@@ -217,7 +227,7 @@ class BaseProductVariation(Priced):
 		check the given quantity is in stock taking into account the number in 
 		carts, and cache the number
 		"""
-		if self.num_in_stock is None:
+		if self.num_in_stock is None or quantity == 0:
 			return True
 		if not hasattr(self, "_cached_num_in_stock"):
 			num_in_stock = self.num_in_stock
@@ -227,22 +237,6 @@ class BaseProductVariation(Priced):
 				num_in_stock = num_in_stock - num_in_carts
 			self._cached_num_in_stock = num_in_stock
 		return self._cached_num_in_stock >= quantity
-
-	def _get_image(self):
-		"""
-		return either the image for the variation or the first image for the 
-		variation's product
-		"""
-		image = self.image
-		if image is None:
-			image = self.product.images.all()[:1]
-			if len(image) == 1:
-				image = image[0]
-		if image:
-			image = image.file.name
-		else:
-			image = None
-		return image
 
 # build the ProductVariation model from the BaseProductVariation model by
 # adding each option in shop.settings.PRODUCT_OPTIONS as an OptionField
@@ -346,7 +340,7 @@ class Cart(models.Model):
 			item.description = str(variation)
 			item.unit_price = variation.price()
 			item.url = variation.product.get_absolute_url()
-			image = variation._get_image()
+			image = variation.image
 			if image is not None:
 				item.image = str(image)
 			variation.product.actions.added_to_cart()

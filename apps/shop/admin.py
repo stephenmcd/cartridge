@@ -69,7 +69,6 @@ class ProductAdmin(admin.ModelAdmin):
 			if request.POST.getlist(f)])
 		self._product.variations.create_from_options(options)
 		self._product.variations.manage_empty()
-		self._product._set_image()
 
 class OrderItemInline(admin.TabularInline):
 	verbose_name_plural = _("Items")
