@@ -4,10 +4,16 @@
 {% block title %}Search Results{% endblock %}
 
 {% block main %}
-{% if query %}
+{% if not query %}
+<p>Please enter a search query</p>
+{% else %}
 <p>
+	{% ifequal results.paginator.count 0 %}
+	No products were found matching your query: <em>{{ query }}</em>
+	{% else %}
 	Showing {{ results.start_index }} to {{ results.end_index }} of
 	{{ results.paginator.count }} products matching your query: <em>{{ query }}</em>
+	{% endifequal %}
 </p>
 <ul id="search-results">
 	{% for product in results.object_list %}
