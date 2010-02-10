@@ -155,12 +155,12 @@ class ProductImage(models.Model):
 		verbose_name = _("Image")
 		verbose_name_plural = _("Images")
 	
-	file = models.ImageField(_("Image"), blank=True, upload_to="product")
-	description = models.CharField(_("Description"), max_length=100)
+	file = models.ImageField(_("Image"), upload_to="product")
+	description = models.CharField(_("Description"), blank=True, max_length=100)
 	product = models.ForeignKey(Product, related_name="images")
 	
 	def __unicode__(self):
-		return self.description
+		return self.description if self.description else self.file.name
 
 class BaseProductVariation(Priced):
 	"""
