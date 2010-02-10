@@ -20,7 +20,7 @@ class CategoryAdmin(admin.ModelAdmin):
 	formfield_overrides = {ImageField: {"widget": ImageWidget}}
 
 class ProductVariationAdmin(admin.TabularInline):
-	verbose_name_plural = _("Current varisations")
+	verbose_name_plural = _("Current variations")
 	model = ProductVariation
 	fields = ("sku", "default", "num_in_stock", "unit_price", "sale_price", 
 		"sale_from", "sale_to", "image")
