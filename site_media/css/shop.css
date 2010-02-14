@@ -60,15 +60,15 @@ input, select {font-size:.8em; margin:0 10px;}
 	padding:0; background:#eee;}
 #search-results img {margin:7px;}
 
-/* cart items table */
-#cart {width:100%;}
-#cart th, #cart td {text-align:right; padding:10px; font-size:.8em;}
-#cart th {background:#ccc; white-space:nowrap;}
-#cart .button {margin:0;}
-.cart-item {text-align:left !important; width:100%;}
-.cart-item form {display:inline;}
-.cart-item input {cursor:pointer; padding:0;}
-.cart-item img {width:30px; height:30px; vertical-align:middle; margin-right:5px;}
+/* cart/wishlist items table */
+#items {width:100%;}
+#items th, #items td {text-align:right; padding:10px; font-size:.8em; 
+	white-space:nowrap;}
+#items th {background:#ccc; white-space:nowrap;}
+.items-item {text-align:left !important; width:100%;}
+.items-item form {display:inline;}
+.items-item input {cursor:pointer; padding:0; margin:0;}
+.items-item img {width:30px; height:30px; vertical-align:middle; margin-right:5px;}
 .row1 {background:#eee;}
 .row2 {background:#ddd;}
 

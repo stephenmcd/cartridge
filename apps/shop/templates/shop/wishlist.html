@@ -1,0 +1,32 @@
+{% extends "shop/base.html" %}
+{% load shop_tags i18n %}
+
+{% block title %}{% trans "Your wishlist" %}{% endblock %}
+
+{% block main %}
+{% if wishlist %}
+<table id="items" border="0" cellpadding="5" cellspacing="0">
+	{% for item in wishlist %}
+	<tr class="{% cycle 'row1' 'row2' %}">
+		<td class="items-item">
+			{% if item.image %}
+			<a href="{{ item.url }}"><img alt="{{ item }}"
+				src="{{ MEDIA_URL }}{% thumbnail item.image 30 30 %}" /></a>
+			{% endif %}
+			<a href="{{ item.url }}">{{ item }}</a>
+		</td>
+		<td>
+			<form method="post">
+				<input type="hidden" name="sku" value="{{ item.sku }}" />
+				<input type="submit" name="remove_wishlist" value="{% trans "Remove" %}" />
+				<input type="submit" name="add_cart" value="{% trans "Buy now" %}" />
+			</form>
+		</td>
+	</tr>
+	{% endfor %}
+</table>
+{% else %}
+<div>{% trans "Your wishlist is empty." %}</div>
+{% endif %}
+{% endblock %}
+

@@ -87,22 +87,40 @@ def search(request, template="shop/search_results.html"):
 	
 def wishlist(request, template="shop/wishlist.html"):
 	"""
-	display wishlist - handle removing items
+	display wishlist - handle removing items and adding to cart
 	"""
 	skus = request.COOKIES.get("wishlist", "").split(",")
+	error = None
 	if request.method == "POST":
-		sku = request.POST.get("sku", "")
-		if sku in skus:
-			skus.remove(sku)
-		info(request, _("Item removed from wishlist"), fail_silently=True)
-		response = HttpResponseRedirect(reverse("shop_wishlist"))
-		return set_wishlist(response, skus)
+		sku = request.POST.get("sku", None)
+		to_cart = len(request.POST.get("add_cart", "")) > 0
+		if to_cart:
+			quantity = 1
+			try:
+				variation = ProductVariation.objects.get(sku=sku)
+			except ProductVariation:
+				error = _("This item is no longer available")
+			else:
+				if not variation.has_stock(quantity):
+					error = _("This item is currently out of stock")
+				else:
+					Cart.objects.from_request(request).add_item(variation, quantity)
+		if error is None:
+			if sku in skus:
+				skus.remove(sku)
+			if to_cart:
+				info(request, _("Item add to cart"), fail_silently=True)
+				response = HttpResponseRedirect(reverse("shop_cart"))
+			else:
+				info(request, _("Item removed from wishlist"), fail_silently=True)
+				response = HttpResponseRedirect(reverse("shop_wishlist"))
+			return set_wishlist(response, skus)
 	variations = []
 	if "wishlist" in request.COOKIES:
 		variations = list(ProductVariation.objects.filter(product__active=True,
 			sku__in=skus).select_related())
 		variations.sort(key=lambda v: skus.index(v.sku))
-	return render_to_response(template, {"wishlist": variations}, 
+	return render_to_response(template, {"wishlist": variations, "error": error}, 
 		RequestContext(request))
 
 def cart(request, template="shop/cart.html"):

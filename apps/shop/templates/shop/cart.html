@@ -1,20 +1,20 @@
 {% extends "shop/base.html" %}
 {% load shop_tags i18n %}
 
-{% block title %}{% trans "Cart" %}{% endblock %}
+{% block title %}{% trans "Your cart" %}{% endblock %}
 
 {% block main %}
 {% if cart.has_items %}
-<table id="cart" border="0" cellpadding="5" cellspacing=0">
+<table id="items" border="0" cellpadding="5" cellspacing="0">
 	<tr>
-		<th class="cart-item">{% trans "Item" %}</th>
+		<th class="items-item">{% trans "Item" %}</th>
 		<th>{% trans "Unit Price" %}</th>
 		<th>{% trans "Qty" %}</th>
 		<th>{% trans "Price" %}</th>
 	</tr>
 	{% for item in cart %}
 	<tr class="{% cycle 'row1' 'row2' %}">
-		<td class="cart-item">
+		<td class="items-item">
 			{% if item.image %}
 			<a href="{{ item.url }}"><img alt="{{ item.description }}"
 				src="{{ MEDIA_URL }}{% thumbnail item.image 30 30 %}" /></a>
