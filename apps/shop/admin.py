@@ -65,10 +65,11 @@ class ProductAdmin(admin.ModelAdmin):
 		or removing it if multiple variations exist 
 		"""
 		super(ProductAdmin, self).save_formset(request, form, formset, change)
-		options = dict([(f, request.POST.getlist(f)) for f in option_fields 
-			if request.POST.getlist(f)])
-		self._product.variations.create_from_options(options)
-		self._product.variations.manage_empty()
+		if isinstance(formset, ProductVariationAdminFormset):
+			options = dict([(f, request.POST.getlist(f)) for f in option_fields 
+				if request.POST.getlist(f)])
+			self._product.variations.create_from_options(options)
+			self._product.variations.manage_empty()
 
 class OrderItemInline(admin.TabularInline):
 	verbose_name_plural = _("Items")
