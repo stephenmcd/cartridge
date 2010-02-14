@@ -146,6 +146,18 @@ class Product(Displayable, Priced):
 			self.title, self.keywords)
 		super(Product, self).save(*args, **kwargs)
 
+	def copy_default_variation(self):
+		"""
+		copy price and image fields from the default variation
+		"""
+		default = self.variations.get(default=True)
+		for field in Priced._meta.fields:
+			if not isinstance(field, models.AutoField):
+				setattr(self, field.name, getattr(default, field.name))
+		if default.image:
+			product.image = default.image.file.name
+		self.save()
+
 class ProductImage(models.Model):
 	"""
 	images related to a product - also given a 1to1 relationship with variations
@@ -190,8 +202,7 @@ class BaseProductVariation(Priced):
 	
 	def save(self, *args, **kwargs):
 		"""
-		use the id as the sku, set the first image if none chosen, and if set 
-		as the default then copy price and image fields to the product
+		use the id as the sku, set the first image if none chosen
 		"""
 		super(BaseProductVariation, self).save(*args, **kwargs)
 		save = False
@@ -205,14 +216,6 @@ class BaseProductVariation(Priced):
 				save = True
 		if save:
 			self.save()
-		if self.default:
-			product = self.product
-			for field in Priced._meta.fields:
-				if not isinstance(field, models.AutoField):
-					setattr(product, field.name, getattr(self, field.name))
-			if self.image:
-				product.image = self.image.file.name
-			product.save()
 
 	@classmethod
 	def option_fields(cls):

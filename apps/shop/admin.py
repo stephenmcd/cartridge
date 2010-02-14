@@ -60,9 +60,10 @@ class ProductAdmin(admin.ModelAdmin):
 
 	def save_formset(self, request, form, formset, change):
 		"""
-		create variations for selected options if they don't exist, and also
-		manage the default empty variation, creating it if no variations exist 
-		or removing it if multiple variations exist 
+		create variations for selected options if they don't exist, manage the 
+		default empty variation creating it if no variations exist or removing 
+		it if multiple variations exist, and copy the pricing and image fields
+		from the default variation to the product
 		"""
 		super(ProductAdmin, self).save_formset(request, form, formset, change)
 		if isinstance(formset, ProductVariationAdminFormset):
@@ -70,6 +71,7 @@ class ProductAdmin(admin.ModelAdmin):
 				if request.POST.getlist(f)])
 			self._product.variations.create_from_options(options)
 			self._product.variations.manage_empty()
+			self._product.copy_default_variation()
 
 class OrderItemInline(admin.TabularInline):
 	verbose_name_plural = _("Items")
