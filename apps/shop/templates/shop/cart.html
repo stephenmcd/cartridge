@@ -16,10 +16,10 @@
 	<tr class="{% cycle 'row1' 'row2' %}">
 		<td class="items-item">
 			{% if item.image %}
-			<a href="{{ item.url }}"><img alt="{{ item.description }}"
+			<a href="{{ item.get_absolute_url }}"><img alt="{{ item.description }}"
 				src="{{ MEDIA_URL }}{% thumbnail item.image 30 30 %}" /></a>
 			{% endif %}
-			<a href="{{ item.url }}">{{ item.description }}</a>
+			<a href="{{ item.get_absolute_url }}">{{ item.description }}</a>
 			<form method="post">
 				<input type="hidden" name="sku" value="{{ item.sku }}" />
 				<input type="submit" value="X" />

@@ -199,6 +199,9 @@ class BaseProductVariation(Priced):
 		options = ", ".join(["%s: %s" % (f.name.title(), getattr(self, f.name)) 
 			for f in self.option_fields() if getattr(self, f.name) is not None])
 		return ("%s %s" % (self.product, options)).strip()
+		
+	def get_absolute_url(self):
+		return self.product.get_absolute_url()
 	
 	def save(self, *args, **kwargs):
 		"""
@@ -396,9 +399,13 @@ class SelectedProduct(models.Model):
 		super(SelectedProduct, self).save(*args, **kwargs)
 
 class CartItem(SelectedProduct):
+
 	cart = models.ForeignKey(Cart, related_name="items")
 	url = models.CharField(max_length=200)
 	image = models.CharField(max_length=200, null=True)
+	
+	def get_absolute_url(self):
+		return self.url
 
 class OrderItem(SelectedProduct):
 	order = models.ForeignKey(Order, related_name="items")
