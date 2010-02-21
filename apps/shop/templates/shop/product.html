@@ -59,6 +59,7 @@ $(function() {
 			src="{{ MEDIA_URL }}{% thumbnail image.file 0 300  %}" /></a></li>
 	{% endfor %}
 </ul>
+{% ifnotequal images|length 1 %}
 <ul id="product-images-thumb">
 	{% for image in images %}
 	<li><a id="image-{{ image.id }}" 
@@ -66,6 +67,7 @@ $(function() {
 		src="{{ MEDIA_URL }}{% thumbnail image.file 75 75  %}" /></a></li>
 	{% endfor %}
 </ul>
+{% endifnotequal %}
 {% endif %}
 
 <div>{{ product.description }}</div>

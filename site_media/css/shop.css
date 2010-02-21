@@ -6,8 +6,9 @@ body {font:1.2em sans-serif; background:#fff; color:#000;}
 #menu {background:#ddd; width:180px; border-radius:10px; font-size:.8em;}
 #main {left:230px; right:0; width:auto; margin-top:5px; padding-top:0;}
 #main div {padding:10px 0;}
-#cart-panel {right:0; margin:20px 25px; padding:10px; background:#ddd; 
-	border-radius:5px; text-align:center; z-index:2;}
+#cart-panel {right:10px; margin:10px 25px; padding:10px; background:#ddd; 
+	border-radius:5px; text-align:center; z-index:2; font-size:90%;}
+#cart-panel .wishlist {font-size:70%;}
 #product-images-large img, #product-images-thumb img {border:10px solid #ddd;}
 #product-images-thumb img {margin-right:15px;}
 .old-price {text-decoration: line-through;}
@@ -30,6 +31,7 @@ h1 {margin:20px; padding:20px 100px; line-height:60px; border-radius:10px; heigh
 	background:#eee url('../img/cartridge-demo-logo.png') center left no-repeat;}
 h1 img {width:70px; height:70px; vertical-align:middle; padding:0 10px;}
 h2 {margin-top:20px;}
+h3 {margin:0;}
 
 /* messages */
 #messages li {background:#333; color:#fff; width:300px; display:block; 
@@ -39,7 +41,7 @@ h2 {margin-top:20px;}
 /* forms */
 textarea {display:block;}
 input, select {font-size:.8em; margin:0 10px;}
-.button {font-size:1.1em; padding:2px 20px; cursor:pointer; margin-bottom:20px;}
+.button {font-size:1.1em; padding:2px 20px; cursor:pointer; margin:0 0 20px 0;}
 .errorlist {color:#f00; font-size:.8em; font-weight:bold;}
 
 /* search form */
@@ -67,16 +69,21 @@ input, select {font-size:.8em; margin:0 10px;}
 #items th {background:#ccc; white-space:nowrap;}
 .items-item {text-align:left !important; width:100%;}
 .items-item form {display:inline;}
-.items-item input {cursor:pointer; padding:0; margin:0;}
 .items-item img {width:30px; height:30px; vertical-align:middle; margin-right:5px;}
 .row1 {background:#eee;}
 .row2 {background:#ddd;}
+.buttons {padding:0 !important;}
+.buttons input {cursor:pointer; margin:0 10px 0 0;}
 
-/* checkout form fieldsets */
+/* checkout form */
 fieldset {margin-bottom:20px;}
-fieldset ul label, fieldset ul input {display:block; float:left; width:150px;}
+fieldset ul label, fieldset ul input {display:block; float:left; width:200px;}
 fieldset ul {padding:0;}
 fieldset li {display:block; clear:both; padding:3px;}
+.checkbox label, .checkbox input {float:none; width:auto; display:inline;}
+#card-fields p {float:left; margin:0;}
+#card-fields p label {display:none;}
+#card-fields p select {margin:0 0 5px 10px;}
 
 /* checkout totals */
 .order-totals {text-align:right;}

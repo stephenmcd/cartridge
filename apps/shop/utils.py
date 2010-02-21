@@ -1,8 +1,14 @@
 
 import locale
+import hmac
 from datetime import datetime, timedelta
 from os.path import basename
+try:
+	from hashlib import sha512
+except ImportError:
+	from md5 import new as sha512
 
+from django.conf import settings 
 from django.core.exceptions import ImproperlyConfigured
 from django.core.mail import EmailMultiAlternatives
 from django.db.models import Model
@@ -27,16 +33,22 @@ def set_shipping(request, shipping_type, shipping_total):
 		shipping_total = 0
 	request.session["shipping_type"] = shipping_type
 	request.session["shipping_total"] = shipping_total
-	
-def set_wishlist(response, wishlist):
+
+def set_cookie(response, name, value, secure=False):
 	"""
-	stores the list of wishlist skus in a cookie
+	sets a cookie that expires in a year
 	"""
 	expires = datetime.strftime(datetime.utcnow() + 
 		timedelta(seconds=365*24*60*60), "%a, %d-%b-%Y %H:%M:%S GMT")
-	response.set_cookie("wishlist", ",".join(wishlist), expires=expires)
-	return response
+	response.set_cookie(name, value, expires=expires, secure=secure)
 
+def sign(value):
+	"""
+	returns the hash of the given value, used for signing order key stored in 
+	cookie for remembering address fields
+	"""
+	return hmac.new(settings.SECRET_KEY, value, sha512).hexdigest()
+	
 def clone_model(name, model, fields, abstract=False):
 	"""
 	construct a new model

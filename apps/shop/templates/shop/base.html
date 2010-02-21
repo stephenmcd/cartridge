@@ -34,16 +34,23 @@
 	
 	<div id="cart-panel">
 		<a href="{% url shop_cart %}">
-			{% blocktrans count cart.total_quantity|length as cart_quantity %}
+			{% blocktrans count cart.total_quantity as cart_quantity %}
 			Cart contains 1 item:
 			{% plural %}
 			Cart contains {{ cart_quantity }} items:
 			{% endblocktrans %}
 			{{ cart.total_price|currency }}
+		</a><br />
+		<a href="{% url shop_wishlist %}" class="wishlist">
+			{% blocktrans count wishlist|length as wishlist_count %}
+			Wishlist contains 1 item
+			{% plural %}
+			Wishlist contains {{ wishlist_count }} items
+			{% endblocktrans %}
 		</a>
 	</div>
 	
-	<div id="menu">{% category_menu %}</div>
+	<div id="menu"><h3>{% trans "Categories" %}</h3>{% category_menu %}</div>
 	
 	<div id="main">
 		{% if messages %}

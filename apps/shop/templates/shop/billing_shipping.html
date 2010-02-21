@@ -5,23 +5,24 @@
 {{ block.super }}
 <script type="text/javascript">
 $(function() {
+
+	var sameShipping = $('#id_0-same_billing_shipping');
 	
 	// prepopulate shipping fields with billing values if "same as" checkbox 
 	// checked by iterating the billing fields, mapping each billing field name  
 	// to the shipping field name and setting its value
 	$('#checkout_form').submit(function() {
-		if ($('#toggle_shipping').attr('checked')) {
+		if (sameShipping.attr('checked')) {
 			$('input[name^=0-billing_]').each(function() {
 				$('input[name=' + this.name.replace('0-billing_', 
 					'0-shipping_') + ']').attr('value', this.value);
-			})
+			});
 		}
 	});
 
 	// show/hide shipping fields on change of "same as" checkbox and call on load
-	$('#toggle_shipping').change(function() {
-		$('#shipping_fields')[$('#toggle_shipping').attr('checked') ? 
-			'hide' : 'show']();
+	sameShipping.change(function() {
+		$('#shipping_fields')[sameShipping.attr('checked') ? 'hide' : 'show']();
 	}).change(); 
 
 });
@@ -32,16 +33,16 @@ $(function() {
 {% if cart.has_items %}
 <fieldset>
 	<legend>{% trans "Billing Details" %}</legend>
-	<ul>{{ form.fieldset_billing.as_ul }}</ul>
+	<ul>{{ form.billing_fields.as_ul }}</ul>
 </fieldset>
 <fieldset>
 	<legend>{% trans "Delivery Details" %}</legend>
-	<input type="checkbox" id="toggle_shipping" name="toggle_shipping"
-		{% if not request.POST or request.POST.toggle_shipping %}checked{% endif %}  />
-	<label for="toggle_shipping">{% trans "Deliver to the same address as above" %}</label>
-	<ul id="shipping_fields">{{ form.fieldset_shipping.as_ul }}</ul>
-	<ul>{{ form.fieldset_other.as_ul }}</ul>
+	<ul class="checkbox">{{ form.same_billing_shipping_field.as_ul }}</ul>
+	<ul id="shipping_fields">{{ form.shipping_fields.as_ul }}</ul>
+	<ul>{{ form.additional_instructions_field.as_ul }}</ul>
 </fieldset>
+<ul class="checkbox">{{ form.remember_field.as_ul }}</ul>
+<ul>{{ form.other_fields.as_ul }}</ul>
 {% endif %}
 {% endblock %}
 

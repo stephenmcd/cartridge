@@ -15,7 +15,7 @@
 			{% endif %}
 			<a href="{{ item.get_absolute_url }}">{{ item }}</a>
 		</td>
-		<td>
+		<td class="buttons">
 			<form method="post">
 				<input type="hidden" name="sku" value="{{ item.sku }}" />
 				<input type="submit" name="remove_wishlist" value="{% trans "Remove" %}" />
@@ -26,7 +26,7 @@
 	{% endfor %}
 </table>
 {% else %}
-<div>{% trans "Your wishlist is empty." %}</div>
+<p>{% trans "Your wishlist is empty." %}</p>
 {% endif %}
 {% endblock %}
 

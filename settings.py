@@ -40,7 +40,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
     "django.core.context_processors.request",
-    "shop.context_processors.cart",
+    "shop.context_processors.shop_globals",
 )
 
 MIDDLEWARE_CLASSES = (

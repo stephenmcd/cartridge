@@ -10,7 +10,7 @@ from django.utils.translation import ugettext as _
 from shop.models import Category, Product, ProductVariation, Cart
 from shop.forms import get_add_product_form, OrderForm
 from shop.settings import SEARCH_RESULTS_PER_PAGE
-from shop.utils import set_wishlist
+from shop.utils import set_cookie
 
 
 try:
@@ -66,7 +66,8 @@ def product(request, slug, template="shop/product.html"):
 				skus.append(add_product_form.variation.sku)
 				info(request, _("Item added to wishlist"), fail_silently=True)
 				response = HttpResponseRedirect(reverse("shop_wishlist"))
-				return set_wishlist(response, skus)
+				set_cookie(response, "wishlist", ",".join(wishlist))
+				return response
 	variations = product.variations.all()
 	variations_json = simplejson.dumps([dict([(f, getattr(v, f)) for f in 
 		["sku", "image_id"] + [f.name for f in ProductVariation.option_fields()]]) 
@@ -114,14 +115,9 @@ def wishlist(request, template="shop/wishlist.html"):
 			else:
 				info(request, _("Item removed from wishlist"), fail_silently=True)
 				response = HttpResponseRedirect(reverse("shop_wishlist"))
-			return set_wishlist(response, skus)
-	variations = []
-	if "wishlist" in request.COOKIES:
-		variations = list(ProductVariation.objects.filter(product__active=True,
-			sku__in=skus).select_related())
-		variations.sort(key=lambda v: skus.index(v.sku))
-	return render_to_response(template, {"wishlist": variations, "error": error}, 
-		RequestContext(request))
+			set_cookie(response, "wishlist", ",".join(wishlist))
+			return response
+	return render_to_response(template, {"error": error}, RequestContext(request))
 
 def cart(request, template="shop/cart.html"):
 	"""

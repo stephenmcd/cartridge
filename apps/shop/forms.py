@@ -19,7 +19,8 @@ from shop.exceptions import CheckoutError
 from shop.settings import CARD_TYPES, ORDER_FROM_EMAIL
 from shop.templatetags.shop_tags import thumbnail
 from shop import checkout
-from shop.utils import make_choices, send_mail_template, set_locale
+from shop.utils import make_choices, send_mail_template, set_locale, \
+	set_cookie, sign
 
 
 ADD_PRODUCT_ERRORS = {
@@ -27,6 +28,9 @@ ADD_PRODUCT_ERRORS = {
 	"no_stock": _("The selected options are currently not in stock."),
 	"no_stock_quantity": _("The selected quantity is currently unavailable."),
 }
+
+address_fields = (Order.billing_detail_field_names() + 
+	Order.shipping_detail_field_names())
 
 
 def get_add_product_form(product):
@@ -86,61 +90,84 @@ def get_add_product_form(product):
 					choices=make_choices(values))
 	return type("AddProductForm", (BaseAddProductForm,), option_fields)
 
-class CheckoutForm(object):
+class FormsetForm(object):
 	"""
-	checkout form mixin for calling custom handlers 
+	form mixin that provides template methods for iterating through sets of 
+	fields by prefix, single fields and finally remaning fields that haven't 
+	been iterated with each fieldset made up from a copy of the original form 
+	giving access to as_* methods
 	"""
+	
+	def _fieldset(self, filter_func):
+		"""
+		return a subset of fields by making a copy of the form containing only 
+		the fields matching the filter func, appending the field names to the 
+		internal list of done fields on each call 
+		"""
+		fieldset = copy(self)
+		if not hasattr(self, "_fields_done"):
+			self._fields_done = []
+		else:
+			# all fieldsets will contain all non-field errors, so for fieldsets
+			# other than the first ensure the call to non-field errors does nothing
+			fieldset.non_field_errors = lambda *args: None
+		_filter_func = lambda f: filter_func(f) and f not in self._fields_done
+		field_names = filter(_filter_func, self.fields.keys())
+		self._fields_done.extend(field_names)
+		fieldset.fields = SortedDict([(f, self.fields[f]) for f in field_names])
+		return fieldset
+	
+	def __getattr__(self, name):
+		"""
+		dynamic fieldset caller - handles PREFIX_fields() and FIELD_field()
+		"""
+		if name == "other_fields":
+			# all remaining fields
+			return self._fieldset(lambda f: True)
+		elif name.endswith("_fields"):
+			# all fields beginning with prefix
+			return self._fieldset(lambda f: f.startswith(name[:-len("_fields")]))
+		elif name.endswith("_field"):
+			# exact field name
+			return self._fieldset(lambda f: f == name[:-len("_field")])
+		raise AttributeError(name)
+
+class CheckoutStep(FormsetForm):
+	"""
+	checkout step providing hooks for custom handlers via clean
+	"""
+
 	def clean(self):
+		"""
+		call custom handler for step as well as storing the form data for the 
+		step in the session for pre-populating
+		"""
 		try:
-			self._checkout_handler(self._request, self)
+			self._step_handler(self._request, self)
 		except CheckoutError, e:
 			raise forms.ValidationError(e)
-		return self.cleaned_data
+		cleaned_data = super(CheckoutStep, self).clean()
+		self._request.session["checkout_step_%s" % self._step] = cleaned_data
+		return cleaned_data
 
-class OrderForm(CheckoutForm, forms.ModelForm):
+class OrderForm(CheckoutStep, forms.ModelForm):
 	"""
 	model form for order with billing and shipping details - step 1 of checkout
 	"""
 	
+	same_billing_shipping = forms.BooleanField(required=False, 
+		label=_("My delivery details are the same as my billing details"))
+	remember = forms.BooleanField(required=False, 
+		label=_("Remember my address for next time"))
+	
 	class Meta:
 		model = Order
-		fields = (Order.billing_detail_field_names() + 
-			Order.shipping_detail_field_names() + ["additional_instructions", 
-			"discount_code"])
+		fields = address_fields + ["additional_instructions", "discount_code"]
 			
 	def __init__(self, *args, **kwargs):
 		super(OrderForm, self).__init__(*args, **kwargs)
 		if DiscountCode.objects.active().count() == 0:
 			self.fields["discount_code"].widget = forms.HiddenInput()
-
-	def _fieldset(self, prefix):
-		"""
-		return a subset of fields by making a copy of itself containing only 
-		the fields with the given prefix, storing the given prefix each time 
-		it's called and when finally called with the prefix "other", returning 
-		a copy with all the fields that have not yet been returned
-		"""
-		fieldset = copy(self)
-		if not hasattr(self, "_fields_done"):
-			self._fields_done = {}
-		else:
-			# ensures non-field errors only appear in the first fieldset
-			fieldset.non_field_errors = lambda *args: None
-		fieldset.fields = SortedDict([f for f in self.fields.items() if 
-			(prefix != "other" and f[0].startswith(prefix)) or 
-			(prefix == "other" and f[0] not in self._fields_done)])
-		self._fields_done.update(fieldset.fields)
-		return fieldset
-	
-	def __getattr__(self, name):
-		"""
-		dynamic fieldset caller
-		"""
-		if name.startswith("fieldset_"):
-			return self._fieldset(name.split("fieldset_", 1)[1])
-		elif name == "errors":
-			return None
-		raise AttributeError(name)
 	
 	def clean_discount_code(self):
 		"""
@@ -168,17 +195,17 @@ class ExpiryYearField(forms.ChoiceField):
 		kwargs["choices"] = make_choices(range(year, year + 21))
 		super(ExpiryYearField, self).__init__(*args, **kwargs)
 		
-class PaymentForm(CheckoutForm, forms.Form):
+class PaymentForm(CheckoutStep, forms.Form):
 	"""
 	credit card details form - step 2 of checkout
 	"""	
-	card_name = forms.CharField()
-	card_type = forms.ChoiceField(choices=make_choices(CARD_TYPES))
-	card_number = forms.CharField()
+	card_name = forms.CharField(label=_("Cardholder name"))
+	card_type = forms.ChoiceField(label=_("Type"), choices=make_choices(CARD_TYPES))
+	card_number = forms.CharField(label=_("Card number"))
 	card_expiry_month = forms.ChoiceField(
 		choices=make_choices(["%02d" % i for i in range(1, 13)]))
 	card_expiry_year = ExpiryYearField()
-	card_ccv = forms.CharField()
+	card_ccv = forms.CharField(label="CCV")
 
 class CheckoutWizard(FormWizard):
 	"""
@@ -197,13 +224,39 @@ class CheckoutWizard(FormWizard):
 		"""
 		self._request = request
 		
-	def get_form(self, *args, **kwargs):
+	def get_form(self, step, data=None):
 		"""
-		store the request and checkout handler against each form
+		pre-populate the form from the session and set some extra attributes 
+		for the form
 		"""
-		form = super(CheckoutWizard, self).get_form(*args, **kwargs)
-		form._checkout_handler = getattr(checkout, self.step_names[int(args[0])])
+		initial = self.initial.get(step, None)
+		step_name = self.step_names[int(step)]
+		if step_name != "payment":
+			initial = self._request.session.get("checkout_step_%s" % step, None)
+			# look up the billing/shipping address fields from the last order 
+			# if "remember my details" was checked
+			if step_name == "billing_shipping" and initial is None:
+				initial = {"same_billing_shipping": True}
+				parts = self._request.COOKIES.get("remember", "").split(":")
+				if len(parts) == 2 and parts[0] == sign(parts[1]): 
+					initial["remember"] = True
+					previous_orders = Order.objects.filter(key=parts[1]
+						).values(*address_fields)
+					if len(previous_orders) > 0:
+						initial.update(previous_orders[0])
+						# set initial value for "same billing/shipping" based on 
+						# whether both sets of address fields are all equal
+						ship_field = lambda f: "shipping_%s" % f[len("billing_"):]
+						if any([f for f in initial.keys() 
+							if f.startswith("billing_") and ship_field(f) in 
+							initial and initial[f] != initial[ship_field(f)]]):
+							initial["same_billing_shipping"] = False
+		form = self.form_list[step](data, initial=initial, 
+			prefix=self.prefix_for_step(step))
 		form._request = self._request
+		form._step = step
+		form._step_handler = getattr(checkout, self.step_names[int(step)], 
+			lambda *args: None)
 		return form
 		
 	def get_template(self, step):
@@ -213,6 +266,7 @@ class CheckoutWizard(FormWizard):
 		"""
 		create the order, remove the cart and email receipt
 		"""
+		response = HttpResponseRedirect(reverse("shop_complete"))
 		cart = Cart.objects.from_request(request)
 		order = form_list[0].save(commit=False)
 		# push session persisted fields onto the order
@@ -220,8 +274,16 @@ class CheckoutWizard(FormWizard):
 			if field in request.session:
 				setattr(order, field, request.session[field])
 				del request.session[field]
+		for i in range(len(form_list)):
+			del request.session["checkout_step_%s" % i]
 		order.item_total = cart.total_price()
+		order.key = request.session.session_key
 		order.save()
+		if form_list[0].cleaned_data.get("remember", False):
+			set_cookie(response, "remember", "%s:%s" % (sign(order.key), 
+				order.key), secure=request.is_secure())
+		else:
+			response.delete_cookie("remember")
 		for item in cart:
 			# decrease the item's quantity and set the purchase action
 			try:
@@ -240,11 +302,12 @@ class CheckoutWizard(FormWizard):
 		cart.delete()
 		from_email = ORDER_FROM_EMAIL
 		if from_email is None:
-			from_email = "do_not_reply@%s" % request.get_host()
+			from socket import gethostname
+			from_email = "do_not_reply@%s" % gethostname()
 		send_mail_template(_("Order Receipt"), "shop/email/order_receipt", 
 			from_email, order.billing_detail_email, context={"order": order, 
 			"order_items": order.items.all(), "request": request})
-		return HttpResponseRedirect(reverse("shop_complete"))
+		return response
 
 checkout_wizard = CheckoutWizard([OrderForm, PaymentForm])
 

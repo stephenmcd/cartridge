@@ -11,6 +11,7 @@
 		<th>{% trans "Unit Price" %}</th>
 		<th>{% trans "Qty" %}</th>
 		<th>{% trans "Price" %}</th>
+		<th>&nbsp;</th>
 	</tr>
 	{% for item in cart %}
 	<tr class="{% cycle 'row1' 'row2' %}">
@@ -20,22 +21,25 @@
 				src="{{ MEDIA_URL }}{% thumbnail item.image 30 30 %}" /></a>
 			{% endif %}
 			<a href="{{ item.get_absolute_url }}">{{ item.description }}</a>
-			<form method="post">
-				<input type="hidden" name="sku" value="{{ item.sku }}" />
-				<input type="submit" value="X" />
-			</form>
 		</td>
 		<td>{{ item.unit_price|currency }}</td>
 		<td>{{ item.quantity }}</td>
 		<td>{{ item.total_price|currency }}</td>
+		<td class="buttons">
+			<form method="post">
+				<input type="hidden" name="sku" value="{{ item.sku }}" />
+				<input type="submit" value="{% trans "Remove" %}" />
+			</form>
+		</td>
 	</tr>
 	{% endfor %}
 	<tr>
 		<td colspan="3">{% trans "Total" %}</td>
 		<td>{{ cart.total_price|currency }}</td>
+		<td>&nbsp;</td>
 	</tr>
 	<tr>
-		<td colspan="4">
+		<td colspan="5">
 			<form action="{% url shop_checkout %}">
 				<input type="submit" class="button" 
 					value="{% trans "Go to Checkout" %}" />
@@ -44,7 +48,7 @@
 	</tr>
 </table>
 {% else %}
-<div>{% trans "Your cart is empty." %}</div>
+<p>{% trans "Your cart is empty." %}</p>
 {% endif %}
 {% endblock %}
 

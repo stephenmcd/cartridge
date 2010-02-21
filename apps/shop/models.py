@@ -155,7 +155,7 @@ class Product(Displayable, Priced):
 			if not isinstance(field, models.AutoField):
 				setattr(self, field.name, getattr(default, field.name))
 		if default.image:
-			product.image = default.image.file.name
+			self.image = default.image.file.name
 		self.save()
 
 class ProductImage(models.Model):
@@ -293,11 +293,13 @@ class Order(Address.clone("billing_detail"), Address.clone("shipping_detail")):
 	class Meta:
 		verbose_name = _("Order")
 		verbose_name_plural = _("Orders")
+		ordering = ("-id",)
 
 	billing_detail_email = models.EmailField(_("Email"))
 	additional_instructions = models.TextField(_("Additional instructions"), 
 		blank=True)
 	time = models.DateTimeField(_("Time"), auto_now_add=True)
+	key = models.CharField(max_length=40)
 	shipping_type = models.CharField(_("Shipping type"), max_length=50, 
 		blank=True)
 	shipping_total = MoneyField(_("Shipping total"))
