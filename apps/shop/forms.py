@@ -1,7 +1,9 @@
 
 from copy import copy
 from datetime import datetime
+from itertools import dropwhile, takewhile
 from locale import localeconv
+from re import match
 
 from django import forms
 from django.forms.models import BaseModelForm, BaseInlineFormSet
@@ -97,12 +99,11 @@ class FormsetForm(object):
 	been iterated with each fieldset made up from a copy of the original form 
 	giving access to as_* methods
 	"""
-	
-	def _fieldset(self, filter_func):
+
+	def _fieldset(self, field_names):
 		"""
 		return a subset of fields by making a copy of the form containing only 
-		the fields matching the filter func, appending the field names to the 
-		internal list of done fields on each call 
+		the given field names
 		"""
 		fieldset = copy(self)
 		if not hasattr(self, "_fields_done"):
@@ -111,25 +112,32 @@ class FormsetForm(object):
 			# all fieldsets will contain all non-field errors, so for fieldsets
 			# other than the first ensure the call to non-field errors does nothing
 			fieldset.non_field_errors = lambda *args: None
-		_filter_func = lambda f: filter_func(f) and f not in self._fields_done
-		field_names = filter(_filter_func, self.fields.keys())
-		self._fields_done.extend(field_names)
+		field_names = filter(lambda f: f not in self._fields_done, field_names)
 		fieldset.fields = SortedDict([(f, self.fields[f]) for f in field_names])
+		self._fields_done.extend(field_names)
 		return fieldset
-	
+
 	def __getattr__(self, name):
 		"""
-		dynamic fieldset caller - handles PREFIX_fields() and FIELD_field()
+		dynamic fieldset caller - matches requested attribute name against 
+		pattern for creating the list of field names to use for the fieldset
 		"""
-		if name == "other_fields":
-			# all remaining fields
-			return self._fieldset(lambda f: True)
-		elif name.endswith("_fields"):
-			# all fields beginning with prefix
-			return self._fieldset(lambda f: f.startswith(name[:-len("_fields")]))
-		elif name.endswith("_field"):
-			# exact field name
-			return self._fieldset(lambda f: f == name[:-len("_field")])
+		filters = (
+			("^other_fields$", lambda: 
+				self.fields.keys()),
+			("^(\w*)_fields$", lambda name: 
+				[f for f in self.fields.keys() if f.startswith(name)]),
+			("^(\w*)_field$", lambda name: 
+				[f for f in self.fields.keys() if f == name]),
+			("^fields_before_(\w*)$", lambda name: 
+				takewhile(lambda f: f != name, self.fields.keys())),
+			("^fields_after_(\w*)$", lambda name: 
+				list(dropwhile(lambda f: f != name, self.fields.keys()))[1:]),
+		)
+		for filter_exp, filter_func in filters:
+			filter_args = match(filter_exp, name)
+			if filter_args is not None:
+				return self._fieldset(filter_func(*filter_args.groups()))
 		raise AttributeError(name)
 
 class CheckoutStep(FormsetForm):

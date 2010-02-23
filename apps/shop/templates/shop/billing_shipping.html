@@ -33,12 +33,12 @@ $(function() {
 {% if cart.has_items %}
 <fieldset>
 	<legend>{% trans "Billing Details" %}</legend>
-	<ul>{{ form.billing_fields.as_ul }}</ul>
+	<ul>{{ form.billing_detail_fields.as_ul }}</ul>
 </fieldset>
 <fieldset>
 	<legend>{% trans "Delivery Details" %}</legend>
 	<ul class="checkbox">{{ form.same_billing_shipping_field.as_ul }}</ul>
-	<ul id="shipping_fields">{{ form.shipping_fields.as_ul }}</ul>
+	<ul id="shipping_fields">{{ form.shipping_detail_fields.as_ul }}</ul>
 	<ul>{{ form.additional_instructions_field.as_ul }}</ul>
 </fieldset>
 <ul class="checkbox">{{ form.remember_field.as_ul }}</ul>
