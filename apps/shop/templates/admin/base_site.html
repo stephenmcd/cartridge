@@ -4,7 +4,7 @@
 {% block title %}{{ title }} | {% trans 'Django site admin' %}{% endblock %}
 
 {% block branding %}
-{% if app_list %}{% admin_reorder request.path app_list %}{% endif %}
+{% if app_list %}{% admin_reorder %}{% endif %}
 <h1 id="site-name">{% trans 'Django administration' %}</h1>
 {% endblock %}
 
