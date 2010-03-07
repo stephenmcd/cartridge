@@ -81,8 +81,8 @@ def search(request, template="shop/search_results.html"):
 	display product search results
 	"""
 	query = request.REQUEST.get("query", "")
-	results = paginate(Product.objects.search(query), request.GET.get("page", 1), 
-		SEARCH_RESULTS_PER_PAGE)
+	results = paginate(Product.objects.active().search(query), 
+		request.GET.get("page", 1), SEARCH_RESULTS_PER_PAGE)
 	return render_to_response(template, {"query": query, "results": results},
 		RequestContext(request))
 	

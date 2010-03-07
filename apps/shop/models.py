@@ -10,8 +10,9 @@ from django.template.defaultfilters import slugify, striptags
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 from shop.fields import OptionField, MoneyField, SKUField, DiscountCodeField
-from shop.managers import CategoryManager, ProductManager, CartManager, \
-	ProductVariationManager, ProductActionManager, DiscountCodeManager
+from shop.managers import ActiveManager, SearchableManager, ProductManager, \
+	CartManager, ProductVariationManager, ProductActionManager, \
+	DiscountCodeManager
 from shop.settings import ORDER_STATUSES, ORDER_STATUS_DEFAULT, PRODUCT_OPTIONS
 from shop.utils import clone_model, make_choices
 
@@ -29,6 +30,7 @@ class Displayable(models.Model):
 	title = models.CharField(_("Title"), max_length=100)
 	slug = models.SlugField(max_length=100, editable=False)
 	active = models.BooleanField(_("Visible on the site"), default=False)
+	objects = ActiveManager()
 
 	def __unicode__(self):
 		return self.title
@@ -79,7 +81,6 @@ class Category(Displayable):
 		upload_to="category")
 	parent = models.ForeignKey("self", blank=True, null=True, 
 		related_name="children")
-	objects = CategoryManager()
 
 class Priced(models.Model):
 	"""
@@ -118,7 +119,7 @@ class Priced(models.Model):
 		elif self.has_price():
 			return self.unit_price
 		return Decimal("0")
-	
+
 class Product(Displayable, Priced):
 	"""
 	container model for a product
@@ -131,20 +132,12 @@ class Product(Displayable, Priced):
 	description = models.TextField(_("Description"), blank=True)
 	keywords = models.CharField(_("Keywords"), max_length=200, blank=True, 
 		null=True)
-	search_text = models.TextField(blank=True)
 	available = models.BooleanField(_("Available for purchase"), default=False)
 	image = models.CharField(max_length=100, blank=True, null=True)
 	categories = models.ManyToManyField(Category, blank=True, 
 		related_name="products")
+	search_fields = ("title", "description", "keywords")
 	objects = ProductManager()
-	
-	def save(self, *args, **kwargs):
-		"""
-		create the search text
-		"""
-		self.search_text = "%s %s %s" % (striptags(self.description), 
-			self.title, self.keywords)
-		super(Product, self).save(*args, **kwargs)
 
 	def copy_default_variation(self):
 		"""

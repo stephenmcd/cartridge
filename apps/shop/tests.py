@@ -129,9 +129,9 @@ class ShopTests(TestCase):
 		"""
 		test product search
 		"""
-		first = Product.objects.create(title="test product", active=True).id
-		second = Product.objects.create(title="test another test product", 
-			active=True).id
+		Product.objects.all().delete()
+		first = Product.objects.create(title="test product").id
+		second = Product.objects.create(title="test another test product").id
 		# either word
 		results = Product.objects.search("another test")
 		self.assertEqual(len(results), 2)
@@ -148,7 +148,7 @@ class ShopTests(TestCase):
 		self.assertEqual(len(results), 1)
 		if results:
 			self.assertEqual(results[0].id, second)
-		# test relevance
+		# test ordering
 		results = Product.objects.search("test")
 		self.assertEqual(len(results), 2)
 		if results:

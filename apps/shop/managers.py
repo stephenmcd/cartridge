@@ -1,10 +1,11 @@
 
 from datetime import datetime, timedelta
-from operator import ior
+from operator import ior, iand
 from string import punctuation
 
 from django.conf import settings
-from django.db.models import Manager, Q
+from django.db.models import Manager, Q, CharField, TextField
+from django.db.models.query import QuerySet
 from django.utils.datastructures import SortedDict
 
 from shop.settings import CART_EXPIRY_MINUTES
@@ -19,46 +20,110 @@ class ActiveManager(Manager):
 		kwargs["active"] = True
 		return self.filter(*args, **kwargs)
 
-class CategoryManager(ActiveManager):
-	pass
-
-class ProductManager(ActiveManager):
+class SearchableQuerySet(QuerySet):
 	
-	def search(self, query):
+	def __init__(self, *args, **kwargs):
 		"""
-		build a queryset matching words in the given search query. treat quoted 
-		terms as exact phrases and take into account + and - symbols as 
-		modifiers controlling which terms to require and exclude
+		Create the list of search terms and fields.
 		"""
-		if max([len(t) for t in "".join([c for c in query 
-			if c == " " or c.isalnum()]).split(" ")]) < 3:
-			return []
-		_p = lambda s: s.strip(punctuation)
-		_Q = lambda s: Q(search_text__icontains=_p(s))
-		queryset = self.active()
-		# remove extra spaces, put modifiers inside quoted terms and create 
-		# search term list from exact phrases and then remaining words
-		terms = " ".join(filter(None, query.split(" "))).replace("+ ", "+"
-			).replace('+"', '"+').replace("- ", "-").replace('-"', '"-').split('"')
-		terms = terms[1::2] + "".join(terms[::2]).split(" ")
-		# for mysql use django search filter, for others manually create filters 
-		if settings.DATABASE_ENGINE == "mysql":
-			queryset = queryset.filter(search_text__search=query)
+		super(SearchableQuerySet, self).__init__(*args, **kwargs)
+		self._ordered = False
+		self._terms = []
+		self._fields = getattr(self.model, "search_fields", None)
+		if self._fields is None:
+			self._fields = [f.name for f in self.model._meta.fields
+				if issubclass(f, CharField) or issubclass(f, TextField)]
+				
+	def search(self, query, fields=None):
+		"""
+		Build a queryset matching words in the given search query, treating 
+		quoted terms as exact phrases and taking into account + and - symbols as 
+		modifiers controlling which terms to require and exclude.
+		"""
+		
+		# If search fields are given, append to internal list. Otherwise use 
+		# internal list for search fields.
+		if fields is None:
+			fields = self._fields
 		else:
-			# filter queryset by terms to require and exclude
-			required = [_Q(t[1:]) for t in terms if _p(t[1:]) and t[0] == "+"]
-			exclude = [~_Q(t[1:]) for t in terms if _p(t[1:]) and t[0] == "-"]
-			if required or exclude:
-				queryset = queryset.filter(*required + exclude)
-			# filter queryset by remaining unmodified terms
-			remaining = [_Q(t) for t in terms if _p(t) and t[0] not in "+-"]
-			if remaining:
-				queryset = queryset.filter(reduce(ior, remaining))
-		# sort results by number of occurrences
-		terms = set([_p(t.lower()) for t in terms])
-		rank = lambda p: sum([p.search_text.lower().count(t) for t in terms])
-		return sorted(queryset, key=rank, reverse=True)
+			self._fields = set(list(self._fields) + list(fields))
 
+		# Remove extra spaces, put modifiers inside quoted terms.
+		terms = " ".join(query.split()).replace("+ ", "+").replace('+"', '"+'
+			).replace("- ", "-").replace('-"', '"-').split('"')
+		# Strip punctuation other than modifiers from terms and create term 
+		# list first from quoted terms, and then remaining words.
+		terms = [("" if t[0] not in "+-" else t[0]) + t.strip(punctuation) 
+			for t in terms[1::2] + "".join(terms[::2]).split()]
+		# Append terms to internal list for sorting when results are iterated.
+		self._terms = set(list(self._terms) + [t.lower().strip(punctuation) 
+			for t in terms if t[0] != "-"])
+
+		# Create the queryset combining each set of terms.
+		excluded = [reduce(iand, [~Q(**{"%s__icontains" % f: t[1:]})
+			for f in fields]) for t in terms if t[0] == "-"]
+		required = [reduce(ior, [Q(**{"%s__icontains" % f: t[1:]})
+			for f in fields]) for t in terms if t[0] == "+"]
+		optional = [reduce(ior, [Q(**{"%s__icontains" % f: t})
+			for f in fields]) for t in terms if t[0] not in "+-"]
+		queryset = self
+		if excluded:
+			queryset = queryset.filter(reduce(iand, excluded))
+		if required:
+			queryset = queryset.filter(reduce(iand, required))
+		# Optional terms aren't relevant to the filter if there are terms
+		# that are explicitly required
+		elif optional:
+			queryset = queryset.filter(reduce(ior, optional))
+
+		return queryset
+
+	def _clone(self, *args, **kwargs):
+		"""
+		Ensure attributes are copied to subsequent queries.
+		"""
+		for attr in ("_terms", "_fields", "_ordered"):
+			kwargs[attr] = getattr(self, attr)
+		return super(SearchableQuerySet, self)._clone(*args, **kwargs)
+	
+	def order_by(self, *field_names):
+		"""
+		Mark the filter as being ordered if search has occurred.
+		"""
+		if not self._ordered:
+			self._ordered = len(self._terms) > 0
+		return super(SearchableQuerySet, self).order_by(*field_names)
+		
+	def iterator(self):
+		"""
+		If search has occured and no ordering has occurred, sort the results by 
+		number of occurrences of terms.
+		"""
+		results = super(SearchableQuerySet, self).iterator()
+		if self._terms and not self._ordered:
+			sort_key = lambda obj: sum([getattr(obj, f).lower().count(t.lower()) 
+				for f in self._fields for t in self._terms if getattr(obj, f)])
+			return iter(sorted(results, key=sort_key, reverse=True))
+		return results
+
+class SearchableManager(Manager):
+	"""
+	Manager providing a chainable queryset as per: 
+	http://www.djangosnippets.org/snippets/562/
+	"""
+
+	def get_query_set(self):
+		return SearchableQuerySet(self.model)
+
+	def __getattr__(self, attr, *args):
+		try:
+			return getattr(self.__class__, attr, *args)
+		except AttributeError:
+			return getattr(self.get_query_set(), attr, *args)
+
+class ProductManager(ActiveManager, SearchableManager):
+	pass
+	
 class CartManager(Manager):
 
 	def from_request(self, request):
