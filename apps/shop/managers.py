@@ -26,10 +26,12 @@ class SearchableQuerySet(QuerySet):
 		"""
 		Create the list of search terms and fields.
 		"""
-		super(SearchableQuerySet, self).__init__(*args, **kwargs)
 		self._ordered = False
 		self._terms = []
-		self._fields = getattr(self.model, "search_fields", None)
+		self._fields = kwargs.pop("fields", None)
+		super(SearchableQuerySet, self).__init__(*args, **kwargs)
+		if self._fields is None:
+			self._fields = getattr(self.model, "search_fields", None)
 		if self._fields is None:
 			self._fields = [f.name for f in self.model._meta.fields
 				if issubclass(f, CharField) or issubclass(f, TextField)]
@@ -108,12 +110,16 @@ class SearchableQuerySet(QuerySet):
 
 class SearchableManager(Manager):
 	"""
-	Manager providing a chainable queryset as per: 
-	http://www.djangosnippets.org/snippets/562/
+	Manager providing a chainable queryset.
+	Adapted from http://www.djangosnippets.org/snippets/562/
 	"""
+	
+	def __init__(self, *args, **kwargs):
+		self._fields = kwargs.pop("fields", None)
+		super(SearchableManager, self).__init__(*args, **kwargs)
 
 	def get_query_set(self):
-		return SearchableQuerySet(self.model)
+		return SearchableQuerySet(self.model, fields=self._fields)
 
 	def __getattr__(self, attr, *args):
 		try:
