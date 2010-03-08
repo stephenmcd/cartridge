@@ -17,15 +17,15 @@ from shop.utils import set_shipping
 
 
 def billing_shipping(request, billing_shipping_form):
-	"""
-	implement shipping handling here
-	"""
-	# cart is also accessible via Cart.objects.from_request(request)
-	set_shipping(request, "Shipping Test", 10)
-	
+    """
+    implement shipping handling here
+    """
+    # cart is also accessible via Cart.objects.from_request(request)
+    set_shipping(request, "Shipping Test", 10)
+    
 def payment(request, payment_form):
-	"""
-	implement payment gateway integration here
-	"""
-	# eg declined credit card: raise CheckoutError("Credit card declined")
-	pass
+    """
+    implement payment gateway integration here
+    """
+    # eg declined credit card: raise CheckoutError("Credit card declined")
+    pass

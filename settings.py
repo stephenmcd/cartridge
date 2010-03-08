@@ -10,8 +10,8 @@ USE_I18N = False
 SECRET_KEY = "5tve)^cpj9sdfgasdfsdfsdfaddfgfu-e@u=!p2aqwtjiwxzzt%g6p"
 INTERNAL_IPS = ("127.0.0.1",)
 TEMPLATE_LOADERS = (
-	"django.template.loaders.filesystem.load_template_source",
-	"django.template.loaders.app_directories.load_template_source",
+    "django.template.loaders.filesystem.load_template_source",
+    "django.template.loaders.app_directories.load_template_source",
 )
 
 
@@ -26,12 +26,12 @@ DATABASE_PORT = ""
 
 # apps
 INSTALLED_APPS = (
-	"shop",
-	"django.contrib.admin",
-	"django.contrib.auth",
-	"django.contrib.contenttypes",
-	"django.contrib.sessions",
-	"django.contrib.sites",
+    "shop",
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.sites",
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -44,38 +44,38 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 MIDDLEWARE_CLASSES = (
-	"django.contrib.sessions.middleware.SessionMiddleware",
-	"django.contrib.auth.middleware.AuthenticationMiddleware",
-	"django.middleware.cache.UpdateCacheMiddleware",
-	"django.middleware.common.CommonMiddleware",
-	"django.middleware.cache.FetchFromCacheMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.middleware.cache.UpdateCacheMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.cache.FetchFromCacheMiddleware",
     "shop.middleware.SSLRedirect",
 )
 
 try:
-	import debug_toolbar
+    import debug_toolbar
 except ImportError:
-	pass
+    pass
 else:
-	INSTALLED_APPS = list(INSTALLED_APPS) + ["debug_toolbar"]
-	MIDDLEWARE_CLASSES = list(MIDDLEWARE_CLASSES) + \
-		["debug_toolbar.middleware.DebugToolbarMiddleware"]
-	DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
+    INSTALLED_APPS = list(INSTALLED_APPS) + ["debug_toolbar"]
+    MIDDLEWARE_CLASSES = list(MIDDLEWARE_CLASSES) + \
+        ["debug_toolbar.middleware.DebugToolbarMiddleware"]
+    DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
 
 # caching
 CACHE_BACKEND = ""
 CACHE_TIMEOUT = CACHE_MIDDLEWARE_SECONDS = 0
 try:
-	import cmemcache
+    import cmemcache
 except ImportError:
-	try:
-		import memcache
-	except ImportError:
-		CACHE_BACKEND = "locmem:///"
+    try:
+        import memcache
+    except ImportError:
+        CACHE_BACKEND = "locmem:///"
 if not CACHE_BACKEND:
-	CACHE_TIMEOUT = CACHE_MIDDLEWARE_SECONDS = 180
-	CACHE_BACKEND = "memcached://127.0.0.1:11211/?timeout=%s" % CACHE_MIDDLEWARE_SECONDS
-	CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
+    CACHE_TIMEOUT = CACHE_MIDDLEWARE_SECONDS = 180
+    CACHE_BACKEND = "memcached://127.0.0.1:11211/?timeout=%s" % CACHE_MIDDLEWARE_SECONDS
+    CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
 
 
 # paths
@@ -88,23 +88,23 @@ TEMPLATE_DIRS = (os.path.join(project_path, "templates"),)
 ADMIN_MEDIA_PREFIX = "/media/"
 ROOT_URLCONF = "%s.urls" % project_dir
 if DATABASE_ENGINE == "sqlite3":
-	DATABASE_NAME = os.path.join(project_path, DATABASE_NAME)
+    DATABASE_NAME = os.path.join(project_path, DATABASE_NAME)
 
 
 # host settings
 from socket import gethostname
 host_settings_module = "%s_%s" % (project_dir, 
-	gethostname().replace(".", "_").replace("-", "_").lower())
+    gethostname().replace(".", "_").replace("-", "_").lower())
 host_settings_path = os.path.join(project_path, "host_settings", 
-	"%s.py" % host_settings_module)
+    "%s.py" % host_settings_module)
 if not os.path.exists(host_settings_path):
-	try:
-		f = open(host_settings_path, "w")
-		f.close()
-	except IOError:
-		print "couldn't create host_settings module: %s " % host_settings_path
+    try:
+        f = open(host_settings_path, "w")
+        f.close()
+    except IOError:
+        print "couldn't create host_settings module: %s " % host_settings_path
 try:
-	exec "from host_settings.%s import *" % host_settings_module
+    exec "from host_settings.%s import *" % host_settings_module
 except ImportError, e:
-	pass
+    pass
 TEMPLATE_DEBUG = DEBUG

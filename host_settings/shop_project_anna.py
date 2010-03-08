@@ -1,2 +1,0 @@
-DEBUG = True
-DEV_SERVER = True
