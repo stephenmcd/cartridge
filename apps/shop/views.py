@@ -63,10 +63,12 @@ def product(request, slug, template="shop/product.html"):
 				return HttpResponseRedirect(reverse("shop_cart"))
 			else:
 				skus = request.COOKIES.get("wishlist", "").split(",")
-				skus.append(add_product_form.variation.sku)
+				sku = add_product_form.variation.sku
+				if sku not in skus:
+					skus.append(sku)
 				info(request, _("Item added to wishlist"), fail_silently=True)
 				response = HttpResponseRedirect(reverse("shop_wishlist"))
-				set_cookie(response, "wishlist", ",".join(wishlist))
+				set_cookie(response, "wishlist", ",".join(skus))
 				return response
 	variations = product.variations.all()
 	variations_json = simplejson.dumps([dict([(f, getattr(v, f)) for f in 
@@ -115,7 +117,7 @@ def wishlist(request, template="shop/wishlist.html"):
 			else:
 				info(request, _("Item removed from wishlist"), fail_silently=True)
 				response = HttpResponseRedirect(reverse("shop_wishlist"))
-			set_cookie(response, "wishlist", ",".join(wishlist))
+			set_cookie(response, "wishlist", ",".join(skus))
 			return response
 	return render_to_response(template, {"error": error}, RequestContext(request))
 
