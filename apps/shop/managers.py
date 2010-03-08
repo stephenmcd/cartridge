@@ -24,10 +24,10 @@ class SearchableQuerySet(QuerySet):
 	
 	def __init__(self, *args, **kwargs):
 		"""
-		Create the list of search terms and fields.
+		Create the list of search fields.
 		"""
 		self._ordered = False
-		self._terms = []
+		self._terms = set()
 		self._fields = kwargs.pop("fields", None)
 		super(SearchableQuerySet, self).__init__(*args, **kwargs)
 		if self._fields is None:
@@ -36,6 +36,7 @@ class SearchableQuerySet(QuerySet):
 			self._fields = [f.name for f in self.model._meta.fields
 				if issubclass(f.__class__, CharField) or 
 				issubclass(f.__class__, TextField)]
+		self._fields = set(self._fields)
 				
 	def search(self, query, fields=None):
 		"""
@@ -49,7 +50,7 @@ class SearchableQuerySet(QuerySet):
 		if fields is None:
 			fields = self._fields
 		else:
-			self._fields = set(list(self._fields) + list(fields))
+			self._fields.update(fields)
 
 		# Remove extra spaces, put modifiers inside quoted terms.
 		terms = " ".join(query.split()).replace("+ ", "+").replace('+"', '"+'
@@ -59,7 +60,7 @@ class SearchableQuerySet(QuerySet):
 		terms = [("" if t[0] not in "+-" else t[0]) + t.strip(punctuation) 
 			for t in terms[1::2] + "".join(terms[::2]).split()]
 		# Append terms to internal list for sorting when results are iterated.
-		self._terms = set(list(self._terms) + [t.lower().strip(punctuation) 
+		self._terms.update([t.lower().strip(punctuation) 
 			for t in terms if t[0] != "-"])
 
 		# Create the queryset combining each set of terms.
