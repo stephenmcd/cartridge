@@ -34,7 +34,8 @@ class SearchableQuerySet(QuerySet):
 			self._fields = getattr(self.model, "search_fields", None)
 		if self._fields is None:
 			self._fields = [f.name for f in self.model._meta.fields
-				if issubclass(f, CharField) or issubclass(f, TextField)]
+				if issubclass(f.__class__, CharField) or 
+				issubclass(f.__class__, TextField)]
 				
 	def search(self, query, fields=None):
 		"""

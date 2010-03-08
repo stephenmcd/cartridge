@@ -136,8 +136,8 @@ class Product(Displayable, Priced):
 	image = models.CharField(max_length=100, blank=True, null=True)
 	categories = models.ManyToManyField(Category, blank=True, 
 		related_name="products")
-	search_fields = ("title", "description", "keywords")
 	objects = ProductManager()
+	search_fields = ("title", "description", "keywords")
 
 	def copy_default_variation(self):
 		"""
