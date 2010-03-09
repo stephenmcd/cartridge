@@ -12,7 +12,7 @@ CART_EXPIRY_MINUTES = getattr(settings, "SHOP_CART_EXPIRY_MINUTES", 30)
 
 # sequence of available credit card types for payment
 CARD_TYPES = getattr(settings, "SHOP_CARD_TYPES", 
-	("Mastercard", "Visa", "Diners", "Amex")
+    ("Mastercard", "Visa", "Diners", "Amex")
 )
 
 # controls the display formatting of monetary values accord to the locale 
@@ -21,8 +21,8 @@ CURRENCY_LOCALE = getattr(settings, "SHOP_CURRENCY_LOCALE", "")
 
 # sequence of pairs for order statuses
 ORDER_STATUSES = getattr(settings, "SHOP_ORDER_STATUSES", (
-	(1, _("Unprocessed")),
-	(2, _("Processed")),
+    (1, _("Unprocessed")),
+    (2, _("Processed")),
 ))
 
 # default order status for new orders
@@ -30,8 +30,8 @@ ORDER_STATUS_DEFAULT = getattr(settings, "SHOP_ORDER_STATUS_DEFAULT", 1)
 
 # sequence of name/sequence pairs defining the selectable options for products
 PRODUCT_OPTIONS = getattr(settings, "SHOP_PRODUCT_OPTIONS", (
-	("size", ("Extra Small","Small","Regular","Large","Extra Large")),
-	("colour", ("Red","Orange","Yellow","Green","Blue","Indigo","Violet")),
+    ("size", ("Extra Small","Small","Regular","Large","Extra Large")),
+    ("colour", ("Red","Orange","Yellow","Green","Blue","Indigo","Violet")),
 ))
 
 # email address that order receipts should be emailed from
@@ -48,6 +48,6 @@ SEARCH_RESULTS_PER_PAGE = getattr(settings, "SHOP_SEARCH_RESULTS_PER_PAGE", 10)
 
 ADMIN_REORDER = tuple(getattr(settings, "ADMIN_REORDER", ()))
 if "shop" not in dict(ADMIN_REORDER):
-	ADMIN_REORDER += (("shop", ("Category", "Product", "Sale", "DiscountCode",
-		"Order")),)
+    ADMIN_REORDER += (("shop", ("Category", "Product", "Sale", "DiscountCode",
+        "Order")),)
 
