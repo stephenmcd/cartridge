@@ -23,34 +23,31 @@ class ActiveManager(Manager):
 class SearchableQuerySet(QuerySet):
     
     def __init__(self, *args, **kwargs):
-        """
-        Create the list of search fields.
-        """
-        self._ordered = False
-        self._terms = set()
-        self._fields = kwargs.pop("fields", None)
+        self._search_ordered = False
+        self._search_terms = set()
+        self._search_fields = set(kwargs.pop("search_fields", []))
         super(SearchableQuerySet, self).__init__(*args, **kwargs)
-        if self._fields is None:
-            self._fields = getattr(self.model, "search_fields", None)
-        if self._fields is None:
-            self._fields = [f.name for f in self.model._meta.fields
-                if issubclass(f.__class__, CharField) or 
-                issubclass(f.__class__, TextField)]
-        self._fields = set(self._fields)
-                
-    def search(self, query, fields=None):
+
+    def search(self, query, search_fields=None):
         """
         Build a queryset matching words in the given search query, treating 
         quoted terms as exact phrases and taking into account + and - symbols as 
         modifiers controlling which terms to require and exclude.
         """
         
-        # If search fields are given, append to internal list. Otherwise use 
-        # internal list for search fields.
-        if fields is None:
-            fields = self._fields
-        else:
-            self._fields.update(fields)
+        # Use fields arg if given, otherwise check internal list which if empty, 
+        # populate from model attr or char-like fields.
+        if search_fields is None:
+            search_fields = self._search_fields
+        if len(search_fields) == 0:
+        	search_fields = getattr(self.model, "search_fields", [])
+        if len(search_fields) == 0:
+            search_fields = [f.name for f in self.model._meta.fields
+                if issubclass(f.__class__, CharField) or 
+                issubclass(f.__class__, TextField)]
+        if len(search_fields) == 0:
+        	return self.none()
+        self._search_fields.update(search_fields)
 
         # Remove extra spaces, put modifiers inside quoted terms.
         terms = " ".join(query.split()).replace("+ ", "+").replace('+"', '"+'
@@ -60,16 +57,16 @@ class SearchableQuerySet(QuerySet):
         terms = [("" if t[0] not in "+-" else t[0]) + t.strip(punctuation) 
             for t in terms[1::2] + "".join(terms[::2]).split()]
         # Append terms to internal list for sorting when results are iterated.
-        self._terms.update([t.lower().strip(punctuation) 
+        self._search_terms.update([t.lower().strip(punctuation) 
             for t in terms if t[0] != "-"])
 
         # Create the queryset combining each set of terms.
         excluded = [reduce(iand, [~Q(**{"%s__icontains" % f: t[1:]})
-            for f in fields]) for t in terms if t[0] == "-"]
+            for f in search_fields]) for t in terms if t[0] == "-"]
         required = [reduce(ior, [Q(**{"%s__icontains" % f: t[1:]})
-            for f in fields]) for t in terms if t[0] == "+"]
+            for f in search_fields]) for t in terms if t[0] == "+"]
         optional = [reduce(ior, [Q(**{"%s__icontains" % f: t})
-            for f in fields]) for t in terms if t[0] not in "+-"]
+            for f in search_fields]) for t in terms if t[0] not in "+-"]
         queryset = self
         if excluded:
             queryset = queryset.filter(reduce(iand, excluded))
@@ -79,14 +76,13 @@ class SearchableQuerySet(QuerySet):
         # that are explicitly required
         elif optional:
             queryset = queryset.filter(reduce(ior, optional))
-
         return queryset
 
     def _clone(self, *args, **kwargs):
         """
         Ensure attributes are copied to subsequent queries.
         """
-        for attr in ("_terms", "_fields", "_ordered"):
+        for attr in ("_search_terms", "_search_fields", "_search_ordered"):
             kwargs[attr] = getattr(self, attr)
         return super(SearchableQuerySet, self)._clone(*args, **kwargs)
     
@@ -94,8 +90,8 @@ class SearchableQuerySet(QuerySet):
         """
         Mark the filter as being ordered if search has occurred.
         """
-        if not self._ordered:
-            self._ordered = len(self._terms) > 0
+        if not self._search_ordered:
+            self._search_ordered = len(self._search_terms) > 0
         return super(SearchableQuerySet, self).order_by(*field_names)
         
     def iterator(self):
@@ -104,9 +100,10 @@ class SearchableQuerySet(QuerySet):
         number of occurrences of terms.
         """
         results = super(SearchableQuerySet, self).iterator()
-        if self._terms and not self._ordered:
+        if self._search_terms and not self._search_ordered:
             sort_key = lambda obj: sum([getattr(obj, f).lower().count(t.lower()) 
-                for f in self._fields for t in self._terms if getattr(obj, f)])
+                for f in self._search_fields for t in self._search_terms 
+                if getattr(obj, f)])
             return iter(sorted(results, key=sort_key, reverse=True))
         return results
 
@@ -117,11 +114,11 @@ class SearchableManager(Manager):
     """
     
     def __init__(self, *args, **kwargs):
-        self._fields = kwargs.pop("fields", None)
+        self._search_fields = kwargs.pop("search_fields", [])
         super(SearchableManager, self).__init__(*args, **kwargs)
 
     def get_query_set(self):
-        return SearchableQuerySet(self.model, fields=self._fields)
+        return SearchableQuerySet(self.model, search_fields=self._search_fields)
 
     def __getattr__(self, attr, *args):
         try:
