@@ -232,7 +232,7 @@ class DiscountCodeManager(ActiveManager):
         items flagged as active and in valid date range if date(s) are specified
         """
         valid_from = Q(valid_from__isnull=True) | Q(valid_from__lte=datetime.now())
-        valid_to = Q(valid_to__isnull=True) | Q(valid_from__gte=datetime.now())
+        valid_to = Q(valid_to__isnull=True) | Q(valid_to__gte=datetime.now())
         return super(DiscountCodeManager, self).active(valid_from, valid_to)
     
     def get_valid(self, code, cart):
