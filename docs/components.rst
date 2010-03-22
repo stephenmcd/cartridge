@@ -1,7 +1,7 @@
 Components
 ==========
 
-The following section describes the various components within Cartidge and mostly describes the Django models used. All of the models, managers and admin classes referred to in this section are contained in the ``shop.models``, ``shop.managers`` and ``shop.admin`` modules respectively.
+The following section describes the various components within Cartridge and mostly describes the Django models used. All of the models, managers and admin classes referred to in this section are contained in the ``shop.models``, ``shop.managers`` and ``shop.admin`` modules respectively.
 
 Displayable Items
 -----------------
@@ -11,7 +11,7 @@ The ``Displayable`` abstract model provides common features for an item displaye
 Categories
 ----------
 
-The ``Category`` model provides the navigational tree structure for organising products throughout the site. This structure is stored using the self referencing ForeignKeyField ``Category.parent`` and rendered on both the site and in the admin via the ``category_menu`` and  ``category_menu_admin`` template tags respectively. When viewing the list of categories in the admin, the listing template is overriden with a custom ``change_list.html`` template that allows the category tree to be managed.
+The ``Category`` model provides the navigational tree structure for organising products throughout the site. This structure is stored using the self referencing ForeignKeyField ``Category.parent`` and rendered on both the site and in the admin via the ``category_menu`` and  ``category_menu_admin`` template tags respectively. When viewing the list of categories in the admin, the listing template is overridden with a custom ``change_list.html`` template that allows the category tree to be managed.
 
 The ``Category`` model inherits from the ``Displayable`` abstract model mentioned previously. It also contains a ManyToManyField ``Category.products`` that contains the products assigned to the category, although this is defined in the ``Product`` model discussed next.
 
@@ -75,7 +75,7 @@ The ``Discount`` abstract model provides common features for the reduction of a 
     * ``Discount.discount_percent`` for reducing by a percent
     * ``Discount.discount_exact`` for reducing to an amount
 
-The ``Discount`` model also contains a DateTimeField ``Discount.valid_from`` and a DateTimeField ``Discount.valid_to`` which together define the start and end dates of the discount, and a ManyToManyfield ``Discount.categories`` and a ManyToManyfield ``Discount.products`` which together define the applicable ``Category`` and ``Product`` instances the discount is applicable for.
+The ``Discount`` model also contains a DateTimeField ``Discount.valid_from`` and a DateTimeField ``Discount.valid_to`` which together define the start and end dates of the discount, and a ManyToManyField ``Discount.categories`` and a ManyToManyField ``Discount.products`` which together define the applicable ``Category`` and ``Product`` instances the discount is applicable for.
 
 The ``Discount`` abstract model is inherited by the ``DiscountCode`` and ``Sale`` models discussed next.
 
@@ -107,7 +107,9 @@ The ``CartItem`` model represents each unique product in the customer's ``Cart``
 Selected Products
 ^^^^^^^^^^^^^^^^^
 
-The ``SelectedProduct`` abstract model represents a unique product that has been selected by a customer. 
+The ``SelectedProduct`` abstract model represents a unique product and set of selected options that has been selected by a customer. The ``SelectedProduct`` model is inherited by the ``CartItem`` model previously discussed and the ``OrderItem`` model discussed next.
+
+The ``SelectedProduct`` abstract model acts as a snapshot of a ``ProductVariation`` instance in that is does not contain a direct reference to the ``ProductVariation`` instance, but copies information from it when the ``SelectedProduct`` instance is created. This is to ensure that any changes made to a ``ProductVariation`` instance do not affect existing ``SelectedProduct`` instances. The ``SelectedProduct`` model contains fields such as ``SelectedProduct.sku``, ``SelectedProduct.unit_price`` and ``SelectedProduct.description``, all of which are copied from the ``ProductVariation`` instance at creation time with the ``SelectedProduct.description`` being created from the  ``ProductVariation`` instances's related ``Product.title`` as well as the selected options for the ``SelectedProduct`` instance. The ``SelectedProduct`` model also contains the IntegerField ``SelectedProduct.quantity`` for storing the selected quantity.
 
 Orders
 ------
