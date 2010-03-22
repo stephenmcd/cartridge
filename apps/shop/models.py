@@ -336,7 +336,8 @@ class Cart(models.Model):
         """
         increase quantity of existing item if sku matches, otherwise create new
         """
-        item, created = self.items.get_or_create(sku=variation.sku)
+        item, created = self.items.get_or_create(sku=variation.sku, 
+            unit_price=variation.unit_price)
         if created:
             item.description = str(variation)
             item.unit_price = variation.price()
