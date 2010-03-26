@@ -27,7 +27,7 @@
 		<td>{{ item.total_price|currency }}</td>
 		<td class="buttons">
 			<form method="post">
-				<input type="hidden" name="sku" value="{{ item.sku }}" />
+				<input type="hidden" name="item_id" value="{{ item.id }}" />
 				<input type="submit" value="{% trans "Remove" %}" />
 			</form>
 		</td>

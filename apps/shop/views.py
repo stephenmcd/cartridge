@@ -127,7 +127,8 @@ def cart(request, template="shop/cart.html"):
     display cart - handle removing items
     """
     if request.method == "POST":
-        Cart.objects.from_request(request).remove_item(request.POST.get("sku", ""))
+        Cart.objects.from_request(request).remove_item(
+            request.POST.get("item_id", ""))
         info(request, _("Item removed from cart"), fail_silently=True)
         return HttpResponseRedirect(reverse("shop_cart"))
     return render_to_response(template, {}, RequestContext(request))

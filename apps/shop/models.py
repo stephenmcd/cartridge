@@ -337,7 +337,7 @@ class Cart(models.Model):
         increase quantity of existing item if sku matches, otherwise create new
         """
         item, created = self.items.get_or_create(sku=variation.sku, 
-            unit_price=variation.unit_price)
+            unit_price=variation.price())
         if created:
             item.description = str(variation)
             item.unit_price = variation.price()
@@ -349,11 +349,14 @@ class Cart(models.Model):
         item.quantity += quantity
         item.save()
             
-    def remove_item(self, sku):
+    def remove_item(self, item_id):
         """
         remove item by sku
         """
-        self.items.filter(sku=sku).delete()
+        try:
+            self.items.get(id=item_id).delete()
+        except CartItem.DoesNotExist:
+            pass
         
     def has_items(self):
         """
