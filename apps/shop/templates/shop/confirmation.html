@@ -1,0 +1,13 @@
+{% extends "shop/checkout.html" %}
+{% load i18n shop_tags %}
+
+{% block fields %}
+{% if cart.has_items %}
+
+{% order_fields as fields %}
+{% for field, value in fields %}
+{{ field }}: {{ value }}<br />
+{% endfor %}
+{% endif %}
+{% endblock %}
+

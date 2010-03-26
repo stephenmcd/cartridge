@@ -3,6 +3,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.forms import Form
 from django.http import HttpResponseRedirect
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
@@ -139,7 +140,7 @@ def checkout(request):
     created for every request so it is thread-safe, since the wizard stores 
     the current request internally.
     """
-    return CheckoutWizard([OrderForm, PaymentForm])(request)
+    return CheckoutWizard([OrderForm, PaymentForm, Form])(request)
 
 def complete(request, template="shop/complete.html"):
     """

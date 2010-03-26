@@ -224,7 +224,7 @@ class CheckoutWizard(FormWizard):
 
     # these correspond to the custom checkout handler names in the checkout
     # module for each step as well as the template names for each step
-    step_names = ("billing_shipping", "payment")
+    step_names = ("billing_shipping", "payment", "confirmation")
 
     def parse_params(self, request, *args, **kwargs):
         """
@@ -283,7 +283,10 @@ class CheckoutWizard(FormWizard):
                 setattr(order, field, request.session[field])
                 del request.session[field]
         for i in range(len(form_list)):
-            del request.session["checkout_step_%s" % i]
+            try:
+                del request.session["checkout_step_%s" % i]
+            except KeyError:
+                pass
         order.item_total = cart.total_price()
         order.key = request.session.session_key
         order.save()
