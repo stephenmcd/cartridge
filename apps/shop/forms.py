@@ -221,7 +221,7 @@ class CheckoutWizard(FormWizard):
     and get_form, pass the request object to each form so that it can be sent 
     on to each of the custom handlers in the checkout module
     """
-    
+
     # these correspond to the custom checkout handler names in the checkout
     # module for each step as well as the template names for each step
     step_names = ("billing_shipping", "payment")
@@ -316,8 +316,6 @@ class CheckoutWizard(FormWizard):
             from_email, order.billing_detail_email, context={"order": order, 
             "order_items": order.items.all(), "request": request})
         return response
-
-checkout_wizard = CheckoutWizard([OrderForm, PaymentForm])
 
 #######################
 #    admin widgets    

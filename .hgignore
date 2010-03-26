@@ -4,3 +4,4 @@ syntax: glob
 *.pyo
 site_media/product/*
 site_media/category/*
+docs/out/*

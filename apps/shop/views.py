@@ -8,7 +8,8 @@ from django.utils import simplejson
 from django.utils.translation import ugettext as _
 
 from shop.models import Category, Product, ProductVariation, Cart
-from shop.forms import get_add_product_form, OrderForm
+from shop.forms import get_add_product_form, CheckoutWizard, OrderForm, \
+    PaymentForm
 from shop.settings import SEARCH_RESULTS_PER_PAGE
 from shop.utils import set_cookie
 
@@ -130,6 +131,14 @@ def cart(request, template="shop/cart.html"):
         info(request, _("Item removed from cart"), fail_silently=True)
         return HttpResponseRedirect(reverse("shop_cart"))
     return render_to_response(template, {}, RequestContext(request))
+
+def checkout(request):
+    """
+    Wraps the checkout wizard into a view function so that the wizard is 
+    created for every request so it is thread-safe, since the wizard stores 
+    the current request internally.
+    """
+    return CheckoutWizard([OrderForm, PaymentForm])(request)
 
 def complete(request, template="shop/complete.html"):
     """
