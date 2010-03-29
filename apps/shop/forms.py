@@ -10,7 +10,7 @@ from django.forms.models import BaseModelForm, BaseInlineFormSet
 from django.contrib.formtools.wizard import FormWizard
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, QueryDict
 from django.utils.datastructures import SortedDict
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
@@ -173,6 +173,19 @@ class OrderForm(CheckoutStep, forms.ModelForm):
         fields = address_fields + ["additional_instructions", "discount_code"]
             
     def __init__(self, *args, **kwargs):
+        """
+        Handle setting shipping field values to the same as billing field 
+        values in case Javascript is disabled, and hide discount_code field if 
+        there are currently no active discount codes.
+        """
+        if (args and isinstance(args[0], QueryDict) and 
+            "0-same_billing_shipping" in args[0]):
+            data = copy(args[0])
+            for field in data:
+                billing = field.replace("shipping_detail_", "billing_detail_")
+                if "shipping_detail" in field and billing in data:
+                    data[field] = data[billing]
+            args = (data,) + args[1:]
         super(OrderForm, self).__init__(*args, **kwargs)
         if DiscountCode.objects.active().count() == 0:
             self.fields["discount_code"].widget = forms.HiddenInput()
