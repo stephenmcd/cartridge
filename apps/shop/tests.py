@@ -117,7 +117,8 @@ class ShopTests(TestCase):
         self.assertEqual(cart.total_price(), price * num_in_stock * 2)
 
         # remove from cart
-        self.client.post(reverse("shop_cart"), {"sku": variation.sku})
+        for item in cart:
+            self.client.post(reverse("shop_cart"), {"item_id": item.id})
         cart = Cart.objects.from_request(self.client)
         variation = self._product.variations.all()[0]
         self.assertTrue(variation.has_stock(num_in_stock * 2))
