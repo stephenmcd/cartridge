@@ -193,27 +193,28 @@ class OrderForm(CheckoutStep, forms.ModelForm):
             self._request.session["discount_total"] = discount.calculate(
                 cart.total_price())
         return code
-
-class ExpiryYearField(forms.ChoiceField):
-    """
-    choice field for credit card expiry with years from now as choices
-    """
-    def __init__(self, *args, **kwargs):
-        year = datetime.now().year
-        kwargs["choices"] = make_choices(range(year, year + 21))
-        super(ExpiryYearField, self).__init__(*args, **kwargs)
         
 class PaymentForm(CheckoutStep, forms.Form):
     """
     credit card details form - step 2 of checkout
     """    
     card_name = forms.CharField(label=_("Cardholder name"))
-    card_type = forms.ChoiceField(label=_("Type"), choices=make_choices(CARD_TYPES))
+    card_type = forms.ChoiceField(label=_("Type"), 
+        choices=make_choices(CARD_TYPES))
     card_number = forms.CharField(label=_("Card number"))
     card_expiry_month = forms.ChoiceField(
         choices=make_choices(["%02d" % i for i in range(1, 13)]))
-    card_expiry_year = ExpiryYearField()
+    card_expiry_year = forms.ChoiceField()
     card_ccv = forms.CharField(label="CCV")
+    
+    def __init__(self, *args, **kwargs):
+        """
+        Set the choices for the cc expiry year relative to the current year.
+        """
+        super(PaymentForm, self).__init__(*args, **kwargs)
+        year = datetime.now().year
+        choices = make_choices(range(year, year + 21))
+        self.fields["card_expiry_year"].choices = choices
 
 class CheckoutWizard(FormWizard):
     """
