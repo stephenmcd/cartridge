@@ -31,9 +31,9 @@ ADD_PRODUCT_ERRORS = {
     "no_stock_quantity": _("The selected quantity is currently unavailable."),
 }
 
-address_fields = (Order.billing_detail_field_names() + 
-    Order.shipping_detail_field_names())
-
+address_fields = [f.name for f in Order._meta.fields if 
+    f.name.startswith("billing_detail") or 
+    f.name.startswith("shipping_detail")]
 
 def get_add_product_form(product):
     """
@@ -182,7 +182,7 @@ class OrderForm(CheckoutStep, forms.ModelForm):
             "0-same_billing_shipping" in args[0]):
             data = copy(args[0])
             for field in data:
-                billing = field.replace("shipping_detail_", "billing_detail_")
+                billing = field.replace("shipping_detail", "billing_detail")
                 if "shipping_detail" in field and billing in data:
                     data[field] = data[billing]
             args = (data,) + args[1:]
@@ -201,7 +201,8 @@ class OrderForm(CheckoutStep, forms.ModelForm):
             try:
                 discount = DiscountCode.objects.get_valid(code=code, cart=cart)
             except DiscountCode.DoesNotExist:
-                raise forms.ValidationError("The discount code entered is invalid.")
+                raise forms.ValidationError(
+                    _("The discount code entered is invalid."))
             self._request.session["free_shipping"] = discount.free_shipping
             self._request.session["discount_total"] = discount.calculate(
                 cart.total_price())
@@ -291,6 +292,7 @@ class CheckoutWizard(FormWizard):
         response = HttpResponseRedirect(reverse("shop_complete"))
         cart = Cart.objects.from_request(request)
         order = form_list[0].save(commit=False)
+        
         # push session persisted fields onto the order
         for field in ("shipping_type", "shipping_total", "discount_total"):
             if field in request.session:
@@ -309,6 +311,7 @@ class CheckoutWizard(FormWizard):
                 order.key), secure=request.is_secure())
         else:
             response.delete_cookie("remember")
+        
         for item in cart:
             # decrease the item's quantity and set the purchase action
             try:
@@ -325,13 +328,20 @@ class CheckoutWizard(FormWizard):
             item = dict([(field, getattr(item, field)) for field in fields])
             order.items.create(**item)
         cart.delete()
+        
         from_email = ORDER_FROM_EMAIL
         if from_email is None:
             from socket import gethostname
             from_email = "do_not_reply@%s" % gethostname()
+        order_context = {"order": order, "order_items": order.items.all(), 
+            "request": request}
+        for fieldset in ("billing_detail", "shipping_detail"):
+            fields = [(f.verbose_name, getattr(order, f.name)) 
+                for f in order._meta.fields if f.name.startswith(fieldset)]
+            order_context["order_%s_fields" % fieldset] = fields
         send_mail_template(_("Order Receipt"), "shop/email/order_receipt", 
-            from_email, order.billing_detail_email, context={"order": order, 
-            "order_items": order.items.all(), "request": request})
+            from_email, order.billing_detail_email, context=order_context)
+            
         return response
 
 #######################

@@ -7,13 +7,13 @@
 <p>{% trans "Order ID:" %} #{{ order.id }}</p>
 
 <p><span style="font-weight:bold;">{% trans "Billing Details:" %}</span><br />
-{% for field in order.billing_detail_fields %}
-{{ field.name }}: {{ field.value }}<br />
+{% for field, value in order_billing_detail_fields %}
+{{ field }}: {{ value }}<br />
 {% endfor %}</p>
 
 <p><span style="font-weight:bold;">{% trans "Shipping Details:" %}</span><br />
-{% for field in order.shipping_detail_fields %}
-{{ field.name }}: {{ field.value }}<br />
+{% for field, value in order_shipping_detail_fields %}
+{{ field }}: {{ value }}<br />
 {% endfor %}</p>
 
 <p><span style="font-weight:bold;">{% trans "Items Ordered:" %}</span></p>

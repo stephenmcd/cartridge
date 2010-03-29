@@ -14,7 +14,7 @@ from shop.managers import ActiveManager, SearchableManager, ProductManager, \
     CartManager, ProductVariationManager, ProductActionManager, \
     DiscountCodeManager
 from shop.settings import ORDER_STATUSES, ORDER_STATUS_DEFAULT, PRODUCT_OPTIONS
-from shop.utils import clone_model, make_choices
+from shop.utils import make_choices
 
 
 class Displayable(models.Model):
@@ -239,56 +239,39 @@ class BaseProductVariation(Priced):
 
 # build the ProductVariation model from the BaseProductVariation model by
 # adding each option in shop.settings.PRODUCT_OPTIONS as an OptionField
-ProductVariation = clone_model("ProductVariation", BaseProductVariation, 
-    dict([(option[0], OptionField(choices=make_choices(option[1]))) 
-    for option in PRODUCT_OPTIONS]))
+_meta = type("Meta", (object,), {})
+_fields = {"__module__": BaseProductVariation.__module__, "Meta": _meta}
+for name, options in PRODUCT_OPTIONS:
+    _fields[name] = OptionField(choices=make_choices(options))
+ProductVariation = type("ProductVariation", (BaseProductVariation,), _fields)
 
-class Address(models.Model):
-    """
-    abstract model used to create new models via Address.make() - new models
-    are billing and shipping with the Order model inherits from below 
-    """
-    
-    class Meta:
-        abstract = True
-
-    first_name = models.CharField(_("First name"), max_length=100)
-    last_name = models.CharField(_("Last name"), max_length=100)
-    street = models.CharField(_("Street"), max_length=100)
-    city = models.CharField(_("City/Suburb"), max_length=100)
-    state = models.CharField(_("State/Region"), max_length=100)
-    postcode = models.CharField(_("Zip/Postcode"), max_length=10)
-    country = models.CharField(_("Country"), max_length=100)
-    phone = models.CharField(_("Phone"), max_length=20)
-    
-    @classmethod
-    def clone(cls, field_prefix):
-        """
-        return a new model with the same fields as Address named using the 
-        given PREFIX, as well as a PREFIX_fields and PREFIX_field_names methods 
-        for accessing the address fields and field names by prefix
-        """
-        def field_names_by_prefix(cls):
-            return [f.name for f in cls._meta.fields 
-                if f.name.startswith(field_prefix)]
-        def fields_by_prefix(instance):
-            return [{"name": f.verbose_name, "value": getattr(instance, f.name)} 
-                for f in instance._meta.fields if f.name.startswith(field_prefix)]
-        fields = dict([("%s_%s" % (field_prefix, f.name), copy(f)) 
-            for f in cls._meta.fields if not isinstance(f, models.AutoField)])
-        fields.update({"%s_fields" % field_prefix: fields_by_prefix, 
-            "%s_field_names" % field_prefix: classmethod(field_names_by_prefix)})
-        name = "".join(s.title() for s in field_prefix.split("_"))
-        return clone_model(name, models.Model, fields, abstract=True)
-
-class Order(Address.clone("billing_detail"), Address.clone("shipping_detail")):
+class Order(models.Model):
 
     class Meta:
         verbose_name = _("Order")
         verbose_name_plural = _("Orders")
         ordering = ("-id",)
 
+    billing_detail_first_name = models.CharField(_("First name"), 
+        max_length=100)
+    billing_detail_last_name = models.CharField(_("Last name"), max_length=100)
+    billing_detail_street = models.CharField(_("Street"), max_length=100)
+    billing_detail_city = models.CharField(_("City/Suburb"), max_length=100)
+    billing_detail_state = models.CharField(_("State/Region"), max_length=100)
+    billing_detail_postcode = models.CharField(_("Zip/Postcode"), max_length=10)
+    billing_detail_country = models.CharField(_("Country"), max_length=100)
+    billing_detail_phone = models.CharField(_("Phone"), max_length=20)
     billing_detail_email = models.EmailField(_("Email"))
+    shipping_detail_first_name = models.CharField(_("First name"), 
+        max_length=100)
+    shipping_detail_last_name = models.CharField(_("Last name"), max_length=100)
+    shipping_detail_street = models.CharField(_("Street"), max_length=100)
+    shipping_detail_city = models.CharField(_("City/Suburb"), max_length=100)
+    shipping_detail_state = models.CharField(_("State/Region"), max_length=100)
+    shipping_detail_postcode = models.CharField(_("Zip/Postcode"), 
+        max_length=10)
+    shipping_detail_country = models.CharField(_("Country"), max_length=100)
+    shipping_detail_phone = models.CharField(_("Phone"), max_length=20)
     additional_instructions = models.TextField(_("Additional instructions"), 
         blank=True)
     time = models.DateTimeField(_("Time"), auto_now_add=True)

@@ -11,9 +11,11 @@ from shop.models import Category, Product, ProductImage, ProductVariation, \
 
 
 # lists of field names
-option_fields = [field.name for field in ProductVariation.option_fields()]
-billing_fields = Order.billing_detail_field_names()
-shipping_fields = Order.shipping_detail_field_names()
+option_fields = [f.name for f in ProductVariation.option_fields()]
+billing_fields = [f.name for f in Order._meta.fields 
+    if f.name.startswith("billing_detail")]
+shipping_fields = [f.name for f in Order._meta.fields 
+    if f.name.startswith("shipping_detail")]
 
         
 class CategoryAdmin(admin.ModelAdmin):

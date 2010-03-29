@@ -48,13 +48,6 @@ def sign(value):
     cookie for remembering address fields
     """
     return hmac.new(settings.SECRET_KEY, value, sha512).hexdigest()
-    
-def clone_model(name, model, fields, abstract=False):
-    """
-    construct a new model
-    """
-    return type(name, (model,), dict({"__module__": model.__module__, 
-        "Meta": type("Meta", (object,), {"abstract": abstract})}, **fields))
 
 def send_mail_template(subject, template, addr_from, addr_to, context=None,
     attachments=None, fail_silently=False):
