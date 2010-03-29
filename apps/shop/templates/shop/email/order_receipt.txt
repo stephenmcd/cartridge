@@ -21,6 +21,6 @@
 {{ item.quantity }} x {{ item.description }} {{ item.unit_price|currency }} {% trans "each" %}
 {% endfor %}
 
-{% order_totals "True" %}
+{% order_totals_text %}
 
 http://{{ request.get_host }}

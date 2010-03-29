@@ -114,14 +114,12 @@ def thumbnail(image_url, width, height):
         return image_url
     return thumb_url
 
-@register.inclusion_tag("shop/order_totals.html", takes_context=True)
-def order_totals(context, text_only=False):
+def _order_totals(context):
     """
     add item_total, shipping_total, discount and order_total to the include 
     context. use the order object for email receipts, or the cart object for 
     checkout
     """
-    context["text_only"] = text_only
     if "order" in context:
         context["item_total"] = context["order"].total
         context["shipping_total"] = context["order"].shipping_total
@@ -144,6 +142,20 @@ def order_totals(context, text_only=False):
         context["order_total"] -= context["discount_total"]
     return context
 
+@register.inclusion_tag("shop/order_totals.html", takes_context=True)
+def order_totals(context):
+    """
+    HTML version of order_totals.
+    """
+    return _order_totals(context)
+    
+@register.inclusion_tag("shop/order_totals.txt", takes_context=True)
+def order_totals_text(context):
+    """
+    Text version of order_totals.
+    """
+    return _order_totals(context)
+    
 def register_render_tag(renderer):
     """
     Decorator that creates a template tag using the given renderer as the 
