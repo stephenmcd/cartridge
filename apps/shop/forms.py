@@ -329,10 +329,6 @@ class CheckoutWizard(FormWizard):
             order.items.create(**item)
         cart.delete()
         
-        from_email = ORDER_FROM_EMAIL
-        if from_email is None:
-            from socket import gethostname
-            from_email = "do_not_reply@%s" % gethostname()
         order_context = {"order": order, "order_items": order.items.all(), 
             "request": request}
         for fieldset in ("billing_detail", "shipping_detail"):
@@ -340,7 +336,7 @@ class CheckoutWizard(FormWizard):
                 for f in order._meta.fields if f.name.startswith(fieldset)]
             order_context["order_%s_fields" % fieldset] = fields
         send_mail_template(_("Order Receipt"), "shop/email/order_receipt", 
-            from_email, order.billing_detail_email, context=order_context)
+            ORDER_FROM_EMAIL, order.billing_detail_email, context=order_context)
             
         return response
 
@@ -393,7 +389,7 @@ class ProductVariationAdminForm(forms.ModelForm):
         super(ProductVariationAdminForm, self).__init__(*args, **kwargs)
         self.fields["image"].queryset = self.fields["image"].queryset.filter(
             product=kwargs["instance"].product)
-    
+
 class ProductVariationAdminFormset(BaseInlineFormSet):
     """
     ensures no more than one variation is checked as default
@@ -401,8 +397,8 @@ class ProductVariationAdminFormset(BaseInlineFormSet):
     def clean(self):
         if len([f for f in self.forms if hasattr(f, "cleaned_data") and
             f.cleaned_data["default"]]) > 1:
-            raise forms.ValidationError(
-                _("Only one variation can be checked as the default."))
+            error = _("Only one variation can be checked as the default.")
+            raise forms.ValidationError(error)
 
 class DiscountAdminForm(forms.ModelForm):
 

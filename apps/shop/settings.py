@@ -4,8 +4,11 @@ throughout the shop. each should set in your project's settings module using the
 prefix SHOP_setting_name eg: SHOP_PRODUCT_OPTIONS
 """
 
+from socket import gethostname
+
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
+
 
 # number of minutes of inactivity for carts until they're abandoned
 CART_EXPIRY_MINUTES = getattr(settings, "SHOP_CART_EXPIRY_MINUTES", 30) 
@@ -35,7 +38,8 @@ PRODUCT_OPTIONS = getattr(settings, "SHOP_PRODUCT_OPTIONS", (
 ))
 
 # email address that order receipts should be emailed from
-ORDER_FROM_EMAIL = getattr(settings, "SHOP_ORDER_FROM_EMAIL", None)
+ORDER_FROM_EMAIL = getattr(settings, "SHOP_ORDER_FROM_EMAIL", 
+    "do_not_reply@%s" % gethostname())
 
 # bool to enable automatic redirecting to and from https for checkout
 SSL_ENABLED = getattr(settings, "SHOP_SSL_ENABLED", not settings.DEBUG)
