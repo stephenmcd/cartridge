@@ -9,7 +9,6 @@ This specific focus stems from the idea that every e-commerce website is differe
 Given the outline above, this document focuses on the technical architecture of Cartridge with the aim of giving you enough of an overall understanding to implement and customize it for your own e-commerce websites.
 
 .. toctree::
-	:numbered:
 	:maxdepth: 2
 	
 	overview

@@ -5,3 +5,10 @@
     style="vertical-align: middle; margin-top: -2px" />{{ super() }}
 {% endblock %}
 
+{% block extrahead %}
+{{ super() }}
+<style>
+    .bodywrapper {margin-left:300px !important;}    
+</style>
+{% endblock %}
+
