@@ -24,13 +24,14 @@ class Displayable(models.Model):
     creation and active (toggle visibility) fields
     """
 
-    class Meta:
-        abstract = True
-
     title = models.CharField(_("Title"), max_length=100)
     slug = models.SlugField(max_length=100, editable=False)
     active = models.BooleanField(_("Visible on the site"), default=False)
+
     objects = ActiveManager()
+
+    class Meta:
+        abstract = True
 
     def __unicode__(self):
         return self.title
@@ -73,28 +74,28 @@ class Displayable(models.Model):
 
 class Category(Displayable):
 
-    class Meta:
-        verbose_name = _("Category")
-        verbose_name_plural = _("Categories")
-
     image = models.ImageField(_("Image"), max_length=100, blank=True, 
         upload_to="category")
     parent = models.ForeignKey("self", blank=True, null=True, 
         related_name="children")
+
+    class Meta:
+        verbose_name = _("Category")
+        verbose_name_plural = _("Categories")
 
 class Priced(models.Model):
     """
     abstract model with unit and sale price fields - for product and variation
     """
 
-    class Meta:
-        abstract = True
-
     unit_price = MoneyField(_("Unit price"))
     sale_id = models.IntegerField(null=True)
     sale_price = MoneyField(_("Sale price"))
     sale_from = models.DateTimeField(_("Sale start"), blank=True, null=True)
     sale_to = models.DateTimeField(_("Sale end"), blank=True, null=True)
+
+    class Meta:
+        abstract = True
 
     def on_sale(self):
         """
@@ -125,10 +126,6 @@ class Product(Displayable, Priced):
     container model for a product
     """
 
-    class Meta:
-        verbose_name = _("Product")
-        verbose_name_plural = _("Products")
-
     description = models.TextField(_("Description"), blank=True)
     keywords = models.CharField(_("Keywords"), max_length=200, blank=True, 
         null=True)
@@ -136,8 +133,13 @@ class Product(Displayable, Priced):
     image = models.CharField(max_length=100, blank=True, null=True)
     categories = models.ManyToManyField(Category, blank=True, 
         related_name="products")
+
     objects = ProductManager()
     search_fields = ("title", "description", "keywords")
+
+    class Meta:
+        verbose_name = _("Product")
+        verbose_name_plural = _("Products")
 
     def copy_default_variation(self):
         """
@@ -156,13 +158,13 @@ class ProductImage(models.Model):
     images related to a product - also given a 1to1 relationship with variations
     """
     
-    class Meta:
-        verbose_name = _("Image")
-        verbose_name_plural = _("Images")
-    
     file = models.ImageField(_("Image"), upload_to="product")
     description = models.CharField(_("Description"), blank=True, max_length=100)
     product = models.ForeignKey(Product, related_name="images")
+    
+    class Meta:
+        verbose_name = _("Image")
+        verbose_name_plural = _("Images")
     
     def __unicode__(self):
         return self.description if self.description else self.file.name
@@ -173,18 +175,19 @@ class BaseProductVariation(Priced):
     dynamically created set of option fields from shop.settings.PRODUCT_OPTIONS
     """
     
-    class Meta:
-        abstract = True
-        ordering = ("default",)
-        
     product = models.ForeignKey(Product, related_name="variations")
     sku = SKUField(unique=True)
     num_in_stock = models.IntegerField(_("Number in stock"), blank=True, 
         null=True) 
     default = models.BooleanField(_("Default"))
     image = models.ForeignKey(ProductImage, null=True, blank=True)
+
     objects = ProductVariationManager()
 
+    class Meta:
+        abstract = True
+        ordering = ("default",)
+        
     def __unicode__(self):
         """
         display the option name/values for the variation
@@ -192,9 +195,6 @@ class BaseProductVariation(Priced):
         options = ", ".join(["%s: %s" % (f.name.title(), getattr(self, f.name)) 
             for f in self.option_fields() if getattr(self, f.name) is not None])
         return ("%s %s" % (self.product, options)).strip()
-        
-    def get_absolute_url(self):
-        return self.product.get_absolute_url()
     
     def save(self, *args, **kwargs):
         """
@@ -212,6 +212,9 @@ class BaseProductVariation(Priced):
                 save = True
         if save:
             self.save()
+
+    def get_absolute_url(self):
+        return self.product.get_absolute_url()
 
     @classmethod
     def option_fields(cls):
@@ -247,11 +250,6 @@ ProductVariation = type("ProductVariation", (BaseProductVariation,), _fields)
 
 class Order(models.Model):
 
-    class Meta:
-        verbose_name = _("Order")
-        verbose_name_plural = _("Orders")
-        ordering = ("-id",)
-
     billing_detail_first_name = models.CharField(_("First name"), 
         max_length=100)
     billing_detail_last_name = models.CharField(_("Last name"), max_length=100)
@@ -286,9 +284,10 @@ class Order(models.Model):
     status = models.IntegerField(_("Status"), choices=ORDER_STATUSES, 
         default=ORDER_STATUS_DEFAULT)
 
-    def billing_name(self):
-        return "%s %s" % (self.billing_detail_first_name, 
-            self.billing_detail_last_name)
+    class Meta:
+        verbose_name = _("Order")
+        verbose_name_plural = _("Orders")
+        ordering = ("-id",)
 
     def __unicode__(self):
         return "#%s %s %s" % (self.id, self.billing_name(), self.time)
@@ -301,9 +300,14 @@ class Order(models.Model):
             self.total -= self.discount_total
         super(Order, self).save(*args, **kwargs)
 
+    def billing_name(self):
+        return "%s %s" % (self.billing_detail_first_name, 
+            self.billing_detail_last_name)
+
 class Cart(models.Model):
 
     last_updated = models.DateTimeField(_("Last updated"), auto_now=True)
+
     objects = CartManager()
 
     def __iter__(self):
@@ -364,15 +368,15 @@ class SelectedProduct(models.Model):
     abstract model representing a "selected" product in a cart or order
     """
 
-    class Meta:
-        abstract = True
-        
     sku = SKUField()
     description = models.CharField(_("Description"), max_length=200)
     quantity = models.IntegerField(_("Quantity"), default=0)
     unit_price = MoneyField(_("Unit price"), default=Decimal("0"))
     total_price = MoneyField(_("Total price"), default=Decimal("0"))
     
+    class Meta:
+        abstract = True
+        
     def __unicode__(self):
         return ""
     
@@ -397,15 +401,16 @@ class ProductAction(models.Model):
     records an incremental value for an action against a product such as adding 
     to cart or purchasing, for sales reporting and calculating popularity
     """
-
-    class Meta:
-        unique_together = ("product", "timestamp")
         
     product = models.ForeignKey(Product, related_name="actions")
     timestamp = models.IntegerField()
     total_cart = models.IntegerField(default=0)
     total_purchase = models.IntegerField(default=0)
+
     objects = ProductActionManager()
+
+    class Meta:
+        unique_together = ("product", "timestamp")
 
 class Discount(models.Model):
     """
@@ -413,9 +418,6 @@ class Discount(models.Model):
     well as a date range they're applicable for, and the products and products 
     in categories that the reduction is applicable for
     """
-    
-    class Meta:
-        abstract = True
 
     title = models.CharField(max_length=100)
     active = models.BooleanField(_("Active"))
@@ -427,6 +429,9 @@ class Discount(models.Model):
     discount_exact = MoneyField(_("Reduce to amount"))
     valid_from = models.DateTimeField(_("Valid from"), blank=True, null=True)
     valid_to = models.DateTimeField(_("Valid to"), blank=True, null=True)
+
+    class Meta:
+        abstract = True
 
     def __unicode__(self):
         return self.title
@@ -449,15 +454,6 @@ class Sale(Discount):
     class Meta:
         verbose_name = _("Sale")
         verbose_name_plural = _("Sales")
-    
-    def _clear(self):
-        """
-        clears previously applied sale field values from products prior to 
-        updating the sale, when deactivating it or deleting it
-        """
-        for priced_model in (Product, ProductVariation):
-            priced_model.objects.filter(sale_id=self.id).update(sale_id=None, 
-                sale_from=None, sale_to=None, sale_price=None)
     
     def save(self, *args, **kwargs):
         """
@@ -492,6 +488,15 @@ class Sale(Discount):
         self._clear()
         super(Sale, self).delete(*args, **kwargs)
 
+    def _clear(self):
+        """
+        clears previously applied sale field values from products prior to 
+        updating the sale, when deactivating it or deleting it
+        """
+        for priced_model in (Product, ProductVariation):
+            priced_model.objects.filter(sale_id=self.id).update(sale_id=None, 
+                sale_from=None, sale_to=None, sale_price=None)
+    
 class DiscountCode(Discount):
     """
     a code that can be entered at the checkout process to have a discount 
@@ -501,6 +506,7 @@ class DiscountCode(Discount):
     code = DiscountCodeField(_("Code"), unique=True)
     min_purchase = MoneyField(_("Minimum total purchase"))
     free_shipping = models.BooleanField(_("Free shipping"))
+
     objects = DiscountCodeManager()
     
     def calculate(self, amount):
