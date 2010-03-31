@@ -87,6 +87,7 @@ MEDIA_ROOT = os.path.join(project_path, MEDIA_URL.strip("/"))
 TEMPLATE_DIRS = (os.path.join(project_path, "templates"),)
 ADMIN_MEDIA_PREFIX = "/media/"
 ROOT_URLCONF = "%s.urls" % project_dir
+CACHE_MIDDLEWARE_KEY_PREFIX = project_dir
 if DATABASE_ENGINE == "sqlite3":
     DATABASE_NAME = os.path.join(project_path, DATABASE_NAME)
 
