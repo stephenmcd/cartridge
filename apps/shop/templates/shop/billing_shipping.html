@@ -41,6 +41,9 @@ $(function() {
 	<ul id="shipping_fields">{{ form.shipping_detail_fields.as_ul }}</ul>
 	<ul>{{ form.additional_instructions_field.as_ul }}</ul>
 </fieldset>
+{% if has_payment_fields %}
+{% include "shop/payment_fields.html" %}
+{% endif %}
 <ul class="checkbox">{{ form.remember_field.as_ul }}</ul>
 <ul>{{ form.other_fields.as_ul }}</ul>
 {% endif %}

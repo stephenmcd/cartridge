@@ -17,6 +17,12 @@ CARD_TYPES = getattr(settings, "SHOP_CARD_TYPES",
 # number of minutes of inactivity for carts until they're abandoned
 CART_EXPIRY_MINUTES = getattr(settings, "SHOP_CART_EXPIRY_MINUTES", 30) 
 
+# If True the checkout process is split into two - billing/shipping and payment.
+CHECKOUT_STEPS_SPLIT = True
+
+# If True the checkout process has a final confirmation step before completion.
+CHECKOUT_STEPS_CONFIRMATION = False
+
 # controls the display formatting of monetary values accord to the locale 
 # module in the python standard library
 CURRENCY_LOCALE = getattr(settings, "SHOP_CURRENCY_LOCALE", "")

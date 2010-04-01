@@ -8,7 +8,7 @@ from django.utils.datastructures import SortedDict
 
 from shop.models import Category
 from shop.utils import set_locale
-from shop.settings import ADMIN_REORDER
+from shop.settings import ADMIN_REORDER, CHECKOUT_STEPS_SPLIT
 
 
 register = template.Library()
@@ -201,6 +201,8 @@ def order_fields(context, token):
     fields = []
     for i, form in enumerate((OrderForm, PaymentForm)):
         for k, v in form.base_fields.items():
+            if not CHECKOUT_STEPS_SPLIT:
+                i = 0
             fields.append((v.label, 
                 context["request"].session["checkout_step_%s" % i][k]))
     context[token.split_contents()[2]] = fields

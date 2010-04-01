@@ -3,19 +3,7 @@
 
 {% block fields %}
 {% if cart.has_items %}
-<fieldset>
-	<legend>{% trans "Payment Details" %}</legend>
-	<ul id="card-fields">
-		{{ form.card_name_field.as_ul }}
-		{{ form.card_type_field.as_ul }}
-		{{ form.card_type_field.as_ul }}
-		<li>
-			<label>{% trans "Expiry" %}:</label>
-			{{ form.card_expiry_fields.as_p }}
-		</li>
-		{{ form.other_fields.as_ul }}
-	</ul>
-</fieldset>
+{% include "shop/payment_fields.html" %}
 {% endif %}
 {% endblock %}
 

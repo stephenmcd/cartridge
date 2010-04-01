@@ -9,18 +9,31 @@ from django.utils import simplejson
 from django.utils.translation import ugettext as _
 
 from shop.models import Category, Product, ProductVariation, Cart
-from shop.forms import get_add_product_form, CheckoutWizard, OrderForm, \
-    PaymentForm
-from shop.settings import SEARCH_RESULTS_PER_PAGE
+from shop.forms import CheckoutWizard, OrderForm, PaymentForm, \
+    get_add_product_form
+from shop.settings import SEARCH_RESULTS_PER_PAGE, CHECKOUT_STEPS_SPLIT, \
+    CHECKOUT_STEPS_CONFIRMATION
 from shop.utils import set_cookie
 
 
+# Fall back to authenticated-only messaging if messages app is unavailable.
 try:
     from django.contrib.messages import info 
 except ImportError:
     def info(request, message, fail_silently=True):
         if request.user.is_authenticated():
             request.user.message_set.create(message=message)
+
+# Build the list of checkout steps for the checkout wizard based on settings
+if CHECKOUT_STEPS_SPLIT:
+    _checkout_steps = [OrderForm, PaymentForm]
+else:
+    # Combined billing/shipping and payment form.
+    _checkout_steps = [type("SingleCheckoutForm", (OrderForm, PaymentForm), {})]
+if CHECKOUT_STEPS_CONFIRMATION:
+    # Dummy form without fields for the confirmation step,
+    _checkout_steps.append(Form)
+    
 
 def paginate(objects, page_num, per_page):
     """
@@ -140,7 +153,9 @@ def checkout(request):
     created for every request so it is thread-safe, since the wizard stores 
     the current request internally.
     """
-    return CheckoutWizard([OrderForm, PaymentForm, Form])(request)
+
+    return CheckoutWizard(_checkout_steps)(request, 
+        extra_context={"has_payment_fields": not CHECKOUT_STEPS_SPLIT})
 
 def complete(request, template="shop/complete.html"):
     """

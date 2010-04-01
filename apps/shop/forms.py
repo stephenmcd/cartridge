@@ -10,6 +10,7 @@ from django.forms.models import BaseModelForm, BaseInlineFormSet
 from django.contrib.formtools.wizard import FormWizard
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.db.models import Model
 from django.http import HttpResponseRedirect, QueryDict
 from django.utils.datastructures import SortedDict
 from django.utils.safestring import mark_safe
@@ -18,9 +19,10 @@ from django.utils.translation import ugettext_lazy as _
 from shop.models import Product, ProductVariation, SelectedProduct, \
     Cart, Order, DiscountCode
 from shop.exceptions import CheckoutError
-from shop.settings import CARD_TYPES, ORDER_FROM_EMAIL
+from shop.settings import CARD_TYPES, ORDER_FROM_EMAIL, CHECKOUT_STEPS_SPLIT, \
+    CHECKOUT_STEPS_CONFIRMATION
 from shop.templatetags.shop_tags import thumbnail
-from shop import checkout
+from shop.checkout import billing_shipping, payment
 from shop.utils import make_choices, send_mail_template, set_locale, \
     set_cookie, sign
 
@@ -140,27 +142,35 @@ class FormsetForm(object):
                 return self._fieldset(filter_func(*filter_args.groups()))
         raise AttributeError(name)
 
-class CheckoutStep(FormsetForm):
+class DummyModel(Model):
+    pass
+
+class CheckoutStep(FormsetForm, forms.ModelForm):
     """
     checkout step providing hooks for custom handlers via clean
     """
+
+    class Meta:
+        model = DummyModel
 
     def clean(self):
         """
         call custom handler for step as well as storing the form data for the 
         step in the session for pre-populating
         """
-        try:
-            self._step_handler(self._request, self)
-        except CheckoutError, e:
-            raise forms.ValidationError(e)
+        if not getattr(self, "_step_handled", False):
+            self._step_handled = True
+            try:
+                self._step_handler(self._request, self)
+            except CheckoutError, e:
+                raise forms.ValidationError(e)
         cleaned_data = super(CheckoutStep, self).clean()
         self._request.session["checkout_step_%s" % self._step] = cleaned_data
         return cleaned_data
 
-class OrderForm(CheckoutStep, forms.ModelForm):
+class OrderForm(CheckoutStep):
     """
-    model form for order with billing and shipping details - step 1 of checkout
+    Checkout Step Form for billing and shipping details.
     """
     
     same_billing_shipping = forms.BooleanField(required=False, 
@@ -208,10 +218,11 @@ class OrderForm(CheckoutStep, forms.ModelForm):
                 cart.total_price())
         return code
         
-class PaymentForm(CheckoutStep, forms.Form):
+class PaymentForm(CheckoutStep):
     """
-    credit card details form - step 2 of checkout
-    """    
+    Checkout Step form for credit card details.
+    """
+
     card_name = forms.CharField(label=_("Cardholder name"))
     card_type = forms.ChoiceField(label=_("Type"), 
         choices=make_choices(CARD_TYPES))
@@ -229,17 +240,13 @@ class PaymentForm(CheckoutStep, forms.Form):
         year = datetime.now().year
         choices = make_choices(range(year, year + 21))
         self.fields["card_expiry_year"].choices = choices
-
+    
 class CheckoutWizard(FormWizard):
     """
     combine the two checkout step forms into a form wizard - using parse_params
     and get_form, pass the request object to each form so that it can be sent 
     on to each of the custom handlers in the checkout module
     """
-
-    # these correspond to the custom checkout handler names in the checkout
-    # module for each step as well as the template names for each step
-    step_names = ("billing_shipping", "payment", "confirmation")
 
     def parse_params(self, request, *args, **kwargs):
         """
@@ -253,12 +260,11 @@ class CheckoutWizard(FormWizard):
         for the form
         """
         initial = self.initial.get(step, None)
-        step_name = self.step_names[int(step)]
-        if step_name != "payment":
+        if step == 0:
             initial = self._request.session.get("checkout_step_%s" % step, None)
             # look up the billing/shipping address fields from the last order 
             # if "remember my details" was checked
-            if step_name == "billing_shipping" and initial is None:
+            if initial is None:
                 initial = {"same_billing_shipping": True}
                 parts = self._request.COOKIES.get("remember", "").split(":")
                 if len(parts) == 2 and parts[0] == sign(parts[1]): 
@@ -278,12 +284,21 @@ class CheckoutWizard(FormWizard):
             prefix=self.prefix_for_step(step))
         form._request = self._request
         form._step = step
-        form._step_handler = getattr(checkout, self.step_names[int(step)], 
-            lambda *args: None)
+        if step == 0:
+            form._step_handler = billing_shipping
+        elif step == self.num_steps() - 1:
+            form._step_handler = payment
+        else:
+            form._step_handler = lambda *args: None
         return form
         
     def get_template(self, step):
-        return "shop/%s.html" % self.step_names[int(step)]
+        templates = ["billing_shipping"]
+        if CHECKOUT_STEPS_SPLIT:
+            templates.append("payment")
+        if CHECKOUT_STEPS_CONFIRMATION:
+            templates.append("confirmation")
+        return "shop/%s.html" % templates[int(step)]
 
     def done(self, request, form_list):
         """
