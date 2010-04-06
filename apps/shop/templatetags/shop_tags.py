@@ -195,16 +195,3 @@ def admin_reorder(context, token):
                 sort(model_order, model["admin_url"].strip("/").split("/")[-1]))
     return ""
 
-@register_render_tag
-def order_fields(context, token):
-    from shop.forms import OrderForm, PaymentForm
-    fields = []
-    for i, form in enumerate((OrderForm, PaymentForm)):
-        for k, v in form.base_fields.items():
-            if not CHECKOUT_STEPS_SPLIT:
-                i = 0
-            fields.append((v.label, 
-                context["request"].session["checkout_step_%s" % i][k]))
-    context[token.split_contents()[2]] = fields
-    return ""
-    

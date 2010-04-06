@@ -8,12 +8,14 @@ from django.http import HttpResponseRedirect
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
 
+from shop.forms import OrderForm, get_add_product_form
+from shop.checkout import billing_shipping, payment, initial_order_data, \
+    send_order_email, CheckoutError, CHECKOUT_STEP_FIRST, CHECKOUT_STEP_LAST, \
+    CHECKOUT_TEMPLATES
+from shop.exceptions import PaymentError
 from shop.models import Category, Product, ProductVariation, Cart
-from shop.forms import CheckoutWizard, OrderForm, PaymentForm, \
-    get_add_product_form
-from shop.settings import SEARCH_RESULTS_PER_PAGE, CHECKOUT_STEPS_SPLIT, \
-    CHECKOUT_STEPS_CONFIRMATION
-from shop.utils import set_cookie
+from shop.utils import set_cookie, send_mail_template, sign
+from shop.settings import SEARCH_RESULTS_PER_PAGE, CHECKOUT_STEPS_SPLIT, CHECKOUT_STEPS_CONFIRMATION
 
 
 # Fall back to authenticated-only messaging if messages app is unavailable.
@@ -23,16 +25,6 @@ except ImportError:
     def info(request, message, fail_silently=True):
         if request.user.is_authenticated():
             request.user.message_set.create(message=message)
-
-# Build the list of checkout steps for the checkout wizard based on settings
-if CHECKOUT_STEPS_SPLIT:
-    _checkout_steps = [OrderForm, PaymentForm]
-else:
-    # Combined billing/shipping and payment form.
-    _checkout_steps = [type("SingleCheckoutForm", (OrderForm, PaymentForm), {})]
-if CHECKOUT_STEPS_CONFIRMATION:
-    # Dummy form without fields for the confirmation step,
-    _checkout_steps.append(Form)
     
 
 def paginate(objects, page_num, per_page):
@@ -149,13 +141,71 @@ def cart(request, template="shop/cart.html"):
 
 def checkout(request):
     """
-    Wraps the checkout wizard into a view function so that the wizard is 
-    created for every request so it is thread-safe, since the wizard stores 
-    the current request internally.
+    Display the order form and handle processing of each step.
     """
+    step = int(request.POST.get("step", CHECKOUT_STEP_FIRST))
+    initial = initial_order_data(request)
+    form = OrderForm(request, step, initial=initial)
+    data = request.POST
 
-    return CheckoutWizard(_checkout_steps)(request, 
-        extra_context={"has_payment_fields": not CHECKOUT_STEPS_SPLIT})
+    if request.POST.get("back", ""):
+        step -= 1
+        form = OrderForm(request, step, initial=initial)
+    elif request.method == "POST":
+        form = OrderForm(request, step, initial=initial, data=data)
+        if form.is_valid():
+            checkout_errors = []
+            request.session["order"] = dict(form.cleaned_data)
+            for field in ("card_number", "card_expiry_month", 
+                "card_expiry_year", "card_ccv"):
+                del request.session["order"][field]
+
+            # Handle shipping and discount code on first step.
+            if step == CHECKOUT_STEP_FIRST:
+                try:
+                    billing_shipping(request, form)
+                except CheckoutError, e:
+                    checkout_errors.append(e)
+                if hasattr(form, "discount"):
+                    cart = Cart.objects.from_request(request)
+                    discount_total = discount.calculate(cart.total_price())
+                    request.session["free_shipping"] = discount.free_shipping
+                    request.session["discount_total"] = discount_total
+
+            # Process order on final step.
+            if step == CHECKOUT_STEP_LAST and not checkout_errors:
+                try:
+                    payment(request, form)
+                except CheckoutError, e:
+                    checkout_errors.append(e)
+                    if CHECKOUT_STEPS_CONFIRMATION:
+                        step -= 1
+                else:    
+                    order = form.save(commit=False)
+                    order.process(request)
+                    send_order_email(request, order)
+                    response = HttpResponseRedirect(reverse("shop_complete"))
+                    if form.cleaned_data.get("remember", False):
+                        remembered = "%s:%s" % (sign(order.key), order.key)
+                        set_cookie(response, "remember", remembered, 
+                            secure=request.is_secure())
+                    else:
+                        response.delete_cookie("remember")
+                    return response
+
+            # Assign checkout errors to new form if any and re-run is_valid 
+            # if valid set form to next step.
+            form = OrderForm(request, step, initial=initial, data=data)
+            form.checkout_errors = checkout_errors
+            if form.is_valid():
+                step += 1
+                form = OrderForm(request, step, initial=initial)
+            
+    template = "shop/%s.html" % CHECKOUT_TEMPLATES[step - 1]
+    return render_to_response(template, {"form": form, 
+        "CHECKOUT_STEPS_SPLIT": CHECKOUT_STEPS_SPLIT, 
+        "CHECKOUT_STEP_FIRST": step == CHECKOUT_STEP_FIRST}, 
+        RequestContext(request))
 
 def complete(request, template="shop/complete.html"):
     """

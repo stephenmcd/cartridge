@@ -3,11 +3,10 @@
 
 {% block fields %}
 {% if cart.has_items %}
-
-{% order_fields as fields %}
-{% for field, value in fields %}
+{% for field, value in form.values %}
 {{ field }}: {{ value }}<br />
 {% endfor %}
+{% for field in form %}{{ field }}{% endfor %}
 {% endif %}
 {% endblock %}
 

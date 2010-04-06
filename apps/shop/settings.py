@@ -9,6 +9,7 @@ from socket import gethostname
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
+
 # sequence of available credit card types for payment
 CARD_TYPES = getattr(settings, "SHOP_CARD_TYPES", 
     ("Mastercard", "Visa", "Diners", "Amex")
@@ -21,7 +22,7 @@ CART_EXPIRY_MINUTES = getattr(settings, "SHOP_CART_EXPIRY_MINUTES", 30)
 CHECKOUT_STEPS_SPLIT = True
 
 # If True the checkout process has a final confirmation step before completion.
-CHECKOUT_STEPS_CONFIRMATION = False
+CHECKOUT_STEPS_CONFIRMATION = True
 
 # controls the display formatting of monetary values accord to the locale 
 # module in the python standard library

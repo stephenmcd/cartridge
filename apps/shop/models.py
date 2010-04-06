@@ -304,6 +304,37 @@ class Order(models.Model):
         return "%s %s" % (self.billing_detail_first_name, 
             self.billing_detail_last_name)
 
+    def process(self, request):
+        """
+        Process a successful order
+        """
+        cart = Cart.objects.from_request(request)
+        # Get fields fields from session and remove order details from session.
+        for field in ("shipping_type", "shipping_total", "discount_total"):
+            if field in request.session:
+                setattr(self, field, request.session[field])
+                del request.session[field]
+        del request.session["order"]
+        # Set final fields and save.
+        self.item_total = cart.total_price()
+        self.key = request.session.session_key
+        self.save()
+        # Copy items from cart and delete the cart.
+        for item in cart:
+            try:
+                variation = ProductVariation.objects.get(sku=item.sku)
+            except ProductVariation.DoesNotExist:
+                pass
+            else:
+                if variation.num_in_stock is not None:
+                    variation.num_in_stock -= item.quantity
+                    variation.save()
+                variation.product.actions.purchased()
+            fields = [f.name for f in SelectedProduct._meta.fields]
+            item = dict([(f, getattr(item, f)) for f in fields])
+            self.items.create(**item)
+        cart.delete()
+
 class Cart(models.Model):
 
     last_updated = models.DateTimeField(_("Last updated"), auto_now=True)

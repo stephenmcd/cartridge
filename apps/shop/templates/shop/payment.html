@@ -4,6 +4,7 @@
 {% block fields %}
 {% if cart.has_items %}
 {% include "shop/payment_fields.html" %}
+{{ form.other_fields.as_ul }}
 {% endif %}
 {% endblock %}
 

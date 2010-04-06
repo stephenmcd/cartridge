@@ -6,16 +6,31 @@
 {% block main %}
 
 {% order_totals %}
+<form method="post" id="checkout-form">
 
-<form method="post" id="checkout_form">
+	{% with form.non_field_errors as errors %}
+	    {% if errors or form.errors %}
+	    <ul class="errorlist">
+	        {% for error in errors %}
+	        <li>{{ error }}</li>
+	        {% empty %}
+            <li>Please correct the errors below.</li>
+            {% endfor %}
+	    </ul>
+	    {% endif %}
+	{% endwith %}
+
 	{% block fields %}{% endblock %}
-	{{ previous_fields|safe }}
+
 	{% if cart.has_items %}
-	<input type="hidden" name="{{ step_field }}" value="{{ step0 }}" />
-	<input type="submit" class="button" value="Next" />
+	    <input type="submit" class="button" value="{% trans "Next" %}" />
+	    {% if not CHECKOUT_STEP_FIRST %}
+	    <input type="submit" class="button" name="back" value="{% trans "Back" %}" />
+	    {% endif %}
 	{% else %} 
-	<p>{% trans "Your cart is empty." %}</p>
+    	<p>{% trans "Your cart is empty." %}</p>
 	{% endif %}
+
 </form>
 
 {% endblock %}

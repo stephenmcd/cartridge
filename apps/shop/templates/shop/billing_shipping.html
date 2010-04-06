@@ -6,16 +6,16 @@
 <script type="text/javascript">
 $(function() {
 
-	var sameShipping = $('#id_0-same_billing_shipping');
+	var sameShipping = $('#id_same_billing_shipping');
 	
 	// prepopulate shipping fields with billing values if "same as" checkbox 
 	// checked by iterating the billing fields, mapping each billing field name  
 	// to the shipping field name and setting its value
-	$('#checkout_form').submit(function() {
+	$('#checkout-form').submit(function() {
 		if (sameShipping.attr('checked')) {
-			$('input[name^=0-billing_]').each(function() {
-				$('input[name=' + this.name.replace('0-billing_', 
-					'0-shipping_') + ']').attr('value', this.value);
+			$('input[name^=billing_]').each(function() {
+				var shippingName = this.name.replace('billing_', 'shipping_');
+				$('input[name=' + shippingName + ']').attr('value', this.value);
 			});
 		}
 	});
@@ -41,7 +41,7 @@ $(function() {
 	<ul id="shipping_fields">{{ form.shipping_detail_fields.as_ul }}</ul>
 	<ul>{{ form.additional_instructions_field.as_ul }}</ul>
 </fieldset>
-{% if has_payment_fields %}
+{% if not CHECKOUT_STEPS_SPLIT %}
 {% include "shop/payment_fields.html" %}
 {% endif %}
 <ul class="checkbox">{{ form.remember_field.as_ul }}</ul>

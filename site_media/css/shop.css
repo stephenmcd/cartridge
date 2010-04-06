@@ -84,6 +84,7 @@ fieldset li {display:block; clear:both; padding:3px;}
 #card-fields p {float:left; margin:0;}
 #card-fields p label {display:none;}
 #card-fields p select {margin:0 0 5px 10px;}
+#checkout-form .button {float:right; margin-left:10px;}
 
 /* checkout totals */
 .order-totals {text-align:right;}
