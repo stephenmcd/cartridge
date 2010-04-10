@@ -194,8 +194,6 @@ class OrderForm(FormsetForm, forms.ModelForm):
                 if "shipping_detail" in field and billing in data:
                     data[field] = data[billing]
 
-        self._request = request
-        self.checkout_errors = []
         if initial is not None:
             initial["step"] = step
         # Force the specified step in the posted data - this is required to
@@ -205,6 +203,8 @@ class OrderForm(FormsetForm, forms.ModelForm):
             data["step"] = step
             
         super(OrderForm, self).__init__(data=data, initial=initial)
+        self._request = request
+        self.checkout_errors = []
 
         # Determine which sets of fields to hide for each checkout step.
         hidden = None

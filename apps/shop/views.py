@@ -12,7 +12,6 @@ from shop.forms import OrderForm, get_add_product_form
 from shop.checkout import billing_shipping, payment, initial_order_data, \
     send_order_email, CheckoutError, CHECKOUT_STEP_FIRST, CHECKOUT_STEP_LAST, \
     CHECKOUT_TEMPLATES
-from shop.exceptions import PaymentError
 from shop.models import Category, Product, ProductVariation, Cart
 from shop.utils import set_cookie, send_mail_template, sign
 from shop.settings import SEARCH_RESULTS_PER_PAGE, CHECKOUT_STEPS_SPLIT, CHECKOUT_STEPS_CONFIRMATION
