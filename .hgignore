@@ -4,4 +4,5 @@ syntax: glob
 *.pyo
 site_media/product/*
 site_media/category/*
+shop/migrations/*
 docs/out/*

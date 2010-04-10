@@ -45,3 +45,13 @@ class DiscountCodeField(CharField):
         defaults = {"max_length": 20}
         defaults.update(kwargs)
         super(DiscountCodeField, self).__init__(*args, **defaults)
+        
+# South requires custom fields to be given "rules".
+# See http://south.aeracode.org/docs/customfields.html
+try:
+    from south.modelsinspector import add_introspection_rules
+    add_introspection_rules(rules=[((OptionField, MoneyField, SKUField, 
+        DiscountCodeField), [], {})], patterns=["shop\.fields\."])
+except ImportError:
+    pass
+
