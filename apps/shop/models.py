@@ -274,6 +274,7 @@ class Order(models.Model):
         blank=True)
     time = models.DateTimeField(_("Time"), auto_now_add=True)
     key = models.CharField(max_length=40)
+    user_id = models.IntegerField(blank=True, null=True)
     shipping_type = models.CharField(_("Shipping type"), max_length=50, 
         blank=True)
     shipping_total = MoneyField(_("Shipping total"))
@@ -318,6 +319,7 @@ class Order(models.Model):
         # Set final fields and save.
         self.item_total = cart.total_price()
         self.key = request.session.session_key
+        self.user_id = request.user.id    
         self.save()
         # Copy items from cart and delete the cart.
         for item in cart:

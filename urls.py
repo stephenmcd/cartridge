@@ -1,6 +1,6 @@
 
 from django import VERSION
-from django.conf.urls.defaults import patterns, url, include
+from django.conf.urls.defaults import patterns, include
 from django.contrib import admin
 from django.conf import settings
 from django.views.generic.simple import direct_to_template
@@ -9,9 +9,9 @@ from django.views.generic.simple import direct_to_template
 admin.autodiscover()
 
 if VERSION[0] == 1 and VERSION[1] == 0:
-	admin_pattern = ("^admin/(.*)", admin.site.root)
+    admin_pattern = ("^admin/(.*)", admin.site.root)
 else:
-	admin_pattern = ("^admin/", include(admin.site.urls))
+    admin_pattern = ("^admin/", include(admin.site.urls))
 
 urlpatterns = patterns("",
     admin_pattern,

@@ -1,0 +1,27 @@
+{% extends "shop/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Login / Signup" %}{% endblock %}
+
+{% block main %}
+
+<fieldset class="login-signup">
+	<legend>{% trans "Login" %}</legend>
+    <form method="post">
+	<ul>{{ login_form.as_ul }}</ul>
+	<input class="button" type="submit" 
+	    name="login" value="{% trans "Login" %}" />
+    </form>
+</fieldset>
+
+<fieldset class="login-signup">
+	<legend>{% trans "Signup" %}</legend>
+    <form method="post">
+	<ul>{{ signup_form.as_ul }}</ul>
+	<input class="button" type="submit" 
+	    name="signup" value="{% trans "Signup" %}" />
+    </form>
+</fieldset>
+
+{% endblock %}
+

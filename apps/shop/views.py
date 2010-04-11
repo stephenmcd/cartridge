@@ -1,20 +1,24 @@
 
-from django.shortcuts import render_to_response, get_object_or_404
-from django.template import RequestContext
+from django.conf import settings
+from django.contrib.auth import logout as auth_logout
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.forms import Form
 from django.http import HttpResponseRedirect
+from django.shortcuts import render_to_response, get_object_or_404
+from django.template import RequestContext
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
 
-from shop.forms import OrderForm, get_add_product_form
 from shop.checkout import billing_shipping, payment, initial_order_data, \
     send_order_email, CheckoutError, CHECKOUT_STEP_FIRST, CHECKOUT_STEP_LAST, \
     CHECKOUT_TEMPLATES
+from shop.forms import get_add_product_form, OrderForm, LoginForm, SignupForm
 from shop.models import Category, Product, ProductVariation, Cart
+from shop.settings import SEARCH_RESULTS_PER_PAGE, CHECKOUT_STEPS_SPLIT, \
+    CHECKOUT_STEPS_CONFIRMATION, CHECKOUT_ACCOUNT_ENABLED, \
+    CHECKOUT_ACCOUNT_REQUIRED, LOGIN_URL
 from shop.utils import set_cookie, send_mail_template, sign
-from shop.settings import SEARCH_RESULTS_PER_PAGE, CHECKOUT_STEPS_SPLIT, CHECKOUT_STEPS_CONFIRMATION
 
 
 # Fall back to authenticated-only messaging if messages app is unavailable.
@@ -138,10 +142,53 @@ def cart(request, template="shop/cart.html"):
         return HttpResponseRedirect(reverse("shop_cart"))
     return render_to_response(template, {}, RequestContext(request))
 
+def account(request, template="shop/account.html"):
+    """
+    Display and handle both the login and signup forms.
+    """
+    login_form = LoginForm()
+    signup_form = SignupForm()
+    if request.method == "POST":
+        posted_form = None
+        message = ""
+        if request.POST.get("login", ""):
+            login_form = LoginForm(request.POST)
+            if login_form.is_valid():
+                posted_form = login_form
+                message = _("Successfully logged in")
+        else:
+            signup_form = SignupForm(request.POST)
+            if signup_form.is_valid():
+                signup_form.save()
+                posted_form = signup_form
+                message = _("Successfully signed up")
+        if posted_form is not None:
+            posted_form.login(request)
+            info(request, message, fail_silently=True)
+            return HttpResponseRedirect(request.GET.get("next", "/"))
+    return render_to_response(template, {"login_form": login_form, 
+        "signup_form": signup_form}, RequestContext(request))
+
+def logout(request):
+    """
+    Log the user out.
+    """
+    auth_logout(request)
+    info(request, _("Successfully logged out"), fail_silently=True)
+    return HttpResponseRedirect(request.GET.get("next", "/"))
+
 def checkout(request):
     """
     Display the order form and handle processing of each step.
     """
+    
+    # Do authentication check here rather than using standard login_required
+    # decorator. This means we can check for a custom LOGIN_URL and fall back
+    # to our own login view.
+    if CHECKOUT_ACCOUNT_REQUIRED and not request.user.is_authenticated():
+        login_url = "%s?next=%s" % (LOGIN_URL, reverse("shop_checkout"))
+        return HttpResponseRedirect(login_url)
+    
     step = int(request.POST.get("step", CHECKOUT_STEP_FIRST))
     initial = initial_order_data(request)
     form = OrderForm(request, step, initial=initial)
@@ -201,10 +248,8 @@ def checkout(request):
                 form = OrderForm(request, step, initial=initial)
             
     template = "shop/%s.html" % CHECKOUT_TEMPLATES[step - 1]
-    return render_to_response(template, {"form": form, 
-        "CHECKOUT_STEPS_SPLIT": CHECKOUT_STEPS_SPLIT, 
-        "CHECKOUT_STEP_FIRST": step == CHECKOUT_STEP_FIRST}, 
-        RequestContext(request))
+    return render_to_response(template, {"form": form, "CHECKOUT_STEP_FIRST": 
+        step == CHECKOUT_STEP_FIRST}, RequestContext(request))
 
 def complete(request, template="shop/complete.html"):
     """

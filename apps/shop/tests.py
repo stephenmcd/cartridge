@@ -2,11 +2,12 @@
 from decimal import Decimal
 from operator import mul
 
-from django.test import TestCase
 from django.core.urlresolvers import reverse
+from django.test import TestCase
 
 from shop.models import Product, ProductVariation, Category, Cart, CartItem
-from shop.settings import PRODUCT_OPTIONS
+from shop.settings import PRODUCT_OPTIONS, CHECKOUT_ACCOUNT_ENABLED, \
+    CHECKOUT_ACCOUNT_REQUIRED
 
 
 class ShopTests(TestCase):
@@ -32,14 +33,20 @@ class ShopTests(TestCase):
         self.assertEqual(response.status_code, 200)
         # checkout
         response = self.client.get(reverse("shop_checkout"))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200 if not 
+            CHECKOUT_ACCOUNT_REQUIRED else 302)
+        # Login
+        if CHECKOUT_ACCOUNT_ENABLED:
+            response = self.client.get(reverse("shop_account"))
+            self.assertEqual(response.status_code, 200)
 
     def test_variations(self):
         """
         test creation of variations from options, and management of empty 
         variations
         """
-        total_variations = reduce(mul, [len(opts[1]) for opts in PRODUCT_OPTIONS])
+        total_variations = reduce(mul, [len(opts[1]) 
+            for opts in PRODUCT_OPTIONS])
         # clear variations
         self._product.variations.all().delete()
         self.assertEqual(self._product.variations.count(), 0)

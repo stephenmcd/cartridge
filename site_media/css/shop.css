@@ -49,6 +49,7 @@ input, select {font-size:.8em; margin:0 10px;}
 #search-form input {border:1px solid #ccc; margin:0; font-size:120%; 
 	border-radius:4px;}
 #search-form .button {padding:1px 10px;}
+#account {text-align:right; font-size:70%; margin:5px;}
 
 /* add to cart form */
 #add-cart {background:#ddd; padding:10px 20px; width:auto; white-space:nowrap;}
@@ -61,6 +62,10 @@ input, select {font-size:.8em; margin:0 10px;}
 #search-results .img {width:78px; height:78px; float:left; margin:0 10px 0 0; 
 	padding:0; background:#eee;}
 #search-results img {margin:7px;}
+
+/* login / signup */
+.login-signup {float:left; width:250px; margin-right:10px;}
+.login-signup .button {float:right; margin-top:10px;}
 
 /* cart/wishlist items table */
 #items {width:100%;}

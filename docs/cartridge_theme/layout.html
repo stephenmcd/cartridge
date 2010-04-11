@@ -7,8 +7,11 @@
 
 {% block extrahead %}
 {{ super() }}
-<style>
-    .bodywrapper {margin-left:300px !important;}    
-</style>
+<script>
+    var parts = location.pathname.split('/');
+    if (parts[parts.length - 1] == 'configuration.html') {
+        document.write('<style>.bodywrapper {margin-left:330px !important;}</style>');
+    }
+</script>
 {% endblock %}
 

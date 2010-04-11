@@ -30,6 +30,18 @@
 	<form id="search-form" method="post" action="{% url shop_search %}">
 		<input type="text" name="query" value="{{ request.REQUEST.query }}" />
 		<input type="submit" class="button" value="{% trans "Search" %}" />
+		{% if CHECKOUT_ACCOUNT_ENABLED %}
+		<p id="account">
+		    {% if request.user.is_authenticated %}
+		    {% trans "Logged in as: " %}{{ request.user.username }} / 
+		    <a href="{% url shop_logout %}?next={{ request.path }}"
+		        >{% trans "Log out" %}</a>
+		    {% else %}
+		    <a href="{{ LOGIN_URL }}?next={{ request.path }}"
+		        >{% trans "Log in or sign up" %}</a>
+		    {% endif %}
+		 </p>
+		 {% endif %}
 	</form>
 	
 	<div id="cart-panel">

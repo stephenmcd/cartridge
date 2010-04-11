@@ -34,25 +34,30 @@ def payment(request, order_form):
 def initial_order_data(request):
     """
     Return the initial data for the order form - favor request.POST, then 
-    session, then previous order cookie set with "remember my details".
+    session, then last order from either logged in user or from previous order 
+    cookie set with "remember my details".
     """
     if request.method == "POST":
         return dict(request.POST.items())
     if "order" in request.session:
         return request.session["order"]
-    initial = {}
+    previous_lookup = {}
+    if request.user.is_authenticated():
+        previous_lookup["user_id"] = request.user.id
     remembered = request.COOKIES.get("remember", "").split(":")
     if len(remembered) == 2 and remembered[0] == sign(remembered[1]):
-        previous_orders = Order.objects.filter(key=remembered[1]).values()[:1]
+        previous_lookup["key"] = remembered[1]
+    initial = {}
+    if previous_lookup:
+        previous_orders = Order.objects.filter(**previous_lookup).values()[:1]
         if len(previous_orders) > 0:
             initial.update(previous_orders[0])
             # Set initial value for "same billing/shipping" based on 
             # whether both sets of address fields are all equal.
-            ship_field = lambda f: "shipping_%s" % f[len("billing_"):]
-            if any([f for f in initial.keys() 
-                if f.startswith("billing_") and ship_field(f) in 
-                    initial and initial[f] != initial[ship_field(f)]]):
-                    initial["same_billing_shipping"] = False
+            shipping = lambda f: "shipping_%s" % f[len("billing_"):]
+            if any([f for f in initial if f.startswith("billing_") and 
+                shipping(f) in initial and initial[f] != initial[shipping(f)]]):
+                initial["same_billing_shipping"] = False
     return initial
     
 def send_order_email(request, order):
