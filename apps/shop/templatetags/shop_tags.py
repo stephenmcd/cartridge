@@ -1,14 +1,17 @@
 
 import os
 import locale
+from urllib import quote
 
 from django import template
 from django.conf import settings
+from django.template.defaultfilters import slugify
 from django.utils.datastructures import SortedDict
 
 from shop.models import Category
 from shop.utils import set_locale
-from shop.settings import ADMIN_REORDER, CHECKOUT_STEPS_SPLIT
+from shop.settings import ADMIN_REORDER, CHECKOUT_STEPS_SPLIT, \
+    PRODUCT_SORT_OPTIONS, MAX_PAGING_LINKS
 
 
 register = template.Library()
@@ -155,6 +158,40 @@ def order_totals_text(context):
     Text version of order_totals.
     """
     return _order_totals(context)
+
+@register.inclusion_tag("shop/product_sorting.html", takes_context=True)
+def product_sorting(context, products):
+    """
+    Renders the links for each product sort option.
+    """
+    sort_options = [(o[0], slugify(o[0])) for o in PRODUCT_SORT_OPTIONS]
+    querystring = context["request"].REQUEST.get("query", "")
+    if querystring:
+        querystring = "&query=" + quote(querystring)
+    else:
+        del sort_options[0]
+    context.update({"selected_option": getattr(products, "sort"), 
+        "sort_options": sort_options, "querystring": querystring})
+    return context
+    
+@register.inclusion_tag("shop/product_paging.html", takes_context=True)
+def product_paging(context, products):
+    """
+    Renders the links for each page number in a paginated list of products.
+    """
+    querystring = ""
+    for name in ("query", "sort"):
+        value = context["request"].REQUEST.get(name)
+        if value is not None:
+            querystring += "&%s=%s" % (name, quote(value))
+    page_range = products.paginator.page_range
+    if len(page_range) > MAX_PAGING_LINKS:
+        start = min(products.paginator.num_pages - MAX_PAGING_LINKS, 
+            max(0, products.number - (MAX_PAGING_LINKS / 2) - 1))
+        page_range = page_range[start:start + MAX_PAGING_LINKS]
+    context.update({"products": products, "querystring": querystring, 
+        "page_range": page_range})
+    return context
     
 def register_render_tag(renderer):
     """

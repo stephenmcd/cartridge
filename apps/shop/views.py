@@ -7,6 +7,7 @@ from django.forms import Form
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
+from django.template.defaultfilters import slugify
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
 
@@ -15,9 +16,9 @@ from shop.checkout import billing_shipping, payment, initial_order_data, \
     CHECKOUT_TEMPLATES
 from shop.forms import get_add_product_form, OrderForm, LoginForm, SignupForm
 from shop.models import Category, Product, ProductVariation, Cart
-from shop.settings import SEARCH_RESULTS_PER_PAGE, CHECKOUT_STEPS_SPLIT, \
-    CHECKOUT_STEPS_CONFIRMATION, CHECKOUT_ACCOUNT_ENABLED, \
-    CHECKOUT_ACCOUNT_REQUIRED, LOGIN_URL
+from shop.settings import LOGIN_URL, PER_PAGE_CATEGORY, PER_PAGE_SEARCH, \
+    PRODUCT_SORT_OPTIONS, CHECKOUT_STEPS_CONFIRMATION, CHECKOUT_STEPS_SPLIT, \
+    CHECKOUT_ACCOUNT_ENABLED, CHECKOUT_ACCOUNT_REQUIRED
 from shop.utils import set_cookie, send_mail_template, sign
 
 
@@ -30,39 +31,50 @@ except ImportError:
             request.user.message_set.create(message=message)
     
 
-def paginate(objects, page_num, per_page):
+def product_list(products, request, per_page):
     """
-    pagination 
+    Handle pagination and sorting for the given products.
     """
-    paginator = Paginator(objects, per_page)
+    sort_options = [(slugify(o[0]), o[1]) for o in PRODUCT_SORT_OPTIONS]
+    if "query" not in request.REQUEST:
+        del sort_options[0]
+    sort_name = request.GET.get("sort", sort_options[0][0])
+    sort_value = dict(sort_options).get(sort_name)
+    if sort_value is not None:
+        products = products.order_by(sort_value)
+    paginator = Paginator(products, per_page)
     try:
-        page_num = int(page_num)
+        page_num = int(request.GET.get("page", 1))
     except ValueError:
         page_num = 1
     try:
-        objects = paginator.page(page_num)
+        products = paginator.page(page_num)
     except (EmptyPage, InvalidPage):
-        objects = paginator.page(paginator.num_pages)
-    return objects
+        products = paginator.page(paginator.num_pages)
+    products.sort = sort_name
+    return products
 
 
 def category(request, slug, template="shop/category.html"):
     """
-    display a category
+    Display sub categories and products for a category.
     """
     category = get_object_or_404(Category.objects.active(), slug=slug)
-    return render_to_response(template, {"category": category}, 
-        RequestContext(request))
+    products = product_list(category.products.active(), request, 
+        PER_PAGE_CATEGORY)
+    return render_to_response(template, {"category": category, "products":
+        products}, RequestContext(request))
 
 def product(request, slug, template="shop/product.html"):
     """
-    display a product - redirect to wishlist or cart if product added to either
+    Display a product - convert the product variations to JSON as well as 
+    handling adding the product to either the cart or the wishlist.
     """
     product = get_object_or_404(Product.objects.active(slug=slug))
     AddProductForm = get_add_product_form(product)
     add_product_form = AddProductForm(initial={"quantity": 1})
     if request.method == "POST":
-        to_cart = len(request.POST.get("add_wishlist", "")) == 0
+        to_cart = request.POST.get("add_wishlist") is None
         add_product_form = AddProductForm(request.POST, to_cart=to_cart)
         if add_product_form.is_valid():
             if to_cart:
@@ -90,23 +102,24 @@ def product(request, slug, template="shop/product.html"):
 
 def search(request, template="shop/search_results.html"):
     """
-    display product search results
+    Display product search results.
     """
     query = request.REQUEST.get("query", "")
-    results = paginate(Product.objects.active().search(query), 
-        request.GET.get("page", 1), SEARCH_RESULTS_PER_PAGE)
+    results = product_list(Product.objects.active().search(query), request, 
+        PER_PAGE_SEARCH)
     return render_to_response(template, {"query": query, "results": results},
         RequestContext(request))
     
 def wishlist(request, template="shop/wishlist.html"):
     """
-    display wishlist - handle removing items and adding to cart
+    Display the wishlist and handle removing items from the wishlist and adding 
+    them to the cart.
     """
     skus = request.COOKIES.get("wishlist", "").split(",")
     error = None
     if request.method == "POST":
-        sku = request.POST.get("sku", None)
-        to_cart = len(request.POST.get("add_cart", "")) > 0
+        sku = request.POST.get("sku")
+        to_cart = request.POST.get("add_cart") is not None
         if to_cart:
             quantity = 1
             try:
@@ -117,27 +130,38 @@ def wishlist(request, template="shop/wishlist.html"):
                 if not variation.has_stock(quantity):
                     error = _("This item is currently out of stock")
                 else:
-                    Cart.objects.from_request(request).add_item(variation, quantity)
+                    cart = Cart.objects.from_request(request)
+                    cart.add_item(variation, quantity)
         if error is None:
             if sku in skus:
                 skus.remove(sku)
             if to_cart:
-                info(request, _("Item add to cart"), fail_silently=True)
+                message = _("Item add to cart")
                 response = HttpResponseRedirect(reverse("shop_cart"))
             else:
-                info(request, _("Item removed from wishlist"), fail_silently=True)
+                message = _("Item removed from wishlist")
                 response = HttpResponseRedirect(reverse("shop_wishlist"))
+            info(request, message, fail_silently=True)
             set_cookie(response, "wishlist", ",".join(skus))
             return response
-    return render_to_response(template, {"error": error}, RequestContext(request))
+    # Remove skus from the cookie that no longer exist.
+    wishlist = list(ProductVariation.objects.filter(product__active=True,
+        sku__in=skus).select_related())
+    wishlist.sort(key=lambda variation: skus.index(variation.sku))
+    response = render_to_response(template, {"wishlist": wishlist, 
+        "error": error}, RequestContext(request))
+    if len(wishlist) < len(skus):
+        skus = [variation.sku for variation in wishlist]
+        set_cookie(response, "wishlist", ",".join(skus))
+    return response
 
 def cart(request, template="shop/cart.html"):
     """
-    display cart - handle removing items
+    Display cart and handle removing items from the cart.
     """
     if request.method == "POST":
-        Cart.objects.from_request(request).remove_item(
-            request.POST.get("item_id", ""))
+        cart = Cart.objects.from_request(request)
+        cart.remove_item(request.POST.get("item_id"))
         info(request, _("Item removed from cart"), fail_silently=True)
         return HttpResponseRedirect(reverse("shop_cart"))
     return render_to_response(template, {}, RequestContext(request))
@@ -151,7 +175,7 @@ def account(request, template="shop/account.html"):
     if request.method == "POST":
         posted_form = None
         message = ""
-        if request.POST.get("login", ""):
+        if request.POST.get("login") is not None:
             login_form = LoginForm(request.POST)
             if login_form.is_valid():
                 posted_form = login_form
@@ -182,7 +206,7 @@ def checkout(request):
     Display the order form and handle processing of each step.
     """
     
-    # Do authentication check here rather than using standard login_required
+    # Do the authentication check here rather than using standard login_required
     # decorator. This means we can check for a custom LOGIN_URL and fall back
     # to our own login view.
     if CHECKOUT_ACCOUNT_REQUIRED and not request.user.is_authenticated():
@@ -194,7 +218,7 @@ def checkout(request):
     form = OrderForm(request, step, initial=initial)
     data = request.POST
 
-    if request.POST.get("back", ""):
+    if request.POST.get("back") is not None:
         step -= 1
         form = OrderForm(request, step, initial=initial)
     elif request.method == "POST":
@@ -231,7 +255,7 @@ def checkout(request):
                     order.process(request)
                     send_order_email(request, order)
                     response = HttpResponseRedirect(reverse("shop_complete"))
-                    if form.cleaned_data.get("remember", False):
+                    if form.cleaned_data.get("remember") is not None:
                         remembered = "%s:%s" % (sign(order.key), order.key)
                         set_cookie(response, "remember", remembered, 
                             secure=request.is_secure())
@@ -241,8 +265,8 @@ def checkout(request):
 
             # Assign checkout errors to new form if any and re-run is_valid 
             # if valid set form to next step.
-            form = OrderForm(request, step, initial=initial, data=data)
-            form.checkout_errors = checkout_errors
+            form = OrderForm(request, step, initial=initial, data=data, 
+                checkout_errors=checkout_errors)
             if form.is_valid():
                 step += 1
                 form = OrderForm(request, step, initial=initial)
@@ -253,7 +277,7 @@ def checkout(request):
 
 def complete(request, template="shop/complete.html"):
     """
-    order completed
+    Redirected to once an order is complete.
     """
     return render_to_response(template, {}, RequestContext(request))
 

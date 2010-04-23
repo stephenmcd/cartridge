@@ -15,6 +15,7 @@
 	{{ results.paginator.count }} products matching your query: <em>{{ query }}</em>
 	{% endifequal %}
 </p>
+{% product_sorting results %}
 <ul id="search-results">
 	{% for product in results.object_list %}
 	<li>
@@ -29,25 +30,7 @@
 	</li>
 	{% endfor %}
 </ul>
-{% ifnotequal results.paginator.num_pages 1 %}
-<ul class="paging">
-	{% if results.has_previous %}
-	<a href="?page={{ results.previous_page_number }}&query={{ query|urlencode }}">&lt;</a>
-	{% endif %}
-	{% for page in results.paginator.page_range %}
-	<li>
-		{% ifequal page results.number %}
-	   	{{ page }}
-		{% else %}
-	   	<a href="?page={{ page }}&query={{ query|urlencode }}">{{ page }}</a>
-		{% endifequal %}
-	</li>
-	{% endfor %} 
-	{% if results.has_next %}
-	<a href="?page={{ results.next_page_number }}&query={{ query|urlencode }}">&gt;</a>
-	{% endif %}
-</ul>
-{% endifnotequal %}
+{% product_paging results %}
 
 {% endif %}
 {% endblock %}

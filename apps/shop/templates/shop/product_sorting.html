@@ -1,0 +1,15 @@
+<div class="product-sorting">
+    <p>Sort by:</p>
+    <ul>
+    {% for name, option in sort_options %}
+        <li>
+            {% ifequal option selected_option %}
+            {{ name }}
+            {% else %}
+            <a href="{{ category.get_absolute_url }}?sort={{ option }}{{ querystring }}"
+                >{{ name }}</a>
+            {% endifequal %}
+        </li>
+    {% endfor %}
+    </ul>
+</div>

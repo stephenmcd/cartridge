@@ -61,13 +61,15 @@ else:
     MIDDLEWARE_CLASSES = list(MIDDLEWARE_CLASSES) + \
         ["debug_toolbar.middleware.DebugToolbarMiddleware"]
     DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
-    
-try:
-    import south
-except ImportError:
-    pass
-else:
-    INSTALLED_APPS = list(INSTALLED_APPS) + ["south"]
+
+import sys
+if not (len(sys.argv) > 1 and sys.argv[1] == "test"):
+    try:
+        import south
+    except ImportError:
+        pass
+    else:
+        INSTALLED_APPS = list(INSTALLED_APPS) + ["south"]
 
 
 # caching

@@ -2,8 +2,9 @@
 /* main layout */
 body {font:1.2em sans-serif; background:#fff; color:#000;}
 #menu, #main, #cart-panel {position:absolute; top:120px;}
-#menu, #main {float:left; bottom:0; padding:20px; margin:20px;}
-#menu {background:#ddd; width:180px; border-radius:10px; font-size:.8em;}
+#menu, #main {float:left; padding:20px; margin:20px;}
+#menu {background:#ddd; width:180px; border-radius:10px; font-size:.8em;
+    padding-left:5px;}
 #main {left:230px; right:0; width:auto; margin-top:5px; padding-top:0;}
 #main div {padding:10px 0;}
 #cart-panel {right:10px; margin:10px 25px; padding:10px; background:#ddd; 
@@ -16,19 +17,28 @@ a {color:#000;}
 ul {list-style-type:none; padding:0;}
 li {display:inline;}
 #menu a:visited {color:#666;}
+#menu h3 {padding-left:20px;}
 #menu ul {list-style-type:disc; padding-left:20px;}
 #menu li {display:block; float:none;}
-#footer {margin:40px; padding:20px; font-size:.8em; text-align:center; color:#333;}
-.category li {float:left; margin:10px; padding:10px; text-align:center;
-	  background:#ddd;}
-.category li .img {width:120px; height:120px; margin:0; padding:0;}
+#footer {margin:40px; padding:20px; font-size:.8em; text-align:center; 
+    color:#333;}
+.category .products li {float:left; margin:10px 20px 10px 0; padding:10px; 
+    text-align:center; background:#ddd; width:140px; height:210px;}
+.category .products li .img {width:120px; height:120px; margin:auto; 
+    padding:0 !important; border:2px solid #333; margin-bottom:5px;}
 .img img {margin:0;}
-.paging {display:block; float:left; margin:10px 0;}
-.paging li {padding:0 5px;}
+.product-paging {float:left; margin-top:10px; width:100%;}
+.product-paging li {padding:0 5px;}
+.product-sorting, .product-paging {padding:10px !important; background:#eee; 
+    float:left; width:100%; margin-bottom:10px; border-top:1px solid #ddd;}
+.product-sorting p, .product-paging p, .product-sorting ul, .product-paging ul {
+    float:left; padding:0 5px 0 0px; margin:0; font-size:.8em;}
+.category .price {font-size:.8em;}
 
 /* headings */
-h1 {margin:20px; padding:20px 100px; line-height:60px; border-radius:10px; height:60px;
-	background:#eee url('../img/cartridge-demo-logo.png') center left no-repeat;}
+h1 {margin:20px; padding:20px 100px; line-height:60px; border-radius:10px; 
+    height:60px; background:#eee url('../img/cartridge-demo-logo.png') center 
+    left no-repeat;}
 h1 img {width:70px; height:70px; vertical-align:middle; padding:0 10px;}
 h2 {margin-top:20px;}
 h3 {margin:0;}
@@ -74,7 +84,8 @@ input, select {font-size:.8em; margin:0 10px;}
 #items th {background:#ccc; white-space:nowrap;}
 .items-item {text-align:left !important; width:100%;}
 .items-item form {display:inline;}
-.items-item img {width:30px; height:30px; vertical-align:middle; margin-right:5px;}
+.items-item img {width:30px; height:30px; vertical-align:middle; 
+    margin-right:5px;}
 .row1 {background:#eee;}
 .row2 {background:#ddd;}
 .buttons {padding:0 !important;}

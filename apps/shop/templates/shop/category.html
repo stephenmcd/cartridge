@@ -1,34 +1,49 @@
 {% extends "shop/base.html" %}
-{% load shop_tags %}
+{% load shop_tags i18n %}
 
 {% block title %}{{ category.title }}{% endblock %}
 
 {% block main %}
 <div class="category">
-<ul>
-	{% for category in category.children.active %}
-	<li>
-		<a href="{{ category.get_absolute_url }}">
-		<div class="img">
-			{% if category.image %}
-			<img src="{{ MEDIA_URL }}{% thumbnail category.image 120 120  %}" />
-			{% endif %}
-		</div>
-		{{ category }}
-	</a></li>
-	{% endfor %}
-	{% for product in category.products.active %}
-	<li>
-		<a href="{{ product.get_absolute_url }}">
-		<div class="img">
-			{% if product.image %}
-			<img src="{{ MEDIA_URL }}{% thumbnail product.image 120 120  %}" />
-			{% endif %}
-		</div>
-		{{ product }}
-	</a></li>
+
+{% with category.children.active as child_categories %}
+{% if child_categories %}
+<ul class="categories">
+	{% for category in child_categories %}
+	<li><a href="{{ category.get_absolute_url }}">{{ category }}</a></li>
 	{% endfor %}
 </ul>
+{% endif %}
+{% endwith %}
+
+{% ifnotequal products.paginator.count 0 %}
+    {% product_sorting products %}
+    <ul class="products">
+	    {% for product in products.object_list %}
+	    <li>
+		    <a href="{{ product.get_absolute_url }}">
+		        <div class="img">
+			        {% if product.image %}
+			        <img src="{{ MEDIA_URL }}{% thumbnail product.image 120 120 %}" />
+			        {% endif %}
+		        </div>
+		        {{ product }}
+	        </a>
+            {% if product.has_price %}
+	        <p class="price">
+	            {% if product.on_sale %}
+		            <span class="old-price">{{ product.unit_price|currency }}</span>
+		            {% trans "On sale:" %}
+	            {% endif %}
+	            {{ product.price|currency }}
+	        </p>
+            {% endif %}
+	    </li>
+	    {% endfor %}
+    </ul>
+    {% product_paging products %}
+{% endifnotequal %}
+
 </div>
 {% endblock %}
 

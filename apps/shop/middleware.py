@@ -10,9 +10,9 @@ class SSLRedirect(object):
 
     def process_request(self, request):
         """
-        if SHOP_FORCE_HOST is set and is not the current host, redirect to it
+        If SHOP_FORCE_HOST is set and is not the current host, redirect to it
         if SHOP_SSL_ENABLED is True, ensure checkout views are accessed over 
-        https and all other views are accessed over http
+        HTTPS and all other views are accessed over HTTP.
         """
         if FORCE_HOST and request.get_host().split(":")[0] != FORCE_HOST:
             return http.HttpResponsePermanentRedirect("http://%s%s" % 

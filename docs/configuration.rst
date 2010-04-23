@@ -103,18 +103,32 @@ Default: ``1``
 
 Default value for the ``Order.status`` field when new orders are created.
 
+PER_PAGE_CATEGORY
+^^^^^^^^^^^^^^^^^
+
+Default ``10``
+
+The number of products to display per page for a category.
+
+PER_PAGE_SEARCH
+^^^^^^^^^^^^^^^
+
+Default ``10``
+
+The number of products to display per page for search results.
+
+MAX_PAGING_LINKS
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Default ``15``
+
+The maximum number of paging links to show.
+
 # sequence of name/sequence pairs defining the selectable options for products
 # PRODUCT_OPTIONS = getattr(settings, "SHOP_PRODUCT_OPTIONS", (
 #     ("size", ("Extra Small","Small","Regular","Large","Extra Large")),
 #     ("colour", ("Red","Orange","Yellow","Green","Blue","Indigo","Violet")),
 # ))
-
-SEARCH_RESULTS_PER_PAGE
-^^^^^^^^^^^^^^^^^^^^^^^
-
-Default ``10``
-
-The number of search results to display per page.
 
 SSL_ENABLED
 ^^^^^^^^^^^

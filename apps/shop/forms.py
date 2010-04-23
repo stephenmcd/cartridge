@@ -175,7 +175,8 @@ class OrderForm(FormsetForm, forms.ModelForm):
             f.name.startswith("shipping_detail")] + ["additional_instructions",     
             "discount_code"]
             
-    def __init__(self, request, step, data=None, initial=None):
+    def __init__(self, request, step, data=None, initial=None, 
+        checkout_errors=None):
         """
         Handle setting shipping field values to the same as billing field 
         values in case Javascript is disabled, hiding fields for current step 
@@ -205,7 +206,7 @@ class OrderForm(FormsetForm, forms.ModelForm):
             
         super(OrderForm, self).__init__(data=data, initial=initial)
         self._request = request
-        self.checkout_errors = []
+        self._checkout_errors = checkout_errors
 
         # Determine which sets of fields to hide for each checkout step.
         hidden = None
@@ -251,8 +252,8 @@ class OrderForm(FormsetForm, forms.ModelForm):
         return code
         
     def clean(self):
-        if self.checkout_errors:
-            raise forms.ValidationError(self.checkout_errors)
+        if self._checkout_errors:
+            raise forms.ValidationError(self._checkout_errors)
         return self.cleaned_data
 
 class UserForm(forms.Form):

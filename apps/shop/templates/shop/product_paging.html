@@ -1,0 +1,28 @@
+{% load shop_tags i18n %}
+
+{% ifnotequal products.paginator.num_pages 1 %}
+<div class="product-paging">
+    <p>{% trans "Page" %} {{ products.number }} {% trans "of" %} 
+        {{ products.paginator.num_pages }}:</p>
+    <ul>
+	    {% if products.has_previous %}
+	    <li><a href="?page={{ products.previous_page_number }}{{ querystring }}"
+	        >&lt;</a></li>
+	    {% endif %}
+	    {% for page in page_range %}
+	    <li>
+		    {% ifequal page products.number %}
+	       	<strong>{{ page }}</strong>
+		    {% else %}
+	       	<a href="?page={{ page }}{{ querystring }}">{{ page }}</a>
+		    {% endifequal %}
+	    </li>
+	    {% endfor %} 
+	    {% if products.has_next %}
+	    <li><a href="?page={{ products.next_page_number }}{{ querystring }}"
+	        >&gt;</a></li>
+	    {% endif %}
+    </ul>
+</div>
+{% endifnotequal %}
+

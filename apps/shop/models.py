@@ -25,9 +25,9 @@ class Displayable(models.Model):
     """
 
     title = models.CharField(_("Title"), max_length=100)
-    slug = models.SlugField(max_length=100, editable=False)
+    slug = models.SlugField(max_length=100, editable=False, null=True)
     active = models.BooleanField(_("Visible on the site"), default=False)
-
+        
     objects = ActiveManager()
 
     class Meta:
@@ -74,8 +74,6 @@ class Displayable(models.Model):
 
 class Category(Displayable):
 
-    image = models.ImageField(_("Image"), max_length=100, blank=True, 
-        upload_to="category")
     parent = models.ForeignKey("self", blank=True, null=True, 
         related_name="children")
 
@@ -133,6 +131,8 @@ class Product(Displayable, Priced):
     image = models.CharField(max_length=100, blank=True, null=True)
     categories = models.ManyToManyField(Category, blank=True, 
         related_name="products")
+    date_added = models.DateTimeField(_("Date added"), auto_now_add=True, 
+        null=True)
 
     objects = ProductManager()
     search_fields = ("title", "description", "keywords")
@@ -272,7 +272,7 @@ class Order(models.Model):
     shipping_detail_phone = models.CharField(_("Phone"), max_length=20)
     additional_instructions = models.TextField(_("Additional instructions"), 
         blank=True)
-    time = models.DateTimeField(_("Time"), auto_now_add=True)
+    time = models.DateTimeField(_("Time"), auto_now_add=True, null=True)
     key = models.CharField(max_length=40)
     user_id = models.IntegerField(blank=True, null=True)
     shipping_type = models.CharField(_("Shipping type"), max_length=50, 
@@ -339,7 +339,8 @@ class Order(models.Model):
 
 class Cart(models.Model):
 
-    last_updated = models.DateTimeField(_("Last updated"), auto_now=True)
+    last_updated = models.DateTimeField(_("Last updated"), auto_now=True, 
+        null=True)
 
     objects = CartManager()
 

@@ -66,17 +66,32 @@ ORDER_STATUSES = getattr(settings, "SHOP_ORDER_STATUSES", (
 ORDER_STATUS_DEFAULT = getattr(settings, "SHOP_ORDER_STATUS_DEFAULT", 
     ORDER_STATUSES[0][0])
 
+# Number of products to display per page for a category.
+PER_PAGE_CATEGORY = getattr(settings, "SHOP_PER_PAGE_CATEGORY", 10)
+
+# Number of products to display per page for search results.
+PER_PAGE_SEARCH = getattr(settings, "SHOP_PER_PAGE_SEARCH", 10)
+
+# Maximum number of paging links to show.
+MAX_PAGING_LINKS = getattr(settings, "SHOP_MAX_PAGING_LINKS", 15)
+
 # Sequence of name/sequence pairs defining the selectable options for products.
 PRODUCT_OPTIONS = getattr(settings, "SHOP_PRODUCT_OPTIONS", (
     ("size", ("Extra Small","Small","Regular","Large","Extra Large")),
     ("colour", ("Red","Orange","Yellow","Green","Blue","Indigo","Violet")),
 ))
 
+# Sequence of description/field+direction pairs defining the options available 
+# for sorting a list of products.
+PRODUCT_SORT_OPTIONS = getattr(settings, "SHOP_PRODUCT_SORT_OPTIONS", (
+    (_("Relevance"), None),
+    (_("Least expensive"), "unit_price"),
+    (_("Most expensive"), "-unit_price"),
+    (_("Recently added"), "-date_added"),
+))
+
 # Bool to enable automatic redirecting to and from https for checkout.
 SSL_ENABLED = getattr(settings, "SHOP_SSL_ENABLED", not settings.DEBUG)
-
-# Number of search results to display per page.
-SEARCH_RESULTS_PER_PAGE = getattr(settings, "SHOP_SEARCH_RESULTS_PER_PAGE", 10)
 
 # Custom ordering of admin app/model listing.
 ADMIN_REORDER = tuple(getattr(settings, "ADMIN_REORDER", ()))
