@@ -6,6 +6,7 @@ from decimal import Decimal
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.db.models.base import ModelBase
 from django.template.defaultfilters import slugify, striptags
 from django.utils.translation import ugettext, ugettext_lazy as _
 
@@ -169,10 +170,21 @@ class ProductImage(models.Model):
     def __unicode__(self):
         return self.description if self.description else self.file.name
 
-class BaseProductVariation(Priced):
+class ProductVariationMetaclass(ModelBase):
     """
-    abstract model used to create the ProductVariation model below using 
-    dynamically created set of option fields from shop.settings.PRODUCT_OPTIONS
+    Metaclass for the ProductVariation model that dynamcally assigns an 
+    OptionField for each option in shop.settings.PRODUCT_OPTIONS.
+    """
+    def __new__(cls, name, bases, attrs):
+        for option, options in PRODUCT_OPTIONS:
+            attrs[option] = OptionField(choices=make_choices(options))
+        return super(ProductVariationMetaclass, cls).__new__(cls, name, bases, 
+            attrs)
+
+class ProductVariation(Priced):
+    """
+    A combination of selected options from shop.settings.PRODUCT_OPTIONS for a 
+    Product instance.
     """
     
     product = models.ForeignKey(Product, related_name="variations")
@@ -184,8 +196,9 @@ class BaseProductVariation(Priced):
 
     objects = ProductVariationManager()
 
+    __metaclass__ = ProductVariationMetaclass
+
     class Meta:
-        abstract = True
         ordering = ("default",)
         
     def __unicode__(self):
@@ -200,7 +213,7 @@ class BaseProductVariation(Priced):
         """
         use the id as the sku, set the first image if none chosen
         """
-        super(BaseProductVariation, self).save(*args, **kwargs)
+        super(ProductVariation, self).save(*args, **kwargs)
         save = False
         if not self.sku:
             self.sku = self.id
@@ -239,14 +252,6 @@ class BaseProductVariation(Priced):
                 num_in_stock = num_in_stock - num_in_carts
             self._cached_num_in_stock = num_in_stock
         return self._cached_num_in_stock >= quantity
-
-# build the ProductVariation model from the BaseProductVariation model by
-# adding each option in shop.settings.PRODUCT_OPTIONS as an OptionField
-_meta = type("Meta", (object,), {})
-_fields = {"__module__": BaseProductVariation.__module__, "Meta": _meta}
-for name, options in PRODUCT_OPTIONS:
-    _fields[name] = OptionField(choices=make_choices(options))
-ProductVariation = type("ProductVariation", (BaseProductVariation,), _fields)
 
 class Order(models.Model):
 

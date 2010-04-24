@@ -6,12 +6,11 @@ from locale import localeconv
 from re import match
 
 from django import forms
-from django.forms.models import BaseInlineFormSet
+from django.forms.models import BaseInlineFormSet, ModelFormMetaclass
 from django.conf import settings
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, QueryDict
 from django.utils.datastructures import SortedDict
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
@@ -35,26 +34,33 @@ ADD_PRODUCT_ERRORS = {
 
 def get_add_product_form(product):
     """
-    return the add product form dynamically adding the options to it using the 
-    variations of the given product and setting the minimum quantity based on 
-    whether the product is being added to the cart or the wishlist
+    Return the form for adding the given product to the cart or the wishlist. 
     """
 
-    class BaseAddProductForm(forms.Form):
-        """
-        add product form for cart and wishlist
-        """
+    class AddProductForm(forms.Form):
 
         quantity = forms.IntegerField(min_value=1)
         
         def __init__(self, *args, **kwargs):
+            """
+            Create each ChoiceField for selecting from the product's variations.
+            """
             self._to_cart = kwargs.pop("to_cart", True)
-            super(BaseAddProductForm, self).__init__(*args, **kwargs)
+            super(AddProductForm, self).__init__(*args, **kwargs)
+            option_names = [f.name for f in ProductVariation.option_fields()]
+            option_values = zip(*product.variations.filter(
+                unit_price__isnull=False).values_list(*option_names))
+            if option_values:
+                for i, name in enumerate(option_names):
+                    values = filter(None, set(option_values[i]))
+                    if values:
+                        field = forms.ChoiceField(choices=make_choices(values))
+                        self.fields[name] = field
     
         def clean(self):
             """
-            set the form's selected variation if the selected options and
-            quantity are valid
+            Set the form's selected variation if the selected options and
+            quantity are valid.
             """
             options = self.cleaned_data.copy()
             quantity = options.pop("quantity", 0)
@@ -76,19 +82,7 @@ def get_add_product_form(product):
             self.variation = variation
             return self.cleaned_data
 
-    # create the dict of form fields for the product's selected options and 
-    # add them to a newly created form type 
-    option_names = [field.name for field in ProductVariation.option_fields()]
-    option_values = zip(*product.variations.filter(
-        unit_price__isnull=False).values_list(*option_names))
-    option_fields = {}
-    if option_values:
-        for i, name in enumerate(option_names):
-            values = filter(None, set(option_values[i]))
-            if values:
-                option_fields[name] = forms.ChoiceField(
-                    choices=make_choices(values))
-    return type("AddProductForm", (BaseAddProductForm,), option_fields)
+    return AddProductForm
 
 class FormsetForm(object):
     """
@@ -318,7 +312,7 @@ class LoginForm(UserForm):
 
 class ImageWidget(forms.FileInput):
     """
-    renders a visible thumbnail for image fields
+    Render a visible thumbnail for image fields.
     """
     def render(self, name, value, attrs):
         rendered = super(ImageWidget, self).render(name, value, attrs)
@@ -332,7 +326,7 @@ class ImageWidget(forms.FileInput):
 
 class MoneyWidget(forms.TextInput):
     """
-    renders missing decimal places for money fields
+    Render missing decimal places for money fields.
     """
     def render(self, name, value, attrs):
         try:
@@ -345,17 +339,30 @@ class MoneyWidget(forms.TextInput):
             attrs["style"] = "text-align:right;"
         return super(MoneyWidget, self).render(name, value, attrs)
 
-# build a dict of option fields for creating the ProductAdminForm type
-_fields = dict([(field.name, forms.MultipleChoiceField(choices=field.choices, 
-    widget=forms.CheckboxSelectMultiple, required=False)) for field in 
-    ProductVariation.option_fields()]) 
-_fields["Meta"] = type("Meta", (object,), {"model": Product})
-ProductAdminForm = type("ProductAdminForm", (forms.ModelForm,), _fields)
+class ProductAdminFormMetaclass(ModelFormMetaclass):
+    """
+    Metaclass for the Product Admin form that dynamically assigns each of the 
+    types of product options as 
+    """
+    def __new__(cls, name, bases, attrs):
+        for field in ProductVariation.option_fields():
+            attrs[field.name] = forms.MultipleChoiceField(choices=field.choices, 
+                widget=forms.CheckboxSelectMultiple, required=False)
+        return super(ProductAdminFormMetaclass, cls).__new__(cls, name, bases, 
+            attrs)
+
+class ProductAdminForm(forms.ModelForm):
+    """
+    Admin form for the Product model.
+    """
+    __metaclass__ = ProductAdminFormMetaclass
+    class Meta:
+        model = Product
 
 class ProductVariationAdminForm(forms.ModelForm):
     """
-    ensures the list of images for the variation are specific to the variation's 
-    product
+    Ensure the list of images for the variation are specific to the variation's 
+    product.
     """
     def __init__(self, *args, **kwargs):
         super(ProductVariationAdminForm, self).__init__(*args, **kwargs)
@@ -364,7 +371,7 @@ class ProductVariationAdminForm(forms.ModelForm):
 
 class ProductVariationAdminFormset(BaseInlineFormSet):
     """
-    ensures no more than one variation is checked as default
+    Ensure no more than one variation is checked as default. 
     """
     def clean(self):
         if len([f for f in self.forms if hasattr(f, "cleaned_data") and
@@ -373,20 +380,15 @@ class ProductVariationAdminFormset(BaseInlineFormSet):
             raise forms.ValidationError(error)
 
 class DiscountAdminForm(forms.ModelForm):
-
-    def __init__(self, *args, **kwargs):
-        """
-        build a clean method that validates the last discount field ensuring 
-        only one discount field is given a value
-        """
-        super(DiscountAdminForm, self).__init__(*args, **kwargs)
-        fields = [f for f in self.fields.keys() if f.startswith("discount_")]
-        def clean_last_discount_field():
-            reductions = filter(None, [self.cleaned_data.get(f, None) 
-                for f in fields])
-            if len(reductions) > 1:
-                error = _("Please enter a value for only one type of reduction.")
-                raise forms.ValidationError(error)
-            return self.cleaned_data[fields[-1]]
-        self.__dict__["clean_%s" % fields[-1]] = clean_last_discount_field
+    """
+    Ensure only one discount field is given a value and if not, assign the 
+    error to the first discount field so that it displays correctly.
+    """
+    def clean(self):
+        fields = [f for f in self.fields if f.startswith("discount_")]
+        reductions = filter(None, [self.cleaned_data.get(f) for f in fields])
+        if len(reductions) > 1:
+            error = _("Please enter a value for only one type of reduction.")
+            self._errors[fields[0]] = self.error_class([error])
+        return self.cleaned_data
 
