@@ -52,19 +52,21 @@ FORCE_SSL_VIEWS = getattr(settings, "SHOP_FORCE_SSL_VIEWS",
 if CHECKOUT_ACCOUNT_ENABLED:
     FORCE_SSL_VIEWS = list(FORCE_SSL_VIEWS) + ["shop_account"]
 
+# Sequence of value/name pairs for types of product options, eg Size, Colour.
+OPTION_TYPE_CHOICES = getattr(settings, "SHOP_OPTION_TYPE_CHOICES", (
+    (1, _("Size")),
+    (2, _("Colour")),
+))
+
 # Email address that order receipts should be emailed from.
 ORDER_FROM_EMAIL = getattr(settings, "SHOP_ORDER_FROM_EMAIL", 
     "do_not_reply@%s" % gethostname())
 
 # Sequence of value/name pairs for order statuses.
-ORDER_STATUSES = getattr(settings, "SHOP_ORDER_STATUSES", (
+ORDER_STATUS_CHOICES = getattr(settings, "SHOP_ORDER_STATUS_CHOICES", (
     (1, _("Unprocessed")),
     (2, _("Processed")),
 ))
-
-# Default order status for new orders.
-ORDER_STATUS_DEFAULT = getattr(settings, "SHOP_ORDER_STATUS_DEFAULT", 
-    ORDER_STATUSES[0][0])
 
 # Number of products to display per page for a category.
 PER_PAGE_CATEGORY = getattr(settings, "SHOP_PER_PAGE_CATEGORY", 10)
@@ -74,12 +76,6 @@ PER_PAGE_SEARCH = getattr(settings, "SHOP_PER_PAGE_SEARCH", 10)
 
 # Maximum number of paging links to show.
 MAX_PAGING_LINKS = getattr(settings, "SHOP_MAX_PAGING_LINKS", 15)
-
-# Sequence of name/sequence pairs defining the selectable options for products.
-PRODUCT_OPTIONS = getattr(settings, "SHOP_PRODUCT_OPTIONS", (
-    ("size", ("Extra Small","Small","Regular","Large","Extra Large")),
-    ("colour", ("Red","Orange","Yellow","Green","Blue","Indigo","Violet")),
-))
 
 # Sequence of description/field+direction pairs defining the options available 
 # for sorting a list of products.
@@ -96,8 +92,8 @@ SSL_ENABLED = getattr(settings, "SHOP_SSL_ENABLED", not settings.DEBUG)
 # Custom ordering of admin app/model listing.
 ADMIN_REORDER = tuple(getattr(settings, "ADMIN_REORDER", ()))
 if "shop" not in dict(ADMIN_REORDER):
-    ADMIN_REORDER += (("shop", ("Category", "Product", "Sale", "DiscountCode",
-        "Order")),)
+    ADMIN_REORDER += (("shop", ("Category", "Product", "ProductOption", 
+        "Sale", "DiscountCode", "Order")),)
 
 # Decorator that wraps the given func in the CallableSetting object that calls 
 # the func when it is cast to a string.

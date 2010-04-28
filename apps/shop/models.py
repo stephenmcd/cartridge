@@ -11,25 +11,22 @@ from django.template.defaultfilters import slugify, striptags
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 from shop.fields import OptionField, MoneyField, SKUField, DiscountCodeField
-from shop.managers import ActiveManager, SearchableManager, ProductManager, \
-    CartManager, ProductVariationManager, ProductActionManager, \
-    DiscountCodeManager
-from shop.settings import ORDER_STATUSES, ORDER_STATUS_DEFAULT, PRODUCT_OPTIONS
-from shop.utils import make_choices
+from shop import managers
+from shop.settings import ORDER_STATUS_CHOICES, OPTION_TYPE_CHOICES
 
 
 class Displayable(models.Model):
     """
-    abstract model representing a visible object on the website - Category and 
-    Product are derived from this. contains common functionality like auto slug 
-    creation and active (toggle visibility) fields
+    Abstract model representing a visible object on the website with common 
+    functionality such as auto slug creation and an active field for toggling 
+    visibility. Inherited by Category and Product models.
     """
 
     title = models.CharField(_("Title"), max_length=100)
     slug = models.SlugField(max_length=100, editable=False, null=True)
     active = models.BooleanField(_("Visible on the site"), default=False)
         
-    objects = ActiveManager()
+    objects = managers.ActiveManager()
 
     class Meta:
         abstract = True
@@ -39,12 +36,12 @@ class Displayable(models.Model):
         
     def save(self, *args, **kwargs):
         """
-        create a unique slug from the title by appending an index
+        Create a unique slug from the title by appending an index.
         """
         if self.id is None:
+            self.slug = self.get_slug()
             i = 0
             while True:
-                self.slug = slugify(self.title)
                 if i > 0:
                     self.slug = "%s-%s" % (self.slug, i)
                 if not self.__class__.objects.filter(slug=self.slug):
@@ -53,8 +50,11 @@ class Displayable(models.Model):
         super(Displayable, self).save(*args, **kwargs)
         
     def get_absolute_url(self):
-        return reverse("shop_%s" % self.__class__.__name__.lower(), 
-            kwargs={"slug": self.slug})
+        url_name = self.__class__.__name__.lower()
+        return reverse("shop_%s" % url_name, kwargs={"slug": self.slug})
+        
+    def get_slug(self):
+        return slugify(self.title)
     
     def admin_link(self):
         if not self.active:
@@ -63,28 +63,65 @@ class Displayable(models.Model):
             ugettext("View on site"))
     admin_link.allow_tags = True
     admin_link.short_description = ""
+
+class ProductOption(models.Model):
+    """
+    A selectable option for a product such as size or colour.
+    """
     
-    def admin_thumb(self):
-        if self.image is None:
-            return ""
-        from shop.templatetags.shop_tags import thumbnail
-        thumb_url = "%s%s" % (settings.MEDIA_URL, thumbnail(self.image, 24, 24))
-        return "<img src='%s' />" % thumb_url
-    admin_thumb.allow_tags = True
-    admin_thumb.short_description = ""
+    type = models.IntegerField(_("Type"), choices=OPTION_TYPE_CHOICES)
+    name = OptionField(_("Name"))
+    
+    objects = managers.ProductOptionManager()
+
+    def __unicode__(self):
+        return "%s: %s" % (self.get_type_display(), self.name)
+
+    class Meta:
+        verbose_name = _("Product Option")
+        verbose_name_plural = _("Product Options")
 
 class Category(Displayable):
+    """
+    A category of products on the website.
+    """
 
     parent = models.ForeignKey("self", blank=True, null=True, 
         related_name="children")
+    titles = models.CharField(editable=False, max_length=1000, blank=True, 
+        null=True)
 
     class Meta:
         verbose_name = _("Category")
         verbose_name_plural = _("Categories")
+        ordering = ("titles",)
+
+    def __unicode__(self):
+        return self.titles
+        
+    def save(self, *args, **kwargs):
+        """
+        Create the titles field using the titles up the parent chain.
+        """
+        if self.id is None:
+            titles = [self.title]
+            parent = self.parent
+            while parent is not None:
+                titles.insert(0, parent.title)
+                parent = parent.parent
+            self.titles = " / ".join(titles)
+        super(Category, self).save(*args, **kwargs)
+        
+    def get_slug(self):
+        slug = slugify(self.title)
+        if self.parent is not None:
+            return "%s/%s" % (self.parent.get_slug(), slug)
+        return slug
 
 class Priced(models.Model):
     """
-    abstract model with unit and sale price fields - for product and variation
+    Abstract model with unit and sale price fields. Inherited by Product and 
+    ProductVariation models.
     """
 
     unit_price = MoneyField(_("Unit price"))
@@ -98,7 +135,7 @@ class Priced(models.Model):
 
     def on_sale(self):
         """
-        is the sale price applicable
+        Returns True if the sale price is applicable.
         """
         valid_from = self.sale_from is None or self.sale_from < datetime.now()
         valid_to = self.sale_to is None or self.sale_to > datetime.now()
@@ -106,13 +143,14 @@ class Priced(models.Model):
 
     def has_price(self):
         """
-        is there a valid price
+        Returns True if there is a valid price.
         """
         return self.on_sale() or self.unit_price is not None 
     
     def price(self):
         """
-        actual price, sale price if applicable, otherwise unit price
+        Returns the actual price - sale price if applicable otherwise the unit 
+        price.
         """
         if self.on_sale():
             return self.sale_price
@@ -122,7 +160,8 @@ class Priced(models.Model):
 
 class Product(Displayable, Priced):
     """
-    container model for a product
+    Container model for a product that stores information common to all of its 
+    variations such as the product's title and description.
     """
 
     description = models.TextField(_("Description"), blank=True)
@@ -130,12 +169,12 @@ class Product(Displayable, Priced):
         null=True)
     available = models.BooleanField(_("Available for purchase"), default=False)
     image = models.CharField(max_length=100, blank=True, null=True)
-    categories = models.ManyToManyField(Category, blank=True, 
+    categories = models.ManyToManyField("Category", blank=True,
         related_name="products")
     date_added = models.DateTimeField(_("Date added"), auto_now_add=True, 
         null=True)
 
-    objects = ProductManager()
+    objects = managers.ProductManager()
     search_fields = ("title", "description", "keywords")
 
     class Meta:
@@ -144,7 +183,7 @@ class Product(Displayable, Priced):
 
     def copy_default_variation(self):
         """
-        copy price and image fields from the default variation
+        Copies the price and image fields from the default variation.
         """
         default = self.variations.get(default=True)
         for field in Priced._meta.fields:
@@ -154,14 +193,26 @@ class Product(Displayable, Priced):
             self.image = default.image.file.name
         self.save()
 
+    def admin_thumb(self):
+        if self.image is None:
+            return ""
+        from shop.templatetags.shop_tags import thumbnail
+        thumb_url = "%s%s" % (settings.MEDIA_URL, thumbnail(self.image, 24, 24))
+        return "<img src='%s' />" % thumb_url
+    admin_thumb.allow_tags = True
+    admin_thumb.short_description = ""
+
 class ProductImage(models.Model):
     """
-    images related to a product - also given a 1to1 relationship with variations
+    An image for a product - a relationship is also defined with the product's 
+    variations so that each variation can potentially have it own image, while 
+    the relationship between the Product and ProductImage models ensures 
+    there is a single set of images for the product.
     """
     
     file = models.ImageField(_("Image"), upload_to="product")
     description = models.CharField(_("Description"), blank=True, max_length=100)
-    product = models.ForeignKey(Product, related_name="images")
+    product = models.ForeignKey("Product", related_name="images")
     
     class Meta:
         verbose_name = _("Image")
@@ -176,8 +227,8 @@ class ProductVariationMetaclass(ModelBase):
     OptionField for each option in shop.settings.PRODUCT_OPTIONS.
     """
     def __new__(cls, name, bases, attrs):
-        for option, options in PRODUCT_OPTIONS:
-            attrs[option] = OptionField(choices=make_choices(options))
+        for option in OPTION_TYPE_CHOICES:
+            attrs["option%s" % option[0]] = OptionField(option[1])
         return super(ProductVariationMetaclass, cls).__new__(cls, name, bases, 
             attrs)
 
@@ -187,14 +238,14 @@ class ProductVariation(Priced):
     Product instance.
     """
     
-    product = models.ForeignKey(Product, related_name="variations")
+    product = models.ForeignKey("Product", related_name="variations")
     sku = SKUField(unique=True)
     num_in_stock = models.IntegerField(_("Number in stock"), blank=True, 
         null=True) 
     default = models.BooleanField(_("Default"))
-    image = models.ForeignKey(ProductImage, null=True, blank=True)
+    image = models.ForeignKey("ProductImage", null=True, blank=True)
 
-    objects = ProductVariationManager()
+    objects = managers.ProductVariationManager()
 
     __metaclass__ = ProductVariationMetaclass
 
@@ -203,15 +254,17 @@ class ProductVariation(Priced):
         
     def __unicode__(self):
         """
-        display the option name/values for the variation
+        Display the option names and values for the variation.
         """
-        options = ", ".join(["%s: %s" % (f.name.title(), getattr(self, f.name)) 
+        options = ", ".join(["%s: %s" % (unicode(f.verbose_name), getattr(self, f.name)) 
             for f in self.option_fields() if getattr(self, f.name) is not None])
         return ("%s %s" % (self.product, options)).strip()
     
     def save(self, *args, **kwargs):
         """
-        use the id as the sku, set the first image if none chosen
+        Use the variation's ID as the SKU when the variation is first created 
+        and set the variation's image to be the first image of the product if 
+        no image is chosen for the variation.
         """
         super(ProductVariation, self).save(*args, **kwargs)
         save = False
@@ -239,8 +292,8 @@ class ProductVariation(Priced):
 
     def has_stock(self, quantity=1):
         """
-        check the given quantity is in stock taking into account the number in 
-        carts, and cache the number
+        Check the given quantity is in stock taking into account the number in 
+        carts, and cache the number.
         """
         if self.num_in_stock is None or quantity == 0:
             return True
@@ -287,8 +340,8 @@ class Order(models.Model):
     discount_code = DiscountCodeField(_("Discount code"), blank=True)
     discount_total = MoneyField(_("Discount total"))
     total = MoneyField(_("Order total"))
-    status = models.IntegerField(_("Status"), choices=ORDER_STATUSES, 
-        default=ORDER_STATUS_DEFAULT)
+    status = models.IntegerField(_("Status"), choices=ORDER_STATUS_CHOICES, 
+        default=ORDER_STATUS_CHOICES[0][0])
 
     class Meta:
         verbose_name = _("Order")
@@ -312,7 +365,7 @@ class Order(models.Model):
 
     def process(self, request):
         """
-        Process a successful order
+        Process a successful order.
         """
         cart = Cart.objects.from_request(request)
         # Get fields fields from session and remove order details from session.
@@ -347,7 +400,7 @@ class Cart(models.Model):
     last_updated = models.DateTimeField(_("Last updated"), auto_now=True, 
         null=True)
 
-    objects = CartManager()
+    objects = managers.CartManager()
 
     def __iter__(self):
         """
@@ -425,7 +478,7 @@ class SelectedProduct(models.Model):
 
 class CartItem(SelectedProduct):
 
-    cart = models.ForeignKey(Cart, related_name="items")
+    cart = models.ForeignKey("Cart", related_name="items")
     url = models.CharField(max_length=200)
     image = models.CharField(max_length=200, null=True)
     
@@ -433,35 +486,39 @@ class CartItem(SelectedProduct):
         return self.url
 
 class OrderItem(SelectedProduct):
-    order = models.ForeignKey(Order, related_name="items")
+    """
+    A selected product in a completed order.
+    """
+    order = models.ForeignKey("Order", related_name="items")
 
 class ProductAction(models.Model):
     """
-    records an incremental value for an action against a product such as adding 
-    to cart or purchasing, for sales reporting and calculating popularity
+    Records an incremental value for an action against a product such as adding 
+    to cart or purchasing, for sales reporting and calculating popularity. Not 
+    yet used but will be used for product popularity and sales reporting.
     """
         
-    product = models.ForeignKey(Product, related_name="actions")
+    product = models.ForeignKey("Product", related_name="actions")
     timestamp = models.IntegerField()
     total_cart = models.IntegerField(default=0)
     total_purchase = models.IntegerField(default=0)
 
-    objects = ProductActionManager()
+    objects = managers.ProductActionManager()
 
     class Meta:
         unique_together = ("product", "timestamp")
 
 class Discount(models.Model):
     """
-    abstract model representing one of several types of monetary reductions as 
+    Abstract model representing one of several types of monetary reductions as 
     well as a date range they're applicable for, and the products and products 
-    in categories that the reduction is applicable for
+    in categories that the reduction is applicable for.
     """
 
     title = models.CharField(max_length=100)
     active = models.BooleanField(_("Active"))
-    products = models.ManyToManyField(Product, blank=True)
-    categories = models.ManyToManyField(Category, blank=True)
+    products = models.ManyToManyField("Product", blank=True)
+    categories = models.ManyToManyField("Category", blank=True)
     discount_deduct = MoneyField(_("Reduce by amount"))
     discount_percent = models.DecimalField(_("Reduce by percent"), max_digits=4, 
         decimal_places=2, blank=True, null=True)
@@ -546,7 +603,7 @@ class DiscountCode(Discount):
     min_purchase = MoneyField(_("Minimum total purchase"))
     free_shipping = models.BooleanField(_("Free shipping"))
 
-    objects = DiscountCodeManager()
+    objects = managers.DiscountCodeManager()
     
     def calculate(self, amount):
         """

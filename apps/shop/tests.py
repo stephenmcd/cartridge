@@ -5,9 +5,10 @@ from operator import mul
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-from shop.models import Product, ProductVariation, Category, Cart, CartItem
-from shop.settings import PRODUCT_OPTIONS, CHECKOUT_ACCOUNT_ENABLED, \
-    CHECKOUT_ACCOUNT_REQUIRED
+from shop.models import Product, ProductOption, ProductVariation, Category, \
+    Cart, CartItem
+from shop.settings import CHECKOUT_ACCOUNT_ENABLED, CHECKOUT_ACCOUNT_REQUIRED, \
+    OPTION_TYPE_CHOICES
 
 
 class ShopTests(TestCase):
@@ -17,6 +18,10 @@ class ShopTests(TestCase):
     def setUp(self):
         self._category = Category.objects.create(active=True)
         self._product = Product.objects.create(active=True)
+        for option_type in OPTION_TYPE_CHOICES:
+            for i in range(10):
+                name = "test%s" % i
+                ProductOption.objects.create(type=option_type[0], name=name)
 
     def test_views(self):
         """
@@ -45,8 +50,9 @@ class ShopTests(TestCase):
         test creation of variations from options, and management of empty 
         variations
         """
-        total_variations = reduce(mul, [len(opts[1]) 
-            for opts in PRODUCT_OPTIONS])
+        product_options = ProductOption.objects.as_fields()
+        total_variations = reduce(mul, [len(values) 
+            for values in product_options.values()])
         # clear variations
         self._product.variations.all().delete()
         self.assertEqual(self._product.variations.count(), 0)
@@ -54,9 +60,9 @@ class ShopTests(TestCase):
         self._product.variations.manage_empty()
         self.assertEqual(self._product.variations.count(), 1)
         # create variations from all options
-        self._product.variations.create_from_options(PRODUCT_OPTIONS)
+        self._product.variations.create_from_options(product_options)
         # should do nothing
-        self._product.variations.create_from_options(PRODUCT_OPTIONS)
+        self._product.variations.create_from_options(product_options)
         # all options plus empty
         self.assertEqual(self._product.variations.count(), total_variations + 1)
         # remove empty
@@ -86,8 +92,9 @@ class ShopTests(TestCase):
         """
         test the cart object and cart add/remove forms
         """
+        product_options = ProductOption.objects.as_fields()
         self._product.variations.all().delete()
-        self._product.variations.create_from_options(PRODUCT_OPTIONS)
+        self._product.variations.create_from_options(product_options)
         price = Decimal("20")
         num_in_stock = 5
         variation = self._product.variations.all()[0]

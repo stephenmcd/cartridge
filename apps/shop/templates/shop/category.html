@@ -10,7 +10,7 @@
 {% if child_categories %}
 <ul class="categories">
 	{% for category in child_categories %}
-	<li><a href="{{ category.get_absolute_url }}">{{ category }}</a></li>
+	<li><a href="{{ category.get_absolute_url }}">{{ category.title }}</a></li>
 	{% endfor %}
 </ul>
 {% endif %}

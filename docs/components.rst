@@ -44,7 +44,7 @@ The ``Priced`` abstract model is inherited by the ``Product`` model previously d
 Product Variations
 ^^^^^^^^^^^^^^^^^^
 
-The ``ProductVariation`` model represents a unique combination of options for a product. Consider a shirt that comes in two colours and three sizes: this would be represented with a single ``Product`` instance for the shirt, and six ``ProductVariation`` instances, one for each colour/size combination. The configuration of available options such as colours and sizes is discussed in the section :ref:`ref-configuration`.
+The ``ProductVariation`` model represents a unique combination of options for a product. Consider a shirt that comes in two colours and three sizes: this would be represented with a single ``Product`` instance for the shirt, and six ``ProductVariation`` instances, one for each colour/size combination. These options are discussed below in :ref:`ref-product-options`.
 
 The ``ProductVariation`` model is editable via the admin as the inline ``ProductVariationAdmin`` for the ``ProductAdmin`` admin, however the attribute ``ProductVariationAdmin.extra`` is set to ``0`` and therefore ``ProductVariation`` instances cannot be added via the admin. Instead when editing ``Product`` instances via the admin, a list of check-boxes is provided with the form for each type of option available such as colour and size, with a check-box provided for each of the individual options. When the ``Product`` instance is saved, a set of related ``ProductVariation`` instances will be created for each combination of options that are checked. If no options are selected when creating a new ``Product`` instance, then a single ``ProductVariation`` instance will be created without any associated options. This means that a ``Product`` instances will *always* contains at least one related ``ProductVariation`` instance. All of this occurs via the ``ProductAdmin.save_formset()`` method and shows that the process of creating a new ``Product`` instance will always require two steps: firstly, creating the ``Product`` instance with its core attributes and secondly, entering values for one or more related ``ProductVariation`` instances that are automatically created for each combination of options.
 
@@ -65,6 +65,13 @@ Denormalized Fields
 ^^^^^^^^^^^^^^^^^^^
 
 Certain fields are duplicated for the ``Product`` model in order to avoid querying the database for ``ProductImage`` and ``ProductVariation`` instances when a large number of products are being iterated through on the site and the product's image or price need to be displayed. These fields are those provided by the ``Priced`` abstract model which both the ``Product`` and ``ProductVariation`` models inherit from, as well a CharField ``Product.image`` which stores the location of the image in the related ``ProductImage`` instance that is determined to be the default for display. The values for these fields are set for the ``Product`` instance when the  ``ProductAdmin.save_formset()`` method is run as referred to above. The  ``ProductVariation.default`` field is used to determine which ``ProductVariation`` instance's ``Priced`` fields are duplicated. The ``ProductImage`` related to the ``ProductVariation`` instance is used for the ``Product.image`` field if selected, otherwise the first ``ProductImage`` instance related to the ``Product`` instance is used.
+
+.. _ref-product-options:
+
+Product Options
+^^^^^^^^^^^^^^^
+
+The ``ProductOption`` model provides a simple type and name for a selectable option for a ``ProductVariation`` instance, for example Size: Small or Colour: Red. For performance and simplicty these options don't use a model relationship with the ``ProductVariation`` model and simply store the pool of available options. The configuration of available types such as colour and size is discussed in the section :ref:`ref-configuration`.
 
 Discounts
 ---------

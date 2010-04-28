@@ -15,12 +15,12 @@ from django.utils.datastructures import SortedDict
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
-from shop.models import Product, ProductVariation, SelectedProduct, \
-    Cart, Order, DiscountCode
+from shop.models import Product, ProductOption, ProductVariation, \
+    SelectedProduct, Cart, Order, DiscountCode
 from shop.checkout import CHECKOUT_STEP_FIRST, CHECKOUT_STEP_LAST, \
     CHECKOUT_STEP_PAYMENT
 from shop.settings import CARD_TYPES, CHECKOUT_STEPS_SPLIT, \
-    CHECKOUT_STEPS_CONFIRMATION
+    CHECKOUT_STEPS_CONFIRMATION, OPTION_TYPE_CHOICES
 from shop.templatetags.shop_tags import thumbnail
 from shop.utils import make_choices, set_locale, set_cookie
 
@@ -47,14 +47,16 @@ def get_add_product_form(product):
             """
             self._to_cart = kwargs.pop("to_cart", True)
             super(AddProductForm, self).__init__(*args, **kwargs)
-            option_names = [f.name for f in ProductVariation.option_fields()]
+            option_names, option_labels = zip(*[(f.name, f.verbose_name) 
+                for f in ProductVariation.option_fields()])
             option_values = zip(*product.variations.filter(
                 unit_price__isnull=False).values_list(*option_names))
             if option_values:
                 for i, name in enumerate(option_names):
                     values = filter(None, set(option_values[i]))
                     if values:
-                        field = forms.ChoiceField(choices=make_choices(values))
+                        field = forms.ChoiceField(label=option_labels[i], 
+                            choices=make_choices(values))
                         self.fields[name] = field
     
         def clean(self):
@@ -307,7 +309,7 @@ class LoginForm(UserForm):
         return self.cleaned_data
     
 #######################
-#    admin widgets    
+#    ADMIN WIDGETS    #    
 #######################
 
 class ImageWidget(forms.FileInput):
@@ -342,12 +344,14 @@ class MoneyWidget(forms.TextInput):
 class ProductAdminFormMetaclass(ModelFormMetaclass):
     """
     Metaclass for the Product Admin form that dynamically assigns each of the 
-    types of product options as 
+    types of product options as set of checkboxes for selecting which options 
+    to use for creating new product variations.
     """
     def __new__(cls, name, bases, attrs):
-        for field in ProductVariation.option_fields():
-            attrs[field.name] = forms.MultipleChoiceField(choices=field.choices, 
-                widget=forms.CheckboxSelectMultiple, required=False)
+        for option in OPTION_TYPE_CHOICES:
+            field = forms.MultipleChoiceField(label=option[1], 
+                required=False, widget=forms.CheckboxSelectMultiple)
+            attrs["option%s" % option[0]] = field
         return super(ProductAdminFormMetaclass, cls).__new__(cls, name, bases, 
             attrs)
 
@@ -358,6 +362,15 @@ class ProductAdminForm(forms.ModelForm):
     __metaclass__ = ProductAdminFormMetaclass
     class Meta:
         model = Product
+        
+    def __init__(self, *args, **kwargs):
+        """
+        Set the choices for each of the fields for product options, hiding them 
+        if no choices exist.
+        """
+        super(ProductAdminForm, self).__init__(*args, **kwargs)
+        for field, options in ProductOption.objects.as_fields().items():
+            self.fields[field].choices = make_choices(options)
 
 class ProductVariationAdminForm(forms.ModelForm):
     """

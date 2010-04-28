@@ -7,7 +7,7 @@ from shop.fields import MoneyField
 from shop.forms import ProductAdminForm, ProductVariationAdminForm, \
     ProductVariationAdminFormset, DiscountAdminForm, ImageWidget, MoneyWidget
 from shop.models import Category, Product, ProductImage, ProductVariation, \
-    Order, OrderItem, Sale, DiscountCode
+    ProductOption, Order, OrderItem, Sale, DiscountCode
 
 
 # lists of field names
@@ -75,6 +75,14 @@ class ProductAdmin(admin.ModelAdmin):
             self._product.variations.manage_empty()
             self._product.copy_default_variation()
 
+class ProductOptionAdmin(admin.ModelAdmin):
+    ordering = ("type", "name")
+    list_display = ("type", "name")
+    list_filter = ("type",)
+    list_display_links = ("type", "name")
+    search_fields = ("type", "name")
+    radio_fields = {"type": admin.HORIZONTAL}
+
 class OrderItemInline(admin.TabularInline):
     verbose_name_plural = _("Items")
     model = OrderItem
@@ -139,6 +147,7 @@ class DiscountCodeAdmin(admin.ModelAdmin):
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
+admin.site.register(ProductOption, ProductOptionAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Sale, SaleAdmin)
 admin.site.register(DiscountCode, DiscountCodeAdmin)

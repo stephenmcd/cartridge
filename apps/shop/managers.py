@@ -1,4 +1,5 @@
 
+from collections import defaultdict
 from datetime import datetime, timedelta
 from operator import ior, iand
 from string import punctuation
@@ -147,6 +148,17 @@ class CartManager(Manager):
         else:
             cart.save() # update timestamp
         return cart
+
+class ProductOptionManager(Manager):
+
+    def as_fields(self):
+        """
+        Return a dict of product options as their field names and choices.
+        """
+        options = defaultdict(list)
+        for option in self.all():
+            options["option%s" % option.type].append(option.name)
+        return options        
 
 class ProductVariationManager(Manager):
 

@@ -89,19 +89,12 @@ Default: ``"do_not_reply@%s" % socket.gethostname()``
 
 The email address that order receipts should be emailed from.
 
-ORDER_STATUSES
-^^^^^^^^^^^^^^
+ORDER_STATUS_CHOICES
+^^^^^^^^^^^^^^^^^^^^
 
 Default: ``((1, _("Unprocessed")), (2, _("Processed")))``
 
-Choices for the ``Order.status`` field.
-
-ORDER_STATUS_DEFAULT
-^^^^^^^^^^^^^^^^^^^^
-
-Default: ``1``
-
-Default value for the ``Order.status`` field when new orders are created.
+Choices for the ``Order.status`` field. The first status is used as the default.
 
 PER_PAGE_CATEGORY
 ^^^^^^^^^^^^^^^^^
@@ -124,11 +117,12 @@ Default ``15``
 
 The maximum number of paging links to show.
 
-# sequence of name/sequence pairs defining the selectable options for products
-# PRODUCT_OPTIONS = getattr(settings, "SHOP_PRODUCT_OPTIONS", (
-#     ("size", ("Extra Small","Small","Regular","Large","Extra Large")),
-#     ("colour", ("Red","Orange","Yellow","Green","Blue","Indigo","Violet")),
-# ))
+PRODUCT_SORT_OPTIONS
+^^^^^^^^^^^^^^^^^^^^
+
+Default ``(_("Relevance"), None), (_("Least expensive"), "unit_price"), (_("Most expensive"), "-unit_price"), (_("Recently added"), "-date_added"))``
+
+A sequence of description and fields with their directions as pairs defining the options available for sorting a list of products when viewing a category or search results.
 
 SSL_ENABLED
 ^^^^^^^^^^^
@@ -145,7 +139,7 @@ The following settings are provided by Cartridge but are not specific to Cartrid
 ADMIN_REORDER
 ^^^^^^^^^^^^^
 
-Default: ``(("shop", ("Category", "Product", "Sale", "DiscountCode", "Order")),)``
+Default: ``(("shop", ("Category", "Product", "ProductOption", "Sale", "DiscountCode", "Order")),)``
 
 A tuple of two-item tuples, each containing an application name and a tuple of model names belonging to the application. The listing of applications and models in the admin will be displayed in the same order as given in this setting. If you override ``ADMIN_REORDER`` in your project's ``settings`` module without specifying the ``shop`` application, the above default will be combined with your custom setting.
 
