@@ -71,7 +71,14 @@ if not (len(sys.argv) > 1 and sys.argv[1] == "test"):
     else:
         INSTALLED_APPS = list(INSTALLED_APPS) + ["south"]
 
-
+try:
+    import django_extensions
+except ImportError:
+    pass
+else:
+    INSTALLED_APPS = list(INSTALLED_APPS) + ["django_extensions"]
+ 
+ 
 # caching
 CACHE_BACKEND = ""
 CACHE_TIMEOUT = CACHE_MIDDLEWARE_SECONDS = 0

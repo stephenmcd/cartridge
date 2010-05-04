@@ -4,12 +4,13 @@ from django.contrib.auth import logout as auth_logout
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.forms import Form
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
+from django.contrib.admin.views.decorators import staff_member_required
 
 from shop.checkout import billing_shipping, payment, initial_order_data, \
     send_order_email, CheckoutError, CHECKOUT_STEP_FIRST, CHECKOUT_STEP_LAST, \
@@ -53,7 +54,6 @@ def product_list(products, request, per_page):
         products = paginator.page(paginator.num_pages)
     products.sort = sort_name
     return products
-
 
 def category(request, slug, template="shop/category.html"):
     """
@@ -280,4 +280,16 @@ def complete(request, template="shop/complete.html"):
     Redirected to once an order is complete.
     """
     return render_to_response(template, {}, RequestContext(request))
+
+def admin_category_ordering(request):
+    """
+    Updates the ordering of categories via AJAX from within the admin.
+    """
+    for i, cat in enumerate(request.POST.get("ordering", "").split(",")):
+        try:
+            Category.objects.filter(id=cat.split("_")[-1]).update(ordering=i)
+        except ValueError:
+            pass
+    return HttpResponse("")
+admin_category_ordering = staff_member_required(admin_category_ordering)
 

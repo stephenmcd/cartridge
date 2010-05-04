@@ -1,6 +1,7 @@
 
 import os
 import locale
+from collections import defaultdict
 from urllib import quote
 
 from django import template
@@ -24,10 +25,8 @@ def _category_menu(context, parent_category, category_qs):
     for retrieval on subsequent recursive calls from the menu template
     """
     if "menu_cats" not in context:
-        categories = {}
-        for category in category_qs:
-            if category.parent_id not in categories:
-                categories[category.parent_id] = []
+        categories = defaultdict(list)
+        for category in category_qs.order_by("ordering"):
             categories[category.parent_id].append(category)
         context["menu_cats"] = categories
     if parent_category is not None:

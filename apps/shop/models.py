@@ -90,6 +90,7 @@ class Category(Displayable):
         related_name="children")
     titles = models.CharField(editable=False, max_length=1000, blank=True, 
         null=True)
+    ordering = models.IntegerField(editable=False, null=True)
 
     class Meta:
         verbose_name = _("Category")
@@ -101,7 +102,8 @@ class Category(Displayable):
         
     def save(self, *args, **kwargs):
         """
-        Create the titles field using the titles up the parent chain.
+        Create the titles field using the titles up the parent chain and set 
+        the initial value for ordering.
         """
         if self.id is None:
             titles = [self.title]
@@ -110,7 +112,16 @@ class Category(Displayable):
                 titles.insert(0, parent.title)
                 parent = parent.parent
             self.titles = " / ".join(titles)
+            self.ordering = Category.objects.filter(parent=self.parent).count()
         super(Category, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        """
+        Update the ordering values for the sibling categories.
+        """
+        Category.objects.filter(parent=self.parent, ordering__gte=self.ordering
+            ).update(ordering=models.F("ordering") - 1)
+        super(Category, self).delete(*args, **kwargs)
         
     def get_slug(self):
         slug = slugify(self.title)

@@ -10,6 +10,8 @@ urlpatterns = patterns("shop.views",
     url("^cart/$", "cart", name="shop_cart"),
     url("^checkout/$", "checkout", name="shop_checkout"),
     url("^checkout/complete/$", "complete", name="shop_complete"),
+    url("^admin_category_ordering/$", "admin_category_ordering", 
+        name="admin_category_ordering"),
 )
 
 if CHECKOUT_ACCOUNT_ENABLED:
