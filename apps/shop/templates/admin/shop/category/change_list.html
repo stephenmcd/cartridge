@@ -36,18 +36,19 @@
 	if (at > -1) {
 		ids = document.cookie.substr(at + cookie.length + 1).split(';')[0];
 	}
-
+	
 	var toggleID = function(opened, id) {
 		// Add or remove the category ID from the cookie IDs string.
-		var pad = function(s) {return ',' + s + ',';};
+		var index = $.inArray(id, ids.split(','));
 		if (opened) {
-			if (pad(ids).indexOf(pad(id)) == -1) {
+			if (index == -1) {
 				if (ids) {ids += ',';}
 				ids += id;
 			}
-		} else { 
-			ids = pad(ids).split(pad(id)).join('');
-			ids = ids.substr(1, ids.length - 2);
+		} else if (index > -1) { 
+    		ids = ids.split(',');
+    		ids.splice(index, 1);
+			ids = ids.join(',');
 		}
 		document.cookie = cookie + '=' + ids + '; path=/';
 	};
