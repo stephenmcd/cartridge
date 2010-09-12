@@ -20,7 +20,6 @@ for e in exclude:
 from setuptools import setup, find_packages
 
 from cartridge import __version__ as version
-from cartridge.project_template import settings
 
 try:
     setup(
@@ -39,7 +38,7 @@ try:
 
         install_requires=[
             "setuptools",
-            "mezzanine",
+            "mezzanine >= 0.8",
         ],
 
         classifiers=[
