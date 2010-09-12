@@ -1,22 +1,23 @@
+==========
 Components
 ==========
 
 The following section describes the various components within Cartridge and mostly describes the Django models used. All of the models, managers and admin classes referred to in this section are contained in the ``shop.models``, ``shop.managers`` and ``shop.admin`` modules respectively.
 
 Displayable Items
------------------
+=================
 
 The ``Displayable`` abstract model provides common features for an item displayed on the site such as the item's title, automatic generation of slug fields via ``Displayable.save()`` and a Boolean field ``Displayable.active`` for controlling whether or not the item is visible on the site. The ``Displayable`` abstract model is inherited by the ``Category`` and ``Product`` models discussed next.
 
 Categories
-----------
+==========
 
 The ``Category`` model provides the navigational tree structure for organising products throughout the site. This structure is stored using the self referencing ForeignKeyField ``Category.parent`` and rendered on both the site and in the admin via the ``category_menu`` and  ``category_menu_admin`` template tags respectively. When viewing the list of categories in the admin, the listing template is overridden with a custom ``change_list.html`` template that allows the category tree to be managed.
 
 The ``Category`` model inherits from the ``Displayable`` abstract model mentioned previously. It also contains a ManyToManyField ``Category.products`` that contains the products assigned to the category, although this is defined in the ``Product`` model discussed next.
 
 Products
---------
+========
 
 Products are the corner-stone of Cartridge and are made up from three separate models. Firstly the model ``Product`` provides the container for storing the core attributes of a product. The other two models are ``ProductImage`` and ``ProductVariation`` which each contain a ForeignKeyField to ``Product`` and can be accessed via ``Product.images`` and ``Product.variations`` respectively.
 
@@ -25,7 +26,7 @@ Like the ``Category`` model, the ``Product`` model inherits from the abstract mo
 .. _ref-priced-items:
 
 Priced Items
-^^^^^^^^^^^^
+------------
 
 The ``Priced`` abstract model provides common features for an item that has a price. It contains fields such as ``Priced.unit_price`` for the base price and three fields that control whether the given item is on sale:
 
@@ -42,7 +43,7 @@ The ``Priced`` model also contains several convenience methods:
 The ``Priced`` abstract model is inherited by the ``Product`` model previously discussed and the ``ProductVariation`` model discussed next.
 
 Product Variations
-^^^^^^^^^^^^^^^^^^
+------------------
 
 The ``ProductVariation`` model represents a unique combination of options for a product. Consider a shirt that comes in two colours and three sizes: this would be represented with a single ``Product`` instance for the shirt, and six ``ProductVariation`` instances, one for each colour/size combination. These options are discussed below in :ref:`ref-product-options`.
 
@@ -55,26 +56,26 @@ The ``ProductVariation`` model also contains an `SKUField <http://en.wikipedia.o
 The ``ProductVariation`` model also contains a BooleanField ``ProductVariation.default`` which is used to specify which ``ProductVariation`` instance to use when displaying the related ``Product`` instance on the site. Only one ``ProductVariation`` instance can have this field set to ``True`` and this constraint is managed within the ``ProductAdmin.save_formset()`` method referred to above.
 
 Product Images
-^^^^^^^^^^^^^^
+--------------
 
 The ``ProductImage`` model is a simple container for storing an image file against a related ``Product`` instance. It contains an ImageField ``ProductImage.file`` and a CharField ``ProductImage.description`` which gives the image a meaningful description. The description provides a means of identifying the image so that it can be easily selected as the related image for the ``ProductVariation`` model which contains a nullable (optional) reference to the ``ProductImage`` model via the ForeignKeyField ``ProductVariation.image``.
 
 .. _ref-denormalized-fields:
 
 Denormalized Fields
-^^^^^^^^^^^^^^^^^^^
+-------------------
 
 Certain fields are duplicated for the ``Product`` model in order to avoid querying the database for ``ProductImage`` and ``ProductVariation`` instances when a large number of products are being iterated through on the site and the product's image or price need to be displayed. These fields are those provided by the ``Priced`` abstract model which both the ``Product`` and ``ProductVariation`` models inherit from, as well a CharField ``Product.image`` which stores the location of the image in the related ``ProductImage`` instance that is determined to be the default for display. The values for these fields are set for the ``Product`` instance when the  ``ProductAdmin.save_formset()`` method is run as referred to above. The  ``ProductVariation.default`` field is used to determine which ``ProductVariation`` instance's ``Priced`` fields are duplicated. The ``ProductImage`` related to the ``ProductVariation`` instance is used for the ``Product.image`` field if selected, otherwise the first ``ProductImage`` instance related to the ``Product`` instance is used.
 
 .. _ref-product-options:
 
 Product Options
-^^^^^^^^^^^^^^^
+---------------
 
 The ``ProductOption`` model provides a simple type and name for a selectable option for a ``ProductVariation`` instance, for example Size: Small or Colour: Red. For performance and simplicty these options don't use a model relationship with the ``ProductVariation`` model and simply store the pool of available options. The configuration of available types such as colour and size is discussed in the section :ref:`ref-configuration`.
 
 Discounts
----------
+=========
 
 The ``Discount`` abstract model provides common features for the reduction of a price. It contains fields for three types of reductions:
 
@@ -87,19 +88,19 @@ The ``Discount`` model also contains a DateTimeField ``Discount.valid_from`` and
 The ``Discount`` abstract model is inherited by the ``DiscountCode`` and ``Sale`` models discussed next.
 
 Discount Codes
-^^^^^^^^^^^^^^
+--------------
 
 The ``DiscountCode`` model provides a way for managing promotional codes that a customer can enter during the checkout process to receive a discount on their order. The ``DiscountCode`` model inhreits from the ``Discount`` abstract model as referred to above and also contains fields such as ``DiscountCode.code`` for the promotional code to be entered, ``DiscountCode.min_purchase`` for specifying a minimum order total required for applying the discount and a BooleanField ``DiscountCode.free_shipping`` which can be checked to provide free shipping for the discount code.
 
 Sales
-^^^^^
+-----
 
 The ``Sale`` model provides a way for managing discounts across selections of ``Product`` instances. Like the ``DiscountCode`` model, the ``Sale`` model inherits from the abstract model ``Discount`` however the ``Sale`` model does not provide any extra fields. Instead it acts as a bulk update tool so that when a ``Sale`` instance is created or updated, it modifies the ``Product`` and related ``ProductVariation`` instances according to the selections made for ``Sale.categories`` and ``Sales.products``. When this occurs the various sale fields discussed in :ref:`ref-priced-items` such as ``Priced.sale_price``, ``Priced.sale_from`` and  ``Priced.sale_to`` are updated according to the type of discount given for either ``Sale.discount_deduct``, ``Sale.discount_percent`` or ``Sale.discount_exact`` and the dates given for ``Sale.valid_from`` and ``Sale.valid_to`` respectively. ``Sale.id`` is also stored against ``Product`` and related ``ProductVariation`` instance so that if the ``Sale`` instance is updated or deleted the ``Product`` and related ``ProductVariation`` instances are updated with the relevant fields removed. This process occurs within the ``Sale._clear()`` method which is called in both the ``Sale.save()`` and ``Sale.delete()`` methods.
 
 This goal of this architecture is to decouple the sale information for each ``Product`` instance from the actual ``Sale`` instance so that no database querying is required in order to display sale information for a ``Product`` instance.
 
 Carts
------
+=====
 
 The ``Cart`` and related ``CartItem`` models represent a customer's shopping cart. The ``Cart`` model provides the container for storing each ``CartItem`` instance. It contains a customer manager ``CartManager`` which is assigned to ``Cart.objects``. The ``CartManager`` contains the method ``CartManager.from_request()`` which when given a request object, is responsible for creating a ``Cart`` instance and maintaining it across the session.
 
@@ -112,11 +113,11 @@ The ``Cart`` model contains the methods ``Cart.add_item()`` and ``Cart.remove_it
 The ``CartItem`` model represents each unique product in the customer's ``Cart`` instance and inherits from the ``SelectedProduct`` abstract model discussed next.
 
 Selected Products
-^^^^^^^^^^^^^^^^^
+-----------------
 
 The ``SelectedProduct`` abstract model represents a unique product and set of selected options that has been selected by a customer. The ``SelectedProduct`` model is inherited by the ``CartItem`` model previously discussed and the ``OrderItem`` model discussed next.
 
 The ``SelectedProduct`` abstract model acts as a snapshot of a ``ProductVariation`` instance in that is does not contain a direct reference to the ``ProductVariation`` instance, but copies information from it when the ``SelectedProduct`` instance is created. This is to ensure that any changes made to a ``ProductVariation`` instance do not affect existing ``SelectedProduct`` instances. The ``SelectedProduct`` model contains fields such as ``SelectedProduct.sku``, ``SelectedProduct.unit_price`` and ``SelectedProduct.description``, all of which are copied from the ``ProductVariation`` instance at creation time with the ``SelectedProduct.description`` being created from the  ``ProductVariation`` instances's related ``Product.title`` as well as the selected options for the ``SelectedProduct`` instance. The ``SelectedProduct`` model also contains the IntegerField ``SelectedProduct.quantity`` for storing the selected quantity.
 
 Orders
-------
+======
