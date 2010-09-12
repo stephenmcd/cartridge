@@ -22,8 +22,8 @@ from django.contrib.webdesign.lorem_ipsum import paragraph
 from django.db import connection
 from django.db.models import F
 
-from shop.models import Category, Product
-from shop.settings import PRODUCT_OPTIONS
+from cartridge.shop.models import Category, Product
+from cartridge.shop.settings import PRODUCT_OPTIONS
 
 
 try:

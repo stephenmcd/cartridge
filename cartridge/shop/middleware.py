@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.conf import settings
 
-from shop.settings import SSL_ENABLED, FORCE_SSL_VIEWS, FORCE_HOST
+from cartridge.shop.settings import SSL_ENABLED, FORCE_SSL_VIEWS, FORCE_HOST
 
 
 class SSLRedirect(object):

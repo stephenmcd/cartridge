@@ -15,14 +15,14 @@ from django.utils.datastructures import SortedDict
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
-from shop.models import Product, ProductOption, ProductVariation, \
+from cartridge.shop.models import Product, ProductOption, ProductVariation, \
     SelectedProduct, Cart, Order, DiscountCode
-from shop.checkout import CHECKOUT_STEP_FIRST, CHECKOUT_STEP_LAST, \
+from cartridge.shop.checkout import CHECKOUT_STEP_FIRST, CHECKOUT_STEP_LAST, \
     CHECKOUT_STEP_PAYMENT
-from shop.settings import CARD_TYPES, CHECKOUT_STEPS_SPLIT, \
+from cartridge.shop.settings import CARD_TYPES, CHECKOUT_STEPS_SPLIT, \
     CHECKOUT_STEPS_CONFIRMATION, OPTION_TYPE_CHOICES
-from shop.templatetags.shop_tags import thumbnail
-from shop.utils import make_choices, set_locale, set_cookie
+from cartridge.shop.templatetags.shop_tags import thumbnail
+from cartridge.shop.utils import make_choices, set_locale, set_cookie
 
 
 ADD_PRODUCT_ERRORS = {

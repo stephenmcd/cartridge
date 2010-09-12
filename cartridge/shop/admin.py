@@ -3,10 +3,10 @@ from django.contrib import admin
 from django.db.models import ImageField
 from django.utils.translation import ugettext_lazy as _
 
-from shop.fields import MoneyField
-from shop.forms import ProductAdminForm, ProductVariationAdminForm, \
+from cartridge.shop.fields import MoneyField
+from cartridge.shop.forms import ProductAdminForm, ProductVariationAdminForm, \
     ProductVariationAdminFormset, DiscountAdminForm, ImageWidget, MoneyWidget
-from shop.models import Category, Product, ProductImage, ProductVariation, \
+from cartridge.shop.models import Category, Product, ProductImage, ProductVariation, \
     ProductOption, Order, OrderItem, Sale, DiscountCode
 
 

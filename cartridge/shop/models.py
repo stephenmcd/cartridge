@@ -10,9 +10,9 @@ from django.db.models.base import ModelBase
 from django.template.defaultfilters import slugify, striptags
 from django.utils.translation import ugettext, ugettext_lazy as _
 
-from shop.fields import OptionField, MoneyField, SKUField, DiscountCodeField
-from shop import managers
-from shop.settings import ORDER_STATUS_CHOICES, OPTION_TYPE_CHOICES
+from cartridge.shop.fields import OptionField, MoneyField, SKUField, DiscountCodeField
+from cartridge.shop import managers
+from cartridge.shop.settings import ORDER_STATUS_CHOICES, OPTION_TYPE_CHOICES
 
 
 class Displayable(models.Model):
@@ -207,7 +207,7 @@ class Product(Displayable, Priced):
     def admin_thumb(self):
         if self.image is None:
             return ""
-        from shop.templatetags.shop_tags import thumbnail
+        from cartridge.shop.templatetags.shop_tags import thumbnail
         thumb_url = "%s%s" % (settings.MEDIA_URL, thumbnail(self.image, 24, 24))
         return "<img src='%s' />" % thumb_url
     admin_thumb.allow_tags = True
@@ -245,7 +245,7 @@ class ProductVariationMetaclass(ModelBase):
 
 class ProductVariation(Priced):
     """
-    A combination of selected options from shop.settings.PRODUCT_OPTIONS for a 
+    A combination of selected options from cartridge.shop.settings.PRODUCT_OPTIONS for a 
     Product instance.
     """
     

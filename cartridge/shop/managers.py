@@ -9,7 +9,7 @@ from django.db.models import Manager, Q, CharField, TextField
 from django.db.models.query import QuerySet
 from django.utils.datastructures import SortedDict
 
-from shop.settings import CART_EXPIRY_MINUTES
+from cartridge.shop.settings import CART_EXPIRY_MINUTES
 
 
 class ActiveManager(Manager):

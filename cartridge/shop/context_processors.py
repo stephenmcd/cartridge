@@ -1,6 +1,6 @@
 
-from shop.models import Cart
-from shop import settings
+from cartridge.shop.models import Cart
+from cartridge.shop import settings
 
 
 def shop_globals(request):

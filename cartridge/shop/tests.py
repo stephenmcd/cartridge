@@ -5,9 +5,9 @@ from operator import mul
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-from shop.models import Product, ProductOption, ProductVariation, Category, \
+from cartridge.shop.models import Product, ProductOption, ProductVariation, Category, \
     Cart, CartItem
-from shop.settings import CHECKOUT_ACCOUNT_ENABLED, CHECKOUT_ACCOUNT_REQUIRED, \
+from cartridge.shop.settings import CHECKOUT_ACCOUNT_ENABLED, CHECKOUT_ACCOUNT_REQUIRED, \
     OPTION_TYPE_CHOICES
 
 

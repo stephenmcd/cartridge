@@ -15,7 +15,7 @@ from django.db.models import Model
 from django.template import loader, Context
 from django.utils.translation import ugettext as _
 
-from shop.settings import CURRENCY_LOCALE
+from cartridge.shop.settings import CURRENCY_LOCALE
 
 
 def make_choices(choices):

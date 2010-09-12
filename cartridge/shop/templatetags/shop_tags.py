@@ -9,9 +9,9 @@ from django.conf import settings
 from django.template.defaultfilters import slugify
 from django.utils.datastructures import SortedDict
 
-from shop.models import Category
-from shop.utils import set_locale
-from shop.settings import ADMIN_REORDER, CHECKOUT_STEPS_SPLIT, \
+from cartridge.shop.models import Category
+from cartridge.shop.utils import set_locale
+from cartridge.shop.settings import ADMIN_REORDER, CHECKOUT_STEPS_SPLIT, \
     PRODUCT_SORT_OPTIONS, MAX_PAGING_LINKS
 
 

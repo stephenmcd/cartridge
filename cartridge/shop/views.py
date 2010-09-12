@@ -12,15 +12,15 @@ from django.utils import simplejson
 from django.utils.translation import ugettext as _
 from django.contrib.admin.views.decorators import staff_member_required
 
-from shop.checkout import billing_shipping, payment, initial_order_data, \
+from cartridge.shop.checkout import billing_shipping, payment, initial_order_data, \
     send_order_email, CheckoutError, CHECKOUT_STEP_FIRST, CHECKOUT_STEP_LAST, \
     CHECKOUT_TEMPLATES
-from shop.forms import get_add_product_form, OrderForm, LoginForm, SignupForm
-from shop.models import Category, Product, ProductVariation, Cart
-from shop.settings import LOGIN_URL, PER_PAGE_CATEGORY, PER_PAGE_SEARCH, \
+from cartridge.shop.forms import get_add_product_form, OrderForm, LoginForm, SignupForm
+from cartridge.shop.models import Category, Product, ProductVariation, Cart
+from cartridge.shop.settings import LOGIN_URL, PER_PAGE_CATEGORY, PER_PAGE_SEARCH, \
     PRODUCT_SORT_OPTIONS, CHECKOUT_STEPS_CONFIRMATION, CHECKOUT_STEPS_SPLIT, \
     CHECKOUT_ACCOUNT_ENABLED, CHECKOUT_ACCOUNT_REQUIRED
-from shop.utils import set_cookie, send_mail_template, sign
+from cartridge.shop.utils import set_cookie, send_mail_template, sign
 
 
 # Fall back to authenticated-only messaging if messages app is unavailable.

@@ -1,8 +1,9 @@
 
 from django.conf.urls.defaults import *
-from shop.settings import CHECKOUT_ACCOUNT_ENABLED
+from cartridge.shop.settings import CHECKOUT_ACCOUNT_ENABLED
 
-urlpatterns = patterns("shop.views",
+
+urlpatterns = patterns("cartridge.shop.views",
     url("^category/(?P<slug>.*)/$", "category", name="shop_category"),
     url("^product/(?P<slug>.*)/$", "product", name="shop_product"),
     url("^search/$", "search", name="shop_search"),
@@ -15,7 +16,7 @@ urlpatterns = patterns("shop.views",
 )
 
 if CHECKOUT_ACCOUNT_ENABLED:
-    urlpatterns += patterns("shop.views",
+    urlpatterns += patterns("cartridge.shop.views",
         url("^account/$", "account", name="shop_account"),
         url("^logout/$", "logout", name="shop_logout"),
     )

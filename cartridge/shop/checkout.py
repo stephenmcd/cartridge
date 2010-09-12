@@ -11,10 +11,10 @@ payment() - Hook for payment gateway integration.
 
 from django.utils.translation import ugettext as _
 
-from shop.models import Order
-from shop.settings import CHECKOUT_STEPS_SPLIT, CHECKOUT_STEPS_CONFIRMATION, \
+from cartridge.shop.models import Order
+from cartridge.shop.settings import CHECKOUT_STEPS_SPLIT, CHECKOUT_STEPS_CONFIRMATION, \
     ORDER_FROM_EMAIL
-from shop.utils import set_shipping, send_mail_template, sign
+from cartridge.shop.utils import set_shipping, send_mail_template, sign
 
 
 def billing_shipping(request, order_form):
