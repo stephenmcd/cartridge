@@ -17,12 +17,21 @@ from cartridge.shop.settings import CHECKOUT_STEPS_SPLIT, CHECKOUT_STEPS_CONFIRM
 from cartridge.shop.utils import set_shipping, send_mail_template, sign
 
 
+class CheckoutError(Exception):
+    """
+    Raised if an error occurs when processing payment above in 
+    shop.checkout.payment() and caught in shop.views.checkout()
+    """
+    pass
+
+
 def billing_shipping(request, order_form):
     """
     Implement shipping handling here.
     """
     # Cart is also accessible via shop.Cart.objects.from_request(request)
     set_shipping(request, "Shipping Test", 10)
+
     
 def payment(request, order_form):
     """
@@ -30,6 +39,7 @@ def payment(request, order_form):
     """
     # Eg, for declined credit card: raise CheckoutError("Credit card declined")
     pass
+
     
 def initial_order_data(request):
     """
@@ -59,6 +69,7 @@ def initial_order_data(request):
                 shipping(f) in initial and initial[f] != initial[shipping(f)]]):
                 initial["same_billing_shipping"] = False
     return initial
+
     
 def send_order_email(request, order):
     """
@@ -73,14 +84,8 @@ def send_order_email(request, order):
     send_mail_template(_("Order Receipt"), "shop/email/order_receipt", 
         ORDER_FROM_EMAIL, order.billing_detail_email, context=order_context)
 
-class CheckoutError(Exception):
-    """
-    Raised if an error occurs when processing payment above in 
-    shop.checkout.payment() and caught in shop.views.checkout()
-    """
-    pass
 
-# set up some constants for identifying each checkout step.
+# Set up some constants for identifying each checkout step.
 CHECKOUT_TEMPLATES = ["billing_shipping"]
 CHECKOUT_STEP_FIRST = CHECKOUT_STEP_PAYMENT = CHECKOUT_STEP_LAST = 1
 if CHECKOUT_STEPS_SPLIT:

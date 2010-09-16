@@ -1,12 +1,22 @@
-{% extends "shop/base.html" %}
+{% extends "base.html" %}
 {% load shop_tags i18n %}
+
+{% block body_id %}checkout{% endblock %}
 
 {% block title %}{% trans "Checkout" %}{% endblock %}
 
+{% block breadcrumb_menu %}
+<ul>
+    <li><a href="{% url home %}">{% trans "Home" %}</a> &gt;</li>
+    <li>{% trans "Checkout" %}</li>
+</ul><br />
+{% endblock %}
+
 {% block main %}
 
-{% order_totals %}
-<form method="post" id="checkout-form">
+<p>{% order_totals %}</p>
+
+<form method="post" id="checkout-form" class="form">
 
 	{% with form.non_field_errors as errors %}
 	    {% if errors or form.errors %}

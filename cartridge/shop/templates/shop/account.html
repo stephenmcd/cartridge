@@ -1,13 +1,20 @@
-{% extends "shop/base.html" %}
+{% extends "base.html" %}
 {% load i18n %}
 
 {% block title %}{% trans "Login / Signup" %}{% endblock %}
+
+{% block breadcrumb_menu %}
+<ul>
+    <li><a href="{% url home %}">{% trans "Home" %}</a> &gt;</li>
+    <li>{% trans "Account" %}</li>
+</ul><br />
+{% endblock %}
 
 {% block main %}
 
 <fieldset class="login-signup">
 	<legend>{% trans "Login" %}</legend>
-    <form method="post">
+    <form method="post" class="form">
 	<ul>{{ login_form.as_ul }}</ul>
 	<input class="button" type="submit" 
 	    name="login" value="{% trans "Login" %}" />
@@ -16,7 +23,7 @@
 
 <fieldset class="login-signup">
 	<legend>{% trans "Signup" %}</legend>
-    <form method="post">
+    <form method="post" class="form">
 	<ul>{{ signup_form.as_ul }}</ul>
 	<input class="button" type="submit" 
 	    name="signup" value="{% trans "Signup" %}" />

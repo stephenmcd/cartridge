@@ -4,7 +4,7 @@
 {% block fields %}
 {% if cart.has_items %}
 {% for field, value in form.values %}
-{{ field }}: {{ value }}<br />
+<p class="confirmation">{{ field }}: {{ value }}</p>
 {% endfor %}
 {% for field in form %}{{ field }}{% endfor %}
 {% endif %}

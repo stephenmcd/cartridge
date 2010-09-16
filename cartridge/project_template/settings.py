@@ -1,3 +1,4 @@
+import sys; sys.path.insert(0, "../../../mezzanine/")
 
 from mezzanine.project_template.settings import *
 
@@ -12,9 +13,7 @@ ROOT_URLCONF = "%s.urls" % project_dir
 CACHE_MIDDLEWARE_KEY_PREFIX = project_dir
 
 # Apps/
-INSTALLED_APPS += (
-    "cartridge.shop",
-)
+INSTALLED_APPS.insert(0, "cartridge.shop")
 
 TEMPLATE_CONTEXT_PROCESSORS += (
     "cartridge.shop.context_processors.shop_globals",

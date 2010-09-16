@@ -1,7 +1,14 @@
-{% extends "shop/base.html" %}
+{% extends "base.html" %}
 {% load shop_tags i18n %}
 
 {% block title %}{% trans "Your wishlist" %}{% endblock %}
+
+{% block breadcrumb_menu %}
+<ul>
+    <li><a href="{% url home %}">{% trans "Home" %}</a> &gt;</li>
+    <li>{% trans "Your wishlist" %}</li>
+</ul><br />
+{% endblock %}
 
 {% block main %}
 {% if wishlist %}

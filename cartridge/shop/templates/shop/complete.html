@@ -1,9 +1,16 @@
-{% extends "shop/base.html" %}
+{% extends "base.html" %}
 {% load i18n %}
 
 {% block title %}{% trans "Order Complete" %}{% endblock %}
 
+{% block breadcrumb_menu %}
+<ul>
+    <li><a href="{% url home %}">{% trans "Home" %}</a> &gt;</li>
+    <li>{% trans "Checkout" %}</li>
+</ul><br />
+{% endblock %}
+
 {% block main %}
-<div>{% trans "Order Complete" %}</div>
+<div>{% trans "Order complete" %}</div>
 {% endblock %}
 
