@@ -1,135 +1,14 @@
 
 from collections import defaultdict
 from datetime import datetime, timedelta
-from operator import ior, iand
-from string import punctuation
 
 from django.conf import settings
-from django.db.models import Manager, Q, CharField, TextField
-from django.db.models.query import QuerySet
+from django.db.models import Manager, Q
 from django.utils.datastructures import SortedDict
 
 from cartridge.shop.settings import CART_EXPIRY_MINUTES
 
 
-class ActiveManager(Manager):
-
-    def active(self, *args, **kwargs):
-        """
-        items flagged as active
-        """
-        kwargs["active"] = True
-        return self.filter(*args, **kwargs)
-
-class SearchableQuerySet(QuerySet):
-    
-    def __init__(self, *args, **kwargs):
-        self._search_ordered = False
-        self._search_terms = set()
-        self._search_fields = set(kwargs.pop("search_fields", []))
-        super(SearchableQuerySet, self).__init__(*args, **kwargs)
-
-    def search(self, query, search_fields=None):
-        """
-        Build a queryset matching words in the given search query, treating 
-        quoted terms as exact phrases and taking into account + and - symbols as 
-        modifiers controlling which terms to require and exclude.
-        """
-        
-        # Use fields arg if given, otherwise check internal list which if empty, 
-        # populate from model attr or char-like fields.
-        if search_fields is None:
-            search_fields = self._search_fields
-        if len(search_fields) == 0:
-        	search_fields = getattr(self.model, "search_fields", [])
-        if len(search_fields) == 0:
-            search_fields = [f.name for f in self.model._meta.fields
-                if issubclass(f.__class__, CharField) or 
-                issubclass(f.__class__, TextField)]
-        if len(search_fields) == 0:
-        	return self.none()
-        self._search_fields.update(search_fields)
-
-        # Remove extra spaces, put modifiers inside quoted terms.
-        terms = " ".join(query.split()).replace("+ ", "+").replace('+"', '"+'
-            ).replace("- ", "-").replace('-"', '"-').split('"')
-        # Strip punctuation other than modifiers from terms and create term 
-        # list first from quoted terms, and then remaining words.
-        terms = [("" if t[0] not in "+-" else t[0]) + t.strip(punctuation) 
-            for t in terms[1::2] + "".join(terms[::2]).split()]
-        # Append terms to internal list for sorting when results are iterated.
-        self._search_terms.update([t.lower().strip(punctuation) 
-            for t in terms if t[0] != "-"])
-
-        # Create the queryset combining each set of terms.
-        excluded = [reduce(iand, [~Q(**{"%s__icontains" % f: t[1:]})
-            for f in search_fields]) for t in terms if t[0] == "-"]
-        required = [reduce(ior, [Q(**{"%s__icontains" % f: t[1:]})
-            for f in search_fields]) for t in terms if t[0] == "+"]
-        optional = [reduce(ior, [Q(**{"%s__icontains" % f: t})
-            for f in search_fields]) for t in terms if t[0] not in "+-"]
-        queryset = self
-        if excluded:
-            queryset = queryset.filter(reduce(iand, excluded))
-        if required:
-            queryset = queryset.filter(reduce(iand, required))
-        # Optional terms aren't relevant to the filter if there are terms
-        # that are explicitly required
-        elif optional:
-            queryset = queryset.filter(reduce(ior, optional))
-        return queryset
-
-    def _clone(self, *args, **kwargs):
-        """
-        Ensure attributes are copied to subsequent queries.
-        """
-        for attr in ("_search_terms", "_search_fields", "_search_ordered"):
-            kwargs[attr] = getattr(self, attr)
-        return super(SearchableQuerySet, self)._clone(*args, **kwargs)
-    
-    def order_by(self, *field_names):
-        """
-        Mark the filter as being ordered if search has occurred.
-        """
-        if not self._search_ordered:
-            self._search_ordered = len(self._search_terms) > 0
-        return super(SearchableQuerySet, self).order_by(*field_names)
-        
-    def iterator(self):
-        """
-        If search has occured and no ordering has occurred, sort the results by 
-        number of occurrences of terms.
-        """
-        results = super(SearchableQuerySet, self).iterator()
-        if self._search_terms and not self._search_ordered:
-            sort_key = lambda obj: sum([getattr(obj, f).lower().count(t.lower()) 
-                for f in self._search_fields for t in self._search_terms 
-                if getattr(obj, f)])
-            return iter(sorted(results, key=sort_key, reverse=True))
-        return results
-
-class SearchableManager(Manager):
-    """
-    Manager providing a chainable queryset.
-    Adapted from http://www.djangosnippets.org/snippets/562/
-    """
-    
-    def __init__(self, *args, **kwargs):
-        self._search_fields = kwargs.pop("search_fields", [])
-        super(SearchableManager, self).__init__(*args, **kwargs)
-
-    def get_query_set(self):
-        return SearchableQuerySet(self.model, search_fields=self._search_fields)
-
-    def __getattr__(self, attr, *args):
-        try:
-            return getattr(self.__class__, attr, *args)
-        except AttributeError:
-            return getattr(self.get_query_set(), attr, *args)
-
-class ProductManager(ActiveManager, SearchableManager):
-    pass
-    
 class CartManager(Manager):
 
     def from_request(self, request):
@@ -237,7 +116,7 @@ class ProductActionManager(Manager):
         """
         self._action_for_field("total_purchase")
 
-class DiscountCodeManager(ActiveManager):
+class DiscountCodeManager(Manager):
 
     def active(self, *args, **kwargs):
         """
@@ -245,7 +124,7 @@ class DiscountCodeManager(ActiveManager):
         """
         valid_from = Q(valid_from__isnull=True) | Q(valid_from__lte=datetime.now())
         valid_to = Q(valid_to__isnull=True) | Q(valid_to__gte=datetime.now())
-        return super(DiscountCodeManager, self).active(valid_from, valid_to)
+        return self.filter(valid_from, valid_to, active=True)
     
     def get_valid(self, code, cart):
         """

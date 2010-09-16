@@ -1,7 +1,20 @@
 {% extends "shop/base.html" %}
-{% load shop_tags i18n %}
+{% load mezzanine_tags shop_tags i18n %}
 
-{% block extrahead %}
+{% block meta_title %}{{ product.title }}{% endblock %}
+
+{% block meta_keywords %}{% metablock %}
+{% for keyword in product.keywords.all %}
+    {% if not forloop.first %}, {% endif %}
+    {{ keyword }}
+{% endfor %}
+{% endmetablock %}{% endblock %}
+
+{% block meta_description %}{% metablock %}
+{{ product.description }}
+{% endmetablock %}{% endblock %}
+
+{% block extra_head %}
 {{ block.super }}
 <script type="text/javascript">
 $(function() {
@@ -46,7 +59,16 @@ $(function() {
 </script>
 {% endblock %}
 
-{% block title %}{{ product.title }}{% endblock %}
+{% block breadcrumb_menu %}
+<ul>
+    <li><a href="{% url home %}">{% trans "Home" %}</a> &gt;</li>
+    <li>{{ product.title }}</li>
+</ul><br />
+{% endblock %}
+
+{% block title %}
+{% editable product.title %}{{ product.title }}{% endeditable %}
+{% endblock %}
 
 {% block main %}
 
@@ -70,8 +92,11 @@ $(function() {
 {% endifnotequal %}
 {% endif %}
 
-<div>{{ product.description }}</div>
+{% editable product.content %}
+{{ product.content|safe }}
+{% endeditable %}
 
+{% if product.available %}
 <ul id="variations">
 	{% for variation in variations %}
 	<li id="variation-{{ variation.sku }}"
@@ -88,8 +113,6 @@ $(function() {
 	</li>
 	{% endfor %}
 </ul>
-
-{% if product.available %}
 <form method="post" id="add-cart">
 	<ul>
 		{{ add_product_form.as_ul }}

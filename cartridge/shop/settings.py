@@ -89,12 +89,6 @@ PRODUCT_SORT_OPTIONS = getattr(settings, "SHOP_PRODUCT_SORT_OPTIONS", (
 # Bool to enable automatic redirecting to and from https for checkout.
 SSL_ENABLED = getattr(settings, "SHOP_SSL_ENABLED", not settings.DEBUG)
 
-# Custom ordering of admin app/model listing.
-ADMIN_REORDER = tuple(getattr(settings, "ADMIN_REORDER", ()))
-if "shop" not in dict(ADMIN_REORDER):
-    ADMIN_REORDER += (("shop", ("Category", "Product", "ProductOption", 
-        "Sale", "DiscountCode", "Order")),)
-
 # Decorator that wraps the given func in the CallableSetting object that calls 
 # the func when it is cast to a string.
 callable_setting = lambda func: type("", (), {"__str__": lambda self: func()})()
@@ -103,8 +97,11 @@ callable_setting = lambda func: type("", (), {"__str__": lambda self: func()})()
 @callable_setting
 def LOGIN_URL():
     from django.core.urlresolvers import resolve, reverse, Resolver404
+    from mezzanine.pages.views import page
     try:
-        return resolve(settings.LOGIN_URL)
+        if resolve(settings.LOGIN_URL)[0] is page:
+            raise Resolver404
+        return settings.LOGIN_URL
     except Resolver404:
         return reverse("shop_account")
 

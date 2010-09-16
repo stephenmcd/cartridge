@@ -6,7 +6,7 @@
 {% block main %}
 <div class="category">
 
-{% with category.children.active as child_categories %}
+{% with page.category.children.active as child_categories %}
 {% if child_categories %}
 <ul class="categories">
 	{% for category in child_categories %}

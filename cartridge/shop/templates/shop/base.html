@@ -1,82 +1,72 @@
-{% load shop_tags i18n %}
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" 
-   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"> 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+{% extends "base.html" %}
 
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-	<meta http-equiv="description" name="description" 
-		content="Demo site for Cartridge - a Django shopping cart application">
-	<title>Cartridge Demo</title>
-	<link rel="shortcut icon" href="/favicon.ico" type="image/vnd.microsoft.icon" />
-	<link rel="stylesheet" href="{{ MEDIA_URL }}css/shop.css" media="screen" />
-	<script type="text/javascript" 
-		src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
-	<script type="text/javascript">
-		$(function() {
-			$('#messages a').click(function() {
-				$(this).parent().hide();
-				return false;
-			});
+{% load mezzanine_tags shop_tags i18n %}
+{% load_settings CONTENT_MEDIA_URL %}
+
+{% block extra_head %}
+<script language="javascript" src="{{ CONTENT_MEDIA_URL }}js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript">
+	$(function() {
+		$('#messages a').click(function() {
+			$(this).parent().hide();
+			return false;
 		});
-	</script>
-	{% block extrahead %}{% endblock %}
-</head>
+	});
+</script>
+<style type="text/css">
 
-<body>
+    #account, #cart-panel {margin:20px 0;}
+    #cart-panel {background:#333; padding:10px;} 
+    #cart-panel a {color:#eee; font-weight:bold; line-height:20px;}
+    #product-images-thumb img {margin:10px; margin-left:0;}
 
-	<h1>Cartridge Demo</h1>
-	
-	<form id="search-form" method="post" action="{% url shop_search %}">
-		<input type="text" name="query" value="{{ request.REQUEST.query }}" />
-		<input type="submit" class="button" value="{% trans "Search" %}" />
-		{% if CHECKOUT_ACCOUNT_ENABLED %}
-		<p id="account">
-		    {% if request.user.is_authenticated %}
-		    {% trans "Logged in as: " %}{{ request.user.username }} / 
-		    <a href="{% url shop_logout %}?next={{ request.path }}"
-		        >{% trans "Log out" %}</a>
-		    {% else %}
-		    <a href="{{ LOGIN_URL }}?next={{ request.path }}"
-		        >{% trans "Log in or sign up" %}</a>
-		    {% endif %}
-		 </p>
-		 {% endif %}
-	</form>
-	
-	<div id="cart-panel">
-		<a href="{% url shop_cart %}">
-			{% blocktrans count cart.total_quantity as cart_quantity %}
-			Cart contains 1 item:
-			{% plural %}
-			Cart contains {{ cart_quantity }} items:
-			{% endblocktrans %}
-			{{ cart.total_price|currency }}
-		</a><br />
-		<a href="{% url shop_wishlist %}" class="wishlist">
-			{% blocktrans count wishlist|length as wishlist_count %}
-			Wishlist contains 1 item
-			{% plural %}
-			Wishlist contains {{ wishlist_count }} items
-			{% endblocktrans %}
-		</a>
-	</div>
-	
-	<div id="menu"><h3>{% trans "Categories" %}</h3>{% category_menu %}</div>
-	
-	<div id="main">
-		{% if messages %}
-		<ul id="messages">
-			{% for message in messages %}
-			<li>{{ message }}<a href="#">x</a></li>
-			{% endfor %}
-		</ul>
-		{% endif %}
-		<h2><a href="{{ request.path }}">{% block title %}{% endblock %}</a></h2>
-		{% block main %}{% endblock %}<br clear="both" />
-		<div id="footer">Built with <a href="#">Cartridge</a></div>
-	</div>
-	
-</body>
+</style>
+{% endblock %}
 
-</html>
+{% block right_panel %}
+
+<div id="cart-panel">
+	<a href="{% url shop_cart %}">
+		{% blocktrans count cart.total_quantity as cart_quantity %}
+		Cart contains 1 item:
+		{% plural %}
+		Cart contains {{ cart_quantity }} items:
+		{% endblocktrans %}
+		{{ cart.total_price|currency }}
+	</a><br />
+	<a href="{% url shop_wishlist %}" class="wishlist">
+		{% blocktrans count wishlist|length as wishlist_count %}
+		Wishlist contains 1 item
+		{% plural %}
+		Wishlist contains {{ wishlist_count }} items
+		{% endblocktrans %}
+	</a>
+</div>
+
+{% if CHECKOUT_ACCOUNT_ENABLED %}
+<div id="account">
+    {% if request.user.is_authenticated %}
+    {% trans "Logged in as: " %}{{ request.user.username }} / 
+    <a href="{% url shop_logout %}?next={{ request.path }}"
+        >{% trans "Log out" %}</a>
+    {% else %}
+    <a href="{{ LOGIN_URL }}?next={{ request.path }}"
+        >{% trans "Log in or sign up" %}</a>
+    {% endif %}
+</div>
+{% endif %}
+
+{{ block.super }}
+
+{% endblock %}
+
+{% comment %}
+{% if messages %}
+<ul id="messages">
+	{% for message in messages %}
+	<li>{{ message }}<a href="#">x</a></li>
+	{% endfor %}
+</ul>
+{% endif %}
+{% endcomment %}
+

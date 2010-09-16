@@ -3,73 +3,61 @@
 
 {% block extrahead %}{{ block.super }}
 <style type="text/css">
-	
-	#show-image-row {margin:10px; font-weight:bold; text-align:right;}
-	#show-image-row a {color:#666; font-size:11px;}
-	#show-image-row a:hover {color:#036;}
-	#show-image-row img {width:10px; height:10px; margin:0 5px 2px 0;}
-	.create-variations li {list-style-type:none; float:left; margin-right:10px;}
-	.create-variations label {width:auto;}
-	.original a {display:none;}
-	.original p {background:#eee; color:#000 !important; 
-	    font-weight:normal !important; width:99%;
-	    margin:-3px 0 10px 0 !important;  
-	    padding:3px 5px 8px 5px !important;
-	    border:1px solid #ddd; border-top-width:0;}
-	.sku input {width:100px;} 
-	.unit_price input, .sale_price input, .num_in_stock input {width:50px;}
-	.module td {border-right:1px solid #ddd;}
+
+	.create-variations li {list-style-type:none; float:left;}
+	.create-variations label {width:120px;}
+	.create-variations li label {width:auto;}
+    .create-variations input {margin:-1px 3px 0px 5px;}
+    .create-variations {margin-top:20px;}
+	.sku input {width:100px !important;} 
+	.tiny {font-size:70%;}
+	.unit_price input, .sale_price input, .num_in_stock input {
+	    width:50px !important;}
+	.item img {vertical-align:middle; margin-right:10px !important;}
+	.viewsitelink {display:none !important;}
 	
 </style>
-<script type="text/javascript" 
-	src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
 <script type="text/javascript">
 
 $(function() {
+
+    var grappelli = $('.admin-title').length == 1;
+
+	// Move the "create variations" fieldset to under current variations.
+	var variationsFieldset;
+	if (grappelli) {
+	    variationsFieldset = $('#id_variations-INITIAL_FORMS + ' + 
+	        '.items').parent();
+	} else {
+	    variationsFieldset = $('#id_variations-INITIAL_FORMS + ' + 
+	        'fieldset').parent().parent();
+	}
+	$('.create-variations').insertAfter(variationsFieldset);
 	
-	var imagesFieldset = '#id_images-INITIAL_FORMS + fieldset';
-	var variationsFieldset = '#id_variations-INITIAL_FORMS + fieldset';
-	var variationDefaults = variationsFieldset + ' td.default input:checkbox';
-	var addButtonID = 'show-image-row';
-	
-	// hide all the unused "extra" image field table rows apart from the first
-	$(imagesFieldset + ' tr[class^=row]:not(:first):not(.has_original)').hide();
-	// if a description was entered for the image the fieldset will be invalid 
-	// and not contain the 'has_original' class, so the above will hide it,
-	// therefore show it again as well as removing the invalid image name that's
-	// used in the img tag for displaying the image, and replacing it with a 
-	// reminder to the user to select the image again as django fails to maintain
-	// a reference to the uploaded image when another field is invalid 
-	$(imagesFieldset + ' ul[class=errorlist]').parent().parent().show().find(
-		'a').replaceWith('<ul class="errorlist"><li>' + 
-		'{% trans "Please select the image again" %}</li></ul>');
-	
-	// add the add button for showing the next hidden field image field table row
-	$(imagesFieldset).append('<p id="' + addButtonID + '"><img src="' +
-		'{% admin_media_prefix %}img/admin/icon_addlink.gif" /><a href="#">' + 
-		'{% trans "Add another image" %}</a></p>');
-		
-	// add button click handler - show the next hidden field image table row
-	$('#' + addButtonID).click(function() {
-		var imageRows = $(imagesFieldset + ' tr:hidden');
-		$(imageRows[0]).show();
-		if (imageRows.length == 1) {
-			$('#' + addButtonID).hide();
-		}
-		return false;
-	});
-	
-	// move the "create variations" fieldset to under current variations
-	$('.create-variations').insertAfter($(variationsFieldset).parent().parent());
-	
-	// deselect default variation when another is selected as default
-	$(variationDefaults).click(function() {
+	// Deselect default variation when another is selected as default.
+	var variationDefaults = variationsFieldset.find(' .default input:checkbox');
+	variationDefaults.click(function() {
 		var clicked = $(this);
 		if (clicked.attr('checked')) {
-			$(variationDefaults + '[name!=' + clicked.attr('name') + 
-				']').attr('checked', false);
+		    $.each(variationDefaults, function(i, variation) {
+		        variation = $(variation);
+		        if (variation.attr('name') != clicked.attr('name')) {
+		            variation.attr('checked', false);
+		        }
+		    });
 		}
 	});
+	
+	// Grappelli removes the string value of inline objects, so show these 
+	// for the product variations.
+	if (grappelli) {
+	    $.each(variationsFieldset.find('h3'), function(i, variation) {
+	        variation = $(variation);
+	        var title = variation.html().split('</b>')[1];
+	        variation.parent().find('.sku input').before(
+	            '<div class="tiny">' + title + '</div>');
+	    });
+	}
 
 });
 

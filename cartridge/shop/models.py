@@ -10,59 +10,15 @@ from django.db.models.base import ModelBase
 from django.template.defaultfilters import slugify, striptags
 from django.utils.translation import ugettext, ugettext_lazy as _
 
-from cartridge.shop.fields import OptionField, MoneyField, SKUField, DiscountCodeField
+from mezzanine.core.models import Displayable, Content
+from mezzanine.core.managers import DisplayableManager
+from mezzanine.pages.models import Page
+
+from cartridge.shop.fields import OptionField, MoneyField, SKUField, \
+    DiscountCodeField
 from cartridge.shop import managers
 from cartridge.shop.settings import ORDER_STATUS_CHOICES, OPTION_TYPE_CHOICES
 
-
-class Displayable(models.Model):
-    """
-    Abstract model representing a visible object on the website with common 
-    functionality such as auto slug creation and an active field for toggling 
-    visibility. Inherited by Category and Product models.
-    """
-
-    title = models.CharField(_("Title"), max_length=100)
-    slug = models.SlugField(max_length=100, editable=False, null=True)
-    active = models.BooleanField(_("Visible on the site"), default=False)
-        
-    objects = managers.ActiveManager()
-
-    class Meta:
-        abstract = True
-
-    def __unicode__(self):
-        return self.title
-        
-    def save(self, *args, **kwargs):
-        """
-        Create a unique slug from the title by appending an index.
-        """
-        if self.id is None:
-            self.slug = self.get_slug()
-            i = 0
-            while True:
-                if i > 0:
-                    self.slug = "%s-%s" % (self.slug, i)
-                if not self.__class__.objects.filter(slug=self.slug):
-                    break
-                i += 1
-        super(Displayable, self).save(*args, **kwargs)
-        
-    def get_absolute_url(self):
-        url_name = self.__class__.__name__.lower()
-        return reverse("shop_%s" % url_name, kwargs={"slug": self.slug})
-        
-    def get_slug(self):
-        return slugify(self.title)
-    
-    def admin_link(self):
-        if not self.active:
-            return ""
-        return "<a href='%s'>%s</a>" % (self.get_absolute_url(), 
-            ugettext("View on site"))
-    admin_link.allow_tags = True
-    admin_link.short_description = ""
 
 class ProductOption(models.Model):
     """
@@ -78,61 +34,24 @@ class ProductOption(models.Model):
         return "%s: %s" % (self.get_type_display(), self.name)
 
     class Meta:
-        verbose_name = _("Product Option")
-        verbose_name_plural = _("Product Options")
+        verbose_name = _("Product option")
+        verbose_name_plural = _("Product options")
 
-class Category(Displayable):
+
+class Category(Page):
     """
     A category of products on the website.
     """
 
-    parent = models.ForeignKey("self", blank=True, null=True, 
-        related_name="children")
-    titles = models.CharField(editable=False, max_length=1000, blank=True, 
-        null=True)
-    ordering = models.IntegerField(editable=False, null=True)
-
     class Meta:
-        verbose_name = _("Category")
-        verbose_name_plural = _("Categories")
-        ordering = ("titles",)
+        verbose_name = _("Product category")
+        verbose_name_plural = _("Product categories")
 
-    def __unicode__(self):
-        return self.titles
-        
-    def save(self, *args, **kwargs):
-        """
-        Create the titles field using the titles up the parent chain and set 
-        the initial value for ordering.
-        """
-        if self.id is None:
-            titles = [self.title]
-            parent = self.parent
-            while parent is not None:
-                titles.insert(0, parent.title)
-                parent = parent.parent
-            self.titles = " / ".join(titles)
-            self.ordering = Category.objects.filter(parent=self.parent).count()
-        super(Category, self).save(*args, **kwargs)
-
-    def delete(self, *args, **kwargs):
-        """
-        Update the ordering values for the sibling categories.
-        """
-        Category.objects.filter(parent=self.parent, ordering__gte=self.ordering
-            ).update(ordering=models.F("ordering") - 1)
-        super(Category, self).delete(*args, **kwargs)
-        
-    def get_slug(self):
-        slug = slugify(self.title)
-        if self.parent is not None:
-            return "%s/%s" % (self.parent.get_slug(), slug)
-        return slug
 
 class Priced(models.Model):
     """
-    Abstract model with unit and sale price fields. Inherited by Product and 
-    ProductVariation models.
+    Abstract model with unit and sale price fields. Inherited by ``Product`` 
+    and ``ProductVariation`` models.
     """
 
     unit_price = MoneyField(_("Unit price"))
@@ -169,15 +88,13 @@ class Priced(models.Model):
             return self.unit_price
         return Decimal("0")
 
-class Product(Displayable, Priced):
+
+class Product(Displayable, Priced, Content):
     """
     Container model for a product that stores information common to all of its 
     variations such as the product's title and description.
     """
 
-    description = models.TextField(_("Description"), blank=True)
-    keywords = models.CharField(_("Keywords"), max_length=200, blank=True, 
-        null=True)
     available = models.BooleanField(_("Available for purchase"), default=False)
     image = models.CharField(max_length=100, blank=True, null=True)
     categories = models.ManyToManyField("Category", blank=True,
@@ -185,12 +102,15 @@ class Product(Displayable, Priced):
     date_added = models.DateTimeField(_("Date added"), auto_now_add=True, 
         null=True)
 
-    objects = managers.ProductManager()
-    search_fields = ("title", "description", "keywords")
+    objects = DisplayableManager()
 
     class Meta:
         verbose_name = _("Product")
         verbose_name_plural = _("Products")
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ("shop_product", (), {"slug": self.slug})
 
     def copy_default_variation(self):
         """
@@ -213,12 +133,13 @@ class Product(Displayable, Priced):
     admin_thumb.allow_tags = True
     admin_thumb.short_description = ""
 
+
 class ProductImage(models.Model):
     """
     An image for a product - a relationship is also defined with the product's 
     variations so that each variation can potentially have it own image, while 
-    the relationship between the Product and ProductImage models ensures 
-    there is a single set of images for the product.
+    the relationship between the ``Product`` and ``ProductImage`` models 
+    ensures there is a single set of images for the product.
     """
     
     file = models.ImageField(_("Image"), upload_to="product")
@@ -232,10 +153,12 @@ class ProductImage(models.Model):
     def __unicode__(self):
         return self.description if self.description else self.file.name
 
+
 class ProductVariationMetaclass(ModelBase):
     """
-    Metaclass for the ProductVariation model that dynamcally assigns an 
-    OptionField for each option in shop.settings.PRODUCT_OPTIONS.
+    Metaclass for the ``ProductVariation`` model that dynamcally assigns an 
+    ``OptionField`` for each option in 
+    ``cartridge.shop.settings.PRODUCT_OPTIONS``.
     """
     def __new__(cls, name, bases, attrs):
         for option in OPTION_TYPE_CHOICES:
@@ -243,10 +166,11 @@ class ProductVariationMetaclass(ModelBase):
         return super(ProductVariationMetaclass, cls).__new__(cls, name, bases, 
             attrs)
 
+
 class ProductVariation(Priced):
     """
-    A combination of selected options from cartridge.shop.settings.PRODUCT_OPTIONS for a 
-    Product instance.
+    A combination of selected options from 
+    ``cartridge.shop.settings.PRODUCT_OPTIONS`` for a ``Product`` instance.
     """
     
     product = models.ForeignKey("Product", related_name="variations")
@@ -316,6 +240,7 @@ class ProductVariation(Priced):
                 num_in_stock = num_in_stock - num_in_carts
             self._cached_num_in_stock = num_in_stock
         return self._cached_num_in_stock >= quantity
+
 
 class Order(models.Model):
 
@@ -406,6 +331,7 @@ class Order(models.Model):
             self.items.create(**item)
         cart.delete()
 
+
 class Cart(models.Model):
 
     last_updated = models.DateTimeField(_("Last updated"), auto_now=True, 
@@ -415,8 +341,8 @@ class Cart(models.Model):
 
     def __iter__(self):
         """
-        allow the cart to be iterated giving access to the cart's items, 
-        ensuring the items are only retrieved once and cached
+        Allow the cart to be iterated giving access to the cart's items, 
+        ensuring the items are only retrieved once and cached.
         """
         if not hasattr(self, "_cached_items"):
             self._cached_items = self.items.all()
@@ -424,7 +350,8 @@ class Cart(models.Model):
         
     def add_item(self, variation, quantity):
         """
-        increase quantity of existing item if sku matches, otherwise create new
+        Increase quantity of existing item if SKU matches, otherwise create 
+        new.
         """
         item, created = self.items.get_or_create(sku=variation.sku, 
             unit_price=variation.price())
@@ -434,14 +361,14 @@ class Cart(models.Model):
             item.url = variation.product.get_absolute_url()
             image = variation.image
             if image is not None:
-                item.image = str(image)
+                item.image = unicode(image.file)
             variation.product.actions.added_to_cart()
         item.quantity += quantity
         item.save()
             
     def remove_item(self, item_id):
         """
-        remove item by sku
+        Remove item by SKU.
         """
         try:
             self.items.get(id=item_id).delete()
@@ -450,25 +377,26 @@ class Cart(models.Model):
         
     def has_items(self):
         """
-        template helper function - does the cart have items
+        Template helper function - does the cart have items?
         """
         return len(list(self)) > 0 
     
     def total_quantity(self):
         """
-        template helper function - sum of all item quantities
+        Template helper function - sum of all item quantities?
         """
         return sum([item.quantity for item in self])
         
     def total_price(self):
         """
-        template helper function - sum of all costs of item quantities
+        Template helper function - sum of all costs of item quantities?
         """
         return sum([item.total_price for item in self])
-    
+
+
 class SelectedProduct(models.Model):
     """
-    abstract model representing a "selected" product in a cart or order
+    Abstract model representing a "selected" product in a cart or order.
     """
 
     sku = SKUField()
@@ -487,6 +415,7 @@ class SelectedProduct(models.Model):
         self.total_price = self.unit_price * self.quantity
         super(SelectedProduct, self).save(*args, **kwargs)
 
+
 class CartItem(SelectedProduct):
 
     cart = models.ForeignKey("Cart", related_name="items")
@@ -496,11 +425,13 @@ class CartItem(SelectedProduct):
     def get_absolute_url(self):
         return self.url
 
+
 class OrderItem(SelectedProduct):
     """
     A selected product in a completed order.
     """
     order = models.ForeignKey("Order", related_name="items")
+
 
 class ProductAction(models.Model):
     """
@@ -518,6 +449,7 @@ class ProductAction(models.Model):
 
     class Meta:
         unique_together = ("product", "timestamp")
+
 
 class Discount(models.Model):
     """
@@ -545,17 +477,18 @@ class Discount(models.Model):
         
     def all_products(self):
         """
-        return the selected products as well as the products in the selected 
-        categories
+        Return the selected products as well as the products in the selected 
+        categories.
         """
         return Product.objects.filter(models.Q(id__in=self.products.all()) | 
             models.Q(categories__in=self.categories.all()))
 
+
 class Sale(Discount):
     """
-    stores sales field values for price and date range which when saved are 
+    Stores sales field values for price and date range which when saved are 
     then applied across products and variations according to the selected 
-    categories and products for the sale
+    categories and products for the sale.
     """
     
     class Meta:
@@ -564,22 +497,22 @@ class Sale(Discount):
     
     def save(self, *args, **kwargs):
         """
-        apply sales field value to products and variations according to the 
-        selected categories and products for the sale 
+        Apply sales field value to products and variations according to the 
+        selected categories and products for the sale.
         """
         super(Sale, self).save(*args, **kwargs)
         self._clear()
         if self.active:
             extra_filter = {}
             if self.discount_deduct is not None:
-                # don't apply to prices that would be negative after deduction
+                # Don't apply to prices that would be negative after deduction.
                 extra_filter["unit_price__gt"] = self.discount_deduct
                 sale_price = models.F("unit_price") - self.discount_deduct
             elif self.discount_percent is not None:
                 sale_price = models.F("unit_price") - (models.F("unit_price") / 
                     "100.0" * self.discount_percent)
             elif self.discount_exact is not None:
-                # don't apply to prices that are cheaper than the sale amount
+                # Don't apply to prices that are cheaper than the sale amount.
                 extra_filter["unit_price__gt"] = self.discount_exact
                 sale_price = self.discount_exact
             else:
@@ -597,17 +530,18 @@ class Sale(Discount):
 
     def _clear(self):
         """
-        clears previously applied sale field values from products prior to 
-        updating the sale, when deactivating it or deleting it
+        Clears previously applied sale field values from products prior to 
+        updating the sale, when deactivating it or deleting it.
         """
         for priced_model in (Product, ProductVariation):
             priced_model.objects.filter(sale_id=self.id).update(sale_id=None, 
                 sale_from=None, sale_to=None, sale_price=None)
-    
+
+
 class DiscountCode(Discount):
     """
-    a code that can be entered at the checkout process to have a discount 
-    applied to the total purchase amount
+    A code that can be entered at the checkout process to have a discount 
+    applied to the total purchase amount.
     """
     
     code = DiscountCodeField(_("Code"), unique=True)
@@ -618,13 +552,12 @@ class DiscountCode(Discount):
     
     def calculate(self, amount):
         """
-        calculates the discount for the given amount
+        Calculates the discount for the given amount.
         """
         if self.discount_deduct is not None:
-            # don't apply to amounts that would be negative after deduction
+            # Don't apply to amounts that would be negative after deduction.
             if self.discount_deduct < amount:
                 return self.discount_deduct
         elif self.discount_percent is not None:
             return amount / Decimal("100") * self.discount_percent
         return 0
-

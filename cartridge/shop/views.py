@@ -12,12 +12,13 @@ from django.utils import simplejson
 from django.utils.translation import ugettext as _
 from django.contrib.admin.views.decorators import staff_member_required
 
-from cartridge.shop.checkout import billing_shipping, payment, initial_order_data, \
-    send_order_email, CheckoutError, CHECKOUT_STEP_FIRST, CHECKOUT_STEP_LAST, \
-    CHECKOUT_TEMPLATES
-from cartridge.shop.forms import get_add_product_form, OrderForm, LoginForm, SignupForm
+from cartridge.shop.checkout import billing_shipping, payment, \
+    initial_order_data, send_order_email, CheckoutError, \
+    CHECKOUT_STEP_FIRST, CHECKOUT_STEP_LAST, CHECKOUT_TEMPLATES
+from cartridge.shop.forms import get_add_product_form, OrderForm, \
+    LoginForm, SignupForm
 from cartridge.shop.models import Category, Product, ProductVariation, Cart
-from cartridge.shop.settings import LOGIN_URL, PER_PAGE_CATEGORY, PER_PAGE_SEARCH, \
+from cartridge.shop.settings import LOGIN_URL, PER_PAGE_SEARCH, \
     PRODUCT_SORT_OPTIONS, CHECKOUT_STEPS_CONFIRMATION, CHECKOUT_STEPS_SPLIT, \
     CHECKOUT_ACCOUNT_ENABLED, CHECKOUT_ACCOUNT_REQUIRED
 from cartridge.shop.utils import set_cookie, send_mail_template, sign
@@ -55,22 +56,13 @@ def product_list(products, request, per_page):
     products.sort = sort_name
     return products
 
-def category(request, slug, template="shop/category.html"):
-    """
-    Display sub categories and products for a category.
-    """
-    category = get_object_or_404(Category.objects.active(), slug=slug)
-    products = product_list(category.products.active(), request, 
-        PER_PAGE_CATEGORY)
-    return render_to_response(template, {"category": category, "products":
-        products}, RequestContext(request))
-
 def product(request, slug, template="shop/product.html"):
     """
     Display a product - convert the product variations to JSON as well as 
     handling adding the product to either the cart or the wishlist.
     """
-    product = get_object_or_404(Product.objects.active(slug=slug))
+    published_products = Product.objects.published(for_user=request.user)
+    product = get_object_or_404(published_products, slug=slug)
     AddProductForm = get_add_product_form(product)
     add_product_form = AddProductForm(initial={"quantity": 1})
     if request.method == "POST":
@@ -105,8 +97,8 @@ def search(request, template="shop/search_results.html"):
     Display product search results.
     """
     query = request.REQUEST.get("query", "")
-    results = product_list(Product.objects.active().search(query), request, 
-        PER_PAGE_SEARCH)
+    results = product_list(Product.objects.published_for(
+        user=request.user).search(query), request, PER_PAGE_SEARCH)
     return render_to_response(template, {"query": query, "results": results},
         RequestContext(request))
     
@@ -145,8 +137,9 @@ def wishlist(request, template="shop/wishlist.html"):
             set_cookie(response, "wishlist", ",".join(skus))
             return response
     # Remove skus from the cookie that no longer exist.
-    wishlist = list(ProductVariation.objects.filter(product__active=True,
-        sku__in=skus).select_related())
+    published_products = Product.objects.published(for_user=request.user)
+    wishlist = list(ProductVariation.objects.filter(
+        product__in=published_products, sku__in=skus).select_related())
     wishlist.sort(key=lambda variation: skus.index(variation.sku))
     response = render_to_response(template, {"wishlist": wishlist, 
         "error": error}, RequestContext(request))
@@ -280,16 +273,3 @@ def complete(request, template="shop/complete.html"):
     Redirected to once an order is complete.
     """
     return render_to_response(template, {}, RequestContext(request))
-
-def admin_category_ordering(request):
-    """
-    Updates the ordering of categories via AJAX from within the admin.
-    """
-    for i, cat in enumerate(request.POST.get("ordering", "").split(",")):
-        try:
-            Category.objects.filter(id=cat.split("_")[-1]).update(ordering=i)
-        except ValueError:
-            pass
-    return HttpResponse("")
-admin_category_ordering = staff_member_required(admin_category_ordering)
-

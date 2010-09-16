@@ -1,7 +1,12 @@
 
+from copy import deepcopy
+
 from django.contrib import admin
 from django.db.models import ImageField
 from django.utils.translation import ugettext_lazy as _
+
+from mezzanine.core.admin import DisplayableAdmin, DynamicInlineAdmin
+from mezzanine.pages.admin import PageAdmin
 
 from cartridge.shop.fields import MoneyField
 from cartridge.shop.forms import ProductAdminForm, ProductVariationAdminForm, \
@@ -18,7 +23,7 @@ shipping_fields = [f.name for f in Order._meta.fields
     if f.name.startswith("shipping_detail")]
 
         
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(PageAdmin):
     formfield_overrides = {ImageField: {"widget": ImageWidget}}
 
 class ProductVariationAdmin(admin.TabularInline):
@@ -31,27 +36,29 @@ class ProductVariationAdmin(admin.TabularInline):
     form = ProductVariationAdminForm
     formset = ProductVariationAdminFormset
 
-class ProductImageAdmin(admin.TabularInline):
+class ProductImageAdmin(DynamicInlineAdmin):
     model = ProductImage
-    extra = 20 
     formfield_overrides = {ImageField: {"widget": ImageWidget}}
     
-class ProductAdmin(admin.ModelAdmin):
 
-    list_display = ("admin_thumb", "title", "active", "available", "admin_link")
+product_fieldsets = deepcopy(DisplayableAdmin.fieldsets)
+product_fieldsets[0][1]["fields"].extend(["available", "categories", 
+    "content"])
+product_fieldsets = list(product_fieldsets)
+product_fieldsets.insert(1, (_("Create new variations"), 
+    {"classes": ("create-variations",), "fields": option_fields}))
+
+class ProductAdmin(DisplayableAdmin):
+
+    list_display = ("admin_thumb", "title", "status", "available", "admin_link")
     list_display_links = ("admin_thumb", "title")
-    list_editable = ("active", "available")
-    list_filter = ("active", "available", "categories")
+    list_editable = ("status", "available")
+    list_filter = ("status", "available", "categories")
     filter_horizontal = ("categories",)
-    search_fields = ("title", "categories__title", "variations__sku")
+    search_fields = ("title", "content", "categories__title", "variations__sku")
     inlines = (ProductImageAdmin, ProductVariationAdmin)
     form = ProductAdminForm
-    fieldsets = (
-        (None, {"fields": ("title", "description", ("active", "available"), 
-            "keywords", "categories")}),
-        (_("Create new variations"), {"classes": ("create-variations",), 
-            "fields": option_fields}),
-    )
+    fieldsets = product_fieldsets
 
     def save_model(self, request, obj, form, change):
         """
@@ -78,8 +85,9 @@ class ProductAdmin(admin.ModelAdmin):
 class ProductOptionAdmin(admin.ModelAdmin):
     ordering = ("type", "name")
     list_display = ("type", "name")
+    list_display_links = ("type",)
+    list_editable = ("name",)
     list_filter = ("type",)
-    list_display_links = ("type", "name")
     search_fields = ("type", "name")
     radio_fields = {"type": admin.HORIZONTAL}
 
