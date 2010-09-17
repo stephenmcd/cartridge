@@ -13,9 +13,7 @@
 
     {% editable_loader %}
 
-    {% if not request.user.is_staff %}
     <script language="javascript" src="{{ CONTENT_MEDIA_URL }}js/jquery-1.4.2.min.js"></script>
-    {% endif %}
 
     <style type="text/css">
 
@@ -122,7 +120,7 @@
         
         #search-results p {margin:5px 0;}
 
-        legend {font-weight:bold; padding:15px; font-size:130%;}
+        legend {font-weight:bold; padding:15px 10px; font-size:130%;}
         .checkbox label {width:90% !important; margin-bottom:10px !important; 
             float:left;}
         .checkbox input {float:left;}
