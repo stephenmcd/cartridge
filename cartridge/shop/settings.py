@@ -1,8 +1,9 @@
 """
-shop.settings - These are the settings and their default values used internally 
-throughout the shop. 
+cartridge.shop.settings - These are the settings and their default values 
+used internally throughout the shop. 
 
-Each can be set via project's settings module with the prefix SHOP_setting_name. 
+Each can be set via project's settings module with the prefix 
+SHOP_setting_name. 
 
 For example, set PRODUCT_OPTIONS with SHOP_PRODUCT_OPTIONS.
 """
