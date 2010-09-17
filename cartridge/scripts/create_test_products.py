@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 Stand-alone data generation routine that uses the ecommerce taxonomy found on 
 Google Base to generate a significant amount of category and product data, as 
@@ -8,8 +10,10 @@ The Django models and environment used here are specific to the Cartridge
 project but the approach could easily be reused with any ecommerce database.
 """
 
-from deploy.environment import setup
-setup()
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+    "..", ".."))
+os.environ["DJANGO_SETTINGS_MODULE"] = "cartridge.project_template.settings"
 
 from multiprocessing import Process, Queue
 from os.path import exists, join
@@ -22,8 +26,10 @@ from django.contrib.webdesign.lorem_ipsum import paragraph
 from django.db import connection
 from django.db.models import F
 
-from cartridge.shop.models import Category, Product
-from cartridge.shop.settings import PRODUCT_OPTIONS
+from mezzanine.settings import CONTENT_STATUS_PUBLISHED
+
+from cartridge.shop.models import Category, Product, ProductOption
+from cartridge.shop.settings import OPTION_TYPE_CHOICES
 
 
 try:
@@ -35,10 +41,12 @@ except ImportError:
 WORKERS = 10
 image_dir = join(settings.MEDIA_ROOT, "product")
 queue = Queue()
+product_options = {"Size": ("Small", "Medium", "Large"), 
+    "Colour": ("Red", "Orange", "Yellow", "Green", "Blue", "Indigo", "Violet")}
 
 
 def create_products(queue):
-    """
+    """OPTION_TYPE_CHOICES
     Download an image from Flickr for the product on the queue and if 
     successful now or previously, create the applicable product records.
     """
@@ -46,6 +54,7 @@ def create_products(queue):
     # Close the connection for this process to avoid the issue discussed here:
     # http://groups.google.com/group/django-users/browse_thread/thread/2c7421cdb9b99e48
     connection.close() 
+    product_options = ProductOption.objects.as_fields()
     while True:
 
         # Get next set of data from queue.
@@ -76,10 +85,11 @@ def create_products(queue):
         if exists(image):
             product = Category.objects.get(parent__title=main_category,
                 title=sub_category).products.create(title=product, 
-                available=True, active=True, description=paragraph())
+                available=True, status=CONTENT_STATUS_PUBLISHED, 
+                content="<p>%s</p>" % paragraph())
             image = "product/%s.jpg" % product.title
             product.images.create(file=image)
-            product.variations.create_from_options(PRODUCT_OPTIONS)
+            product.variations.create_from_options(product_options)
             product.variations.manage_empty()
             product.variations.update(unit_price=F("id") + "10000")
             product.variations.update(unit_price=F("unit_price") / "1000.0")
@@ -97,6 +107,13 @@ if __name__ == "__main__":
 
     # Clear out the database, moving the product images to a temp location and 
     # restoring them so that they're not deleted.
+    print "Resetting product options"
+    ProductOption.objects.all().delete()
+    for type, name in OPTION_TYPE_CHOICES:
+        for name in product_options[unicode(name)]:
+            ProductOption.objects.create(type=type, name=name)
+        
+    Category.objects.all().delete()
     print "Deleting categories"
     Category.objects.all().delete()
     print "Backing up images"
@@ -116,10 +133,11 @@ if __name__ == "__main__":
         if len(parts) > 2:
             if len(parts) == 3:
                 main_category, created = Category.objects.get_or_create(
-                    title=parts[0], active=True)
-                sub_category, created = main_category.children.get_or_create(
-                    title=parts[1], active=True)
-            queue.put(parts)
+                    title=parts[0], status=CONTENT_STATUS_PUBLISHED)
+                sub_category, created = Category.objects.get_or_create(
+                    title=parts[1], status=CONTENT_STATUS_PUBLISHED,
+                    parent=main_category)
+                queue.put(parts)
 
     # Create worker processes and run the main function in them.
     workers = []
