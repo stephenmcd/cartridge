@@ -13,6 +13,10 @@
 
     {% editable_loader %}
 
+    {% if not request.user.is_staff %}
+    <script language="javascript" src="{{ CONTENT_MEDIA_URL }}js/jquery-1.4.2.min.js"></script>
+    {% endif %}
+
     <style type="text/css">
 
         /* 960 Grid System */
@@ -118,19 +122,6 @@
         
         #search-results p {margin:5px 0;}
 
-    </style>
-
-    <script language="javascript" src="{{ CONTENT_MEDIA_URL }}js/jquery-1.4.2.min.js"></script>
-    <script type="text/javascript">
-	    $(function() {
-		    $('#messages a').click(function() {
-			    $(this).parent().hide();
-			    return false;
-		    });
-	    });
-    </script>
-    <style type="text/css">
-
         legend {font-weight:bold; padding:15px; font-size:130%;}
         .checkbox label {width:90% !important; margin-bottom:10px !important; 
             float:left;}
@@ -160,7 +151,31 @@
         
         .confirmation {margin:5px 10px;}
 
+        .category .products li {float:left; margin:10px 15px 0 0; 
+            padding:10px; text-align:center; background:#ddd; width:95px; 
+            height:210px;}
+        .category .products li .img {width:90px; height:90px; margin:auto; 
+            padding:0 !important; border:2px solid #333; margin-bottom:5px;}
+        .img img {margin:0;}
+        .product-paging {float:left; margin-top:10px; width:100%;}
+        .product-paging li {padding:0 5px;}
+        .product-sorting, .product-paging {padding:10px !important; 
+            background:#eee; float:left; width:100%; margin-bottom:10px; 
+            border-top:1px solid #ddd;}
+        .product-sorting p, .product-paging p, .product-sorting ul, 
+            .product-paging ul {float:left; padding:0 5px 0 0px; margin:0; 
+            font-size:.8em;}
+        .category .price {font-size:.8em;}
+
     </style>
+    <script type="text/javascript">
+	    $(function() {
+		    $('#messages a').click(function() {
+			    $(this).parent().hide();
+			    return false;
+		    });
+	    });
+    </script>
 
     {% block extra_head %}{% endblock %}
 

@@ -28,6 +28,7 @@ class CartManager(Manager):
             cart.save() # Update timestamp.
         return cart
 
+
 class ProductOptionManager(Manager):
 
     def as_fields(self):
@@ -38,6 +39,7 @@ class ProductOptionManager(Manager):
         for option in self.all():
             options["option%s" % option.type].append(option.name)
         return options        
+
 
 class ProductVariationManager(Manager):
 
@@ -90,6 +92,7 @@ class ProductVariationManager(Manager):
             first_variation.default = True
             first_variation.save()
 
+
 class ProductActionManager(Manager):
     
     use_for_related_fields = True
@@ -117,6 +120,7 @@ class ProductActionManager(Manager):
         """
         self._action_for_field("total_purchase")
 
+
 class DiscountCodeManager(Manager):
 
     def active(self, *args, **kwargs):
@@ -140,4 +144,3 @@ class DiscountCodeManager(Manager):
             [item.sku for item in cart]).count() == 0:
             raise self.model.DoesNotExist
         return discount
-
