@@ -2,6 +2,26 @@ import sys; sys.path.insert(0, "../../../mezzanine/")
 
 from mezzanine.project_template.settings import *
 
+# Main Django settings.
+DEBUG = False
+DEV_SERVER = False
+MANAGERS = ADMINS = ()
+TIME_ZONE = ""
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+LANGUAGE_CODE = "en"
+SITE_ID = 1
+USE_I18N = False
+SECRET_KEY = "%(SECRET_KEY)s"
+INTERNAL_IPS = ("127.0.0.1",)
+
+# Database.
+DATABASE_ENGINE = ""
+DATABASE_NAME = ""
+DATABASE_USER = ""
+DATABASE_PASSWORD = ""
+DATABASE_HOST = ""
+DATABASE_PORT = ""
+
 # Paths.
 import os
 project_path = os.path.dirname(os.path.abspath(__file__))
