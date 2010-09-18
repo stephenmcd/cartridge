@@ -25,9 +25,11 @@ Features
   * Stock management
   * Product popularity
   * Thumbnail generation
-  * Complete unit test coverage
-  * Total separation of presentation (no embedded markup)
-  * Denormalised data built for accessiblilty and performance
+  * Built-in test suite
+  * Separation of presentation (no embedded markup)
+  * Smart categories (by price range, colour, etc)
+  * Configurable nunber of checkout steps
+  * Denormalised data for accessiblilty and performance
 
 Dependencies
 ============
@@ -52,7 +54,7 @@ Once installed, the command ``mezzanine-project`` should be available via
 Mezzanine, which can be used for creating a new Cartridge project in a 
 similar fashion to ``django-admin.py``::
 
-    $ mezzanine-project project_name cartridge
+    $ mezzanine-project -a cartridge project_name
 
 You can then run your project with the usual Django steps::
 
