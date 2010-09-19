@@ -49,7 +49,6 @@
 	<tr>
 		<td colspan="5">
 			<form action="{% url shop_checkout %}">
-                {% csrf_token %}
 				<input type="submit" class="button" 
 					value="{% trans "Go to Checkout" %}" />
 			</form>
