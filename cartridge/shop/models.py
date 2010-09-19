@@ -38,7 +38,7 @@ class ProductOption(models.Model):
         verbose_name_plural = _("Product options")
 
 
-class Category(Page):
+class Category(Page, Content):
     """
     A category of products on the website.
     """
@@ -151,7 +151,12 @@ class ProductImage(models.Model):
         verbose_name_plural = _("Images")
     
     def __unicode__(self):
-        return self.description if self.description else self.file.name
+        value = self.description
+        if not value:
+            value = self.file.name
+        if not value:
+            value = ""
+        return value
 
 
 class ProductVariationMetaclass(ModelBase):
@@ -185,7 +190,7 @@ class ProductVariation(Priced):
     __metaclass__ = ProductVariationMetaclass
 
     class Meta:
-        ordering = ("default",)
+        ordering = ("-default",)
         
     def __unicode__(self):
         """

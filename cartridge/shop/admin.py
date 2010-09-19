@@ -22,8 +22,11 @@ billing_fields = [f.name for f in Order._meta.fields
 shipping_fields = [f.name for f in Order._meta.fields 
     if f.name.startswith("shipping_detail")]
 
-        
+category_fieldsets = deepcopy(PageAdmin.fieldsets)
+category_fieldsets[0][1]["fields"].insert(3, "content")
+
 class CategoryAdmin(PageAdmin):
+    fieldsets = category_fieldsets
     formfield_overrides = {ImageField: {"widget": ImageWidget}}
 
 class ProductVariationAdmin(admin.TabularInline):
