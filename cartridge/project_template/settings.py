@@ -3,6 +3,7 @@ import sys; sys.path.insert(0, "../../../mezzanine/")
 from mezzanine.project_template.settings import *
 
 from django.utils.translation import ugettext_lazy as _
+
 MEZZANINE_ADMIN_MENU_ORDER = (
     (_("Content"), ("pages.Page", "blog.BlogPost", "blog.Comment",)),
     (_("Shop"), ("shop.Product", "shop.ProductOption", "shop.DiscountCode", 

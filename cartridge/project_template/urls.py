@@ -1,5 +1,4 @@
 
-from django import VERSION
 from django.conf.urls.defaults import *
 
 from mezzanine.project_template.urls import urlpatterns

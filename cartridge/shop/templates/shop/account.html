@@ -15,6 +15,7 @@
 <fieldset class="login-signup">
 	<legend>{% trans "Login" %}</legend>
     <form method="post" class="form">
+    {% csrf_token %}
 	<ul>{{ login_form.as_ul }}</ul>
 	<input class="button" type="submit" 
 	    name="login" value="{% trans "Login" %}" />
@@ -24,6 +25,7 @@
 <fieldset class="login-signup">
 	<legend>{% trans "Signup" %}</legend>
     <form method="post" class="form">
+    {% csrf_token %}
 	<ul>{{ signup_form.as_ul }}</ul>
 	<input class="button" type="submit" 
 	    name="signup" value="{% trans "Signup" %}" />

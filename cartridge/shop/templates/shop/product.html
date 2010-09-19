@@ -114,6 +114,7 @@ $(function() {
 	{% endfor %}
 </ul>
 <form method="post" id="add-cart" class="form">
+    {% csrf_token %}
 	<ul>{{ add_product_form.as_ul }}</ul>
 	<input type="submit" class="button" name="add_cart" value="{% trans "Buy" %}" />
 	<input type="submit" class="button" name="add_wishlist" value="{% trans "Save for later" %}" />

@@ -34,6 +34,7 @@
 		<td>{{ item.total_price|currency }}</td>
 		<td class="buttons">
 			<form method="post">
+                {% csrf_token %}
 				<input type="hidden" name="item_id" value="{{ item.id }}" />
 				<input type="submit" value="{% trans "Remove" %}" />
 			</form>
@@ -48,6 +49,7 @@
 	<tr>
 		<td colspan="5">
 			<form action="{% url shop_checkout %}">
+                {% csrf_token %}
 				<input type="submit" class="button" 
 					value="{% trans "Go to Checkout" %}" />
 			</form>

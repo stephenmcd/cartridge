@@ -17,6 +17,7 @@
 <p>{% order_totals %}</p>
 
 <form method="post" id="checkout-form" class="form">
+    {% csrf_token %}
 
 	{% with form.non_field_errors as errors %}
 	    {% if errors or form.errors %}

@@ -24,6 +24,7 @@
 		</td>
 		<td class="buttons">
 			<form method="post">
+                {% csrf_token %}
 				<input type="hidden" name="sku" value="{{ item.sku }}" />
 				<input type="submit" name="remove_wishlist" value="{% trans "Remove" %}" />
 				<input type="submit" name="add_cart" value="{% trans "Buy now" %}" />
