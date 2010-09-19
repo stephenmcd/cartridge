@@ -1,7 +1,7 @@
 
 import os
 
-exclude = ["cartridge/project_template/mezzanine.db", 
+exclude = ["cartridge/project_template/cartridge.db", 
     "cartridge/project_template/local_settings.py"]
 exclude = dict([(e, None) for e in exclude])
 for e in exclude:
@@ -28,7 +28,7 @@ try:
         version=version,
         author="Stephen McDonald",
         author_email="stephen.mc@gmail.com",
-        description="An Django shopping cart application.",
+        description="A Django shopping cart application.",
         long_description=open("README.rst").read(),
         license="BSD",
         url="http://cartridge.jupo.org/",
