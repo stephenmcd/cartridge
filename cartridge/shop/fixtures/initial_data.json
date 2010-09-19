@@ -326,37 +326,6 @@
     }, 
     {
         "pk": 1, 
-        "model": "shop.cart", 
-        "fields": {
-            "last_updated": "2010-09-19 08:18:30"
-        }
-    }, 
-    {
-        "pk": 1, 
-        "model": "shop.cartitem", 
-        "fields": {
-            "sku": "4", 
-            "total_price": "5", 
-            "description": "Django Pony Size: Small, Colour: Yellow", 
-            "url": "/shop/product/django-pony/", 
-            "image": "product/yellow.png", 
-            "cart": 1, 
-            "unit_price": "5", 
-            "quantity": 1
-        }
-    }, 
-    {
-        "pk": 1, 
-        "model": "shop.productaction", 
-        "fields": {
-            "timestamp": 734034, 
-            "product": 1, 
-            "total_purchase": 0, 
-            "total_cart": 1
-        }
-    }, 
-    {
-        "pk": 1, 
         "model": "shop.sale", 
         "fields": {
             "valid_from": "2009-09-19 17:03:32", 

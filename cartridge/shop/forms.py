@@ -379,8 +379,10 @@ class ProductVariationAdminForm(forms.ModelForm):
     """
     def __init__(self, *args, **kwargs):
         super(ProductVariationAdminForm, self).__init__(*args, **kwargs)
-        self.fields["image"].queryset = self.fields["image"].queryset.filter(
-            product=kwargs["instance"].product)
+        if "instance" in kwargs:
+            qs = self.fields["image"].queryset.filter(
+                product=kwargs["instance"].product)
+            self.fields["image"].queryset = qs
 
 class ProductVariationAdminFormset(BaseInlineFormSet):
     """
