@@ -6,7 +6,5 @@ local_settings.py
 build/*
 docs/build/*
 dist/*
-cartridge/project_template/site_media/product/*
-cartridge/project_template/site_media/category/*
 Cartridge.egg-info/*
 
