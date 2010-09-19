@@ -15,7 +15,7 @@
 	    width:50px !important;}
 	.item img {vertical-align:middle; margin-right:10px !important;}
 	.viewsitelink {display:none !important;}
-	tr.add-row {display:none};
+	tr.add-row {display:none;}
 	
 </style>
 <script type="text/javascript">
@@ -61,7 +61,6 @@ $(function() {
 	    $.each(variationsFieldset.find('h3'), function(i, variation) {
 	        variation = $(variation);
 	        var title = variation.html().split('</b>')[1];
-	        s += title + 's\n';
 	        variation.parent().find('.sku input').before(
 	            '<div class="tiny">' + title + '</div>');
 	    });
@@ -72,7 +71,7 @@ $(function() {
 	    if (grappelli) {
         	$('#id_variations-__prefix__-sku').parent().parent()
         	    .parent().remove();
-        } else {
+        }
 	} 
 	
 
