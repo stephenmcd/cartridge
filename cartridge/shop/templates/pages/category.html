@@ -1,9 +1,13 @@
-{% extends "base.html" %}
-{% load shop_tags i18n %}
+{% extends "pages/page.html" %}
 
-{% block title %}{{ page.category.title }}{% endblock %}
+{% load mezzanine_tags shop_tags i18n %}
 
-{% block main %}
+{% block main %}{{ block.super }}
+
+{% editable page.category.content %}
+{{ page.category.content|safe }}
+{% endeditable %}
+
 <div class="category">
 
 {% with page.category.children.active as child_categories %}
