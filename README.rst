@@ -15,6 +15,9 @@ should therefore be as easy as possible to customize. Cartridge achieves
 this goal with a code-base that implements only the core features of an 
 e-commerce site, therefore remaining as simple as possible.
 
+Cartridge also extends the `Mezzanine`_ content management platform and a live 
+demo of Cartridge can be found by visiting the `Mezzanine live demo`_.
+
 Features
 ========
 
@@ -35,7 +38,8 @@ Dependencies
 ============
 
 Cartridge is designed as a plugin for the `Mezzanine`_ content management 
-platform.
+platform and us such requires it to be installed. By following the 
+installation instructions below this should occur automatically.
 
 Installation
 ============
@@ -80,6 +84,7 @@ please use the `Github issue tracker`_.
 
 .. _`Django`: http://djangoproject.com/
 .. _`BSD licensed`: http://www.linfo.org/bsdlicense.html
+.. _`Mezzanine live demo`: http://mezzanine.jupo.org/
 .. _`setuptools`: http://pypi.python.org/pypi/setuptools
 .. _`Mezzanine`: http://mezzanine.jupo.org/
 .. _`Github`: http://github.com/stephenmcd/cartridge/
