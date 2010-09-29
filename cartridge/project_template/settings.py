@@ -53,6 +53,8 @@ MIDDLEWARE_CLASSES += (
     "cartridge.shop.middleware.SSLRedirect",
 )
 
+TEST_DATABASE_COLLATION = "utf8_general_ci"
+
 # Local settings.
 try:
     from local_settings import *

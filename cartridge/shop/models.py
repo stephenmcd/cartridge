@@ -525,9 +525,16 @@ class Sale(Discount):
             products = self.all_products()
             variations = ProductVariation.objects.filter(product__in=products)
             for priced_objects in (products, variations):
-                priced_objects.filter(**extra_filter).update(sale_id=self.id, 
-                    sale_to=self.valid_to, sale_from=self.valid_from, 
-                    sale_price=sale_price)
+                # MySQL will raise a 'Data truncated' warning here in some 
+                # scenarios, presumably when doing a calculation that exceeds 
+                # the precision of the price column. In this case it's safe 
+                # to ignore it and the calculation will still be applied.
+                try:
+                    priced_objects.filter(**extra_filter).update(
+                        sale_id=self.id, sale_price=sale_price,
+                        sale_to=self.valid_to, sale_from=self.valid_from)
+                except Warning:
+                    pass
     
     def delete(self, *args, **kwargs):
         self._clear()

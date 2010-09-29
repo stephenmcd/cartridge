@@ -21,9 +21,11 @@ register = template.Library()
 @register.filter
 def currency(value):
     """
-    format a value as currency according to locale
+    Format a value as currency according to locale.
     """
     set_locale()
+    if len(str(value)) == 0:
+        value = 0
     if hasattr(locale, "currency"):
         value = locale.currency(value)
     else:
@@ -40,9 +42,10 @@ def currency(value):
 @register.simple_tag
 def thumbnail(image_url, width, height):
     """
-    given the url to an image, resizes the image using the given width and 
+    Given the url to an image, resizes the image using the given width and 
     height on the first time it is requested, and returns the url to the new 
-    resized image. if width or height are zero then original ratio is maintained
+    resized image. if width or height are zero then original ratio is 
+    maintained.
     """
     
     image_url = unicode(image_url)
@@ -87,9 +90,9 @@ def thumbnail(image_url, width, height):
 
 def _order_totals(context):
     """
-    add item_total, shipping_total, discount and order_total to the include 
-    context. use the order object for email receipts, or the cart object for 
-    checkout
+    Add ``item_total``, ``shipping_total``, ``discount_total`` and 
+    ``order_total`` to the include context. use the order object for email 
+    receipts, or the cart object for checkout.
     """
     if "order" in context:
         context["item_total"] = context["order"].total
