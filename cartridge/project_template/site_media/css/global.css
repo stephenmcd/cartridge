@@ -34,7 +34,7 @@ h2, p, #breadcrumb-menu, #description, .paging, .share,
 h1 {font-size:250%; border-bottom:1px solid #ccc; font-weight:normal;}
 h2 {font-size:150%;}
 h3 {font-weight:normal; margin:20px 0 10px;}
-h4 {font-weight:normal; margin-top:10px;}
+h4 {font-weight:bold; margin-top:10px;}
 h5 {font-weight:bold; margin-top:20px;}
 a {color:#008;}
 .active, .active .active {font-style:italic;}
@@ -46,6 +46,8 @@ li {list-style-type:none; display:inline;}
 input, textarea {border:1px solid #999;}
 textarea {width:100%;}
 #grid-bottom a {color:#eee; text-decoration:none;}
+table {margin-bottom:30px;}
+td, th {padding:3px;}
 
 .since {display:block; margin-bottom:20px;}
 .paging {border-top:1px solid #ccc;}
