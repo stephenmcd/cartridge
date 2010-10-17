@@ -13,11 +13,14 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 from mezzanine.core.models import Displayable, Content
 from mezzanine.core.managers import DisplayableManager
 from mezzanine.pages.models import Page
+from mezzanine.settings import load_settings
 
 from cartridge.shop.fields import OptionField, MoneyField, SKUField, \
     DiscountCodeField
 from cartridge.shop import managers
-from cartridge.shop.settings import ORDER_STATUS_CHOICES, OPTION_TYPE_CHOICES
+
+
+mezz_settings = load_settings("ORDER_STATUS_CHOICES", "OPTION_TYPE_CHOICES")
 
 
 class ProductOption(models.Model):
@@ -25,7 +28,8 @@ class ProductOption(models.Model):
     A selectable option for a product such as size or colour.
     """
     
-    type = models.IntegerField(_("Type"), choices=OPTION_TYPE_CHOICES)
+    type = models.IntegerField(_("Type"), 
+                                    choices=mezz_settings.OPTION_TYPE_CHOICES)
     name = OptionField(_("Name"))
     
     objects = managers.ProductOptionManager()
@@ -166,7 +170,7 @@ class ProductVariationMetaclass(ModelBase):
     ``cartridge.shop.settings.PRODUCT_OPTIONS``.
     """
     def __new__(cls, name, bases, attrs):
-        for option in OPTION_TYPE_CHOICES:
+        for option in mezz_settings.OPTION_TYPE_CHOICES:
             attrs["option%s" % option[0]] = OptionField(option[1])
         return super(ProductVariationMetaclass, cls).__new__(cls, name, bases, 
             attrs)
@@ -281,8 +285,9 @@ class Order(models.Model):
     discount_code = DiscountCodeField(_("Discount code"), blank=True)
     discount_total = MoneyField(_("Discount total"))
     total = MoneyField(_("Order total"))
-    status = models.IntegerField(_("Status"), choices=ORDER_STATUS_CHOICES, 
-        default=ORDER_STATUS_CHOICES[0][0])
+    status = models.IntegerField(_("Status"), 
+        choices=mezz_settings.ORDER_STATUS_CHOICES, 
+        default=mezz_settings.ORDER_STATUS_CHOICES[0][0])
 
     class Meta:
         verbose_name = _("Order")

@@ -1,9 +1,10 @@
 """
 
-Checkout process utilities. The following are particularly for customization
-and if fail should raise checkout.CheckoutError:
+Checkout process utilities. The following are particularly for 
+customization and if fail should raise checkout.CheckoutError:
 
-billing_shipping() - Hook for setting shipping via shop.utils.set_shipping.
+billing_shipping() - Hook for setting shipping via 
+``cartridge.shop.utils.set_shipping``.
 
 payment() - Hook for payment gateway integration.
 
@@ -11,9 +12,9 @@ payment() - Hook for payment gateway integration.
 
 from django.utils.translation import ugettext as _
 
+from mezzanine.settings import load_settings
+
 from cartridge.shop.models import Order
-from cartridge.shop.settings import CHECKOUT_STEPS_SPLIT, CHECKOUT_STEPS_CONFIRMATION, \
-    ORDER_FROM_EMAIL
 from cartridge.shop.utils import set_shipping, send_mail_template, sign
 
 
@@ -75,6 +76,7 @@ def send_order_email(request, order):
     """
     Send order receipt email on successful order.
     """
+    mezz_settings = load_settings("ORDER_FROM_EMAIL")
     order_context = {"order": order, "request": request, 
         "order_items": order.items.all()}
     for fieldset in ("billing_detail", "shipping_detail"):
@@ -82,16 +84,18 @@ def send_order_email(request, order):
             order._meta.fields if f.name.startswith(fieldset)]
         order_context["order_%s_fields" % fieldset] = fields
     send_mail_template(_("Order Receipt"), "shop/email/order_receipt", 
-        ORDER_FROM_EMAIL, order.billing_detail_email, context=order_context)
+        mezz_settings.ORDER_FROM_EMAIL, order.billing_detail_email, 
+        context=order_context)
 
 
 # Set up some constants for identifying each checkout step.
+mezz_settings = load_settings("CHECKOUT_STEPS_SPLIT", 
+                                                "CHECKOUT_STEPS_CONFIRMATION")
 CHECKOUT_TEMPLATES = ["billing_shipping"]
 CHECKOUT_STEP_FIRST = CHECKOUT_STEP_PAYMENT = CHECKOUT_STEP_LAST = 1
-if CHECKOUT_STEPS_SPLIT:
+if mezz_settings.CHECKOUT_STEPS_SPLIT:
     CHECKOUT_TEMPLATES.append("payment")
     CHECKOUT_STEP_PAYMENT = CHECKOUT_STEP_LAST = 2
-if CHECKOUT_STEPS_CONFIRMATION:
+if mezz_settings.CHECKOUT_STEPS_CONFIRMATION:
     CHECKOUT_TEMPLATES.append("confirmation")
     CHECKOUT_STEP_LAST += 1
-

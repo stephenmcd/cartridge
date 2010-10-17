@@ -12,16 +12,19 @@ from django.utils import simplejson
 from django.utils.translation import ugettext as _
 from django.contrib.admin.views.decorators import staff_member_required
 
+from mezzanine.settings import load_settings
+
 from cartridge.shop.checkout import billing_shipping, payment, \
     initial_order_data, send_order_email, CheckoutError, \
     CHECKOUT_STEP_FIRST, CHECKOUT_STEP_LAST, CHECKOUT_TEMPLATES
 from cartridge.shop.forms import get_add_product_form, OrderForm, \
     LoginForm, SignupForm
 from cartridge.shop.models import Category, Product, ProductVariation, Cart
-from cartridge.shop.settings import LOGIN_URL, PER_PAGE_SEARCH, \
-    PRODUCT_SORT_OPTIONS, CHECKOUT_STEPS_CONFIRMATION, CHECKOUT_STEPS_SPLIT, \
-    CHECKOUT_ACCOUNT_ENABLED, CHECKOUT_ACCOUNT_REQUIRED
 from cartridge.shop.utils import set_cookie, send_mail_template, sign
+
+
+mezz_settings = load_settings("CHECKOUT_ACCOUNT_REQUIRED", 
+    "CHECKOUT_STEPS_CONFIRMATION", "LOGIN_URL", "PRODUCT_SORT_OPTIONS")
 
 
 # Fall back to authenticated-only messaging if messages app is unavailable.
@@ -37,7 +40,8 @@ def product_list(products, request, per_page):
     """
     Handle pagination and sorting for the given products.
     """
-    sort_options = [(slugify(o[0]), o[1]) for o in PRODUCT_SORT_OPTIONS]
+    sort_options = [(slugify(o[0]), o[1]) for o in 
+                                        mezz_settings.PRODUCT_SORT_OPTIONS]
     if "query" not in request.REQUEST:
         del sort_options[0]
     sort_name = request.GET.get("sort", sort_options[0][0])
@@ -55,6 +59,7 @@ def product_list(products, request, per_page):
         products = paginator.page(paginator.num_pages)
     products.sort = sort_name
     return products
+
 
 def product(request, slug, template="shop/product.html"):
     """
@@ -92,15 +97,18 @@ def product(request, slug, template="shop/product.html"):
         variations_json, "variations": variations, "images": product.images.all(),
         "add_product_form": add_product_form}, RequestContext(request))
 
+
 def search(request, template="shop/search_results.html"):
     """
     Display product search results.
     """
+    mezz_settings = load_settings("PER_PAGE_SEARCH")
     query = request.REQUEST.get("query", "")
-    results = product_list(Product.objects.published_for(
-        user=request.user).search(query), request, PER_PAGE_SEARCH)
+    results = product_list(Product.objects.published_for(user=request.user
+                    ).search(query), request, mezz_settings.PER_PAGE_SEARCH)
     return render_to_response(template, {"query": query, "results": results},
         RequestContext(request))
+
     
 def wishlist(request, template="shop/wishlist.html"):
     """
@@ -148,6 +156,7 @@ def wishlist(request, template="shop/wishlist.html"):
         set_cookie(response, "wishlist", ",".join(skus))
     return response
 
+
 def cart(request, template="shop/cart.html"):
     """
     Display cart and handle removing items from the cart.
@@ -158,6 +167,7 @@ def cart(request, template="shop/cart.html"):
         info(request, _("Item removed from cart"), fail_silently=True)
         return HttpResponseRedirect(reverse("shop_cart"))
     return render_to_response(template, {}, RequestContext(request))
+
 
 def account(request, template="shop/account.html"):
     """
@@ -186,6 +196,7 @@ def account(request, template="shop/account.html"):
     return render_to_response(template, {"login_form": login_form, 
         "signup_form": signup_form}, RequestContext(request))
 
+
 def logout(request):
     """
     Log the user out.
@@ -193,6 +204,7 @@ def logout(request):
     auth_logout(request)
     info(request, _("Successfully logged out"), fail_silently=True)
     return HttpResponseRedirect(request.GET.get("next", "/"))
+
 
 def checkout(request):
     """
@@ -202,9 +214,10 @@ def checkout(request):
     # Do the authentication check here rather than using standard login_required
     # decorator. This means we can check for a custom LOGIN_URL and fall back
     # to our own login view.
-    if CHECKOUT_ACCOUNT_REQUIRED and not request.user.is_authenticated():
-        login_url = "%s?next=%s" % (LOGIN_URL, reverse("shop_checkout"))
-        return HttpResponseRedirect(login_url)
+    if mezz_settings.CHECKOUT_ACCOUNT_REQUIRED and \
+        not request.user.is_authenticated():
+        return HttpResponseRedirect("%s?next=%s" % (mezz_settings.LOGIN_URL, 
+                                                    reverse("shop_checkout")))
     
     step = int(request.POST.get("step", CHECKOUT_STEP_FIRST))
     initial = initial_order_data(request)
@@ -241,7 +254,7 @@ def checkout(request):
                     payment(request, form)
                 except CheckoutError, e:
                     checkout_errors.append(e)
-                    if CHECKOUT_STEPS_CONFIRMATION:
+                    if mezz_settings.CHECKOUT_STEPS_CONFIRMATION:
                         step -= 1
                 else:    
                     order = form.save(commit=False)
@@ -267,6 +280,7 @@ def checkout(request):
     template = "shop/%s.html" % CHECKOUT_TEMPLATES[step - 1]
     return render_to_response(template, {"form": form, "CHECKOUT_STEP_FIRST": 
         step == CHECKOUT_STEP_FIRST}, RequestContext(request))
+
 
 def complete(request, template="shop/complete.html"):
     """

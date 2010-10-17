@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db.models import Manager, Q
 from django.utils.datastructures import SortedDict
 
-from cartridge.shop.settings import CART_EXPIRY_MINUTES
+from mezzanine.settings import load_settings
 
 
 class CartManager(Manager):
@@ -16,7 +16,9 @@ class CartManager(Manager):
         Return a cart by id stored in the session, creating it if not found
         as well as removing old carts prior to creating a new cart.
         """
-        expiry_time = datetime.now() - timedelta(minutes=CART_EXPIRY_MINUTES)
+        mezz_settings = load_settings("CART_EXPIRY_MINUTES")
+        expiry_time = datetime.now() - timedelta(
+                                    minutes=mezz_settings.CART_EXPIRY_MINUTES)
         try:
             cart = self.get(last_updated__gte=expiry_time, 
                 id=request.session.get("cart", None))

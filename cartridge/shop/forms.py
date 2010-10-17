@@ -16,15 +16,17 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
 from mezzanine.core.templatetags.mezzanine_tags import thumbnail
+from mezzanine.settings import load_settings
 
 from cartridge.shop.models import Product, ProductOption, ProductVariation, \
     SelectedProduct, Cart, Order, DiscountCode
 from cartridge.shop.checkout import CHECKOUT_STEP_FIRST, CHECKOUT_STEP_LAST, \
     CHECKOUT_STEP_PAYMENT
-from cartridge.shop.settings import CARD_TYPES, CHECKOUT_STEPS_SPLIT, \
-    CHECKOUT_STEPS_CONFIRMATION, OPTION_TYPE_CHOICES
 from cartridge.shop.utils import make_choices, set_locale, set_cookie
 
+
+mezz_settings = load_settings("CARD_TYPES", "CHECKOUT_STEPS_SPLIT", 
+                        "CHECKOUT_STEPS_CONFIRMATION", "OPTION_TYPE_CHOICES")
 
 ADD_PRODUCT_ERRORS = {
     "invalid_options": _("The selected options are currently unavailable."),
@@ -160,7 +162,7 @@ class OrderForm(FormsetForm, forms.ModelForm):
         label=_("Remember my address for next time"))
     card_name = forms.CharField(label=_("Cardholder name"))
     card_type = forms.ChoiceField(label=_("Type"), 
-        choices=make_choices(CARD_TYPES))
+        choices=make_choices(mezz_settings.CARD_TYPES))
     card_number = forms.CharField(label=_("Card number"))
     card_expiry_month = forms.ChoiceField(
         choices=make_choices(["%02d" % i for i in range(1, 13)]))
@@ -209,14 +211,15 @@ class OrderForm(FormsetForm, forms.ModelForm):
 
         # Determine which sets of fields to hide for each checkout step.
         hidden = None
-        if CHECKOUT_STEPS_SPLIT:
+        if mezz_settings.CHECKOUT_STEPS_SPLIT:
             if step == CHECKOUT_STEP_FIRST:
                 # Hide the cc fields for billing/shipping if steps are split.
                 hidden = lambda f: f.startswith("card_")
             elif step == CHECKOUT_STEP_PAYMENT:
                 # Hide the non-cc fields for payment if steps are split.
                 hidden = lambda f: not f.startswith("card_")
-        if CHECKOUT_STEPS_CONFIRMATION and step == CHECKOUT_STEP_LAST:
+        if mezz_settings.CHECKOUT_STEPS_CONFIRMATION and \
+            step == CHECKOUT_STEP_LAST:
             # Hide all fields for the confirmation step.
             hidden = lambda f: True
         if hidden is not None:
@@ -357,7 +360,7 @@ class ProductAdminFormMetaclass(ModelFormMetaclass):
     to use for creating new product variations.
     """
     def __new__(cls, name, bases, attrs):
-        for option in OPTION_TYPE_CHOICES:
+        for option in mezz_settings.OPTION_TYPE_CHOICES:
             field = forms.MultipleChoiceField(label=option[1], 
                 required=False, widget=forms.CheckboxSelectMultiple)
             attrs["option%s" % option[0]] = field
