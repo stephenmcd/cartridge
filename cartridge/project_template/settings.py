@@ -8,8 +8,8 @@ MEZZANINE_ADMIN_MENU_ORDER = (
     (_("Content"), ("pages.Page", "blog.BlogPost", "blog.Comment",)),
     (_("Shop"), ("shop.Product", "shop.ProductOption", "shop.DiscountCode", 
         "shop.Sale", "shop.Order")),
-    (_("Site"), ("auth.User", "auth.Group", "sites.Site", 
-        "redirects.Redirect",)),
+    (_("Site"), ("sites.Site", "redirects.Redirect", "settings.Setting")),
+    (_("Users"), ("auth.User", "auth.Group",)),
 )
 
 # Main Django settings.
@@ -41,6 +41,10 @@ MEDIA_ROOT = os.path.join(project_path, MEDIA_URL.strip("/"))
 TEMPLATE_DIRS = (os.path.join(project_path, "templates"),)
 ROOT_URLCONF = "%s.urls" % project_dir
 CACHE_MIDDLEWARE_KEY_PREFIX = project_dir
+
+ADMIN_MEDIA_PREFIX = "/media/"
+if PACKAGE_NAME_GRAPPELLI in INSTALLED_APPS:
+    ADMIN_MEDIA_PREFIX = "/media/admin/"
 
 # Apps/
 INSTALLED_APPS.insert(0, "cartridge.shop")
