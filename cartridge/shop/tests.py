@@ -5,7 +5,7 @@ from operator import mul
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-from mezzanine.settings import CONTENT_STATUS_PUBLISHED
+from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
 
 from cartridge.shop.models import Product, ProductOption, ProductVariation, \
     Category, Cart, CartItem
