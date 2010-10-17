@@ -15,13 +15,14 @@ from django.utils.datastructures import SortedDict
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
+from mezzanine.core.templatetags.mezzanine_tags import thumbnail
+
 from cartridge.shop.models import Product, ProductOption, ProductVariation, \
     SelectedProduct, Cart, Order, DiscountCode
 from cartridge.shop.checkout import CHECKOUT_STEP_FIRST, CHECKOUT_STEP_LAST, \
     CHECKOUT_STEP_PAYMENT
 from cartridge.shop.settings import CARD_TYPES, CHECKOUT_STEPS_SPLIT, \
     CHECKOUT_STEPS_CONFIRMATION, OPTION_TYPE_CHOICES
-from cartridge.shop.templatetags.shop_tags import thumbnail
 from cartridge.shop.utils import make_choices, set_locale, set_cookie
 
 
@@ -86,6 +87,7 @@ def get_add_product_form(product):
 
     return AddProductForm
 
+
 class FormsetForm(object):
     """
     Form mixin that provides template methods for iterating through sets of 
@@ -142,6 +144,7 @@ class FormsetForm(object):
             if filter_args is not None:
                 return self._fieldset(filter_func(*filter_args.groups()))
         raise AttributeError(name)
+
 
 class OrderForm(FormsetForm, forms.ModelForm):
     """
@@ -252,6 +255,7 @@ class OrderForm(FormsetForm, forms.ModelForm):
             raise forms.ValidationError(self._checkout_errors)
         return self.cleaned_data
 
+
 class UserForm(forms.Form):
     """
     Fields for signup & login.
@@ -272,6 +276,7 @@ class UserForm(forms.Form):
         Log the user in.
         """
         login(request, self._user)
+
 
 class SignupForm(UserForm):
     
@@ -294,6 +299,7 @@ class SignupForm(UserForm):
             self.cleaned_data["email"], self.cleaned_data["password"])
         self.authenticate()
 
+
 class LoginForm(UserForm):
     
     def clean(self):
@@ -307,6 +313,7 @@ class LoginForm(UserForm):
             elif not self._user.is_active:
                 raise forms.ValidationError(_("Your account is inactive"))
         return self.cleaned_data
+
     
 #######################
 #    ADMIN WIDGETS    #    
@@ -326,6 +333,7 @@ class ImageWidget(forms.FileInput):
                 thumb_url, rendered)
         return mark_safe(rendered)
 
+
 class MoneyWidget(forms.TextInput):
     """
     Render missing decimal places for money fields.
@@ -341,6 +349,7 @@ class MoneyWidget(forms.TextInput):
             attrs["style"] = "text-align:right;"
         return super(MoneyWidget, self).render(name, value, attrs)
 
+
 class ProductAdminFormMetaclass(ModelFormMetaclass):
     """
     Metaclass for the Product Admin form that dynamically assigns each of the 
@@ -354,6 +363,7 @@ class ProductAdminFormMetaclass(ModelFormMetaclass):
             attrs["option%s" % option[0]] = field
         return super(ProductAdminFormMetaclass, cls).__new__(cls, name, bases, 
             attrs)
+
 
 class ProductAdminForm(forms.ModelForm):
     """
@@ -372,6 +382,7 @@ class ProductAdminForm(forms.ModelForm):
         for field, options in ProductOption.objects.as_fields().items():
             self.fields[field].choices = make_choices(options)
 
+
 class ProductVariationAdminForm(forms.ModelForm):
     """
     Ensure the list of images for the variation are specific to the variation's 
@@ -384,6 +395,7 @@ class ProductVariationAdminForm(forms.ModelForm):
                 product=kwargs["instance"].product)
             self.fields["image"].queryset = qs
 
+
 class ProductVariationAdminFormset(BaseInlineFormSet):
     """
     Ensure no more than one variation is checked as default. 
@@ -393,6 +405,7 @@ class ProductVariationAdminFormset(BaseInlineFormSet):
             f.cleaned_data["default"]]) > 1:
             error = _("Only one variation can be checked as the default.")
             raise forms.ValidationError(error)
+
 
 class DiscountAdminForm(forms.ModelForm):
     """
@@ -406,4 +419,3 @@ class DiscountAdminForm(forms.ModelForm):
             error = _("Please enter a value for only one type of reduction.")
             self._errors[fields[0]] = self.error_class([error])
         return self.cleaned_data
-
