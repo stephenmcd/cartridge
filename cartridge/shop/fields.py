@@ -13,10 +13,9 @@ from cartridge.shop.utils import set_locale
 
 class OptionField(CharField):
     """
-    A field for a selectable option of a product such as colour or size. Ensure
-    Null is True and provide a default field size.
+    A field for a selectable option of a product such as colour or size. 
+    Ensure Null is True and provide a default field size.
     """
-    
     def __init__(self, *args, **kwargs):
         kwargs["null"] = True
         defaults = {"max_length": 50}
@@ -27,7 +26,6 @@ class MoneyField(DecimalField):
     """
     A field for a monetary amount. Provide the default size and precision.
     """
-
     def __init__(self, *args, **kwargs):
         set_locale()
         defaults = {"null": True, "blank": True, "max_digits": 10, 
@@ -39,7 +37,6 @@ class SKUField(CharField):
     """
     A field for a product SKU. Provide the name and default field size.
     """
-    
     def __init__(self, *args, **kwargs):
         if not args:
             args = (_("SKU"),)
@@ -51,7 +48,6 @@ class DiscountCodeField(CharField):
     """
     A field for Discount Codes. Provide the default field size.
     """
-    
     def __init__(self, *args, **kwargs):
         defaults = {"max_length": 20}
         defaults.update(kwargs)
@@ -65,4 +61,3 @@ try:
         DiscountCodeField), [], {})], patterns=["shop\.fields\."])
 except ImportError:
     pass
-

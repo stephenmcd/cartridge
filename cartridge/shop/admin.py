@@ -11,11 +11,11 @@ from mezzanine.pages.admin import PageAdmin
 from cartridge.shop.fields import MoneyField
 from cartridge.shop.forms import ProductAdminForm, ProductVariationAdminForm, \
     ProductVariationAdminFormset, DiscountAdminForm, ImageWidget, MoneyWidget
-from cartridge.shop.models import Category, Product, ProductImage, ProductVariation, \
-    ProductOption, Order, OrderItem, Sale, DiscountCode
+from cartridge.shop.models import Category, Product, ProductImage, \
+    ProductVariation, ProductOption, Order, OrderItem, Sale, DiscountCode
 
 
-# lists of field names
+# Lists of field names.
 option_fields = [f.name for f in ProductVariation.option_fields()]
 billing_fields = [f.name for f in Order._meta.fields 
     if f.name.startswith("billing_detail")]
@@ -25,9 +25,11 @@ shipping_fields = [f.name for f in Order._meta.fields
 category_fieldsets = deepcopy(PageAdmin.fieldsets)
 category_fieldsets[0][1]["fields"].insert(3, "content")
 
+
 class CategoryAdmin(PageAdmin):
     fieldsets = category_fieldsets
     formfield_overrides = {ImageField: {"widget": ImageWidget}}
+
 
 class ProductVariationAdmin(admin.TabularInline):
     verbose_name_plural = _("Current variations")
@@ -38,6 +40,7 @@ class ProductVariationAdmin(admin.TabularInline):
     formfield_overrides = {MoneyField: {"widget": MoneyWidget}}
     form = ProductVariationAdminForm
     formset = ProductVariationAdminFormset
+
 
 class ProductImageAdmin(DynamicInlineAdmin):
     model = ProductImage
@@ -65,17 +68,17 @@ class ProductAdmin(DisplayableAdmin):
 
     def save_model(self, request, obj, form, change):
         """
-        store the product object for creating variations in save_formset
+        Store the product object for creating variations in save_formset.
         """
         super(ProductAdmin, self).save_model(request, obj, form, change)
         self._product = obj
 
     def save_formset(self, request, form, formset, change):
         """
-        create variations for selected options if they don't exist, manage the 
+        Create variations for selected options if they don't exist, manage the 
         default empty variation creating it if no variations exist or removing 
         it if multiple variations exist, and copy the pricing and image fields
-        from the default variation to the product
+        from the default variation to the product.
         """
         super(ProductAdmin, self).save_formset(request, form, formset, change)
         if isinstance(formset, ProductVariationAdminFormset):
@@ -84,6 +87,7 @@ class ProductAdmin(DisplayableAdmin):
             self._product.variations.create_from_options(options)
             self._product.variations.manage_empty()
             self._product.copy_default_variation()
+
 
 class ProductOptionAdmin(admin.ModelAdmin):
     ordering = ("type", "name")
@@ -94,11 +98,13 @@ class ProductOptionAdmin(admin.ModelAdmin):
     search_fields = ("type", "name")
     radio_fields = {"type": admin.HORIZONTAL}
 
+
 class OrderItemInline(admin.TabularInline):
     verbose_name_plural = _("Items")
     model = OrderItem
     extra = 0
     formfield_overrides = {MoneyField: {"widget": MoneyWidget}}
+
 
 class OrderAdmin(admin.ModelAdmin):
     ordering = ("status", "-id")
@@ -119,6 +125,7 @@ class OrderAdmin(admin.ModelAdmin):
             "item_total",("total", "status"))}),
     )
 
+
 class SaleAdmin(admin.ModelAdmin):
     list_display = ("title", "active", "discount_deduct", "discount_percent", 
         "discount_exact", "valid_from", "valid_to")
@@ -136,6 +143,7 @@ class SaleAdmin(admin.ModelAdmin):
             "discount_exact"),)}),
         (_("Sale period"), {"fields": (("valid_from", "valid_to"),)}),
     )
+
 
 class DiscountCodeAdmin(admin.ModelAdmin):
     list_display = ("title", "active", "code", "discount_deduct", 
@@ -156,10 +164,10 @@ class DiscountCodeAdmin(admin.ModelAdmin):
         (_("Valid for"), {"fields": (("valid_from", "valid_to"),)}),
     )
 
+
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(ProductOption, ProductOptionAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Sale, SaleAdmin)
 admin.site.register(DiscountCode, DiscountCodeAdmin)
-
