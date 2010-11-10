@@ -38,7 +38,7 @@ try:
 
         install_requires=[
             "setuptools",
-            "mezzanine >= 0.8",
+            "mezzanine >= 0.8.5",
         ],
 
         classifiers=[
