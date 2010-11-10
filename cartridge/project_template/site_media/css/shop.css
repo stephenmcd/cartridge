@@ -1,0 +1,55 @@
+
+legend {font-weight:bold; padding:15px 10px; font-size:130%;}
+.checkbox label {width:90% !important; margin-bottom:10px !important; 
+    float:left;}
+.checkbox input {float:left;}
+
+#account, #cart-panel {margin:20px 0;}
+#cart-panel {background:#333; padding:10px;} 
+#cart-panel a {color:#eee; font-weight:bold; line-height:20px;}
+#product-images-thumb img {margin:10px; margin-left:0;}
+#variations {margin-bottom:20px;}
+
+#items {width:100%;}
+#items th, #items td {text-align:right; padding:5px; font-size:80%;}
+#items th {background:#ccc; white-space:nowrap;}
+.items-item {text-align:left !important; width:100%;}
+.items-item form {display:inline;}
+.items-item img {width:30px; height:30px; vertical-align:middle; 
+    margin-right:5px;}
+.row1 {background:#eee;}
+.row2 {background:#ddd;}
+
+#checkout #grid-left *, #checkout #grid-right *, 
+    #checkout #breadcrum-menu {display:none;}
+#card-fields p {float:left; margin:0;}
+#card-fields p label {display:none;}
+#card-fields p select {margin:0 5px 0 0;}
+
+.confirmation {margin:5px 10px;}
+
+.category .products li {float:left; margin:10px 15px 0 0 !important; 
+    padding:10px; text-align:center; background:#ddd; width:95px; 
+    height:210px;}
+.category .products li .img {width:90px; height:90px; margin:auto; 
+    padding:0 !important; border:2px solid #333; margin-bottom:5px;}
+.img img {margin:0;}
+.product-paging {float:left; margin-top:10px; width:100%;}
+.product-paging li {padding:0 5px;}
+.product-sorting, .product-paging {padding:10px !important; 
+    background:#eee; float:left; width:100%; margin-bottom:10px; 
+    border-top:1px solid #ddd;}
+.product-sorting p, .product-paging p, .product-sorting ul, 
+    .product-paging ul {float:left; padding:0 5px 0 0; margin:0; 
+    font-size:.8em;}
+.product-sorting ul {padding-top:2px !important;}
+.product-sorting li {margin:5px !important; display:inline;}
+.category .price {font-size:.8em;}
+.old-price {text-decoration: line-through;}
+
+#variations li, #product-images-large li, #product-images-thumb li {
+    margin:0; list-style-type:none; display:inline;}
+
+#checkout-form, #add-cart {width:100%; padding:10px 0;}
+#checkout li {margin:2px 0; list-style-type:none;}
+
