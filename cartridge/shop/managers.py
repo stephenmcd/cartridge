@@ -2,23 +2,21 @@
 from collections import defaultdict
 from datetime import datetime, timedelta
 
-from django.conf import settings
 from django.db.models import Manager, Q
 from django.utils.datastructures import SortedDict
 
-from mezzanine.settings import load_settings
+from mezzanine.conf import settings
 
 
 class CartManager(Manager):
 
     def from_request(self, request):
         """
-        Return a cart by id stored in the session, creating it if not found
+        Return a cart by ID stored in the session, creating it if not found
         as well as removing old carts prior to creating a new cart.
         """
-        mezz_settings = load_settings("CART_EXPIRY_MINUTES")
         expiry_time = datetime.now() - timedelta(
-                                    minutes=mezz_settings.CART_EXPIRY_MINUTES)
+                                    minutes=settings.SHOP_CART_EXPIRY_MINUTES)
         try:
             cart = self.get(last_updated__gte=expiry_time, 
                 id=request.session.get("cart", None))

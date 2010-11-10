@@ -3,34 +3,27 @@ from copy import copy
 from datetime import datetime
 from decimal import Decimal
 
-from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.base import ModelBase
 from django.template.defaultfilters import slugify, striptags
 from django.utils.translation import ugettext, ugettext_lazy as _
 
+from mezzanine.conf import settings
 from mezzanine.core.models import Displayable, Content
 from mezzanine.core.managers import DisplayableManager
 from mezzanine.pages.models import Page
-from mezzanine.settings import load_settings
 
-from cartridge.shop.fields import OptionField, MoneyField, SKUField, \
-    DiscountCodeField
-from cartridge.shop import managers
-
-
-mezz_settings = load_settings("ORDER_STATUS_CHOICES", "OPTION_TYPE_CHOICES")
+from cartridge.shop import fields, managers
 
 
 class ProductOption(models.Model):
     """
     A selectable option for a product such as size or colour.
     """
-    
     type = models.IntegerField(_("Type"), 
-                                    choices=mezz_settings.OPTION_TYPE_CHOICES)
-    name = OptionField(_("Name"))
+                                    choices=settings.SHOP_OPTION_TYPE_CHOICES)
+    name = fields.OptionField(_("Name"))
     
     objects = managers.ProductOptionManager()
 
@@ -58,9 +51,9 @@ class Priced(models.Model):
     and ``ProductVariation`` models.
     """
 
-    unit_price = MoneyField(_("Unit price"))
+    unit_price = fields.MoneyField(_("Unit price"))
     sale_id = models.IntegerField(null=True)
-    sale_price = MoneyField(_("Sale price"))
+    sale_price = fields.MoneyField(_("Sale price"))
     sale_from = models.DateTimeField(_("Sale start"), blank=True, null=True)
     sale_to = models.DateTimeField(_("Sale end"), blank=True, null=True)
 
@@ -166,24 +159,24 @@ class ProductImage(models.Model):
 class ProductVariationMetaclass(ModelBase):
     """
     Metaclass for the ``ProductVariation`` model that dynamcally assigns an 
-    ``OptionField`` for each option in 
-    ``cartridge.shop.settings.PRODUCT_OPTIONS``.
+    ``fields.OptionField`` for each option in the ``SHOP_PRODUCT_OPTIONS`` 
+    setting.
     """
     def __new__(cls, name, bases, attrs):
-        for option in mezz_settings.OPTION_TYPE_CHOICES:
-            attrs["option%s" % option[0]] = OptionField(option[1])
+        for option in settings.SHOP_OPTION_TYPE_CHOICES:
+            attrs["option%s" % option[0]] = fields.OptionField(option[1])
         return super(ProductVariationMetaclass, cls).__new__(cls, name, bases, 
             attrs)
 
 
 class ProductVariation(Priced):
     """
-    A combination of selected options from 
-    ``cartridge.shop.settings.PRODUCT_OPTIONS`` for a ``Product`` instance.
+    A combination of selected options from ``SHOP_PRODUCT_OPTIONS`` for a 
+    ``Product`` instance.
     """
     
     product = models.ForeignKey("Product", related_name="variations")
-    sku = SKUField(unique=True)
+    sku = fields.SKUField(unique=True)
     num_in_stock = models.IntegerField(_("Number in stock"), blank=True, 
         null=True) 
     default = models.BooleanField(_("Default"))
@@ -229,7 +222,7 @@ class ProductVariation(Priced):
     @classmethod
     def option_fields(cls):
         return [field for field in cls._meta.fields 
-            if isinstance(field, OptionField)]
+            if isinstance(field, fields.OptionField)]
     
     def options(self):
         return [getattr(self, field.name) for field in self.option_fields()]
@@ -280,14 +273,14 @@ class Order(models.Model):
     user_id = models.IntegerField(blank=True, null=True)
     shipping_type = models.CharField(_("Shipping type"), max_length=50, 
         blank=True)
-    shipping_total = MoneyField(_("Shipping total"))
-    item_total = MoneyField(_("Item total"))
-    discount_code = DiscountCodeField(_("Discount code"), blank=True)
-    discount_total = MoneyField(_("Discount total"))
-    total = MoneyField(_("Order total"))
+    shipping_total = fields.MoneyField(_("Shipping total"))
+    item_total = fields.MoneyField(_("Item total"))
+    discount_code = fields.DiscountCodeField(_("Discount code"), blank=True)
+    discount_total = fields.MoneyField(_("Discount total"))
+    total = fields.MoneyField(_("Order total"))
     status = models.IntegerField(_("Status"), 
-        choices=mezz_settings.ORDER_STATUS_CHOICES, 
-        default=mezz_settings.ORDER_STATUS_CHOICES[0][0])
+        choices=settings.SHOP_ORDER_STATUS_CHOICES, 
+        default=settings.SHOP_ORDER_STATUS_CHOICES[0][0])
 
     class Meta:
         verbose_name = _("Order")
@@ -409,11 +402,11 @@ class SelectedProduct(models.Model):
     Abstract model representing a "selected" product in a cart or order.
     """
 
-    sku = SKUField()
+    sku = fields.SKUField()
     description = models.CharField(_("Description"), max_length=200)
     quantity = models.IntegerField(_("Quantity"), default=0)
-    unit_price = MoneyField(_("Unit price"), default=Decimal("0"))
-    total_price = MoneyField(_("Total price"), default=Decimal("0"))
+    unit_price = fields.MoneyField(_("Unit price"), default=Decimal("0"))
+    total_price = fields.MoneyField(_("Total price"), default=Decimal("0"))
     
     class Meta:
         abstract = True
@@ -472,10 +465,10 @@ class Discount(models.Model):
     active = models.BooleanField(_("Active"))
     products = models.ManyToManyField("Product", blank=True)
     categories = models.ManyToManyField("Category", blank=True)
-    discount_deduct = MoneyField(_("Reduce by amount"))
+    discount_deduct = fields.MoneyField(_("Reduce by amount"))
     discount_percent = models.DecimalField(_("Reduce by percent"), max_digits=4, 
         decimal_places=2, blank=True, null=True)
-    discount_exact = MoneyField(_("Reduce to amount"))
+    discount_exact = fields.MoneyField(_("Reduce to amount"))
     valid_from = models.DateTimeField(_("Valid from"), blank=True, null=True)
     valid_to = models.DateTimeField(_("Valid to"), blank=True, null=True)
 
@@ -561,8 +554,8 @@ class DiscountCode(Discount):
     applied to the total purchase amount.
     """
     
-    code = DiscountCodeField(_("Code"), unique=True)
-    min_purchase = MoneyField(_("Minimum total purchase"))
+    code = fields.DiscountCodeField(_("Code"), unique=True)
+    min_purchase = fields.MoneyField(_("Minimum total purchase"))
     free_shipping = models.BooleanField(_("Free shipping"))
 
     objects = managers.DiscountCodeManager()

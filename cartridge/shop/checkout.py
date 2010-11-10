@@ -12,7 +12,7 @@ payment() - Hook for payment gateway integration.
 
 from django.utils.translation import ugettext as _
 
-from mezzanine.settings import load_settings
+from mezzanine.conf import settings
 
 from cartridge.shop.models import Order
 from cartridge.shop.utils import set_shipping, send_mail_template, sign
@@ -76,7 +76,7 @@ def send_order_email(request, order):
     """
     Send order receipt email on successful order.
     """
-    mezz_settings = load_settings("ORDER_FROM_EMAIL")
+    settings.use_editable()
     order_context = {"order": order, "request": request, 
         "order_items": order.items.all()}
     for fieldset in ("billing_detail", "shipping_detail"):
@@ -84,18 +84,16 @@ def send_order_email(request, order):
             order._meta.fields if f.name.startswith(fieldset)]
         order_context["order_%s_fields" % fieldset] = fields
     send_mail_template(_("Order Receipt"), "shop/email/order_receipt", 
-        mezz_settings.ORDER_FROM_EMAIL, order.billing_detail_email, 
+        settings.SHOP_ORDER_FROM_EMAIL, order.billing_detail_email, 
         context=order_context)
 
 
 # Set up some constants for identifying each checkout step.
-mezz_settings = load_settings("CHECKOUT_STEPS_SPLIT", 
-                                                "CHECKOUT_STEPS_CONFIRMATION")
 CHECKOUT_TEMPLATES = ["billing_shipping"]
 CHECKOUT_STEP_FIRST = CHECKOUT_STEP_PAYMENT = CHECKOUT_STEP_LAST = 1
-if mezz_settings.CHECKOUT_STEPS_SPLIT:
+if settings.SHOP_CHECKOUT_STEPS_SPLIT:
     CHECKOUT_TEMPLATES.append("payment")
     CHECKOUT_STEP_PAYMENT = CHECKOUT_STEP_LAST = 2
-if mezz_settings.CHECKOUT_STEPS_CONFIRMATION:
+if settings.SHOP_CHECKOUT_STEPS_CONFIRMATION:
     CHECKOUT_TEMPLATES.append("confirmation")
     CHECKOUT_STEP_LAST += 1

@@ -21,15 +21,14 @@ from shutil import move
 from sys import exit
 from urllib import urlopen, urlretrieve
 
-from django.conf import settings
 from django.contrib.webdesign.lorem_ipsum import paragraph
 from django.db import connection
 from django.db.models import F
 
-from mezzanine.settings import CONTENT_STATUS_PUBLISHED
+from mezzanine.conf import settings
+from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
 
 from cartridge.shop.models import Category, Product, ProductOption
-from cartridge.shop.settings import OPTION_TYPE_CHOICES
 
 
 try:
@@ -46,7 +45,7 @@ product_options = {"Size": ("Small", "Medium", "Large"),
 
 
 def create_products(queue):
-    """OPTION_TYPE_CHOICES
+    """
     Download an image from Flickr for the product on the queue and if 
     successful now or previously, create the applicable product records.
     """
@@ -109,7 +108,7 @@ if __name__ == "__main__":
     # restoring them so that they're not deleted.
     print "Resetting product options"
     ProductOption.objects.all().delete()
-    for type, name in OPTION_TYPE_CHOICES:
+    for type, name in settings.OPTION_TYPE_CHOICES:
         for name in product_options[unicode(name)]:
             ProductOption.objects.create(type=type, name=name)
         

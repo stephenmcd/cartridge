@@ -1,5 +1,4 @@
 
-from django.conf import settings
 from django.contrib.auth import logout as auth_logout
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
@@ -12,7 +11,7 @@ from django.utils import simplejson
 from django.utils.translation import ugettext as _
 from django.contrib.admin.views.decorators import staff_member_required
 
-from mezzanine.settings import load_settings
+from mezzanine.conf import settings
 
 from cartridge.shop.checkout import billing_shipping, payment, \
     initial_order_data, send_order_email, CheckoutError, \
@@ -21,10 +20,6 @@ from cartridge.shop.forms import get_add_product_form, OrderForm, \
     LoginForm, SignupForm
 from cartridge.shop.models import Category, Product, ProductVariation, Cart
 from cartridge.shop.utils import set_cookie, send_mail_template, sign
-
-
-mezz_settings = load_settings("CHECKOUT_ACCOUNT_REQUIRED", 
-    "CHECKOUT_STEPS_CONFIRMATION", "LOGIN_URL", "PRODUCT_SORT_OPTIONS")
 
 
 # Fall back to authenticated-only messaging if messages app is unavailable.
@@ -41,7 +36,7 @@ def product_list(products, request, per_page):
     Handle pagination and sorting for the given products.
     """
     sort_options = [(slugify(o[0]), o[1]) for o in 
-                                        mezz_settings.PRODUCT_SORT_OPTIONS]
+                                        settings.SHOP_PRODUCT_SORT_OPTIONS]
     if "query" not in request.REQUEST:
         del sort_options[0]
     sort_name = request.GET.get("sort", sort_options[0][0])
@@ -102,18 +97,18 @@ def search(request, template="shop/search_results.html"):
     """
     Display product search results.
     """
-    mezz_settings = load_settings("PER_PAGE_SEARCH")
+    settings.use_editable()
     query = request.REQUEST.get("query", "")
     results = product_list(Product.objects.published_for(user=request.user
-                    ).search(query), request, mezz_settings.PER_PAGE_SEARCH)
+                    ).search(query), request, settings.SHOP_PER_PAGE_SEARCH)
     return render_to_response(template, {"query": query, "results": results},
         RequestContext(request))
 
     
 def wishlist(request, template="shop/wishlist.html"):
     """
-    Display the wishlist and handle removing items from the wishlist and adding 
-    them to the cart.
+    Display the wishlist and handle removing items from the wishlist and 
+    adding them to the cart.
     """
     skus = request.COOKIES.get("wishlist", "").split(",")
     error = None
@@ -214,9 +209,9 @@ def checkout(request):
     # Do the authentication check here rather than using standard login_required
     # decorator. This means we can check for a custom LOGIN_URL and fall back
     # to our own login view.
-    if mezz_settings.CHECKOUT_ACCOUNT_REQUIRED and \
+    if settings.SHOP_CHECKOUT_ACCOUNT_REQUIRED and \
         not request.user.is_authenticated():
-        return HttpResponseRedirect("%s?next=%s" % (mezz_settings.LOGIN_URL, 
+        return HttpResponseRedirect("%s?next=%s" % (settings.SHOP_LOGIN_URL, 
                                                     reverse("shop_checkout")))
     
     step = int(request.POST.get("step", CHECKOUT_STEP_FIRST))
@@ -254,7 +249,7 @@ def checkout(request):
                     payment(request, form)
                 except CheckoutError, e:
                     checkout_errors.append(e)
-                    if mezz_settings.CHECKOUT_STEPS_CONFIRMATION:
+                    if settings.SHOP_CHECKOUT_STEPS_CONFIRMATION:
                         step -= 1
                 else:    
                     order = form.save(commit=False)

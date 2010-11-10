@@ -5,19 +5,16 @@ from collections import defaultdict
 from urllib import quote
 
 from django import template
-from django.conf import settings
 from django.template.defaultfilters import slugify
 from django.utils.datastructures import SortedDict
 
-from mezzanine.settings import load_settings
+from mezzanine.conf import settings
 
 from cartridge.shop.models import Category
 from cartridge.shop.utils import set_locale
 
 
 register = template.Library()
-
-mezz_settings = load_settings("PRODUCT_SORT_OPTIONS")
 
 
 @register.filter
@@ -93,7 +90,7 @@ def product_sorting(context, products):
     Renders the links for each product sort option.
     """
     sort_options = [(option[0], slugify(option[0])) for option in 
-        mezz_settings.PRODUCT_SORT_OPTIONS]
+                                        settings.SHOP_PRODUCT_SORT_OPTIONS]
     querystring = context["request"].REQUEST.get("query", "")
     if querystring:
         querystring = "&query=" + quote(querystring)
@@ -109,17 +106,17 @@ def product_paging(context, products):
     """
     Renders the links for each page number in a paginated list of products.
     """
-    mezz_settings = load_settings("MAX_PAGING_LINKS")
+    settings = context["settings"]
     querystring = ""
     for name in ("query", "sort"):
         value = context["request"].REQUEST.get(name)
         if value is not None:
             querystring += "&%s=%s" % (name, quote(value))
     page_range = products.paginator.page_range
-    if len(page_range) > mezz_settings.MAX_PAGING_LINKS:
+    if len(page_range) > settings.SHOP_MAX_PAGING_LINKS:
         start = min(products.paginator.num_pages - MAX_PAGING_LINKS, 
-            max(0, products.number - (mezz_settings.MAX_PAGING_LINKS / 2) - 1))
-        page_range = page_range[start:start + mezz_settings.MAX_PAGING_LINKS]
+            max(0, products.number - (settings.SHOP_MAX_PAGING_LINKS / 2) - 1))
+        page_range = page_range[start:start + settings.SHOP_MAX_PAGING_LINKS]
     context.update({"products": products, "querystring": querystring, 
         "page_range": page_range})
     return context

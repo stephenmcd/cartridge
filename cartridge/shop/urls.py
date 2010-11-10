@@ -1,10 +1,7 @@
 
 from django.conf.urls.defaults import *
 
-from mezzanine.settings import load_settings
-
-
-mezz_settings = load_settings("CHECKOUT_ACCOUNT_ENABLED")
+from mezzanine.conf import settings
 
 
 urlpatterns = patterns("cartridge.shop.views",
@@ -16,7 +13,7 @@ urlpatterns = patterns("cartridge.shop.views",
     url("^checkout/complete/$", "complete", name="shop_complete"),
 )
 
-if mezz_settings.CHECKOUT_ACCOUNT_ENABLED:
+if settings.SHOP_CHECKOUT_ACCOUNT_ENABLED:
     urlpatterns += patterns("cartridge.shop.views",
         url("^account/$", "account", name="shop_account"),
         url("^logout/$", "logout", name="shop_logout"),

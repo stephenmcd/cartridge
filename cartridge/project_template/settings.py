@@ -4,11 +4,12 @@ from mezzanine.project_template.settings import *
 
 from django.utils.translation import ugettext_lazy as _
 
-MEZZANINE_ADMIN_MENU_ORDER = (
-    (_("Content"), ("pages.Page", "blog.BlogPost", "blog.Comment",)),
+ADMIN_MENU_ORDER = (
+    (_("Content"), ("pages.Page", "blog.BlogPost", "blog.Comment",
+        (_("Media Library"), "fb_browse"),)),
     (_("Shop"), ("shop.Product", "shop.ProductOption", "shop.DiscountCode", 
         "shop.Sale", "shop.Order")),
-    (_("Site"), ("sites.Site", "redirects.Redirect", "settings.Setting")),
+    (_("Site"), ("sites.Site", "redirects.Redirect", "conf.Setting")),
     (_("Users"), ("auth.User", "auth.Group",)),
 )
 
@@ -89,15 +90,29 @@ if command == "runserver" and PACKAGE_NAME_GRAPPELLI in INSTALLED_APPS:
         addr = "127.0.0.1"
     ADMIN_MEDIA_PREFIX = "http://%s:%s%s" % (addr, port, ADMIN_MEDIA_PREFIX)
 
-db_engine = DATABASE_ENGINE.split(".")[-1]
-if db_engine == "sqlite3" and "/" not in DATABASE_NAME:
-    # If the sqlite DB name doesn't contain a path, assume it's in the 
-    # project directory and add the path to it.
-    DATABASE_NAME = os.path.join(project_path, DATABASE_NAME)
-elif db_engine == "mysql":
-    # Required MySQL collation for tests.
-    TEST_DATABASE_COLLATION = "utf8_general_ci"
-elif db_engine.startswith("postgresql") and not globals().get("TIME_ZONE", 1):
-    # Specifying a blank time zone to fall back to the system's time zone
-    # will break table creation in Postgres so remove it.
-    del TIME_ZONE
+multi_db = (not globals().get("DATABASE_ENGINE")) and "DATABASES" in globals()
+if multi_db:
+    dbs = DATABASES
+else:
+    dbs = {None: {"ENGINE": DATABASE_ENGINE, "NAME": DATABASE_NAME}}
+for key, db in dbs.items():
+    engine = db["ENGINE"].split(".")[-1]
+    if engine == "sqlite3" and os.sep not in db["NAME"]:
+        # If the sqlite DB name doesn't contain a path, assume it's in the 
+        # project directory and add the path to it.
+        name = os.path.join(project_path, db["NAME"])
+        if multi_db:
+            DATABASES[key]["NAME"] = name
+        else:
+            DATABASE_NAME = name
+    elif engine == "mysql":
+        # Required MySQL collation for tests.
+        collation = "utf8_general_ci"
+        if multi_db:
+            DATABASES[key]["TEST_COLLATION"] = collation
+        else:
+            TEST_DATABASE_COLLATION = collation
+    elif engine.startswith("postgresql") and not globals().get("TIME_ZONE", 1):
+        # Specifying a blank time zone to fall back to the system's time zone
+        # will break table creation in Postgres so remove it.
+        del TIME_ZONE

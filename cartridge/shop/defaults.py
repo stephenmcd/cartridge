@@ -1,51 +1,42 @@
-"""
-cartridge.shop.settings - These are the settings and their default values 
-used internally throughout the shop. 
-
-Each can be set via project's settings module with the prefix 
-SHOP_setting_name. 
-
-For example, set PRODUCT_OPTIONS with SHOP_PRODUCT_OPTIONS.
-"""
 
 from socket import gethostname
 
 from django.conf import settings
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 
-from mezzanine.settings import register_setting
+from mezzanine.conf import register_setting
 
 
 register_setting(
-    name="CARD_TYPES",
+    name="SHOP_CARD_TYPES",
     description="Sequence of available credit card types for payment.",
     editable=False,
     default=("Mastercard", "Visa", "Diners", "Amex"),
 )
 
 register_setting(
-    name="CART_EXPIRY_MINUTES",
+    name="SHOP_CART_EXPIRY_MINUTES",
     description="Number of minutes of inactivity until carts are abandoned.",
-    editable=True,
+    editable=False,
     default=30,
 ) 
 
 register_setting(
-    name="CHECKOUT_ACCOUNT_ENABLED",
+    name="SHOP_CHECKOUT_ACCOUNT_ENABLED",
     description="If True, users can create a login for the checkout process.",
     editable=False,
     default=True,
 )
 
 register_setting(
-    name="CHECKOUT_ACCOUNT_REQUIRED",
+    name="SHOP_CHECKOUT_ACCOUNT_REQUIRED",
     description="If True, users must create a login for the checkout process.",
     editable=False,
     default=False,
 )    
 
 register_setting(
-    name="CHECKOUT_STEPS_SPLIT",
+    name="SHOP_CHECKOUT_STEPS_SPLIT",
     description="If True, the checkout process is split into separate "
         "billing/shipping and payment steps.",
     editable=False,
@@ -53,7 +44,7 @@ register_setting(
 )
 
 register_setting(
-    name="CHECKOUT_STEPS_CONFIRMATION",
+    name="SHOP_CHECKOUT_STEPS_CONFIRMATION",
     description="If True, the checkout process has a final confirmation "
         "step before completion.",
     editable=False,
@@ -61,7 +52,7 @@ register_setting(
 )
 
 register_setting(
-    name="CURRENCY_LOCALE",
+    name="SHOP_CURRENCY_LOCALE",
     description="Controls the formatting of monetary values accord to "
         "the locale module in the python standard library.",
     editable=False,
@@ -69,7 +60,7 @@ register_setting(
 )
 
 register_setting(
-    name="FORCE_HOST",
+    name="SHOP_FORCE_HOST",
     description="Host name that the site should always be accessed via that "
         "matches the SSL certificate.",
     editable=True,
@@ -77,7 +68,7 @@ register_setting(
 )
 
 register_setting(
-    name="FORCE_SSL_VIEWS",
+    name="SHOP_FORCE_SSL_VIEWS",
     description="Sequence of view names that will be forced to run over SSL "
         "when SSL_ENABLED is True.",
     editable=False,
@@ -85,7 +76,7 @@ register_setting(
 )
 
 register_setting(
-    name="OPTION_TYPE_CHOICES",
+    name="SHOP_OPTION_TYPE_CHOICES",
     description="Sequence of value/name pairs for types of product options, "
         "eg Size, Colour.",
     editable=False,
@@ -96,14 +87,14 @@ register_setting(
 )
 
 register_setting(
-    name="ORDER_FROM_EMAIL",
+    name="SHOP_ORDER_FROM_EMAIL",
     description="Email address that order receipts should be emailed from.",
     editable=True,
     default="do_not_reply@%s" % gethostname(),
 )
 
 register_setting(
-    name="ORDER_STATUS_CHOICES",
+    name="SHOP_ORDER_STATUS_CHOICES",
     description="Sequence of value/name pairs for order statuses.",
     editable=False,
     default=(
@@ -113,28 +104,28 @@ register_setting(
 )
 
 register_setting(
-    name="PER_PAGE_CATEGORY",
+    name="SHOP_PER_PAGE_CATEGORY",
     description="Number of products to display per category page.",
     editable=True,
     default=10,
 )
 
 register_setting(
-    name="PER_PAGE_SEARCH",
+    name="SHOP_PER_PAGE_SEARCH",
     description="Number of products to display per page for search results.",
     editable=True,
     default=10,
 )
 
 register_setting(
-    name="MAX_PAGING_LINKS",
+    name="SHOP_MAX_PAGING_LINKS",
     description="Maximum number of paging links to show.",
     editable=True,
     default=15,
 )
 
 register_setting(
-    name="PRODUCT_SORT_OPTIONS",
+    name="SHOP_PRODUCT_SORT_OPTIONS",
     description="Sequence of description/field+direction pairs defining "
         "the options available for sorting a list of products.",
     editable=False,
@@ -147,7 +138,7 @@ register_setting(
 )
 
 register_setting(
-    name="SSL_ENABLED",
+    name="SHOP_SSL_ENABLED",
     description="If True, users will be automatically redirect to HTTPS "
         "for the checkout process.",
     editable=True,
@@ -156,7 +147,8 @@ register_setting(
 
 # Decorator that wraps the given func in the CallableSetting object that calls 
 # the func when it is cast to a string.
-callable_setting = lambda func: type("", (), {"__str__": lambda self: func()})()
+callable_setting = lambda func: type("", (), {
+    "__str__": lambda self: func(), "__repr__": lambda self: "[dynamic]"})()
 
 @callable_setting
 def LOGIN_URL():
@@ -170,7 +162,7 @@ def LOGIN_URL():
         return reverse("shop_account")
 
 register_setting(
-    name="LOGIN_URL",
+    name="SHOP_LOGIN_URL",
     description="Fall back to shop's login view if the view for LOGIN_URL "
         "hasn't been defined.",
     editable=False,

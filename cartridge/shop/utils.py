@@ -8,14 +8,13 @@ try:
 except ImportError:
     from md5 import new as sha512
 
-from django.conf import settings 
 from django.core.exceptions import ImproperlyConfigured
 from django.core.mail import EmailMultiAlternatives
 from django.db.models import Model
 from django.template import loader, Context
 from django.utils.translation import ugettext as _
 
-from mezzanine.settings import load_settings
+from mezzanine.conf import settings
 
 
 def make_choices(choices):
@@ -81,9 +80,8 @@ def set_locale():
     """
     Sets the locale for currency formatting.
     """
-    mezz_settings = load_settings("CURRENCY_LOCALE")
     try:
-        locale.setlocale(locale.LC_MONETARY, mezz_settings.CURRENCY_LOCALE)
+        locale.setlocale(locale.LC_MONETARY, settings.SHOP_CURRENCY_LOCALE)
     except:
         raise ImproperlyConfigured(_("Invalid currency locale specified: %s") % 
-            mezz_settings.CURRENCY_LOCALE)
+            settings.SHOP_CURRENCY_LOCALE)

@@ -5,15 +5,11 @@ from operator import mul
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
+from mezzanine.conf import settings
 from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
-from mezzanine.settings import load_settings
 
 from cartridge.shop.models import Product, ProductOption, ProductVariation, \
     Category, Cart, CartItem
-    
-
-mezz_settings = load_settings("CHECKOUT_ACCOUNT_ENABLED", 
-                        "CHECKOUT_ACCOUNT_REQUIRED", "OPTION_TYPE_CHOICES")
 
 
 class ShopTests(TestCase):
@@ -22,7 +18,7 @@ class ShopTests(TestCase):
         published = {"status": CONTENT_STATUS_PUBLISHED}
         self._category = Category.objects.create(**published)
         self._product = Product.objects.create(**published)
-        for option_type in mezz_settings.OPTION_TYPE_CHOICES:
+        for option_type in settings.SHOP_OPTION_TYPE_CHOICES:
             for i in range(10):
                 name = "test%s" % i
                 ProductOption.objects.create(type=option_type[0], name=name)
@@ -43,9 +39,9 @@ class ShopTests(TestCase):
         # Checkout.
         response = self.client.get(reverse("shop_checkout"))
         self.assertEqual(response.status_code, 200 if not 
-            mezz_settings.CHECKOUT_ACCOUNT_REQUIRED else 302)
+            settings.SHOP_CHECKOUT_ACCOUNT_REQUIRED else 302)
         # Login.
-        if mezz_settings.CHECKOUT_ACCOUNT_ENABLED:
+        if settings.SHOP_CHECKOUT_ACCOUNT_ENABLED:
             response = self.client.get(reverse("shop_account"))
             self.assertEqual(response.status_code, 200)
 
