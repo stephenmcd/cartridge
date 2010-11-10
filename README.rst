@@ -15,7 +15,7 @@ should therefore be as easy as possible to customize. Cartridge achieves
 this goal with a code-base that implements only the core features of an 
 e-commerce site, therefore remaining as simple as possible.
 
-Cartridge also extends the `Mezzanine`_ content management platform and a live 
+Cartridge extends the `Mezzanine`_ content management platform and a live 
 demo of Cartridge can be found by visiting the `Mezzanine live demo`_.
 
 Features

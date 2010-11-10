@@ -18,6 +18,31 @@ sys.path.insert(0, cartridge_path)
 os.environ["DJANGO_SETTINGS_MODULE"] = "cartridge.project_template.settings"
 import cartridge
 
+# Generate the documentation for Cartridge's settings.
+import sys; sys.path.insert(0, "../../mezzanine/")
+from mezzanine.conf import registry
+from socket import gethostname
+
+settings_docs = [".. THIS DOCUMENT IS AUTO GENERATED VIA conf.py"]
+for name in sorted(registry.keys()):
+    if not name.startswith("SHOP_"):
+        continue
+    setting = registry[name]
+    settings_name = "``%s``" % name
+    setting_default = setting["default"]
+    if isinstance(setting_default, basestring):
+        if gethostname() in setting_default or (
+            setting_default.startswith("/") and 
+            os.path.exists(setting_default)):
+            setting_default = "[dynamic]"
+    if setting_default != "[dynamic]":
+        setting_default = repr(setting_default)
+    settings_docs.extend(["", settings_name, "-" * len(settings_name)])
+    settings_docs.extend(["", setting["description"]])
+    settings_docs.extend(["", "Default: ``%s``" % setting_default])
+with open(os.path.join(docs_path, "settings.rst"), "w") as f:
+    f.write("\n".join(settings_docs))
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
