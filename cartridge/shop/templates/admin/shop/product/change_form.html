@@ -23,17 +23,11 @@
 $(function() {
 
     var grappelli = $('.admin-title').length == 1;
-    var django12 = $('#id_variations-__prefix__-sku').length == 1;
 
 	// Move the "create variations" fieldset to under current variations.
 	var variationsFieldset;
 	if (grappelli) {
-	    if (django12) {
-	        variationsFieldset = $('#id_variations-INITIAL_FORMS').parent();
-	    } else {
-	        variationsFieldset = $('#id_variations-INITIAL_FORMS + ' + 
-	            '.items').parent();
-	    }
+        variationsFieldset = $('#id_variations-INITIAL_FORMS').parent();
 	} else {
 	    variationsFieldset = $('#id_variations-INITIAL_FORMS + ' + 
 	        'fieldset').parent().parent();
@@ -64,15 +58,6 @@ $(function() {
 	            '<div class="tiny">' + title + '</div>');
 	    });
 	}
-	
-	// Remove Django 1.2's dynamic inline stuff.
-	if (django12) {
-	    if (grappelli) {
-        	$('#id_variations-__prefix__-sku').parent().parent()
-        	    .parent().remove();
-        }
-	} 
-	
 
 });
 
