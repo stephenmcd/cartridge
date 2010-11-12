@@ -4,6 +4,7 @@ syntax: glob
 *.db
 .coverage
 local_settings.py
+cartridge/project_template/site_media/product/*
 build/*
 docs/build/*
 dist/*
