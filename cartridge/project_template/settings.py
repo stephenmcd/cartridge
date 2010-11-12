@@ -14,13 +14,17 @@ USE_I18N = False
 SECRET_KEY = "%(SECRET_KEY)s"
 INTERNAL_IPS = ("127.0.0.1",)
 
-# Database.
-DATABASE_ENGINE = ""
-DATABASE_NAME = ""
-DATABASE_USER = ""
-DATABASE_PASSWORD = ""
-DATABASE_HOST = ""
-DATABASE_PORT = ""
+# Databases.
+DATABASES = {
+    "default": {
+        "ENGINE": "",
+        "HOST": "",
+        "NAME": "",
+        "PASSWORD": "",
+        "PORT": "",
+        "USER": "",
+    }
+}
 
 # Paths.
 import os
