@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.forms import Form
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
 from django.utils import simplejson
@@ -12,6 +12,7 @@ from django.utils.translation import ugettext as _
 from django.contrib.admin.views.decorators import staff_member_required
 
 from mezzanine.conf import settings
+from mezzanine.utils import render_to_response
 
 from cartridge.shop.checkout import billing_shipping, payment, \
     initial_order_data, send_order_email, CheckoutError, \
