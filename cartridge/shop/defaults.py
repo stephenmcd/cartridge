@@ -142,7 +142,7 @@ register_setting(
     description="If True, users will be automatically redirect to HTTPS "
         "for the checkout process.",
     editable=True,
-    default=settings.DEBUG,
+    default=not settings.DEBUG,
 )
 
 # Decorator that wraps the given func in the CallableSetting object that calls 
