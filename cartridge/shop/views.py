@@ -2,25 +2,21 @@
 from django.contrib.auth import logout as auth_logout
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.forms import Form
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
-from django.contrib.admin.views.decorators import staff_member_required
 
 from mezzanine.conf import settings
 from mezzanine.utils import render_to_response
 
-from cartridge.shop.checkout import billing_shipping, payment, \
-    initial_order_data, send_order_email, CheckoutError, \
-    CHECKOUT_STEP_FIRST, CHECKOUT_STEP_LAST, CHECKOUT_TEMPLATES
-from cartridge.shop.forms import get_add_product_form, OrderForm, \
-    LoginForm, SignupForm
-from cartridge.shop.models import Category, Product, ProductVariation, Cart
-from cartridge.shop.utils import set_cookie, send_mail_template, sign
+from cartridge.shop import checkout
+from cartridge.shop.forms import OrderForm, LoginForm, SignupForm
+from cartridge.shop.forms import get_add_product_form
+from cartridge.shop.models import Product, ProductVariation, Cart
+from cartridge.shop.utils import set_cookie, sign
 
 
 # Fall back to authenticated-only messaging if messages app is unavailable.
@@ -202,7 +198,7 @@ def logout(request):
     return HttpResponseRedirect(request.GET.get("next", "/"))
 
 
-def checkout(request):
+def checkout_steps(request):
     """
     Display the order form and handle processing of each step.
     """
@@ -213,10 +209,10 @@ def checkout(request):
     if settings.SHOP_CHECKOUT_ACCOUNT_REQUIRED and \
         not request.user.is_authenticated():
         return HttpResponseRedirect("%s?next=%s" % (settings.SHOP_LOGIN_URL, 
-                                                    reverse("shop_checkout")))
+                                                    reverse("shop_CHECKOUT")))
     
-    step = int(request.POST.get("step", CHECKOUT_STEP_FIRST))
-    initial = initial_order_data(request)
+    step = int(request.POST.get("step", checkout.CHECKOUT_STEP_FIRST))
+    initial = checkout.initial_order_data(request)
     form = OrderForm(request, step, initial=initial)
     data = request.POST
 
@@ -233,29 +229,30 @@ def checkout(request):
                 del request.session["order"][field]
 
             # Handle shipping and discount code on first step.
-            if step == CHECKOUT_STEP_FIRST:
+            if step == checkout.CHECKOUT_STEP_FIRST:
                 try:
-                    billing_shipping(request, form)
-                except CheckoutError, e:
+                    checkout.billing_shipping(request, form)
+                except checkout.CheckoutError, e:
                     checkout_errors.append(e)
-                if hasattr(form, "discount"):
+                discount = getattr(form, "discount")
+                if discount is not None:
                     cart = Cart.objects.from_request(request)
                     discount_total = discount.calculate(cart.total_price())
                     request.session["free_shipping"] = discount.free_shipping
                     request.session["discount_total"] = discount_total
 
             # Process order on final step.
-            if step == CHECKOUT_STEP_LAST and not checkout_errors:
+            if step == checkout.CHECKOUT_STEP_LAST and not checkout_errors:
                 try:
-                    payment(request, form)
-                except CheckoutError, e:
+                    checkout.payment(request, form)
+                except checkout.CheckoutError, e:
                     checkout_errors.append(e)
                     if settings.SHOP_CHECKOUT_STEPS_CONFIRMATION:
                         step -= 1
                 else:    
                     order = form.save(commit=False)
                     order.process(request)
-                    send_order_email(request, order)
+                    checkout.send_order_email(request, order)
                     response = HttpResponseRedirect(reverse("shop_complete"))
                     if form.cleaned_data.get("remember") is not None:
                         remembered = "%s:%s" % (sign(order.key), order.key)
@@ -273,9 +270,9 @@ def checkout(request):
                 step += 1
                 form = OrderForm(request, step, initial=initial)
             
-    template = "shop/%s.html" % CHECKOUT_TEMPLATES[step - 1]
-    return render_to_response(template, {"form": form, "CHECKOUT_STEP_FIRST": 
-        step == CHECKOUT_STEP_FIRST}, RequestContext(request))
+    template = "shop/%s.html" % checkout.CHECKOUT_TEMPLATES[step - 1]
+    return render_to_response(template, {"form": form, "checkout.CHECKOUT_STEP_FIRST": 
+        step == checkout.CHECKOUT_STEP_FIRST}, RequestContext(request))
 
 
 def complete(request, template="shop/complete.html"):

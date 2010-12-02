@@ -9,7 +9,6 @@ from django import forms
 from django.forms.models import BaseInlineFormSet, ModelFormMetaclass
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
 from django.utils.datastructures import SortedDict
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
@@ -17,11 +16,10 @@ from django.utils.translation import ugettext_lazy as _
 from mezzanine.conf import settings
 from mezzanine.core.templatetags.mezzanine_tags import thumbnail
 
-from cartridge.shop.models import Product, ProductOption, ProductVariation, \
-    SelectedProduct, Cart, Order, DiscountCode
-from cartridge.shop.checkout import CHECKOUT_STEP_FIRST, CHECKOUT_STEP_LAST, \
-    CHECKOUT_STEP_PAYMENT
-from cartridge.shop.utils import make_choices, set_locale, set_cookie
+from cartridge.shop import checkout
+from cartridge.shop.models import Product, ProductOption, ProductVariation
+from cartridge.shop.models import Cart, Order, DiscountCode
+from cartridge.shop.utils import make_choices, set_locale
 
 
 ADD_PRODUCT_ERRORS = {
@@ -55,7 +53,7 @@ def get_add_product_form(product):
                     values = filter(None, set(option_values[i]))
                     if values:
                         field = forms.ChoiceField(label=option_labels[i], 
-                            choices=make_choices(values))
+                                                 choices=make_choices(values))
                         self.fields[name] = field
     
         def clean(self):
@@ -65,7 +63,8 @@ def get_add_product_form(product):
             """
             options = self.cleaned_data.copy()
             quantity = options.pop("quantity", 0)
-            if self._to_cart: # ensure the product has a price if adding to cart
+            # Ensure the product has a price if adding to cart.
+            if self._to_cart:
                 options["unit_price__isnull"] = False
             error = None
             try:
@@ -172,8 +171,7 @@ class OrderForm(FormsetForm, forms.ModelForm):
             f.name.startswith("shipping_detail")] + ["additional_instructions",     
             "discount_code"]
             
-    def __init__(self, request, step, data=None, initial=None, 
-        checkout_errors=None):
+    def __init__(self, request, step, data=None, initial=None, errors=None):
         """
         Handle setting shipping field values to the same as billing field 
         values in case Javascript is disabled, hiding fields for current step 
@@ -182,8 +180,9 @@ class OrderForm(FormsetForm, forms.ModelForm):
         """
 
         # Copy billing fields to shipping fields if "same" checked.
-        if (step == CHECKOUT_STEP_FIRST and data is not None and 
-            "same_billing_shipping" in data):
+        first = step == checkout.CHECKOUT_STEP_FIRST
+        last = step == checkout.CHECKOUT_STEP_LAST
+        if (first and data is not None and "same_billing_shipping" in data):
             data = copy(data)
             # Prevent second copy occuring for forcing step below when moving
             # backwards in steps.
@@ -203,19 +202,18 @@ class OrderForm(FormsetForm, forms.ModelForm):
             
         super(OrderForm, self).__init__(data=data, initial=initial)
         self._request = request
-        self._checkout_errors = checkout_errors
+        self._checkout_errors = errors
 
         # Determine which sets of fields to hide for each checkout step.
         hidden = None
         if settings.SHOP_CHECKOUT_STEPS_SPLIT:
-            if step == CHECKOUT_STEP_FIRST:
+            if first:
                 # Hide the cc fields for billing/shipping if steps are split.
                 hidden = lambda f: f.startswith("card_")
-            elif step == CHECKOUT_STEP_PAYMENT:
+            elif step == checkout.CHECKOUT_STEP_PAYMENT:
                 # Hide the non-cc fields for payment if steps are split.
                 hidden = lambda f: not f.startswith("card_")
-        if settings.SHOP_CHECKOUT_STEPS_CONFIRMATION and \
-            step == CHECKOUT_STEP_LAST:
+        if settings.SHOP_CHECKOUT_STEPS_CONFIRMATION and last:
             # Hide all fields for the confirmation step.
             hidden = lambda f: True
         if hidden is not None:
@@ -268,7 +266,7 @@ class UserForm(forms.Form):
         Validate email and password as well as setting the user for login.
         """
         self._user = authenticate(username=self.cleaned_data.get("email", ""), 
-            password=self.cleaned_data.get("password", ""))
+                               password=self.cleaned_data.get("password", ""))
     
     def login(self, request):
         """

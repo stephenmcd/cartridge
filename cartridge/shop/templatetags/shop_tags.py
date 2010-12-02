@@ -1,16 +1,12 @@
 
-import os
 import locale
-from collections import defaultdict
 from urllib import quote
 
 from django import template
 from django.template.defaultfilters import slugify
-from django.utils.datastructures import SortedDict
 
 from mezzanine.conf import settings
 
-from cartridge.shop.models import Category
 from cartridge.shop.utils import set_locale
 
 
@@ -97,7 +93,7 @@ def product_sorting(context, products):
     else:
         del sort_options[0]
     context.update({"selected_option": getattr(products, "sort"), 
-        "sort_options": sort_options, "querystring": querystring})
+                    "sort_options": sort_options, "querystring": querystring})
     return context
 
 
@@ -113,10 +109,11 @@ def product_paging(context, products):
         if value is not None:
             querystring += "&%s=%s" % (name, quote(value))
     page_range = products.paginator.page_range
-    if len(page_range) > settings.SHOP_MAX_PAGING_LINKS:
-        start = min(products.paginator.num_pages - MAX_PAGING_LINKS, 
-            max(0, products.number - (settings.SHOP_MAX_PAGING_LINKS / 2) - 1))
-        page_range = page_range[start:start + settings.SHOP_MAX_PAGING_LINKS]
+    page_links = settings.SHOP_MAX_PAGING_LINKS
+    if len(page_range) > page_links:
+        start = min(products.paginator.num_pages - page_links, 
+            max(0, products.number - (page_links / 2) - 1))
+        page_range = page_range[start:start + page_links]
     context.update({"products": products, "querystring": querystring, 
-        "page_range": page_range})
+                    "page_range": page_range})
     return context

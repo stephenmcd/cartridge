@@ -9,7 +9,7 @@ urlpatterns = patterns("cartridge.shop.views",
     url("^search/$", "search", name="shop_search"),
     url("^wishlist/$", "wishlist", name="shop_wishlist"),
     url("^cart/$", "cart", name="shop_cart"),
-    url("^checkout/$", "checkout", name="shop_checkout"),
+    url("^checkout/$", "checkout_steps", name="shop_checkout"),
     url("^checkout/complete/$", "complete", name="shop_complete"),
 )
 

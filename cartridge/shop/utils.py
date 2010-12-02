@@ -2,15 +2,13 @@
 import locale
 import hmac
 from datetime import datetime, timedelta
-from os.path import basename
 try:
-    from hashlib import sha512
+    from hashlib import sha512 as digest
 except ImportError:
-    from md5 import new as sha512
+    from md5 import new as digest
 
 from django.core.exceptions import ImproperlyConfigured
 from django.core.mail import EmailMultiAlternatives
-from django.db.models import Model
 from django.template import loader, Context
 from django.utils.translation import ugettext as _
 
@@ -49,7 +47,7 @@ def sign(value):
     Returns the hash of the given value, used for signing order key stored in 
     cookie for remembering address fields.
     """
-    return hmac.new(settings.SECRET_KEY, value, sha512).hexdigest()
+    return hmac.new(settings.SECRET_KEY, value, digest).hexdigest()
 
 
 def send_mail_template(subject, template, addr_from, addr_to, context=None,

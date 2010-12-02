@@ -1,13 +1,10 @@
 
-from copy import copy
 from datetime import datetime
 from decimal import Decimal
 
-from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.base import ModelBase
-from django.template.defaultfilters import slugify, striptags
-from django.utils.translation import ugettext, ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _
 
 from mezzanine.conf import settings
 from mezzanine.core.models import Displayable, Content

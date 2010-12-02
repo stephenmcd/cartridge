@@ -8,8 +8,8 @@ from django.test import TestCase
 from mezzanine.conf import settings
 from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
 
-from cartridge.shop.models import Product, ProductOption, ProductVariation, \
-    Category, Cart, CartItem
+from cartridge.shop.models import Product, ProductOption, ProductVariation
+from cartridge.shop.models import Category, Cart
 
 
 class ShopTests(TestCase):

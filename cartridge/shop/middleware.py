@@ -1,6 +1,6 @@
 
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect
 
 from mezzanine.conf import settings
 
@@ -14,12 +14,11 @@ class SSLRedirect(object):
         HTTPS and all other views are accessed over HTTP.
         """
         settings.use_editable()
-        if settings.SHOP_FORCE_HOST and \
-            request.get_host().split(":")[0] != FORCE_HOST:
-            return http.HttpResponsePermanentRedirect("http://%s%s" % 
-                (settings.SHOP_FORCE_HOST, request.get_full_path()))            
-        if settings.SHOP_SSL_ENABLED and not \
-            getattr(settings, "DEV_SERVER", False):
+        force_host = settings.SHOP_FORCE_HOST
+        if force_host and request.get_host().split(":")[0] != force_host:
+            url = "http://%s%s" % (force_host, request.get_full_path())
+            return HttpResponsePermanentRedirect(url)            
+        if settings.SHOP_SSL_ENABLED and not settings.DEV_SERVER:
             url = "%s%s" % (request.get_host(), request.get_full_path())
             if request.path in map(reverse, settings.SHOP_FORCE_SSL_VIEWS):
                 if not request.is_secure():
