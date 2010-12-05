@@ -69,5 +69,5 @@ except ImportError:
     pass
 
 # Dynamic settings.
-from mezzanine.utils import set_dynamic_settings
+from mezzanine.utils.conf import set_dynamic_settings
 set_dynamic_settings(globals())
