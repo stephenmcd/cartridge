@@ -37,7 +37,6 @@ try:
         packages=find_packages(),
 
         install_requires=[
-            "setuptools",
             "mezzanine >= 0.8.5",
         ],
 
