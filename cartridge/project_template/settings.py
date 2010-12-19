@@ -2,8 +2,21 @@
 import sys; sys.path.insert(0, "../../../mezzanine/")
 from mezzanine.project_template.settings import *
 
-# Cartridge Settings.
+# Cartridge settings.
 SHOP_SSL_ENABLED = False
+
+# Mezzanine settings.
+from django.utils.translation import ugettext_lazy as _
+ADMIN_MENU_ORDER = (
+    (_("Content"), ("pages.Page", "blog.BlogPost", "blog.Comment",
+        (_("Media Library"), "fb_browse"),)),
+    (_("Shop"), ("shop.Product", "shop.ProductOption", "shop.DiscountCode", 
+        "shop.Sale", "shop.Order")),
+    (_("Site"), ("sites.Site", "redirects.Redirect", "conf.Setting")),
+    (_("Users"), ("auth.User", "auth.Group",)),
+)
+
+THEME = ""
 
 # Main Django settings.
 DEBUG = False
@@ -49,17 +62,6 @@ TEMPLATE_CONTEXT_PROCESSORS += (
 
 MIDDLEWARE_CLASSES += (
     "cartridge.shop.middleware.SSLRedirect",
-)
-
-# Mezzanine settings.
-from django.utils.translation import ugettext_lazy as _
-ADMIN_MENU_ORDER = (
-    (_("Content"), ("pages.Page", "blog.BlogPost", "blog.Comment",
-        (_("Media Library"), "fb_browse"),)),
-    (_("Shop"), ("shop.Product", "shop.ProductOption", "shop.DiscountCode", 
-        "shop.Sale", "shop.Order")),
-    (_("Site"), ("sites.Site", "redirects.Redirect", "conf.Setting")),
-    (_("Users"), ("auth.User", "auth.Group",)),
 )
 
 # Local settings.
