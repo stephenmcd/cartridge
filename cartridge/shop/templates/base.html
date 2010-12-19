@@ -6,19 +6,17 @@
     <meta name="keywords" content="{% block meta_keywords %}{% endblock %}" /> 
     <meta name="description" content="{% block meta_description %}{% endblock %}" /> 
     <title>{% block meta_title %}{% endblock %}</title>
+
     <link rel="alternate" type="application/rss+xml" title="RSS" 
         href="{% url blog_post_feed "rss" %}" />
     <link rel="alternate" type="application/atom+xml" title="Atom"  
         href="{% url blog_post_feed "atom" %}" />
 
-    <script language="javascript" src="{{ MEDIA_URL }}js/jquery-1.4.2.min.js"></script>
+    <script language="javascript" 
+        src="{{ MEDIA_URL }}js/jquery-1.4.2.min.js"></script>
 
-    <!-- 960 Grid System -->
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/960.css" type="text/css" />
-    <!-- Reset (from 960.gs) -->
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/reset.css" type="text/css" />
-
-    <!-- Write your customer css rules here. -->
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/global.css" type="text/css" />
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/shop.css" type="text/css" />
 
@@ -36,16 +34,23 @@
 </head>
 <body id="{% block body_id %}{% endblock %}">
 
-<div id="grid-top">{% primary_menu %}</div>
+<div id="grid-top">
+    {% page_menu "pages/menus/primary.html" %}
+</div>
+
 <div class="container_12 clearfix">
 
-    <div id="grid-left" class="grid_3 grid">{% tree_menu %}</div>
+    <div id="grid-left" class="grid_3 grid">
+        {% page_menu "pages/menus/tree.html" %}
+    </div>
 
     <div id="grid-middle" class="grid_6 grid">
         <div class="gutter">
             <h1>{% block title %}{% endblock %}</h1>
             <div id="breadcrumb-menu">
-                {% block breadcrumb_menu %}{% breadcrumb_menu %}{% endblock %}
+                {% block breadcrumb_menu %}
+                    {% page_menu "pages/menus/breadcrumb.html" %}
+                {% endblock %}
             </div>
             {% block main %}{% endblock %}
         </div>
@@ -84,35 +89,27 @@
             {% endif %}
         </div>
         {% endif %}
-
+        
         {% block right_panel %}
-        {% include "twitter/tweets.html" %}
+            {% include "twitter/tweets.html" %}
         {% endblock %}
-        <p class="mezzanine">Powered by <a 
-            href="http://mezzanine.jupo.org">Mezzanine</a></p>
+        <p class="mezzanine">
+            {% trans "Powered by" %} 
+            <a href="http://mezzanine.jupo.org">Mezzanine</a>
+        </p>
     </div>
 
 </div>
+
 <div id="grid-bottom">
     <div class="container_12 clearfix">
-        <div class="grid_6 push_3 grid">{% footer_menu %}</div>
+        <div class="grid_6 push_3 grid">
+            {% page_menu "pages/menus/footer.html" %}
+        </div>
     </div>
 </div>
 
-{% editable_loader %}
-
-{% if settings.GOOGLE_ANALYTICS_ID %}
-<script> 
-var _gaq = [['_setAccount', '{{ settings.GOOGLE_ANALYTICS_ID }}'], ['_trackPageview']];
-(function(d, t) {
-var g = d.createElement(t),
-    s = d.getElementsByTagName(t)[0];
-g.async = true;
-g.src = '//www.google-analytics.com/ga.js';
-s.parentNode.insertBefore(g, s);
-})(document, 'script');
-</script>
-{% endif %}
+{% include "includes/footer_scripts.html" %}
 
 </body>
 </html>
