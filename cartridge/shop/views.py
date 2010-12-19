@@ -10,7 +10,7 @@ from django.utils import simplejson
 from django.utils.translation import ugettext as _
 
 from mezzanine.conf import settings
-from mezzanine.utils import render_to_response
+from mezzanine.utils.views import render_to_response
 
 from cartridge.shop import checkout
 from cartridge.shop.forms import OrderForm, LoginForm, SignupForm
