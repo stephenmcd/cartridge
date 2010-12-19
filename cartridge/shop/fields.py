@@ -58,6 +58,6 @@ class DiscountCodeField(CharField):
 try:
     from south.modelsinspector import add_introspection_rules
     add_introspection_rules(rules=[((OptionField, MoneyField, SKUField, 
-        DiscountCodeField), [], {})], patterns=["shop\.fields\."])
+        DiscountCodeField), [], {})], patterns=["cartridge\.shop\.fields\."])
 except ImportError:
     pass

@@ -7,6 +7,7 @@ from django.test import TestCase
 
 from mezzanine.conf import settings
 from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
+from mezzanine.utils.tests import run_pyflakes_for_package
 
 from cartridge.shop.models import Product, ProductOption, ProductVariation
 from cartridge.shop.models import Category, Cart
@@ -139,3 +140,14 @@ class ShopTests(TestCase):
         self.assertFalse(cart.has_items())
         self.assertEqual(cart.total_quantity(), 0)
         self.assertEqual(cart.total_price(), Decimal("0"))
+
+    def test_with_pyflakes(self):
+        """
+        Run pyflakes across the code base to check for potential errors.
+        """
+        ignore = ("redefinition of unused 'digest'", 
+                  "redefinition of unused 'info'")
+        warnings = run_pyflakes_for_package("cartridge", extra_ignore=ignore)
+        if warnings:
+            warnings.insert(0, "pyflakes warnings:")
+            self.fail("\n".join(warnings))

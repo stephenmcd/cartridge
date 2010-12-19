@@ -24,4 +24,5 @@ def create_initial_product(app, created_models, verbosity, **kwargs):
         call_command("loaddata", "cartridge.json")
 
 
-post_syncdb.connect(create_initial_product, sender=shop_app)
+if "south" not in settings.INSTALLED_APPS:
+    post_syncdb.connect(create_initial_product, sender=shop_app)
