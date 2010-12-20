@@ -56,11 +56,11 @@ TEMPLATE_DIRS = (os.path.join(_project_path, "templates"),)
 # Apps.
 INSTALLED_APPS = ("cartridge.shop",) + tuple(INSTALLED_APPS)
 
-TEMPLATE_CONTEXT_PROCESSORS += (
+TEMPLATE_CONTEXT_PROCESSORS = tuple(TEMPLATE_CONTEXT_PROCESSORS) + (
     "cartridge.shop.context_processors.shop_globals",
 )
 
-MIDDLEWARE_CLASSES += (
+MIDDLEWARE_CLASSES = tuple(MIDDLEWARE_CLASSES) + (
     "cartridge.shop.middleware.SSLRedirect",
 )
 
