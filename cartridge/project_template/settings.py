@@ -1,5 +1,5 @@
 
-import sys; sys.path.insert(0, "../../../mezzanine/")
+import os, sys; sys.path.insert(0, os.path.join("..", "..", "..", "mezzanine"))
 from mezzanine.project_template.settings import *
 
 # Cartridge settings.
