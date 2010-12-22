@@ -234,7 +234,7 @@ def checkout_steps(request):
                     checkout.billing_shipping(request, form)
                 except checkout.CheckoutError, e:
                     checkout_errors.append(e)
-                discount = getattr(form, "discount")
+                discount = getattr(form, "discount", None)
                 if discount is not None:
                     cart = Cart.objects.from_request(request)
                     discount_total = discount.calculate(cart.total_price())
@@ -265,7 +265,7 @@ def checkout_steps(request):
             # Assign checkout errors to new form if any and re-run is_valid 
             # if valid set form to next step.
             form = OrderForm(request, step, initial=initial, data=data, 
-                checkout_errors=checkout_errors)
+                             errors=checkout_errors)
             if form.is_valid():
                 step += 1
                 form = OrderForm(request, step, initial=initial)
