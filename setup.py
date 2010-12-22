@@ -1,4 +1,5 @@
 
+from __future__ import with_statement
 import os
 
 exclude = ["cartridge/project_template/cartridge.db", 
