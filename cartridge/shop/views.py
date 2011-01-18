@@ -139,7 +139,7 @@ def wishlist(request, template="shop/wishlist.html"):
     # Remove skus from the cookie that no longer exist.
     published_products = Product.objects.published(for_user=request.user)
     wishlist = list(ProductVariation.objects.filter(
-        product__in=published_products, sku__in=skus).select_related())
+        product__in=published_products, sku__in=skus).select_related(depth=1))
     wishlist.sort(key=lambda variation: skus.index(variation.sku))
     response = render_to_response(template, {"wishlist": wishlist, 
         "error": error}, RequestContext(request))
