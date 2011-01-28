@@ -63,6 +63,20 @@ Sequence of view names that will be forced to run over SSL when SSL_ENABLED is T
 
 Default: ``('shop_checkout', 'shop_complete', 'shop_account')``
 
+``SHOP_HANDLER_BILLING_SHIPPING``
+---------------------------------
+
+Dotted package path and class name of the function that is called on submit of the billing/shipping checkout step. This is where shipping calculation can be performed and set using the function ``cartridge.shop.utils.set_shipping``.
+
+Default: ``'cartridge.shop.checkout.dummy_billship_handler'``
+
+``SHOP_HANDLER_PAYMENT``
+------------------------
+
+Dotted package path and class name of the function that is called on submit of the payment checkout step. This is where integration with a payment gateway should be implemented.
+
+Default: ``'cartridge.shop.checkout.dummy_payment_handler'``
+
 ``SHOP_LOGIN_URL``
 ------------------
 
@@ -124,4 +138,4 @@ Default: ``((u'Relevance', None), (u'Least expensive', 'unit_price'), (u'Most ex
 
 If True, users will be automatically redirect to HTTPS for the checkout process.
 
-Default: ``True``
+Default: ``[dynamic]``
