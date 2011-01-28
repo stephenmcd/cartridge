@@ -10,6 +10,7 @@ from django.utils import simplejson
 from django.utils.translation import ugettext as _
 
 from mezzanine.conf import settings
+from mezzanine.utils.importing import import_dotted_path
 from mezzanine.utils.views import render_to_response
 
 from cartridge.shop import checkout
@@ -19,6 +20,9 @@ from cartridge.shop.models import Product, ProductVariation, Cart
 from cartridge.shop.utils import set_cookie, sign
 
 
+billship_handler = import_dotted_path(settings.SHOP_HANDLER_BILLING_SHIPPING)
+payment_handler = import_dotted_path(settings.SHOP_HANDLER_PAYMENT)
+
 # Fall back to authenticated-only messaging if messages app is unavailable.
 try:
     from django.contrib.messages import info 
@@ -26,7 +30,7 @@ except ImportError:
     def info(request, message, fail_silently=True):
         if request.user.is_authenticated():
             request.user.message_set.create(message=message)
-    
+
 
 def product_list(products, request, per_page):
     """
@@ -231,7 +235,7 @@ def checkout_steps(request):
             # Handle shipping and discount code on first step.
             if step == checkout.CHECKOUT_STEP_FIRST:
                 try:
-                    checkout.billing_shipping(request, form)
+                    billship_handler(request, form)
                 except checkout.CheckoutError, e:
                     checkout_errors.append(e)
                 discount = getattr(form, "discount", None)
@@ -244,7 +248,7 @@ def checkout_steps(request):
             # Process order on final step.
             if step == checkout.CHECKOUT_STEP_LAST and not checkout_errors:
                 try:
-                    checkout.payment(request, form)
+                    payment_handler(request, form)
                 except checkout.CheckoutError, e:
                     checkout_errors.append(e)
                     if settings.SHOP_CHECKOUT_STEPS_CONFIRMATION:

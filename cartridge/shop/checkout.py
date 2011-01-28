@@ -1,13 +1,5 @@
 """
-
-Checkout process utilities. The following are particularly for 
-customization and if fail should raise checkout.CheckoutError:
-
-billing_shipping() - Hook for setting shipping via 
-``cartridge.shop.utils.set_shipping``.
-
-payment() - Hook for payment gateway integration.
-
+Checkout process utilities.
 """
 
 from django.utils.translation import ugettext as _
@@ -26,19 +18,26 @@ class CheckoutError(Exception):
     pass
 
 
-def billing_shipping(request, order_form):
+def dummy_billship_handler(request, order_form):
     """
-    Implement shipping handling here.
+    Example shipping handler - implement your own and specify the path to 
+    import it from via the setting ``SHOP_HANDLER_BILLING_SHIPPING``. This 
+    function will typically contain any shipping calculation where the 
+    shipping amount can then be set using the function 
+    ``cartridge.shop.utils.set_shipping``. The Cart object is also 
+    accessible via ``shop.Cart.objects.from_request(request)``
     """
-    # Cart is also accessible via shop.Cart.objects.from_request(request)
     set_shipping(request, "Shipping Test", 10)
 
     
-def payment(request, order_form):
+def dummy_payment_handler(request, order_form):
     """
-    Implement payment gateway integration here.
+    Dummy payment handler - implement your own and specify the path to 
+    import it from via the setting ``SHOP_HANDLER_PAYMENT``. This 
+    function will typically contain integration with a payment gateway. 
+    Raise cartridge.shop.checkout.CheckoutError("error message") if 
+    payment is unsuccessful.
     """
-    # Eg, for declined credit card: raise CheckoutError("Credit card declined")
     pass
 
     

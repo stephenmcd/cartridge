@@ -76,6 +76,25 @@ register_setting(
 )
 
 register_setting(
+    name="SHOP_HANDLER_BILLING_SHIPPING",
+    description="Dotted package path and class name of the function that "
+        "is called on submit of the billing/shipping checkout step. This "
+        "is where shipping calculation can be performed and set using the "
+        "function ``cartridge.shop.utils.set_shipping``.",
+    editable=True,
+    default="cartridge.shop.checkout.dummy_billship_handler",
+)
+
+register_setting(
+    name="SHOP_HANDLER_PAYMENT",
+    description="Dotted package path and class name of the function that "
+        "is called on submit of the payment checkout step. This is where "
+        "integration with a payment gateway should be implemented.",
+    editable=True,
+    default="cartridge.shop.checkout.dummy_payment_handler",
+)
+
+register_setting(
     name="SHOP_OPTION_TYPE_CHOICES",
     description="Sequence of value/name pairs for types of product options, "
         "eg Size, Colour.",
