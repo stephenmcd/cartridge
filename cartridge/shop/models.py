@@ -192,7 +192,7 @@ class ProductVariation(Priced):
         """
         options = ", ".join(["%s: %s" % (unicode(f.verbose_name), getattr(self, f.name)) 
             for f in self.option_fields() if getattr(self, f.name) is not None])
-        return ("%s %s" % (self.product, options)).strip()
+        return ("%s %s" % (unicode(self.product), options)).strip()
     
     def save(self, *args, **kwargs):
         """
@@ -356,7 +356,7 @@ class Cart(models.Model):
         item, created = self.items.get_or_create(sku=variation.sku, 
             unit_price=variation.price())
         if created:
-            item.description = str(variation)
+            item.description = unicode(variation)
             item.unit_price = variation.price()
             item.url = variation.product.get_absolute_url()
             image = variation.image
