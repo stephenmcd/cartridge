@@ -47,10 +47,10 @@ import os
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIRNAME = PROJECT_ROOT.split(os.sep)[-1]
 ADMIN_MEDIA_PREFIX = "/media/"
-CACHE_MIDDLEWARE_KEY_PREFIX = _project_dir
+CACHE_MIDDLEWARE_KEY_PREFIX = PROJECT_DIRNAME
 MEDIA_URL = "/site_media/"
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, MEDIA_URL.strip("/"))
-ROOT_URLCONF = "%s.urls" % _project_dir
+ROOT_URLCONF = "%s.urls" % PROJECT_DIRNAME
 TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "templates"),)
 
 # Apps.
