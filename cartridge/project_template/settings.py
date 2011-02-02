@@ -44,14 +44,14 @@ DATABASES = {
 
 # Paths.
 import os
-_project_path = os.path.dirname(os.path.abspath(__file__))
-_project_dir = _project_path.split(os.sep)[-1]
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+PROJECT_DIRNAME = PROJECT_ROOT.split(os.sep)[-1]
 ADMIN_MEDIA_PREFIX = "/media/"
 CACHE_MIDDLEWARE_KEY_PREFIX = _project_dir
 MEDIA_URL = "/site_media/"
-MEDIA_ROOT = os.path.join(_project_path, MEDIA_URL.strip("/"))
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, MEDIA_URL.strip("/"))
 ROOT_URLCONF = "%s.urls" % _project_dir
-TEMPLATE_DIRS = (os.path.join(_project_path, "templates"),)
+TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "templates"),)
 
 # Apps.
 INSTALLED_APPS = ("cartridge.shop",) + tuple(INSTALLED_APPS)
