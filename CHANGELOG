@@ -1,0 +1,263 @@
+Version 0.1.7 (Jan 28, 2011)
+----------------------------
+
+  * Added a depth arg for select_related in the wishlist view - stephenmcd
+  * Exposed handlers for billing_shipping and payment forms via settings - stephenmcd
+  * Updated auto-generated settings docs - stephenmcd
+
+Version 0.1.6 (Dec 22, 2010)
+----------------------------
+
+  * Updated required Mezzanine version - stephenmcd
+  * Changed path import for developing against Mezzanine to be cross-platform - jdeblank
+  * Fixed minor bugs in checkout view - jdeblank
+  * Updated setup script for Python 2.5 compatibility - stephenmcd
+
+Version 0.1.5 (Dec 22, 2010)
+----------------------------
+
+  * Fix with statement for Python 2.5 - stephenmcd
+  * Style fix - stephenmcd
+  * Remove redundant JS in admin product change view - stephenmcd
+  * Tabs to spaces - stephenmcd
+  * Update ignore file - stephenmcd
+  * Use ``mezzanine.utils.set_dynamic_settings`` - stephenmcd
+  * Update to multiple DB settings - stephenmcd
+  * Revert to old ordering of shop app in INSTALLED_APPS - stephenmcd
+  * Fixed buempty wishlist length - stephenmcd
+  * Updated render_to_response to Mezzanine's context-aware version - stephenmcd
+  * Removed unused import - stephenmcd
+  * Defined template accessible settings - stephenmcd
+  * Tweaked defaults for SSL - stephenmcd
+  * Upgraded local_settings module template to use multi DB format - stephenmcd
+  * Removed a ton of unused imports - stephenmcd
+  * Updated local_settings template - stephenmcd
+  * Renamed fixtures from initial_data to avoid loading on each call to syncdb - stephenmcd
+  * Updated references to mezzanine.utils to use new module names - stephenmcd
+  * Added pyflakes test - stephenmcd
+  * Cleaned up AUTHORS - stephenmcd
+  * Added south migrations - stephenmcd
+  * Fixed south introspection rules to use cartridge package name - stephenmcd
+  * Updated fixtures installation to support south - stephenmcd
+  * Removed redundant setuptools dependency - stephenmcd
+  * Updated base template to use Mezzanine's new ``page_menu`` template tag - stephenmcd
+  * Updated references to ``mezzanine.utils`` to use new module names - stephenmcd
+  * Rearranged Mezzanine settings in the settings module - stephenmcd
+  * Updated urls.py in the project template to include its own url for the homepage - stephenmcd
+  * Added some guards against imported sequences into settings being an unexpected type (list vs tuple) - stephenmcd
+  * Added link to mobile site in base template - stephenmcd
+  * Added br tag to mobile link - stephenmcd
+
+Version 0.1.4 (Nov 10, 2010)
+----------------------------
+
+  * MySQL patches - stephenmcd
+  * Remove ``TEST_DATABASE_COLLATION`` (will go into Mezzanine) - stephenmcd
+  * Add further DB specific tweaks to ``project_template.settings`` - stephenmcd
+  * CSS update for default templates - stephenmcd
+  * Update install instructions in README to reflect Mezzanine's default user - stephenmcd
+  * Fix incorrect import in tests resulting from Mezzanine's new settings app - stephenmcd
+  * Remove ``thumbnail`` template tag and replace references with Mezzanine's - stephenmcd
+  * Update ``ADMIN_MENU_ORDER`` to include Mezzanine's settings app and fix setting of ``ADMIN_MEDIA_PREFIX`` - stephenmcd
+  * Style fixes - stephenmcd
+  * Convert settings to Mezzanine's settings app - stephenmcd
+  * Update ``mezzanine.settings`` to ``mezzanine.conf`` - stephenmcd
+  * Split the Mezzanine and Cartridge stylesheets into separate files - stephenmcd
+  * Update documentation to automatically generate available settings - stephenmcd
+  * Require the about to be released Mezzanine version - stephenmcd
+
+Version 0.1.2 (Sep 24, 2010)
+----------------------------
+
+  * Docs update - add more info and links around Mezzanine integration - stephenmcd
+  * Update editable_loader tag sequence and move default CSS to external files - stephenmcd
+  * Fixes to category template - stephenmcd
+  * Bundle jQuery - stephenmcd
+
+Version 0.1.1 (Sep 20, 2010)
+----------------------------
+
+  * Add ``csrf_token`` to forms - stephenmcd
+  * Fix Django 1.2 incompatibilities with the admin product form - stephenmcd
+  * Fix the fixes - stephenmcd
+  * Minor cleanups - stephenmcd
+  * Update docs formatting - stephenmcd
+  * Remove old assets - stephenmcd
+  * Add images for fixtures - stephenmcd
+  * Use correct db name to exclude in setup.py - stephenmcd
+
+Version 0.1 (Sep 19, 2010)
+--------------------------
+
+  * initial import - stephenmcd
+  * thumbnail template tag - stephenmcd
+  * cleaned up thumbnail filename convention - stephenmcd
+  * skus - stephenmcd
+  * cleanup widget code - stephenmcd
+  * bugfix imports - stephenmcd
+  * settings file - stephenmcd
+  * added "view on site" in admin listing for product and category - stephenmcd
+  * cleanup payment form options - stephenmcd
+  * front-end handling of skus - stephenmcd
+  * documented cart object - stephenmcd
+  * cleaned up price field names, made variation description from options and removed ability to edit options for variations - stephenmcd
+  * bugfix to pricing field name cleanup - stephenmcd
+  * cleanup model field list accessor names, cleanup checkout form fieldset creator, fix thumbnail tag to return existing thumbnail - stephenmcd
+  * clbugfix to cart not updating total price for item, bugfix to checkout form fields and fieldsets - stephenmcd
+  * dummy commit testing username in hgrc - stephenmcd
+  * added cropping to thumbnail template tag - stephenmcd
+  * bugfix on creating option formfields in admin and update to fieldset names - stephenmcd
+  * change menu template name to reflect new include tag name - stephenmcd
+  * add ssl redirect middleware - stephenmcd
+  * add categories to context processors - stephenmcd
+  * add breadcrumbs template tag and change category tags to use global category list - stephenmcd
+  * add sku to product model and method for building heirarchical slugs - stephenmcd
+  * removed all functionality around hierarchical slugs including breadcrumbs tag - stephenmcd
+  * added styling to templates - stephenmcd
+  * - implemented handling of default skus for products without variations and removed sku field from product- added custom fields: MoneyField, SKUField- added managers module- changed cart to use django models with cart cleanup thread- added stock levels - stephenmcd
+  * new modules from last commit - stephenmcd
+  * template enhancements - stephenmcd
+  * added initial unit tests - stephenmcd
+  * removed redirects app - stephenmcd
+  * fix thumbnail quality - stephenmcd
+  * added shop.settings - stephenmcd
+  * changed ssl middleware to use shop.settings - stephenmcd
+  * removed old cart module - stephenmcd
+  * added items in carts to stock checking - stephenmcd
+  * removed cart cleanup thread and moved cleanup to cart manager - stephenmcd
+  * added shipping and payment hooks as well as order creation - stephenmcd
+  * added calculated total_price fields to SelectedProduct and Order - stephenmcd
+  * removed unnecessary custom fields from admin, moved all admin form functionality to forms module and added money widget - stephenmcd
+  * moved shipping and payment utils into checkout module - stephenmcd
+  * added order_totals inclusion tag - stephenmcd
+  * - reverted address fields for order model and option fields for variation model back to being dynamically created- moved all model choices into shop.settings- implemented checkout_handler functionality for each checkout step- implemented set_shipping method on order form - stephenmcd
+  * - re-added shop.utils with make_choices, send_mail_template and moved set_shipping from payment form into utils- added email receipt to order complete and ORDER_FROM_EMAIL to shop.settings- added FORCE_HOST to settings which when specified will ensure the host is forced for matching ssl cert - stephenmcd
+  * added cartridge site homepage - stephenmcd
+  * misc cleanups - stephenmcd
+  * remove test fixtures and add some more test placeholders - stephenmcd
+  * move variations management from admin module to management module - stephenmcd
+  * added unit tests for variation management - stephenmcd
+  * bugfix for add to basket form on product with no options - stephenmcd
+  * bugfix lookup of sku quantity in carts and some enhancements to cached property testability - stephenmcd
+  * homepage updates - stephenmcd
+  * bugfix incorrect method name for stock checking in add to basket form - stephenmcd
+  * changed unit tests for cart to use test client for cart interaction rather than cart object, in order to cover the cart forms also providing a more realistic test case. removed the need for custom test handling in models so removed these also - stephenmcd
+  * added l10n for strings and currency formatting - stephenmcd
+  * added cartridge site favicon - stephenmcd
+  * added handling for text version of order_totals tag - stephenmcd
+  * - made pricing per product variation- cleaned up model cloning functionality- added more translation handling- added handling for "default" variation- cleanup option field names - stephenmcd
+  * moved product images to separate model that's related to both a product and a product's variation - stephenmcd
+  * added image toggling to product template - stephenmcd
+  * added collapse classes to product admin fieldsets - stephenmcd
+  * used jquery for usability enhancements to product change from in admin - stephenmcd
+  * show first image field in product change form if no images have been added - stephenmcd
+  * cleanup category page layout - stephenmcd
+  * modify "add another image" link in admin product change form to look more like existing admin interface elements - stephenmcd
+  * added image thumbnails to admin - stephenmcd
+  * bugfix on setting main product image - stephenmcd
+  * moved logic for lookup of main product image to variation as this is used when assigning the image for a basket item - stephenmcd
+  * made cart item image nullable for unit tests - stephenmcd
+  * cleanup imports - stephenmcd
+  * bugfix to jquery enhancements for images in admin product change form - stephenmcd
+  * misc homepage updates - stephenmcd
+  * optimized category loading algorithm in menu templatetag and created tree interface for category listing in admin - stephenmcd
+  * remove redundant options from category admin - stephenmcd
+  * cleanup redundant querysets - stephenmcd
+  * add debug toolbar - stephenmcd
+  * cleanup category demo template - stephenmcd
+  * added product search - stephenmcd
+  * added messages integration - stephenmcd
+  * minor i18n fixes - stephenmcd
+  * added "0 categories" message to admin tree when there are no categories - stephenmcd
+  * added pagination to search results - stephenmcd
+  * added initial product actions functionality - stephenmcd
+  * added sales functionality - stephenmcd
+  * bugfix on admin image field widget - stephenmcd
+  * bugfix for setting image on cart item - stephenmcd
+  * bugfix on swapping visible image when changing options on product template - stephenmcd
+  * bugfix indexes on action model - stephenmcd
+  * initial discount codes functionality - stephenmcd
+  * handful of cleanups for discount codes as well as refactoring around various field and class names - stephenmcd
+  * admin for discount codes - stephenmcd
+  * added ability to define ADMIN_REORDER setting for specifying ordering of admin app/models - stephenmcd
+  * implemented handling of discount codes - stephenmcd
+  * removed redundant naming convention for abstract models - stephenmcd
+  * initial view layout for cookie based wishlist - stephenmcd
+  * preparation for the cart add form to also allow adding to wishlist - stephenmcd
+  * add to wishlist handling - stephenmcd
+  * moved handling of variation images and main product image into variation save method - stephenmcd
+  * bugfix to priority of stock error messages - stephenmcd
+  * cleanup display of selected options for a variation - stephenmcd
+  * change distinction between adding to cart or wishlist in product view so that add to cart is the default - stephenmcd
+  * make product image description optional - stephenmcd
+  * typo in admin - stephenmcd
+  * cleanup search results template - stephenmcd
+  * fixed bug in product admin where variation management routines were called for every formset - stephenmcd
+  * added remaining wishlist elements - view and template - stephenmcd
+  * fixed bug where when default variation was saved via admin it would override any changes made to the product - stephenmcd
+  * added get_absolute_url to product variations and cart items - stephenmcd
+  * - refactoring of checkout wizard to provide persisting data in session and more template methods for iterating fields- added "remember my details" to billing/shipping step of checkout- template cleanups - stephenmcd
+  * added pattern matching structure to dynamic calls in FieldsetForm - stephenmcd
+  * removed need for passing app_list and path to admin_reorder template tag - stephenmcd
+  * refactored search manager to be chainable and reusable - stephenmcd
+  * allow fields for search manager to be set via constructor - stephenmcd
+  * bugfix to creation of search fields when none are specified - stephenmcd
+  * cleanup set usage in search - stephenmcd
+  * bugfix to wishlist add/remove - stephenmcd
+  * convert tabs to spaces - stephenmcd
+  * initial layout for docs - stephenmcd
+  * added admin url compatibility with django 1.0 - stephenmcd
+  * bugfixes to search manager - moved fields lookup to inside search method to avoid missing self.model attribute when queryset is being copied, and renamed attributes to avoid collision wih existing _fields attribute - stephenmcd
+  * bugfix to lookup of discount codes - stephenmcd
+  * added initial category/product docs - stephenmcd
+  * added more docs for product and related models - stephenmcd
+  * split docs sections into separate files - stephenmcd
+  * added logo to docs - stephenmcd
+  * updated docs - moved abstract models into their own descriptions and added initial docs for discounts - stephenmcd
+  * added docs for discount codes, sales and carts - stephenmcd
+  * change to adding to cart so that if price has changed on an existing item, maintain both prices treating each item separately - stephenmcd
+  * added docs for selected products - stephenmcd
+  * made the checkout wizard thread-safe by wrapping it in a view function so that it is created on each request - stephenmcd
+  * bugfix to variation lookup in add/remove cart item - stephenmcd
+  * initial version of checkout confirmation page - stephenmcd
+  * Moved the creation of cc expiry year choices to PaymentForm form so that it is generated each time it's rendered - stephenmcd
+  * Added server-side handling for same billing/shipping fields in OrderForm in case Javascript is disabled - stephenmcd
+  * Undo test code from last commit - stephenmcd
+  * Split templates and tags for order_totals into separate versions for HTML and text - stephenmcd
+  * update tests for new method of cart item removal - stephenmcd
+  * Removed clone_model and all associated cleverness stemming from it around Address/Order and methods returning lists of fields - stephenmcd
+  * Re-ordered members in models (mostly Meta classes) as per Django style guide - stephenmcd
+  * Moved creation of default ORDER_FROM_EMAIL using host name from shop.forms into shop.settings - stephenmcd
+  * Updated docs layout with wider sidebar and removed numeric toc - stephenmcd
+  * Added docs for configuration (settings) and re-ordered shop.settings members to match the alphabetical order in the docs - stephenmcd
+  * Initial layout for configurable checkout process - stephenmcd
+  * Total rewrite of the checkout process after hitting a variety of limitations with Django's FormWizard. Now supports going backwards through process as well as configuring the number of steps in the checkout process from 1 to 3 via settings - stephenmcd
+  * Fixed issue #1 - removed broken/redundant import - stephenmcd
+  * Added support for South - stephenmcd
+  * Added auth integration - stephenmcd
+  * - Implemented paging/sorting for products.- Added Product.date_added for sorting products by recency.- Added script for generating dummy product data from Flickr/Google Base.- Prevent south from being used when running tests.- Removed image field from Category model.- Moved lookup of wishlist skus to wishlist view to avoid querying variations on every request.- Moved setting of checkout errors into constructor of checkout form.- Many interface cleanups for the demo templates - stephenmcd
+  * Changed approach for dynamic fields on forms and models to use Metaclasses rather than calling type() as well as other small cleanups around dynamic field hacking - stephenmcd
+  * Moved product options into a model and made slugs and titles for categories contain their parents - stephenmcd
+  * Added drag and drop ordering for category tree in admin - stephenmcd
+  * Minor interface enhancements to the admin category tree - stephenmcd
+  * Bugfix to managing list of IDs for open branches in admin category tree - stephenmcd
+  * Convert from a project to an app with a project template piggy-backing Mezzanine - stephenmcd
+  * Add README - stephenmcd
+  * Reorganize docs - stephenmcd
+  * Add packaging tools: setup.py and MANIFEST - stephenmcd
+  * Mark the required version of Mezzanine as the yet to be released 0.8 - stephenmcd
+  * Convert Cartridge to a Mezzanine app - stephenmcd
+  * Integrate default templates with Mezzanine templates - stephenmcd
+  * Update tests for Mezzanine - stephenmcd
+  * Clean up comments - stephenmcd
+  * Fix the category template to use correct base.html and title - stephenmcd
+  * Upgrade ``create_test_products.py`` script to use Mezzanine - stephenmcd
+  * Fix the layout of the category template - stephenmcd
+  * Revert user check around jQuery loading - stephenmcd
+  * Include further Django settings in the ``project_temlate.settings`` module - stephenmcd
+  * Update features and reference for mezzanine-project in README - stephenmcd
+  * Set ``settings.MEZZANINE_ADMIN_MENU_ORDER`` to include the shop - stephenmcd
+  * Add content field to Category model - stephenmcd
+  * Style old price for sales - stephenmcd
+  * Add fixtures and images for dummy data - stephenmcd
+
