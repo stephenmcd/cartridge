@@ -17,6 +17,7 @@ import os
 
 docs_path = os.path.abspath(os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(docs_path, ".."))
+sys.path.insert(0, os.path.join(docs_path, "..", "..", "mezzanine"))
 os.environ["DJANGO_SETTINGS_MODULE"] = "cartridge.project_template.settings"
 
 import cartridge
