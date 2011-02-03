@@ -1,3 +1,20 @@
+Version 0.1.8 (Feb 04, 2011)
+----------------------------
+
+  * Fixed unicode errors with product names - stephenmcd
+  * Change docs theme to Mezzanine's - stephenmcd
+  * Move settings docs into a sub-section - stephenmcd
+  * Use Mezzanine's settings and CHANGELOG generation - stephenmcd
+  * Added auto-generated CHANGELOG - stephenmcd
+  * Add Mezzanine to sys.path when generating docs - stephenmcd
+  * Update to new path setting names from Mezzanine - stephenmcd
+  * Fix setting names - stephenmcd
+  * Remove docs debugging - stephenmcd
+  * Added docs for shipping and payment integration - stephenmcd
+  * Allow generation of order fields docs to fail as it will in most cases - stephenmcd
+  * Removed section from components docs that's no longer applicable as the features are provided by Mezzanine - stephenmcd
+  * Fixed typo in URL name. Closes #3 - stephenmcd
+
 Version 0.1.7 (Jan 28, 2011)
 ----------------------------
 
