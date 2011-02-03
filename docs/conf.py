@@ -26,6 +26,13 @@ from mezzanine.utils.docs import build_settings_docs, build_changelog
 build_settings_docs(docs_path, prefix="SHOP_")
 build_changelog(docs_path, package_name="cartridge")
 
+from cartridge.shop.forms import OrderForm
+form = OrderForm(None, None)
+fields = form.fields.keys()
+with open(os.path.join(docs_path, "fields.rst"), "w") as f:
+    f.write("  * ``" + "``\n  * ``".join(fields) + "``")
+
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.

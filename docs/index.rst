@@ -10,8 +10,7 @@ Cartridge also extends the `Mezzanine`_ content management platform and a live
 demo of Cartridge can be found by visiting the `Mezzanine live demo`_.
 
 To learn more about Cartridge please read the :doc:`overview` which contains 
-a feature list, installation guide and 
-other general information.
+a feature list, installation guide and other general information.
 
 .. toctree::
 	:maxdepth: 2
