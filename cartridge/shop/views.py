@@ -213,7 +213,7 @@ def checkout_steps(request):
     if settings.SHOP_CHECKOUT_ACCOUNT_REQUIRED and \
         not request.user.is_authenticated():
         return HttpResponseRedirect("%s?next=%s" % (settings.SHOP_LOGIN_URL, 
-                                                    reverse("shop_CHECKOUT")))
+                                                    reverse("shop_checkout")))
     
     step = int(request.POST.get("step", checkout.CHECKOUT_STEP_FIRST))
     initial = checkout.initial_order_data(request)
