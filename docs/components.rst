@@ -3,19 +3,7 @@ Components
 ==========
 
 The following section describes the various components within Cartridge and 
-mostly describes the Django models used. All of the models, managers and 
-admin classes referred to in this section are contained in the 
-``shop.models``, ``shop.managers`` and ``shop.admin`` modules respectively.
-
-Displayable Items
-=================
-
-The ``Displayable`` abstract model provides common features for an item 
-displayed on the site such as the item's title, automatic generation of 
-slug fields via ``Displayable.save()`` and a Boolean field 
-``Displayable.active`` for controlling whether or not the item is visible 
-on the site. The ``Displayable`` abstract model is inherited by the 
-``Category`` and ``Product`` models discussed next.
+mostly describes the Django models used.
 
 Products
 ========
