@@ -53,3 +53,6 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
 #checkout-form, #add-cart {width:100%; padding:10px 0;}
 #checkout li {margin:2px 0; list-style-type:none;}
 
+#messages li {background:#333; color:#fff; padding:5px 10px; 
+              margin-bottom:10px;}
+#messages a {float:right; color:#fff; text-decoration:none;}

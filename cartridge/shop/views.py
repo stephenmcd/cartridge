@@ -132,7 +132,7 @@ def wishlist(request, template="shop/wishlist.html"):
             if sku in skus:
                 skus.remove(sku)
             if to_cart:
-                message = _("Item add to cart")
+                message = _("Item added to cart")
                 response = HttpResponseRedirect(reverse("shop_cart"))
             else:
                 message = _("Item removed from wishlist")

@@ -46,6 +46,11 @@
 
     <div id="grid-middle" class="grid_6 grid">
         <div class="gutter">
+            <ul id="messages">
+                {% for message in messages %}
+                <li>{{ message }}<a href="#">x</a></li>
+                {% endfor %}
+            </ul>
             <h1>{% block title %}{% endblock %}</h1>
             <div id="breadcrumb-menu">
                 {% block breadcrumb_menu %}
