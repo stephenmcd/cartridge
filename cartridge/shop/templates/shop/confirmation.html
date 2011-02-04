@@ -3,10 +3,52 @@
 
 {% block fields %}
 {% if cart.has_items %}
-{% for field, value in form.values %}
-<p class="confirmation">{{ field }}: {{ value }}</p>
-{% endfor %}
+
+<fieldset>
+	<legend>{% trans "Billing Details" %}</legend>
+	<ul>
+	    {% for field, value in form.billing_detail_fields.values %}
+        <li>{{ field }}: {{ value }}</li>
+	    {% endfor %}
+	</ul>
+</fieldset>
+
+<fieldset>
+	<legend>{% trans "Shipping Details" %}</legend>
+	<ul>
+	    {% for field, value in form.shipping_detail_fields.values %}
+        <li>{{ field }}: {{ value }}</li>
+	    {% endfor %}
+	    {% for field, value in form.additional_instructions_field.values %}
+        <li>{{ field }}: {{ value }}</li>
+	    {% endfor %}
+	</ul>
+</fieldset>
+
+<fieldset>
+	<legend>{% trans "Payment Details" %}</legend>
+	<ul>
+	    {% for field, value in form.card_name_field.values %}
+        <li>{{ field }}: {{ value }}</li>
+        {% endfor %}
+	    {% for field, value in form.card_type_field.values %}
+        <li>{{ field }}: {{ value }}</li>
+        {% endfor %}
+        <li>
+    	    {% with form.card_expiry_fields.values as expiry_fields %}
+    	        {% with expiry_fields.next as month_field %}
+    	        {{ month_field.0 }}: {{ month_field.1 }}/{{ expiry_fields.next.1 }}
+    	        {% endwith %}
+            {% endwith %}
+        </li>
+	    {% for field, value in form.card_fields.values %}
+        <li>{{ field }}: {{ value }}</li>
+        {% endfor %}
+	</ul>
+</fieldset>
+
 {% for field in form %}{{ field }}{% endfor %}
+
 {% endif %}
 {% endblock %}
 
