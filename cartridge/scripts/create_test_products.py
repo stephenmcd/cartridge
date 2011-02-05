@@ -11,8 +11,8 @@ project but the approach could easily be reused with any ecommerce database.
 """
 
 import sys, os
-sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 
-    "..", ".."))
+path = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(path, "..", ".."))
 os.environ["DJANGO_SETTINGS_MODULE"] = "cartridge.project_template.settings"
 
 from multiprocessing import Process, Queue
@@ -108,7 +108,7 @@ if __name__ == "__main__":
     # restoring them so that they're not deleted.
     print "Resetting product options"
     ProductOption.objects.all().delete()
-    for type, name in settings.OPTION_TYPE_CHOICES:
+    for type, name in settings.SHOP_OPTION_TYPE_CHOICES:
         for name in product_options[unicode(name)]:
             ProductOption.objects.create(type=type, name=name)
         
