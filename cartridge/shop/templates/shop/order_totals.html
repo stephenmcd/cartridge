@@ -7,7 +7,13 @@
 	<li>{% trans "Discount:" %} {{ discount_total|currency }}</li>
 	{% endif %}
 	{% if shipping_total %}
-	<li>{% trans "Shipping:" %} {{ shipping_total|currency }}</li>
+	<li>
+	    {% if shipping_type %}
+	    {{ shipping_type }}
+	    {% else %}
+	    {% trans "Shipping" %}
+	    {% endif %}: {{ shipping_total|currency }}
+	</li>
 	{% endif %}
 	<li>{% trans "Total:" %} {{ order_total|currency }}</li>
 </ul>
