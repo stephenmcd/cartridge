@@ -252,7 +252,7 @@ ul .posted {
     float:none; margin-bottom:-5px; width:16px; height:16px;
 }
 .mezzanine {
-    font-size:80%;
+    font-size:80%; text-align:center; line-height:200%;
 }
 .form {
     background:#eee; border-bottom:1px solid #ccc; float:left;
