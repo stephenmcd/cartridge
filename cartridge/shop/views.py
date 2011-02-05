@@ -275,7 +275,7 @@ def checkout_steps(request):
                 form = OrderForm(request, step, initial=initial)
             
     template = "shop/%s.html" % checkout.CHECKOUT_TEMPLATES[step - 1]
-    return render_to_response(template, {"form": form, "checkout.CHECKOUT_STEP_FIRST": 
+    return render_to_response(template, {"form": form, "CHECKOUT_STEP_FIRST": 
         step == checkout.CHECKOUT_STEP_FIRST}, RequestContext(request))
 
 
