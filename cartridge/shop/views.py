@@ -36,8 +36,8 @@ def product_list(products, request, per_page):
     """
     Handle pagination and sorting for the given products.
     """
-    sort_options = [(slugify(o[0]), o[1]) for o in 
-                                        settings.SHOP_PRODUCT_SORT_OPTIONS]
+    sort_options = settings.SHOP_PRODUCT_SORT_OPTIONS
+    sort_options = [(slugify(o[0]), o[1]) for o in sort_options]
     if "query" not in request.REQUEST:
         del sort_options[0]
     sort_name = request.GET.get("sort", sort_options[0][0])
@@ -85,13 +85,20 @@ def product(request, slug, template="shop/product.html"):
                 response = HttpResponseRedirect(reverse("shop_wishlist"))
                 set_cookie(response, "wishlist", ",".join(skus))
                 return response
-    variations = product.variations.all()
-    variations_json = simplejson.dumps([dict([(f, getattr(v, f)) for f in 
-        ["sku", "image_id"] + [f.name for f in ProductVariation.option_fields()]]) 
-        for v in variations])
-    return render_to_response(template, {"product": product, "variations_json":
-        variations_json, "variations": variations, "images": product.images.all(),
-        "add_product_form": add_product_form}, RequestContext(request))
+    # Build variations JSON from list of variation dicts.
+    fields = [f.name for f in ProductVariation.option_fields()]
+    fields.extend(["sku", "image_id"])
+    variations = []
+    variations_json = []
+    for variation in product.variations.all():
+        variations.append(variation)
+        variation = dict([(f, getattr(variation, f)) for f in fields])
+        variations_json.append(variation)
+    variations_json = simplejson.dumps(variations_json)
+    context = {"product": product, "images": list(product.images.all()), 
+               "variations": variations, "variations_json": variations_json,
+               "add_product_form": add_product_form}
+    return render_to_response(template, context, RequestContext(request))
 
 
 def search(request, template="shop/search_results.html"):
@@ -100,10 +107,10 @@ def search(request, template="shop/search_results.html"):
     """
     settings.use_editable()
     query = request.REQUEST.get("query", "")
-    results = product_list(Product.objects.published_for(user=request.user
-                    ).search(query), request, settings.SHOP_PER_PAGE_SEARCH)
-    return render_to_response(template, {"query": query, "results": results},
-        RequestContext(request))
+    results = Product.objects.published_for(user=request.user).search(query)
+    results = product_list(results, request, settings.SHOP_PER_PAGE_SEARCH)
+    context = {"query": query, "results": results}
+    return render_to_response(template, context, RequestContext(request))
 
     
 def wishlist(request, template="shop/wishlist.html"):
@@ -111,6 +118,7 @@ def wishlist(request, template="shop/wishlist.html"):
     Display the wishlist and handle removing items from the wishlist and 
     adding them to the cart.
     """
+
     skus = request.COOKIES.get("wishlist", "").split(",")
     error = None
     if request.method == "POST":
@@ -140,13 +148,14 @@ def wishlist(request, template="shop/wishlist.html"):
             info(request, message, fail_silently=True)
             set_cookie(response, "wishlist", ",".join(skus))
             return response
+
     # Remove skus from the cookie that no longer exist.
     published_products = Product.objects.published(for_user=request.user)
-    wishlist = list(ProductVariation.objects.filter(
-        product__in=published_products, sku__in=skus).select_related(depth=1))
-    wishlist.sort(key=lambda variation: skus.index(variation.sku))
-    response = render_to_response(template, {"wishlist": wishlist, 
-        "error": error}, RequestContext(request))
+    f = {"product__in": published_products, "sku__in": skus}
+    wishlist = ProductVariation.objects.filter(**f).select_related(depth=1)
+    wishlist = sorted(wishlist, key=lambda v: skus.index(v.sku))
+    context = {"wishlist": wishlist, "error": error}
+    response = render_to_response(template, context, RequestContext(request))
     if len(wishlist) < len(skus):
         skus = [variation.sku for variation in wishlist]
         set_cookie(response, "wishlist", ",".join(skus))
@@ -189,8 +198,8 @@ def account(request, template="shop/account.html"):
             posted_form.login(request)
             info(request, message, fail_silently=True)
             return HttpResponseRedirect(request.GET.get("next", "/"))
-    return render_to_response(template, {"login_form": login_form, 
-        "signup_form": signup_form}, RequestContext(request))
+    context = {"login_form": login_form, "signup_form": signup_form}
+    return render_to_response(template, context, RequestContext(request))
 
 
 def logout(request):
@@ -207,13 +216,13 @@ def checkout_steps(request):
     Display the order form and handle processing of each step.
     """
     
-    # Do the authentication check here rather than using standard login_required
-    # decorator. This means we can check for a custom LOGIN_URL and fall back
-    # to our own login view.
-    if settings.SHOP_CHECKOUT_ACCOUNT_REQUIRED and \
-        not request.user.is_authenticated():
-        return HttpResponseRedirect("%s?next=%s" % (settings.SHOP_LOGIN_URL, 
-                                                    reverse("shop_checkout")))
+    # Do the authentication check here rather than using standard 
+    # login_required decorator. This means we can check for a custom 
+    # LOGIN_URL and fall back to our own login view.
+    authenticated = request.user.is_authenticated()
+    if settings.SHOP_CHECKOUT_ACCOUNT_REQUIRED and not authenticated:
+        u = "%s?next=%s" % (settings.SHOP_LOGIN_URL, reverse("shop_checkout"))
+        return HttpResponseRedirect(u)
     
     step = int(request.POST.get("step", checkout.CHECKOUT_STEP_FIRST))
     initial = checkout.initial_order_data(request)
@@ -228,8 +237,11 @@ def checkout_steps(request):
         if form.is_valid():
             checkout_errors = []
             request.session["order"] = dict(form.cleaned_data)
-            for field in ("card_number", "card_expiry_month", 
-                "card_expiry_year", "card_ccv"):
+            # Remove these fields from the session so that they're 
+            # never stored anywhere.
+            sensitive_card_fields = ("card_number", "card_expiry_month", 
+                                     "card_expiry_year", "card_ccv")
+            for field in sensitive_card_fields:
                 del request.session["order"][field]
 
             # Handle shipping and discount code on first step.
@@ -261,13 +273,13 @@ def checkout_steps(request):
                     if form.cleaned_data.get("remember") is not None:
                         remembered = "%s:%s" % (sign(order.key), order.key)
                         set_cookie(response, "remember", remembered, 
-                            secure=request.is_secure())
+                                   secure=request.is_secure())
                     else:
                         response.delete_cookie("remember")
                     return response
 
-            # Assign checkout errors to new form if any and re-run is_valid 
-            # if valid set form to next step.
+            # Assign checkout errors to new form if any and re-run 
+            # is_valid if valid set form to next step.
             form = OrderForm(request, step, initial=initial, data=data, 
                              errors=checkout_errors)
             if form.is_valid():
@@ -275,8 +287,9 @@ def checkout_steps(request):
                 form = OrderForm(request, step, initial=initial)
             
     template = "shop/%s.html" % checkout.CHECKOUT_TEMPLATES[step - 1]
-    return render_to_response(template, {"form": form, "CHECKOUT_STEP_FIRST": 
-        step == checkout.CHECKOUT_STEP_FIRST}, RequestContext(request))
+    CHECKOUT_STEP_FIRST = step == checkout.CHECKOUT_STEP_FIRST
+    context = {"form": form, "CHECKOUT_STEP_FIRST": CHECKOUT_STEP_FIRST}
+    return render_to_response(template, context, RequestContext(request))
 
 
 def complete(request, template="shop/complete.html"):

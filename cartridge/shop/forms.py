@@ -31,7 +31,8 @@ ADD_PRODUCT_ERRORS = {
 
 def get_add_product_form(product):
     """
-    Return the form for adding the given product to the cart or the wishlist. 
+    Return the form for adding the given product to the cart or the 
+    wishlist. 
     """
 
     class AddProductForm(forms.Form):
@@ -40,7 +41,8 @@ def get_add_product_form(product):
         
         def __init__(self, *args, **kwargs):
             """
-            Create each ChoiceField for selecting from the product's variations.
+            Create each ChoiceField for selecting from the product's 
+            variations.
             """
             self._to_cart = kwargs.pop("to_cart", True)
             super(AddProductForm, self).__init__(*args, **kwargs)
@@ -58,8 +60,8 @@ def get_add_product_form(product):
     
         def clean(self):
             """
-            Set the form's selected variation if the selected options and
-            quantity are valid.
+            Set the form's selected variation if the selected options 
+            and quantity are valid.
             """
             options = self.cleaned_data.copy()
             quantity = options.pop("quantity", 0)
@@ -87,16 +89,16 @@ def get_add_product_form(product):
 
 class FormsetForm(object):
     """
-    Form mixin that provides template methods for iterating through sets of 
-    fields by prefix, single fields and finally remaning fields that haven't 
-    been iterated with each fieldset made up from a copy of the original form 
-    giving access to as_* methods.
+    Form mixin that provides template methods for iterating through 
+    sets of fields by prefix, single fields and finally remaning 
+    fields that haven't been iterated with each fieldset made up from 
+    a copy of the original form giving access to as_* methods.
     """
 
     def _fieldset(self, field_names):
         """
-        Return a subset of fields by making a copy of the form containing only 
-        the given field names.
+        Return a subset of fields by making a copy of the form 
+        containing only the given field names.
         """
         fieldset = copy(self)
         if not hasattr(self, "_fields_done"):
@@ -119,8 +121,9 @@ class FormsetForm(object):
         
     def __getattr__(self, name):
         """
-        Dynamic fieldset caller - matches requested attribute name against 
-        pattern for creating the list of field names to use for the fieldset.
+        Dynamic fieldset caller - matches requested attribute name 
+        against pattern for creating the list of field names to use 
+        for the fieldset.
         """
         if name == "errors":
             return None
@@ -145,9 +148,9 @@ class FormsetForm(object):
 
 class OrderForm(FormsetForm, forms.ModelForm):
     """
-    Main Form for the checkout process - ModelForm for Order with extra fields 
-    for credit card. Used across each step of the checkout process with fields 
-    being hidden across each step where applicable.
+    Main Form for the checkout process - ModelForm for the Order Model 
+    with extra fields for credit card. Used across each step of the 
+    checkout process with fields being hidden where applicable.
     """
     
     step = forms.IntegerField(widget=forms.HiddenInput())
@@ -173,10 +176,10 @@ class OrderForm(FormsetForm, forms.ModelForm):
             
     def __init__(self, request, step, data=None, initial=None, errors=None):
         """
-        Handle setting shipping field values to the same as billing field 
-        values in case Javascript is disabled, hiding fields for current step 
-        and hiding discount_code field if there are currently no active 
-        discount codes.
+        Handle setting shipping field values to the same as billing 
+        field values in case JavaScript is disabled, hiding fields for 
+        current step and hiding discount_code field if there are 
+        currently no active discount codes.
         """
 
         # Copy billing fields to shipping fields if "same" checked.
@@ -184,8 +187,8 @@ class OrderForm(FormsetForm, forms.ModelForm):
         last = step == checkout.CHECKOUT_STEP_LAST
         if (first and data is not None and "same_billing_shipping" in data):
             data = copy(data)
-            # Prevent second copy occuring for forcing step below when moving
-            # backwards in steps.
+            # Prevent second copy occuring for forcing step below when 
+            # moving backwards in steps.
             data["step"] = step 
             for field in data:
                 billing = field.replace("shipping_detail", "billing_detail")
@@ -194,8 +197,8 @@ class OrderForm(FormsetForm, forms.ModelForm):
 
         if initial is not None:
             initial["step"] = step
-        # Force the specified step in the posted data - this is required to
-        # allow moving backwards in steps. 
+        # Force the specified step in the posted data - this is 
+        # required to allow moving backwards in steps. 
         if data is not None and int(data["step"]) != step:
             data = copy(data)
             data["step"] = step
@@ -233,8 +236,8 @@ class OrderForm(FormsetForm, forms.ModelForm):
     
     def clean_discount_code(self):
         """
-        validate the discount code if given and update the session with free 
-        shipping and/or the discount amount
+        Validate the discount code if given, and attach the discount 
+        instance to the form.
         """
         code = self.cleaned_data.get("discount_code", "")
         if code:
@@ -248,6 +251,10 @@ class OrderForm(FormsetForm, forms.ModelForm):
         return code
         
     def clean(self):
+        """
+        Raise ``ValidationError`` if any errors have been assigned 
+        externally, via one of the custom checkout step handlers.
+        """
         if self._checkout_errors:
             raise forms.ValidationError(self._checkout_errors)
         return self.cleaned_data
@@ -349,9 +356,9 @@ class MoneyWidget(forms.TextInput):
 
 class ProductAdminFormMetaclass(ModelFormMetaclass):
     """
-    Metaclass for the Product Admin form that dynamically assigns each of the 
-    types of product options as set of checkboxes for selecting which options 
-    to use for creating new product variations.
+    Metaclass for the Product Admin form that dynamically assigns each 
+    of the types of product options as set of checkboxes for selecting 
+    which options to use for creating new product variations.
     """
     def __new__(cls, name, bases, attrs):
         for option in settings.SHOP_OPTION_TYPE_CHOICES:
@@ -372,8 +379,8 @@ class ProductAdminForm(forms.ModelForm):
         
     def __init__(self, *args, **kwargs):
         """
-        Set the choices for each of the fields for product options, hiding them 
-        if no choices exist.
+        Set the choices for each of the fields for product options, 
+        hiding them if no choices exist.
         """
         super(ProductAdminForm, self).__init__(*args, **kwargs)
         for field, options in ProductOption.objects.as_fields().items():
@@ -382,8 +389,8 @@ class ProductAdminForm(forms.ModelForm):
 
 class ProductVariationAdminForm(forms.ModelForm):
     """
-    Ensure the list of images for the variation are specific to the variation's 
-    product.
+    Ensure the list of images for the variation are specific to the 
+    variation's product.
     """
     def __init__(self, *args, **kwargs):
         super(ProductVariationAdminForm, self).__init__(*args, **kwargs)
@@ -406,8 +413,8 @@ class ProductVariationAdminFormset(BaseInlineFormSet):
 
 class DiscountAdminForm(forms.ModelForm):
     """
-    Ensure only one discount field is given a value and if not, assign the 
-    error to the first discount field so that it displays correctly.
+    Ensure only one discount field is given a value and if not, assign 
+    the error to the first discount field so that it displays correctly.
     """
     def clean(self):
         fields = [f for f in self.fields if f.startswith("discount_")]
