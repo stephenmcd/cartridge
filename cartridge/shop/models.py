@@ -5,6 +5,7 @@ from decimal import Decimal
 from django.db import models
 from django.db.models.base import ModelBase
 from django.utils.translation import ugettext_lazy as _
+import django.dispatch
 
 from mezzanine.conf import settings
 from mezzanine.core.models import Displayable, Content
@@ -13,6 +14,7 @@ from mezzanine.pages.models import Page
 
 from cartridge.shop import fields, managers
 
+order_complete = django.dispatch.Signal(providing_args=["request", "cart"])
 
 class ProductOption(models.Model):
     """
@@ -329,6 +331,7 @@ class Order(models.Model):
             fields = [f.name for f in SelectedProduct._meta.fields]
             item = dict([(f, getattr(item, f)) for f in fields])
             self.items.create(**item)
+        order_complete.send(sender=self, request=request, cart=cart)
         cart.delete()
 
 
