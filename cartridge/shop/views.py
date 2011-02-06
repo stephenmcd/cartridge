@@ -250,7 +250,6 @@ def checkout_steps(request):
                 try:
                     order = payment_handler(request, form)
                 except checkout.CheckoutError, e:
-                    order.delete()
                     checkout_errors.append(e)
                     if settings.SHOP_CHECKOUT_STEPS_CONFIRMATION:
                         step -= 1
