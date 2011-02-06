@@ -34,7 +34,7 @@ def default_billship_handler(request, order_form):
                  settings.SHOP_DEFAULT_SHIPPING_VALUE)
 
     
-def default_payment_handler(request, order_form):
+def default_payment_handler(request, order_form, order):
     """
     Default payment handler - implement your own and specify the path 
     to import it from via the setting ``SHOP_HANDLER_PAYMENT``. This 

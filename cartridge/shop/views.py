@@ -228,51 +228,87 @@ def checkout_steps(request):
     initial = checkout.initial_order_data(request)
     form = OrderForm(request, step, initial=initial)
     data = request.POST
+    checkout_errors = []
 
     if request.POST.get("back") is not None:
+        # Back button was pressed - load the order form for the 
+        # previous step and maintain the field values entered.
         step -= 1
         form = OrderForm(request, step, initial=initial)
     elif request.method == "POST":
         form = OrderForm(request, step, initial=initial, data=data)
         if form.is_valid():
-            checkout_errors = []
+            # Copy the current form fields to the session so that 
+            # they're maintained if the customer leaves the checkout 
+            # process, but remove sensitive fields from the session 
+            # such as the cart number so that they're never stored 
+            # anywhere.
             request.session["order"] = dict(form.cleaned_data)
-            # Remove these fields from the session so that they're 
-            # never stored anywhere.
             sensitive_card_fields = ("card_number", "card_expiry_month", 
                                      "card_expiry_year", "card_ccv")
             for field in sensitive_card_fields:
                 del request.session["order"][field]
 
-            # Handle shipping and discount code on first step.
+            # FIRST CHECKOUT STEP - handle shipping and discount code.
             if step == checkout.CHECKOUT_STEP_FIRST:
                 try:
                     billship_handler(request, form)
                 except checkout.CheckoutError, e:
                     checkout_errors.append(e)
+                # The order form gets assigned a discount attribute 
+                # when the discount_code field is validated via 
+                # clean_discount_code()
                 discount = getattr(form, "discount", None)
                 if discount is not None:
                     cart = Cart.objects.from_request(request)
                     discount_total = discount.calculate(cart.total_price())
                     if discount.free_shipping:
                         set_shipping(request, _("Free shipping"), 0)
-                    request.session["discount_type"] = discount.title
+                    request.session["free_shipping"] = discount.free_shipping
                     request.session["discount_total"] = discount_total
 
-            # Process order on final step.
+            # FINAL CHECKOUT STEP - handle payment and process order.
             if step == checkout.CHECKOUT_STEP_LAST and not checkout_errors:
+                # Create and save the inital order object so that 
+                # the payment handler has access to the cart total 
+                # and the order ID. If there is a payment error then 
+                # delete the order, otherwise finalize the order by 
+                # copyiing the cart items to it.
+                order = form.save(commit=True)
+                # Copy relevant request/session/cart fields to order.
+                order.key = request.session.session_key
+                order.user_id = request.user.id    
+                session_fields = ("shipping_type", "shipping_total", 
+                                  "discount_total")
+                for field in session_fields:
+                    if field in request.session:
+                        setattr(order, field, request.session[field])
+                cart = Cart.objects.from_request(request)
+                order.set_totals(cart)
+                # Try payment.
                 try:
-                    order = form.save(commit=True)
-                    print order.total
                     payment_handler(request, form, order)
                 except checkout.CheckoutError, e:
+                    # Error in payment handler.
+                    order.delete()
                     checkout_errors.append(e)
                     if settings.SHOP_CHECKOUT_STEPS_CONFIRMATION:
                         step -= 1
                 else:    
-                    order.process(request)
+                    # Successful payment - delete relevant session 
+                    # fields that are no longer required.
+                    for field in session_fields:
+                        if field in request.session:
+                            del request.session[field]
+                    del request.session["order"]
+                    # Finalize order by copying cart items, and send 
+                    # the order email to the customer.
+                    order.copy_cart(cart)
+                    order.save()
                     checkout.send_order_email(request, order)
                     response = HttpResponseRedirect(reverse("shop_complete"))
+                    # Set the cookie for remembering address details 
+                    # if the "remember" checkbox was checked.
                     if form.cleaned_data.get("remember") is not None:
                         remembered = "%s:%s" % (sign(order.key), order.key)
                         set_cookie(response, "remember", remembered, 
@@ -281,8 +317,8 @@ def checkout_steps(request):
                         response.delete_cookie("remember")
                     return response
 
-            # Assign checkout errors to new form if any and re-run 
-            # is_valid if valid set form to next step.
+            # If any checkout errors, assign them to a new form and 
+            # re-run is_valid. If valid, then set form to the next step.
             form = OrderForm(request, step, initial=initial, data=data, 
                              errors=checkout_errors)
             if form.is_valid():
