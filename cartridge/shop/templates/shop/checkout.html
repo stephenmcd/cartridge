@@ -3,12 +3,21 @@
 
 {% block body_id %}checkout{% endblock %}
 
-{% block title %}{% trans "Checkout" %}{% endblock %}
+{% block meta_title %}{% trans "Checkout" %} - {{ step_title }}{% endblock %}
+{% block title %}{% trans "Checkout" %} - {% trans "Step" %} {{ step }} {% trans "of" %} {{ steps|length }}{% endblock %}
+
+{% block extra_head %}
+{{ block.super }}
+<script>_virtualPageView = '{{ request.path }}{{ step_url }}/';</script>
+{% endblock %}
 
 {% block breadcrumb_menu %}
 <ul>
-    <li><a href="{% url home %}">{% trans "Home" %}</a> &gt;</li>
-    <li>{% trans "Checkout" %}</li>
+    {% for step in steps %}
+    <li{% ifequal step.title step_title %} class="current-step"{% endifequal %}
+        >{{ step.title }} &gt;</li>
+    {% endfor %}
+    <li>{% trans "Complete" %}</li>
 </ul><br />
 {% endblock %}
 

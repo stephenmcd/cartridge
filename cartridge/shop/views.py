@@ -285,10 +285,13 @@ def checkout_steps(request):
             if form.is_valid():
                 step += 1
                 form = OrderForm(request, step, initial=initial)
-            
-    template = "shop/%s.html" % checkout.CHECKOUT_TEMPLATES[step - 1]
+    
+    step_vars = checkout.CHECKOUT_STEPS[step - 1]
+    template = "shop/%s.html" % step_vars["template"]
     CHECKOUT_STEP_FIRST = step == checkout.CHECKOUT_STEP_FIRST
-    context = {"form": form, "CHECKOUT_STEP_FIRST": CHECKOUT_STEP_FIRST}
+    context = {"form": form, "CHECKOUT_STEP_FIRST": CHECKOUT_STEP_FIRST, 
+               "step_title": step_vars["title"], "step_url": step_vars["url"], 
+               "steps": checkout.CHECKOUT_STEPS, "step": step}
     return render_to_response(template, context, RequestContext(request))
 
 

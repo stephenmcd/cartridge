@@ -22,9 +22,8 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
 
 #checkout #grid-left *, #checkout #grid-right *, 
     #checkout #breadcrum-menu {display:none;}
-#card-fields p {float:left; margin:0;}
+#card-fields p {float:left; margin:0 5px 0 0 !important;}
 #card-fields p label {display:none;}
-#card-fields p select {margin:0 5px 0 0;}
 
 .confirmation {margin:5px 10px;}
 
@@ -59,3 +58,5 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
 #messages a {float:right; color:#fff; text-decoration:none;}
 
 #additional_instructions label {width:auto;}
+
+.current-step {font-weight:bold;}

@@ -92,11 +92,16 @@ def send_order_email(request, order):
 
 
 # Set up some constants for identifying each checkout step.
-CHECKOUT_TEMPLATES = ["billing_shipping"]
+CHECKOUT_STEPS = [{"template": "billing_shipping", "url": "details", 
+                   "title": _("Details")}]
 CHECKOUT_STEP_FIRST = CHECKOUT_STEP_PAYMENT = CHECKOUT_STEP_LAST = 1
 if settings.SHOP_CHECKOUT_STEPS_SPLIT:
-    CHECKOUT_TEMPLATES.append("payment")
+    CHECKOUT_STEPS[0].update({"url": "billing-shipping", 
+                              "title": _("Billing / Shipping")})
+    CHECKOUT_STEPS.append({"template": "payment", "url": "payment", 
+                           "title": _("Payment")})
     CHECKOUT_STEP_PAYMENT = CHECKOUT_STEP_LAST = 2
 if settings.SHOP_CHECKOUT_STEPS_CONFIRMATION:
-    CHECKOUT_TEMPLATES.append("confirmation")
+    CHECKOUT_STEPS.append({"template": "confirmation", "url": "confirmation", 
+                           "title": _("Confirmation")})
     CHECKOUT_STEP_LAST += 1
