@@ -6,7 +6,7 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
 
 #account, #cart-panel {margin:20px 0;}
 #cart-panel {background:#333; padding:10px;} 
-#cart-panel a {color:#eee; font-weight:bold; line-height:20px;}
+#cart-panel, #cart-panel a {color:#eee; font-weight:bold; line-height:20px;}
 #product-images-thumb img {margin:10px; margin-left:0;}
 #variations {margin-bottom:20px;}
 

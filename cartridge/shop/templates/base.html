@@ -71,8 +71,10 @@
 		        {% plural %}
 		        Cart contains {{ cart_quantity }} items:
 		        {% endblocktrans %}
-		        {{ cart.total_price|currency }}
-	        </a><br />
+		        {{ cart.total_price|currency }}</a>
+		    {% ifnotequal cart.total_quantity 0 %}
+	         / <a href="{% url shop_checkout %}">{% trans "Buy now" %}</a>
+	        {% endifnotequal %}<br />
 	        <a href="{% url shop_wishlist %}" class="wishlist">
 		        {% blocktrans count wishlist|length as wishlist_count %}
 		        Wishlist contains 1 item
