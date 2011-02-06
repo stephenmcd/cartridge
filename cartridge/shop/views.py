@@ -17,7 +17,7 @@ from cartridge.shop import checkout
 from cartridge.shop.forms import OrderForm, LoginForm, SignupForm
 from cartridge.shop.forms import get_add_product_form
 from cartridge.shop.models import Product, ProductVariation, Cart
-from cartridge.shop.utils import set_cookie, sign
+from cartridge.shop.utils import set_cookie, set_shipping, sign
 
 
 billship_handler = import_dotted_path(settings.SHOP_HANDLER_BILLING_SHIPPING)
@@ -254,19 +254,22 @@ def checkout_steps(request):
                 if discount is not None:
                     cart = Cart.objects.from_request(request)
                     discount_total = discount.calculate(cart.total_price())
-                    request.session["free_shipping"] = discount.free_shipping
+                    if discount.free_shipping:
+                        set_shipping(request, _("Free shipping"), 0)
+                    request.session["discount_type"] = discount.title
                     request.session["discount_total"] = discount_total
 
             # Process order on final step.
             if step == checkout.CHECKOUT_STEP_LAST and not checkout_errors:
                 try:
-                    payment_handler(request, form)
+                    order = form.save(commit=True)
+                    print order.total
+                    payment_handler(request, form, order)
                 except checkout.CheckoutError, e:
                     checkout_errors.append(e)
                     if settings.SHOP_CHECKOUT_STEPS_CONFIRMATION:
                         step -= 1
                 else:    
-                    order = form.save(commit=False)
                     order.process(request)
                     checkout.send_order_email(request, order)
                     response = HttpResponseRedirect(reverse("shop_complete"))
