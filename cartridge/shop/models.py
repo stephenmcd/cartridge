@@ -289,35 +289,24 @@ class Order(models.Model):
     def __unicode__(self):
         return "#%s %s %s" % (self.id, self.billing_name(), self.time)
 
-    def save(self, *args, **kwargs):
-        self.total = self.item_total
+    def billing_name(self):
+        return "%s %s" % (self.billing_detail_first_name, 
+                          self.billing_detail_last_name)
+
+    def set_totals(self, cart):
+        """
+        Set item_total and total based on the given cart.
+        """
+        self.total = self.item_total = cart.total_price()
         if self.shipping_total is not None:
             self.total += self.shipping_total
         if self.discount_total is not None:
             self.total -= self.discount_total
-        super(Order, self).save(*args, **kwargs)
 
-    def billing_name(self):
-        return "%s %s" % (self.billing_detail_first_name, 
-            self.billing_detail_last_name)
-
-    def process(self, request):
+    def copy_cart(self, cart):
         """
-        Process a successful order.
+        Copy items from the cart to the order and delete the cart.
         """
-        cart = Cart.objects.from_request(request)
-        # Get fields fields from session and remove order details from session.
-        for field in ("shipping_type", "shipping_total", "discount_total"):
-            if field in request.session:
-                setattr(self, field, request.session[field])
-                del request.session[field]
-        del request.session["order"]
-        # Set final fields and save.
-        self.item_total = cart.total_price()
-        self.key = request.session.session_key
-        self.user_id = request.user.id    
-        self.save()
-        # Copy items from cart and delete the cart.
         for item in cart:
             try:
                 variation = ProductVariation.objects.get(sku=item.sku)

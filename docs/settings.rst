@@ -49,6 +49,13 @@ Controls the formatting of monetary values accord to the locale module in the py
 
 Default: ``''``
 
+``SHOP_DEFAULT_SHIPPING_VALUE``
+-------------------------------
+
+Default cost of shipping when no custom shipping is implemented.
+
+Default: ``10``
+
 ``SHOP_FORCE_HOST``
 -------------------
 
@@ -68,14 +75,14 @@ Default: ``('shop_checkout', 'shop_complete', 'shop_account')``
 
 Dotted package path and class name of the function that is called on submit of the billing/shipping checkout step. This is where shipping calculation can be performed and set using the function ``cartridge.shop.utils.set_shipping``.
 
-Default: ``'cartridge.shop.checkout.dummy_billship_handler'``
+Default: ``'cartridge.shop.checkout.default_billship_handler'``
 
 ``SHOP_HANDLER_PAYMENT``
 ------------------------
 
 Dotted package path and class name of the function that is called on submit of the payment checkout step. This is where integration with a payment gateway should be implemented.
 
-Default: ``'cartridge.shop.checkout.dummy_payment_handler'``
+Default: ``'cartridge.shop.checkout.default_payment_handler'``
 
 ``SHOP_LOGIN_URL``
 ------------------

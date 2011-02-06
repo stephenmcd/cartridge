@@ -60,6 +60,14 @@ register_setting(
 )
 
 register_setting(
+    name="SHOP_DEFAULT_SHIPPING_VALUE",
+    description="Default cost of shipping when no custom shipping is "
+        "implemented.",
+    editable=True,
+    default=10,
+)
+
+register_setting(
     name="SHOP_FORCE_HOST",
     description="Host name that the site should always be accessed via that "
         "matches the SSL certificate.",
@@ -82,7 +90,7 @@ register_setting(
         "is where shipping calculation can be performed and set using the "
         "function ``cartridge.shop.utils.set_shipping``.",
     editable=True,
-    default="cartridge.shop.checkout.dummy_billship_handler",
+    default="cartridge.shop.checkout.default_billship_handler",
 )
 
 register_setting(
@@ -91,7 +99,7 @@ register_setting(
         "is called on submit of the payment checkout step. This is where "
         "integration with a payment gateway should be implemented.",
     editable=True,
-    default="cartridge.shop.checkout.dummy_payment_handler",
+    default="cartridge.shop.checkout.default_payment_handler",
 )
 
 register_setting(

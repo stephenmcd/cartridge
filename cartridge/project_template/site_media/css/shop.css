@@ -6,7 +6,7 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
 
 #account, #cart-panel {margin:20px 0;}
 #cart-panel {background:#333; padding:10px;} 
-#cart-panel a {color:#eee; font-weight:bold; line-height:20px;}
+#cart-panel, #cart-panel a {color:#eee; font-weight:bold; line-height:20px;}
 #product-images-thumb img {margin:10px; margin-left:0;}
 #variations {margin-bottom:20px;}
 
@@ -22,9 +22,8 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
 
 #checkout #grid-left *, #checkout #grid-right *, 
     #checkout #breadcrum-menu {display:none;}
-#card-fields p {float:left; margin:0;}
+#card-fields p {float:left; margin:0 5px 0 0 !important;}
 #card-fields p label {display:none;}
-#card-fields p select {margin:0 5px 0 0;}
 
 .confirmation {margin:5px 10px;}
 
@@ -51,8 +50,16 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
     margin:0; list-style-type:none; display:inline;}
 
 #checkout-form, #add-cart {width:100%; padding:10px 0;}
+#checkout-form p {margin:0 10px;}
 #checkout li {margin:2px 0; list-style-type:none;}
 
 #messages li {background:#333; color:#fff; padding:5px 10px; 
               margin-bottom:10px;}
 #messages a {float:right; color:#fff; text-decoration:none;}
+
+#additional_instructions label {width:auto;}
+
+.current-step {font-weight:bold;}
+
+.order-totals {text-align:right; width:250px;}
+.order-totals label {width:150px; float:left; text-align:left;}

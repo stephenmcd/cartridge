@@ -33,8 +33,9 @@ Billing / Shipping
 The setting ``SHOP_HANDLER_BILLING_SHIPPING`` is used to specify the 
 handler function that will be called when the billing and shipping 
 step of the checkout form is submitted. It defaults to the value 
-``cartridge.shop.checkout.dummy_billship_handler`` which simply sets 
-a test shipping value.
+``cartridge.shop.checkout.default_billship_handler`` which simply sets 
+a flat rate shipping value defined by the setting 
+``SHOP_DEFAULT_SHIPPING_VALUE``.
 
 Setting Shipping
 ================

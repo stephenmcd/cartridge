@@ -26,7 +26,7 @@ def currency(value):
     else:
         # based on locale.currency() in python >= 2.5
         conv = locale.localeconv()
-        value = [conv["currency_symbol"], conv["p_sep_by_space"] and " "  or "", 
+        value = [conv["currency_symbol"], conv["p_sep_by_space"] and " " or "", 
             (("%%.%sf" % conv["frac_digits"]) % value).replace(".", 
             conv["mon_decimal_point"])]
         if not conv["p_cs_precedes"]:
@@ -38,24 +38,21 @@ def currency(value):
 def _order_totals(context):
     """
     Add ``item_total``, ``shipping_total``, ``discount_total`` and 
-    ``order_total`` to the include context. use the order object for email 
-    receipts, or the cart object for checkout.
+    ``order_total`` to the template context. Use the order object for 
+    email receipts, or the cart object for checkout.
     """
     if "order" in context:
-        context["item_total"] = context["order"].total
-        context["shipping_total"] = context["order"].shipping_total
-        context["discount_total"] = context["order"].discount_total
+        for f in ("item_total", "shipping_total", "discount_total"):
+            context[f] = getattr(context["order"], f)
     elif "cart" in context:
         context["item_total"] = context["cart"].total_price()
         if context["item_total"] == 0:
-            # ignore session if cart has no items as cart may have expired
-            # sooner than session
+            # Ignore session if cart has no items, as cart may have 
+            # expired sooner than the session.
             context["discount_total"] = context["shipping_total"] = 0
         else:
-            context["shipping_total"] = context["request"].session.get(
-                "shipping_total", None)
-            context["discount_total"] = context["request"].session.get(
-                "discount_total", None)
+            for f in ("shipping_type", "shipping_total", "discount_total"):
+                context[f] = context["request"].session.get(f, None)
     context["order_total"] = context.get("item_total", None)
     if context.get("shipping_total", None) is not None:
         context["order_total"] += context["shipping_total"]

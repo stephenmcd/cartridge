@@ -31,25 +31,33 @@ $(function() {
 
 {% block fields %}
 {% if cart.has_items %}
+
 {% if not request.user.is_authenticated and settings.SHOP_CHECKOUT_ACCOUNT_ENABLED %}
-<p>If you have an existing accout or would like to create one, please
+<p>If you have an existing account or would like to create one, please 
     <a href="{{ settings.SHOP_LOGIN_URL }}">log in or sign up</a>.</p>
 {% endif %}
+
 <fieldset>
 	<legend>{% trans "Billing Details" %}</legend>
 	<ul>{{ form.billing_detail_fields.as_ul }}</ul>
 </fieldset>
+
 <fieldset>
 	<legend>{% trans "Delivery Details" %}</legend>
 	<ul class="checkbox">{{ form.same_billing_shipping_field.as_ul }}</ul>
 	<ul id="shipping_fields">{{ form.shipping_detail_fields.as_ul }}</ul>
-	<ul>{{ form.additional_instructions_field.as_ul }}</ul>
+	<ul id="additional_instructions">
+	    {{ form.additional_instructions_field.as_ul }}
+	</ul>
 </fieldset>
+
 {% if not settings.SHOP_CHECKOUT_STEPS_SPLIT %}
 {% include "shop/payment_fields.html" %}
 {% endif %}
+
 <ul class="checkbox">{{ form.remember_field.as_ul }}</ul>
 <ul>{{ form.other_fields.as_ul }}</ul>
+
 {% endif %}
 {% endblock %}
 

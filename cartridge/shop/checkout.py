@@ -12,28 +12,32 @@ from cartridge.shop.utils import set_shipping, send_mail_template, sign
 
 class CheckoutError(Exception):
     """
-    Raised if an error occurs when processing payment above in 
-    shop.checkout.payment() and caught in shop.views.checkout()
+    Should be raised in billing/shipping and payment handlers for 
+    cases such as an invalid shipping address or an unsuccessful 
+    payment.
     """
     pass
 
 
-def dummy_billship_handler(request, order_form):
+def default_billship_handler(request, order_form):
     """
-    Example shipping handler - implement your own and specify the path to 
-    import it from via the setting ``SHOP_HANDLER_BILLING_SHIPPING``. This 
-    function will typically contain any shipping calculation where the 
-    shipping amount can then be set using the function 
+    Default billing/shipping handler - implement your own and specify 
+    the path to import it from via the setting 
+    ``SHOP_HANDLER_BILLING_SHIPPING``. This function will typically 
+    contain any shipping calculation where the shipping amount can 
+    then be set using the function 
     ``cartridge.shop.utils.set_shipping``. The Cart object is also 
-    accessible via ``shop.Cart.objects.from_request(request)``
+    accessible via ``Cart.objects.from_request(request)``
     """
-    set_shipping(request, "Shipping Test", 10)
+    settings.use_editable()
+    set_shipping(request, _("Flat rate shipping"), 
+                 settings.SHOP_DEFAULT_SHIPPING_VALUE)
 
     
-def dummy_payment_handler(request, order_form):
+def default_payment_handler(request, order_form, order):
     """
-    Dummy payment handler - implement your own and specify the path to 
-    import it from via the setting ``SHOP_HANDLER_PAYMENT``. This 
+    Default payment handler - implement your own and specify the path 
+    to import it from via the setting ``SHOP_HANDLER_PAYMENT``. This 
     function will typically contain integration with a payment gateway. 
     Raise cartridge.shop.checkout.CheckoutError("error message") if 
     payment is unsuccessful.
@@ -43,9 +47,9 @@ def dummy_payment_handler(request, order_form):
     
 def initial_order_data(request):
     """
-    Return the initial data for the order form - favor request.POST, then 
-    session, then last order from either logged in user or from previous order 
-    cookie set with "remember my details".
+    Return the initial data for the order form - favor request.POST, 
+    then session, then last order from either logged in user or from 
+    previous order cookie set with "remember my details".
     """
     if request.method == "POST":
         return dict(request.POST.items())
@@ -88,11 +92,16 @@ def send_order_email(request, order):
 
 
 # Set up some constants for identifying each checkout step.
-CHECKOUT_TEMPLATES = ["billing_shipping"]
+CHECKOUT_STEPS = [{"template": "billing_shipping", "url": "details", 
+                   "title": _("Details")}]
 CHECKOUT_STEP_FIRST = CHECKOUT_STEP_PAYMENT = CHECKOUT_STEP_LAST = 1
 if settings.SHOP_CHECKOUT_STEPS_SPLIT:
-    CHECKOUT_TEMPLATES.append("payment")
+    CHECKOUT_STEPS[0].update({"url": "billing-shipping", 
+                              "title": _("Billing / Shipping")})
+    CHECKOUT_STEPS.append({"template": "payment", "url": "payment", 
+                           "title": _("Payment")})
     CHECKOUT_STEP_PAYMENT = CHECKOUT_STEP_LAST = 2
 if settings.SHOP_CHECKOUT_STEPS_CONFIRMATION:
-    CHECKOUT_TEMPLATES.append("confirmation")
+    CHECKOUT_STEPS.append({"template": "confirmation", "url": "confirmation", 
+                           "title": _("Confirmation")})
     CHECKOUT_STEP_LAST += 1
