@@ -4,7 +4,15 @@
 	<li><label>{% trans "Sub total" %}:</label> {{ item_total|currency }}</li>
 	{% endif %}
 	{% if discount_total %}
-	<li><label>{% trans "Discount" %}:</label> {{ discount_total|currency }}</li>
+	<li>
+	    <label>
+	    {% if discount_type %}
+	    {{ discount_type }}
+	    {% else %}
+	    {% trans "Discount" %}
+	    {% endif %}:
+	    </label> - {{ discount_total|currency }}
+	</li>
 	{% endif %}
 	{% if shipping_total %}
 	<li>
