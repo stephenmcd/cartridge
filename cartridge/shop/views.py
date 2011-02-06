@@ -248,8 +248,10 @@ def checkout_steps(request):
             # Process order on final step.
             if step == checkout.CHECKOUT_STEP_LAST and not checkout_errors:
                 try:
-                    order = payment_handler(request, form)
+                    order = form.save(commit=True)
+                    payment_handler(request, form, order)
                 except checkout.CheckoutError, e:
+                    order.delete()
                     checkout_errors.append(e)
                     if settings.SHOP_CHECKOUT_STEPS_CONFIRMATION:
                         step -= 1

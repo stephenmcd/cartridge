@@ -8,15 +8,15 @@ from cartridge.shop.checkout import CheckoutError
 AUTH_NET_LIVE = 'https://secure.authorize.net/gateway/transact.dll'
 AUTH_NET_TEST = 'https://test.authorize.net/gateway/transact.dll'
 # replace this with your authroize.net login
-AUTH_NET_LOGIN = ''
+AUTH_NET_LOGIN = '29qC5gYDw'
 # replace with your transaction key
-AUTH_NET_TRANS_KEY = ''
-def process(request, order_form):
+AUTH_NET_TRANS_KEY = '425974X5vnpfGA3J'
+def process(request, order_form, order):
     """
     Raise cartridge.shop.checkout.CheckoutError("error message") if 
     payment is unsuccessful.
     """
-    order = order_form.save(commit=True)
+
     test_mode = True
     cart = Cart.objects.from_request(request)
     trans = {}
@@ -81,7 +81,6 @@ def process(request, order_form):
         f = urllib2.urlopen(conn)
         all_results = f.read()
     except urllib2.URLError, ue:
-        order.delete()
         raise CheckoutError("Could not talk to authorize.net payment gateway")
     
     parsed_results = all_results.split(trans['configuration']['x_delim_char'])
@@ -97,6 +96,5 @@ def process(request, order_form):
     transaction_id = parsed_results[6]
     success = response_code == '1'  
     if not success:
-        order.delete()
         raise CheckoutError("Transaction denied")
     return order
