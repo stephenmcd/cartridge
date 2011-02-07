@@ -22,6 +22,7 @@ from cartridge.shop.utils import set_cookie, set_shipping, sign
 
 billship_handler = import_dotted_path(settings.SHOP_HANDLER_BILLING_SHIPPING)
 payment_handler = import_dotted_path(settings.SHOP_HANDLER_PAYMENT)
+order_handler = import_dotted_path(settings.SHOP_HANDLER_ORDER)
 
 # Fall back to authenticated-only messaging if messages app is unavailable.
 try:
@@ -270,21 +271,12 @@ def checkout_steps(request):
             # FINAL CHECKOUT STEP - handle payment and process order.
             if step == checkout.CHECKOUT_STEP_LAST and not checkout_errors:
                 # Create and save the inital order object so that 
-                # the payment handler has access to the cart total 
-                # and the order ID. If there is a payment error then 
-                # delete the order, otherwise finalize the order by 
-                # copyiing the cart items to it.
-                order = form.save(commit=True)
-                # Copy relevant request/session/cart fields to order.
-                order.key = request.session.session_key
-                order.user_id = request.user.id    
-                session_fields = ("shipping_type", "shipping_total", 
-                                  "discount_total")
-                for field in session_fields:
-                    if field in request.session:
-                        setattr(order, field, request.session[field])
-                cart = Cart.objects.from_request(request)
-                order.set_totals(cart)
+                # the payment handler has access to all of the order 
+                # fields. If there is a payment error then delete the 
+                # order, otherwise remove the cart items from stock 
+                # and send the order reciept email.
+                order = form.save(commit=False)
+                order.prepare(request)
                 # Try payment.
                 try:
                     payment_handler(request, form, order)
@@ -294,21 +286,18 @@ def checkout_steps(request):
                     checkout_errors.append(e)
                     if settings.SHOP_CHECKOUT_STEPS_CONFIRMATION:
                         step -= 1
-                else:    
-                    # Successful payment - delete relevant session 
-                    # fields that are no longer required.
-                    for field in session_fields:
-                        if field in request.session:
-                            del request.session[field]
-                    del request.session["order"]
-                    # Finalize order by copying cart items, and send 
-                    # the order email to the customer.
-                    order.copy_cart(cart)
-                    order.save()
+                else:
+                    # Finalize order - ``order.complete()`` performs 
+                    # final cleanup of session and cart. 
+                    # ``order_handler()`` can be defined by the 
+                    # developer to implement custom order processing.
+                    # Then send the order email to the customer.
+                    order.complete(request)
+                    order_handler(request, form, order)
                     checkout.send_order_email(request, order)
-                    response = HttpResponseRedirect(reverse("shop_complete"))
                     # Set the cookie for remembering address details 
                     # if the "remember" checkbox was checked.
+                    response = HttpResponseRedirect(reverse("shop_complete"))
                     if form.cleaned_data.get("remember") is not None:
                         remembered = "%s:%s" % (sign(order.key), order.key)
                         set_cookie(response, "remember", remembered, 

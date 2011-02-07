@@ -281,6 +281,10 @@ class Order(models.Model):
         choices=settings.SHOP_ORDER_STATUS_CHOICES, 
         default=settings.SHOP_ORDER_STATUS_CHOICES[0][0])
 
+    # These are fields that are stored in the session. They're copied to 
+    # the order in prepare() and removed from the session in complete().
+    session_fields = ("shipping_type", "shipping_total", "discount_total")
+    
     class Meta:
         verbose_name = _("Order")
         verbose_name_plural = _("Orders")
@@ -293,21 +297,41 @@ class Order(models.Model):
         return "%s %s" % (self.billing_detail_first_name, 
                           self.billing_detail_last_name)
 
-    def set_totals(self, cart):
+    def prepare(self, request):
         """
-        Set item_total and total based on the given cart.
+        Set order fields that are stored in the session, item_total 
+        and total based on the given cart, and copy the cart items 
+        to the order. Called in the final step of the checkout process 
+        prior to the payment handler being called.
         """
-        self.total = self.item_total = cart.total_price()
+        self.key = request.session.session_key
+        self.user_id = request.user.id    
+        for field in self.session_fields:
+            if field in request.session:
+                setattr(self, field, request.session[field])
+        self.cart = Cart.objects.from_request(request)
+        self.total = self.item_total = self.cart.total_price()
         if self.shipping_total is not None:
             self.total += self.shipping_total
         if self.discount_total is not None:
             self.total -= self.discount_total
+        self.save() # We need an ID before we can add related items.
+        for item in self.cart:
+            product_fields = [f.name for f in SelectedProduct._meta.fields]
+            item = dict([(f, getattr(item, f)) for f in product_fields])
+            self.items.create(**item)
 
-    def copy_cart(self, cart):
+    def complete(self, request):
         """
-        Copy items from the cart to the order and delete the cart.
+        Remove order fields that are stored in the session, reduce 
+        the stock level for the items in the order, and then delete 
+        the cart.
         """
-        for item in cart:
+        for field in self.session_fields:
+            if field in request.session:
+                del request.session[field]
+        del request.session["order"]
+        for item in self.cart:
             try:
                 variation = ProductVariation.objects.get(sku=item.sku)
             except ProductVariation.DoesNotExist:
@@ -317,11 +341,7 @@ class Order(models.Model):
                     variation.num_in_stock -= item.quantity
                     variation.save()
                 variation.product.actions.purchased()
-            fields = [f.name for f in SelectedProduct._meta.fields]
-            item = dict([(f, getattr(item, f)) for f in fields])
-            self.items.create(**item)
-        order_complete.send(sender=self, request=request, cart=cart)
-        cart.delete()
+        self.cart.delete()
 
 
 class Cart(models.Model):

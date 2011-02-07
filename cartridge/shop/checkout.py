@@ -21,7 +21,9 @@ class CheckoutError(Exception):
 
 def default_billship_handler(request, order_form):
     """
-    Default billing/shipping handler - implement your own and specify 
+    Default billing/shipping handler - called when the first step in 
+    the checkout process with billing/shipping address fields is 
+    submitted. Implement your own and specify 
     the path to import it from via the setting 
     ``SHOP_HANDLER_BILLING_SHIPPING``. This function will typically 
     contain any shipping calculation where the shipping amount can 
@@ -36,20 +38,32 @@ def default_billship_handler(request, order_form):
     
 def default_payment_handler(request, order_form, order):
     """
-    Default payment handler - implement your own and specify the path 
-    to import it from via the setting ``SHOP_HANDLER_PAYMENT``. This 
-    function will typically contain integration with a payment gateway. 
-    Raise cartridge.shop.checkout.CheckoutError("error message") if 
-    payment is unsuccessful.
+    Default payment handler - called when the final step of the 
+    checkout process with payment information is submitted. Implement 
+    your own and specify the path to import it from via the setting 
+    ``SHOP_HANDLER_PAYMENT``. This function will typically contain 
+    integration with a payment gateway. Raise 
+    cartridge.shop.checkout.CheckoutError("error message") if payment 
+    is unsuccessful.
+    """
+    pass
+
+    
+def default_order_handler(request, order_form, order):
+    """
+    Default order handler - called when the order is complete and 
+    contains its final data. Implement your own and specify the path 
+    to import it from via the setting ``SHOP_HANDLER_ORDER``.
     """
     pass
 
     
 def initial_order_data(request):
     """
-    Return the initial data for the order form - favor request.POST, 
-    then session, then last order from either logged in user or from 
-    previous order cookie set with "remember my details".
+    Return the initial data for the order form - favours request.POST, 
+    then session, then the last order deterined by either the current 
+    authenticated user, or from previous the order cookie set with 
+    "remember my details".
     """
     if request.method == "POST":
         return dict(request.POST.items())
@@ -97,7 +111,7 @@ CHECKOUT_STEPS = [{"template": "billing_shipping", "url": "details",
 CHECKOUT_STEP_FIRST = CHECKOUT_STEP_PAYMENT = CHECKOUT_STEP_LAST = 1
 if settings.SHOP_CHECKOUT_STEPS_SPLIT:
     CHECKOUT_STEPS[0].update({"url": "billing-shipping", 
-                              "title": _("Billing / Shipping")})
+                              "title": _("Address")})
     CHECKOUT_STEPS.append({"template": "payment", "url": "payment", 
                            "title": _("Payment")})
     CHECKOUT_STEP_PAYMENT = CHECKOUT_STEP_LAST = 2
