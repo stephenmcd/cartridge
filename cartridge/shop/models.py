@@ -3,9 +3,9 @@ from datetime import datetime
 from decimal import Decimal
 
 from django.db import models
+from django.db.models import CharField
 from django.db.models.base import ModelBase
 from django.utils.translation import ugettext_lazy as _
-import django.dispatch
 
 from mezzanine.conf import settings
 from mezzanine.core.models import Displayable, Content
@@ -14,14 +14,13 @@ from mezzanine.pages.models import Page
 
 from cartridge.shop import fields, managers
 
-order_complete = django.dispatch.Signal(providing_args=["request", "cart"])
 
 class ProductOption(models.Model):
     """
     A selectable option for a product such as size or colour.
     """
     type = models.IntegerField(_("Type"), 
-                                    choices=settings.SHOP_OPTION_TYPE_CHOICES)
+                               choices=settings.SHOP_OPTION_TYPE_CHOICES)
     name = fields.OptionField(_("Name"))
     
     objects = managers.ProductOptionManager()
@@ -46,8 +45,8 @@ class Category(Page, Content):
 
 class Priced(models.Model):
     """
-    Abstract model with unit and sale price fields. Inherited by ``Product`` 
-    and ``ProductVariation`` models.
+    Abstract model with unit and sale price fields. Inherited by 
+    ``Product`` and ``ProductVariation`` models.
     """
 
     unit_price = fields.MoneyField(_("Unit price"))
@@ -75,8 +74,8 @@ class Priced(models.Model):
     
     def price(self):
         """
-        Returns the actual price - sale price if applicable otherwise the unit 
-        price.
+        Returns the actual price - sale price if applicable otherwise 
+        the unit price.
         """
         if self.on_sale():
             return self.sale_price
@@ -87,16 +86,16 @@ class Priced(models.Model):
 
 class Product(Displayable, Priced, Content):
     """
-    Container model for a product that stores information common to all of its 
-    variations such as the product's title and description.
+    Container model for a product that stores information common to 
+    all of its variations such as the product's title and description.
     """
 
     available = models.BooleanField(_("Available for purchase"), default=False)
-    image = models.CharField(max_length=100, blank=True, null=True)
+    image = CharField(max_length=100, blank=True, null=True)
     categories = models.ManyToManyField("Category", blank=True,
-        related_name="products")
+                                        related_name="products")
     date_added = models.DateTimeField(_("Date added"), auto_now_add=True, 
-        null=True)
+                                      null=True)
 
     objects = DisplayableManager()
 
@@ -124,22 +123,23 @@ class Product(Displayable, Priced, Content):
         if self.image is None:
             return ""
         from mezzanine.core.templatetags.mezzanine_tags import thumbnail
-        thumb_url = "%s%s" % (settings.MEDIA_URL, thumbnail(self.image, 24, 24))
-        return "<img src='%s' />" % thumb_url
+        thumb_url = thumbnail(self.image, 24, 24)
+        return "<img src='%s%s' />" % (settings.MEDIA_URL, thumb_url)
     admin_thumb.allow_tags = True
     admin_thumb.short_description = ""
 
 
 class ProductImage(models.Model):
     """
-    An image for a product - a relationship is also defined with the product's 
-    variations so that each variation can potentially have it own image, while 
-    the relationship between the ``Product`` and ``ProductImage`` models 
-    ensures there is a single set of images for the product.
+    An image for a product - a relationship is also defined with the 
+    product's variations so that each variation can potentially have 
+    it own image, while the relationship between the ``Product`` and 
+    ``ProductImage`` models ensures there is a single set of images 
+    for the product.
     """
     
     file = models.ImageField(_("Image"), upload_to="product")
-    description = models.CharField(_("Description"), blank=True, max_length=100)
+    description = CharField(_("Description"), blank=True, max_length=100)
     product = models.ForeignKey("Product", related_name="images")
     
     class Meta:
@@ -157,27 +157,27 @@ class ProductImage(models.Model):
 
 class ProductVariationMetaclass(ModelBase):
     """
-    Metaclass for the ``ProductVariation`` model that dynamcally assigns an 
-    ``fields.OptionField`` for each option in the ``SHOP_PRODUCT_OPTIONS`` 
-    setting.
+    Metaclass for the ``ProductVariation`` model that dynamcally 
+    assigns an ``fields.OptionField`` for each option in the 
+    ``SHOP_PRODUCT_OPTIONS`` setting.
     """
     def __new__(cls, name, bases, attrs):
         for option in settings.SHOP_OPTION_TYPE_CHOICES:
             attrs["option%s" % option[0]] = fields.OptionField(option[1])
-        return super(ProductVariationMetaclass, cls).__new__(cls, name, bases, 
-            attrs)
+        args = (cls, name, bases, attrs)
+        return super(ProductVariationMetaclass, cls).__new__(*args)
 
 
 class ProductVariation(Priced):
     """
-    A combination of selected options from ``SHOP_PRODUCT_OPTIONS`` for a 
-    ``Product`` instance.
+    A combination of selected options from 
+    ``SHOP_OPTION_TYPE_CHOICES`` for a ``Product`` instance.
     """
     
     product = models.ForeignKey("Product", related_name="variations")
     sku = fields.SKUField(unique=True)
     num_in_stock = models.IntegerField(_("Number in stock"), blank=True, 
-        null=True) 
+                                       null=True) 
     default = models.BooleanField(_("Default"))
     image = models.ForeignKey("ProductImage", null=True, blank=True)
 
@@ -192,15 +192,18 @@ class ProductVariation(Priced):
         """
         Display the option names and values for the variation.
         """
-        options = ", ".join(["%s: %s" % (unicode(f.verbose_name), getattr(self, f.name)) 
-            for f in self.option_fields() if getattr(self, f.name) is not None])
-        return ("%s %s" % (unicode(self.product), options)).strip()
+        options = []
+        for field in self.option_fields():
+            if getattr(self, field.name) is not None:
+                options.append("%s: %s" % (unicode(field.verbose_name), 
+                                           getattr(self, field.name)))
+        return ("%s %s" % (unicode(self.product), ", ".join(options))).strip()
     
     def save(self, *args, **kwargs):
         """
-        Use the variation's ID as the SKU when the variation is first created 
-        and set the variation's image to be the first image of the product if 
-        no image is chosen for the variation.
+        Use the variation's ID as the SKU when the variation is first 
+        created and set the variation's image to be the first image of 
+        the product if no image is chosen for the variation.
         """
         super(ProductVariation, self).save(*args, **kwargs)
         save = False
@@ -220,23 +223,34 @@ class ProductVariation(Priced):
 
     @classmethod
     def option_fields(cls):
-        return [field for field in cls._meta.fields 
-            if isinstance(field, fields.OptionField)]
+        """
+        Returns each of the model fields that are dynamically created 
+        from ``SHOP_OPTION_TYPE_CHOICES`` in 
+        ``ProductVariationMetaclass``.
+        """
+        all_fields = cls._meta.fields
+        return [f for f in all_fields if isinstance(f, fields.OptionField)]
     
     def options(self):
+        """
+        Returns the field values of each of the model fields that are 
+        dynamically created from ``SHOP_OPTION_TYPE_CHOICES`` in 
+        ``ProductVariationMetaclass``.
+        """
         return [getattr(self, field.name) for field in self.option_fields()]
 
     def has_stock(self, quantity=1):
         """
-        Check the given quantity is in stock taking into account the number in 
-        carts, and cache the number.
+        Checks the given quantity is in stock, taking into account the 
+        number in carts. Also caches the number for subsequent lookups.
         """
         if self.num_in_stock is None or quantity == 0:
             return True
         if not hasattr(self, "_cached_num_in_stock"):
             num_in_stock = self.num_in_stock
-            num_in_carts = CartItem.objects.filter(sku=self.sku).aggregate(
-                quantity_sum=models.Sum("quantity"))["quantity_sum"]
+            items = CartItem.objects.filter(sku=self.sku)
+            aggregate = items.aggregate(quantity_sum=models.Sum("quantity"))
+            num_in_carts = aggregate["quantity_sum"]
             if num_in_carts is not None:
                 num_in_stock = num_in_stock - num_in_carts
             self._cached_num_in_stock = num_in_stock
@@ -245,41 +259,38 @@ class ProductVariation(Priced):
 
 class Order(models.Model):
 
-    billing_detail_first_name = models.CharField(_("First name"), 
-        max_length=100)
-    billing_detail_last_name = models.CharField(_("Last name"), max_length=100)
-    billing_detail_street = models.CharField(_("Street"), max_length=100)
-    billing_detail_city = models.CharField(_("City/Suburb"), max_length=100)
-    billing_detail_state = models.CharField(_("State/Region"), max_length=100)
-    billing_detail_postcode = models.CharField(_("Zip/Postcode"), max_length=10)
-    billing_detail_country = models.CharField(_("Country"), max_length=100)
-    billing_detail_phone = models.CharField(_("Phone"), max_length=20)
+    billing_detail_first_name = CharField(_("First name"), max_length=100)
+    billing_detail_last_name = CharField(_("Last name"), max_length=100)
+    billing_detail_street = CharField(_("Street"), max_length=100)
+    billing_detail_city = CharField(_("City/Suburb"), max_length=100)
+    billing_detail_state = CharField(_("State/Region"), max_length=100)
+    billing_detail_postcode = CharField(_("Zip/Postcode"), max_length=10)
+    billing_detail_country = CharField(_("Country"), max_length=100)
+    billing_detail_phone = CharField(_("Phone"), max_length=20)
     billing_detail_email = models.EmailField(_("Email"))
-    shipping_detail_first_name = models.CharField(_("First name"), 
-        max_length=100)
-    shipping_detail_last_name = models.CharField(_("Last name"), max_length=100)
-    shipping_detail_street = models.CharField(_("Street"), max_length=100)
-    shipping_detail_city = models.CharField(_("City/Suburb"), max_length=100)
-    shipping_detail_state = models.CharField(_("State/Region"), max_length=100)
-    shipping_detail_postcode = models.CharField(_("Zip/Postcode"), 
-        max_length=10)
-    shipping_detail_country = models.CharField(_("Country"), max_length=100)
-    shipping_detail_phone = models.CharField(_("Phone"), max_length=20)
+    shipping_detail_first_name = CharField(_("First name"), max_length=100)
+    shipping_detail_last_name = CharField(_("Last name"), max_length=100)
+    shipping_detail_street = CharField(_("Street"), max_length=100)
+    shipping_detail_city = CharField(_("City/Suburb"), max_length=100)
+    shipping_detail_state = CharField(_("State/Region"), max_length=100)
+    shipping_detail_postcode = CharField(_("Zip/Postcode"), max_length=10)
+    shipping_detail_country = CharField(_("Country"), max_length=100)
+    shipping_detail_phone = CharField(_("Phone"), max_length=20)
     additional_instructions = models.TextField(_("Additional instructions"), 
-        blank=True)
+                                               blank=True)
     time = models.DateTimeField(_("Time"), auto_now_add=True, null=True)
-    key = models.CharField(max_length=40)
+    key = CharField(max_length=40)
     user_id = models.IntegerField(blank=True, null=True)
-    shipping_type = models.CharField(_("Shipping type"), max_length=50, 
-        blank=True)
+    shipping_type = CharField(_("Shipping type"), max_length=50, blank=True)
     shipping_total = fields.MoneyField(_("Shipping total"))
     item_total = fields.MoneyField(_("Item total"))
     discount_code = fields.DiscountCodeField(_("Discount code"), blank=True)
     discount_total = fields.MoneyField(_("Discount total"))
     total = fields.MoneyField(_("Order total"))
+
     status = models.IntegerField(_("Status"), 
-        choices=settings.SHOP_ORDER_STATUS_CHOICES, 
-        default=settings.SHOP_ORDER_STATUS_CHOICES[0][0])
+                            choices=settings.SHOP_ORDER_STATUS_CHOICES, 
+                            default=settings.SHOP_ORDER_STATUS_CHOICES[0][0])
 
     objects = managers.OrderManager()
 
@@ -349,7 +360,7 @@ class Order(models.Model):
 class Cart(models.Model):
 
     last_updated = models.DateTimeField(_("Last updated"), auto_now=True, 
-        null=True)
+                                        null=True)
 
     objects = managers.CartManager()
 
@@ -368,7 +379,7 @@ class Cart(models.Model):
         new.
         """
         item, created = self.items.get_or_create(sku=variation.sku, 
-            unit_price=variation.price())
+                                                 unit_price=variation.price())
         if created:
             item.description = unicode(variation)
             item.unit_price = variation.price()
@@ -414,7 +425,7 @@ class SelectedProduct(models.Model):
     """
 
     sku = fields.SKUField()
-    description = models.CharField(_("Description"), max_length=200)
+    description = CharField(_("Description"), max_length=200)
     quantity = models.IntegerField(_("Quantity"), default=0)
     unit_price = fields.MoneyField(_("Unit price"), default=Decimal("0"))
     total_price = fields.MoneyField(_("Total price"), default=Decimal("0"))
@@ -433,8 +444,8 @@ class SelectedProduct(models.Model):
 class CartItem(SelectedProduct):
 
     cart = models.ForeignKey("Cart", related_name="items")
-    url = models.CharField(max_length=200)
-    image = models.CharField(max_length=200, null=True)
+    url = CharField(max_length=200)
+    image = CharField(max_length=200, null=True)
     
     def get_absolute_url(self):
         return self.url
@@ -449,9 +460,10 @@ class OrderItem(SelectedProduct):
 
 class ProductAction(models.Model):
     """
-    Records an incremental value for an action against a product such as adding 
-    to cart or purchasing, for sales reporting and calculating popularity. Not 
-    yet used but will be used for product popularity and sales reporting.
+    Records an incremental value for an action against a product such 
+    as adding to cart or purchasing, for sales reporting and 
+    calculating popularity. Not yet used but will be used for product 
+    popularity and sales reporting.
     """
         
     product = models.ForeignKey("Product", related_name="actions")
@@ -467,18 +479,20 @@ class ProductAction(models.Model):
 
 class Discount(models.Model):
     """
-    Abstract model representing one of several types of monetary reductions as 
-    well as a date range they're applicable for, and the products and products 
-    in categories that the reduction is applicable for.
+    Abstract model representing one of several types of monetary 
+    reductions as well as a date range they're applicable for, and 
+    the products and products in categories that the reduction is 
+    applicable for.
     """
 
-    title = models.CharField(max_length=100)
+    title = CharField(max_length=100)
     active = models.BooleanField(_("Active"))
     products = models.ManyToManyField("Product", blank=True)
     categories = models.ManyToManyField("Category", blank=True)
     discount_deduct = fields.MoneyField(_("Reduce by amount"))
-    discount_percent = models.DecimalField(_("Reduce by percent"), max_digits=4, 
-        decimal_places=2, blank=True, null=True)
+    discount_percent = models.DecimalField(_("Reduce by percent"), 
+                                           max_digits=4, decimal_places=2, 
+                                           blank=True, null=True)
     discount_exact = fields.MoneyField(_("Reduce to amount"))
     valid_from = models.DateTimeField(_("Valid from"), blank=True, null=True)
     valid_to = models.DateTimeField(_("Valid to"), blank=True, null=True)
@@ -491,18 +505,19 @@ class Discount(models.Model):
         
     def all_products(self):
         """
-        Return the selected products as well as the products in the selected 
-        categories.
+        Return the selected products as well as the products in the 
+        selected categories.
         """
-        return Product.objects.filter(models.Q(id__in=self.products.all()) | 
-            models.Q(categories__in=self.categories.all()))
+        products = models.Q(id__in=self.products.all())
+        categories = models.Q(categories__in=self.categories.all())
+        return Product.objects.filter(products | categories)
 
 
 class Sale(Discount):
     """
-    Stores sales field values for price and date range which when saved are 
-    then applied across products and variations according to the selected 
-    categories and products for the sale.
+    Stores sales field values for price and date range which when saved 
+    are then applied across products and variations according to the 
+    selected categories and products for the sale.
     """
     
     class Meta:
@@ -511,22 +526,24 @@ class Sale(Discount):
     
     def save(self, *args, **kwargs):
         """
-        Apply sales field value to products and variations according to the 
-        selected categories and products for the sale.
+        Apply sales field value to products and variations according 
+        to the selected categories and products for the sale.
         """
         super(Sale, self).save(*args, **kwargs)
         self._clear()
         if self.active:
             extra_filter = {}
             if self.discount_deduct is not None:
-                # Don't apply to prices that would be negative after deduction.
+                # Don't apply to prices that would be negative 
+                # after deduction.
                 extra_filter["unit_price__gt"] = self.discount_deduct
                 sale_price = models.F("unit_price") - self.discount_deduct
             elif self.discount_percent is not None:
-                sale_price = models.F("unit_price") - (models.F("unit_price") / 
-                    "100.0" * self.discount_percent)
+                sale_price = models.F("unit_price") - (
+                    models.F("unit_price") / "100.0" * self.discount_percent)
             elif self.discount_exact is not None:
-                # Don't apply to prices that are cheaper than the sale amount.
+                # Don't apply to prices that are cheaper than the sale 
+                # amount.
                 extra_filter["unit_price__gt"] = self.discount_exact
                 sale_price = self.discount_exact
             else:
@@ -534,35 +551,42 @@ class Sale(Discount):
             products = self.all_products()
             variations = ProductVariation.objects.filter(product__in=products)
             for priced_objects in (products, variations):
-                # MySQL will raise a 'Data truncated' warning here in some 
-                # scenarios, presumably when doing a calculation that exceeds 
-                # the precision of the price column. In this case it's safe 
-                # to ignore it and the calculation will still be applied.
+                # MySQL will raise a 'Data truncated' warning here in 
+                # some scenarios, presumably when doing a calculation 
+                # that exceeds the precision of the price column. In 
+                # this case it's safe to ignore it and the calculation 
+                # will still be applied.
                 try:
-                    priced_objects.filter(**extra_filter).update(
-                        sale_id=self.id, sale_price=sale_price,
-                        sale_to=self.valid_to, sale_from=self.valid_from)
+                    update = {"sale_id": self.id, 
+                              "sale_price": sale_price, 
+                              "sale_to": self.valid_to, 
+                              "sale_from": self.valid_from}
+                    priced_objects.filter(**extra_filter).update(**update)
                 except Warning:
                     pass
     
     def delete(self, *args, **kwargs):
+        """
+        Clear this sale from products when deleting the sale.
+        """
         self._clear()
         super(Sale, self).delete(*args, **kwargs)
 
     def _clear(self):
         """
-        Clears previously applied sale field values from products prior to 
-        updating the sale, when deactivating it or deleting it.
+        Clears previously applied sale field values from products prior 
+        to updating the sale, when deactivating it or deleting it.
         """
+        update = {"sale_id": None, "sale_price": None,
+                  "sale_from": None, "sale_to": None}
         for priced_model in (Product, ProductVariation):
-            priced_model.objects.filter(sale_id=self.id).update(sale_id=None, 
-                sale_from=None, sale_to=None, sale_price=None)
+            priced_model.objects.filter(sale_id=self.id).update(**update)
 
 
 class DiscountCode(Discount):
     """
-    A code that can be entered at the checkout process to have a discount 
-    applied to the total purchase amount.
+    A code that can be entered at the checkout process to have a 
+    discount applied to the total purchase amount.
     """
     
     code = fields.DiscountCodeField(_("Code"), unique=True)
@@ -576,7 +600,8 @@ class DiscountCode(Discount):
         Calculates the discount for the given amount.
         """
         if self.discount_deduct is not None:
-            # Don't apply to amounts that would be negative after deduction.
+            # Don't apply to amounts that would be negative after 
+            # deduction.
             if self.discount_deduct < amount:
                 return self.discount_deduct
         elif self.discount_percent is not None:
