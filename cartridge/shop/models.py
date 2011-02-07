@@ -281,6 +281,8 @@ class Order(models.Model):
         choices=settings.SHOP_ORDER_STATUS_CHOICES, 
         default=settings.SHOP_ORDER_STATUS_CHOICES[0][0])
 
+    objects = managers.OrderManager()
+
     # These are fields that are stored in the session. They're copied to 
     # the order in prepare() and removed from the session in complete().
     session_fields = ("shipping_type", "shipping_total", "discount_total")

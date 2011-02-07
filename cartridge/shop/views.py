@@ -16,7 +16,7 @@ from mezzanine.utils.views import render_to_response
 from cartridge.shop import checkout
 from cartridge.shop.forms import OrderForm, LoginForm, SignupForm
 from cartridge.shop.forms import get_add_product_form
-from cartridge.shop.models import Product, ProductVariation, Cart
+from cartridge.shop.models import Product, ProductVariation, Cart, Order
 from cartridge.shop.utils import set_cookie, set_shipping, sign
 
 
@@ -325,6 +325,20 @@ def checkout_steps(request):
 
 def complete(request, template="shop/complete.html"):
     """
-    Redirected to once an order is complete.
+    Redirected to once an order is complete - pass the order object 
+    for tracking items via Google Anayltics, and displaying in 
+    the template if required.
     """
-    return render_to_response(template, {}, RequestContext(request))
+    order = Order.objects.from_request(request)
+    items = order.items.all()
+    # Assign product names to each of the items since they're not 
+    # stored.
+    skus = [item.sku for item in items]
+    variations = ProductVariation.objects.filter(sku__in=skus)
+    names = {}
+    for variation in variations.select_related(depth=1):
+        names[variation.sku] = variation.product.title
+    for i, item in enumerate(items):
+        setattr(items[i], "name", names[item.sku])
+    context = {"order": order, "items": items}
+    return render_to_response(template, context, RequestContext(request))

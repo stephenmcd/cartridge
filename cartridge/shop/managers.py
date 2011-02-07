@@ -29,6 +29,20 @@ class CartManager(Manager):
         return cart
 
 
+class OrderManager(Manager):
+
+    def from_request(self, request):
+        """
+        Returns the last order made by session key. Used for 
+        Google Anayltics order tracking in the order complete view, 
+        and in tests.
+        """
+        orders = self.filter(key=request.session.session_key).order_by("-id")
+        if orders:
+            return orders[0]
+        raise self.model.DoesNotExist
+
+
 class ProductOptionManager(Manager):
 
     def as_fields(self):

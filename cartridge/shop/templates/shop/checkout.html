@@ -7,8 +7,9 @@
 {% block title %}{% trans "Checkout" %} - {% trans "Step" %} {{ step }} {% trans "of" %} {{ steps|length }}{% endblock %}
 
 {% block extra_head %}
-{{ block.super }}
-<script>_virtualPageView = '{{ request.path }}{{ step_url }}/';</script>
+<script>
+var _gaq = [['_trackPageview', '{{ request.path }}{{ step_url }}/']];
+</script>
 {% endblock %}
 
 {% block breadcrumb_menu %}
