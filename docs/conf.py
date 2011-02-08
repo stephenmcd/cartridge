@@ -27,13 +27,18 @@ build_settings_docs(docs_path, prefix="SHOP_")
 build_changelog(docs_path, package_name="cartridge")
 
 try:
+    from cartridge.shop.models import Order
     from cartridge.shop.forms import OrderForm
-    form = OrderForm(None, None)
-    fields = form.fields.keys()
-    with open(os.path.join(docs_path, "fields.rst"), "w") as f:
-        f.write("  * ``" + "``\n  * ``".join(fields) + "``")
-except:
-    pass
+    fields = {
+        "form": OrderForm(None, None).fields.keys(),
+        "model": [f.name for f in Order._meta.fields],
+    }
+    for name, names in fields.items():
+        file_name = "order_%s_fields.rst" % name
+        with open(os.path.join(docs_path, file_name), "w") as f:
+            f.write("  * ``" + "``\n  * ``".join(names) + "``")
+except Exception, e:
+    print "Error generating docs for fields: %s" % e
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the

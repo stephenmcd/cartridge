@@ -77,6 +77,13 @@ Dotted package path and class name of the function that is called on submit of t
 
 Default: ``'cartridge.shop.checkout.default_billship_handler'``
 
+``SHOP_HANDLER_ORDER``
+----------------------
+
+Dotted package path and class name of the function that is called once an order is successful and all of the order object's data has been created. This is where any custom order processing should be implemented.
+
+Default: ``'cartridge.shop.checkout.default_order_handler'``
+
 ``SHOP_HANDLER_PAYMENT``
 ------------------------
 
