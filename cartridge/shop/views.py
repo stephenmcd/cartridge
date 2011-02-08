@@ -20,9 +20,11 @@ from cartridge.shop.models import Product, ProductVariation, Cart, Order
 from cartridge.shop.utils import set_cookie, set_shipping, sign
 
 
-billship_handler = import_dotted_path(settings.SHOP_HANDLER_BILLING_SHIPPING)
-payment_handler = import_dotted_path(settings.SHOP_HANDLER_PAYMENT)
-order_handler = import_dotted_path(settings.SHOP_HANDLER_ORDER)
+# Set up checkout handlers.
+handler = lambda s: import_dotted_path(s) if s else lambda *args: None
+billship_handler = handler(settings.SHOP_HANDLER_BILLING_SHIPPING)
+payment_handler = handler(settings.SHOP_HANDLER_PAYMENT)
+order_handler = handler(settings.SHOP_HANDLER_ORDER)
 
 # Fall back to authenticated-only messaging if messages app is unavailable.
 try:
