@@ -171,8 +171,6 @@ class ShopTests(TestCase):
             self.fail("Couldn't create an order")
         items = order.items.all()
         variation = self._product.variations.all()[0]
-        
-        import pdb; pdb.set_trace()
 
         self.assertEqual(cart.total_quantity(), 0)
         self.assertEqual(len(items), 1)
