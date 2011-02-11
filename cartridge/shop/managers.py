@@ -12,14 +12,15 @@ class CartManager(Manager):
 
     def from_request(self, request):
         """
-        Return a cart by ID stored in the session, creating it if not found
-        as well as removing old carts prior to creating a new cart.
+        Return a cart by ID stored in the session, creating it if not 
+        found as well as removing old carts prior to creating a new 
+        cart.
         """
-        expiry_time = datetime.now() - timedelta(
-                                    minutes=settings.SHOP_CART_EXPIRY_MINUTES)
+        expiry_minutes = timedelta(minutes=settings.SHOP_CART_EXPIRY_MINUTES)
+        expiry_time = datetime.now() - expiry_minutes
         try:
-            cart = self.get(last_updated__gte=expiry_time, 
-                id=request.session.get("cart", None))
+            cart_id = request.session.get("cart", None)
+            cart = self.get(last_updated__gte=expiry_time, id=cart_id)
         except self.model.DoesNotExist:
             self.filter(last_updated__lt=expiry_time).delete()
             cart = self.create()
@@ -47,7 +48,8 @@ class ProductOptionManager(Manager):
 
     def as_fields(self):
         """
-        Return a dict of product options as their field names and choices.
+        Return a dict of product options as their field names and 
+        choices.
         """
         options = defaultdict(list)
         for option in self.all():
@@ -79,7 +81,8 @@ class ProductVariationManager(Manager):
             for values_list in options.values():
                 variations = [x + [y] for x in variations for y in values_list]
             for variation in variations:
-                # Lookup unspecified options as null to ensure a unique filter.
+                # Lookup unspecified options as null to ensure a 
+                # unique filter.
                 variation = dict(zip(options.keys(), variation))
                 lookup = dict(variation)
                 lookup.update(self._empty_options_lookup(exclude=variation))
@@ -90,9 +93,10 @@ class ProductVariationManager(Manager):
                     
     def manage_empty(self):
         """
-        Create an empty variation (no options) if none exist, otherwise if 
-        multiple variations exist ensure there is no redundant empty variation.
-        also ensure there is at least one default variation.
+        Create an empty variation (no options) if none exist, 
+        otherwise if multiple variations exist ensure there is no 
+        redundant empty variation. Also ensure there is at least one 
+        default variation.
         """
         total_variations = self.count()
         if total_variations == 0:
@@ -113,12 +117,12 @@ class ProductActionManager(Manager):
 
     def _action_for_field(self, field):
         """
-        Increases the given field by datetime.today().toordinal() which 
-        provides a time scaling value we can order by to determine popularity 
-        over time.
+        Increases the given field by datetime.today().toordinal() 
+        which provides a time scaling value we can order by to 
+        determine popularity over time.
         """
-        action, created = self.get_or_create(
-            timestamp=datetime.today().toordinal())
+        timestamp = datetime.today().toordinal()
+        action, created = self.get_or_create(timestamp=timestamp)
         setattr(action, field, getattr(action, field) + 1)
         action.save()
     
@@ -142,19 +146,22 @@ class DiscountCodeManager(Manager):
         Items flagged as active and in valid date range if date(s) are 
         specified.
         """
-        valid_from = Q(valid_from__isnull=True) | Q(valid_from__lte=datetime.now())
-        valid_to = Q(valid_to__isnull=True) | Q(valid_to__gte=datetime.now())
+        now = datetime.now()
+        valid_from = Q(valid_from__isnull=True) | Q(valid_from__lte=now)
+        valid_to = Q(valid_to__isnull=True) | Q(valid_to__gte=now)
         return self.filter(valid_from, valid_to, active=True)
     
     def get_valid(self, code, cart):
         """
-        Items flagged as active and within date range as well checking that 
-        the given cart contains items that the code is valid for.
+        Items flagged as active and within date range as well checking 
+        that the given cart contains items that the code is valid for.
         """
-        discount = self.active().get(Q(min_purchase__isnull=True) | 
-            Q(min_purchase__lte=cart.total_price()), code=code)
+        total_price_valid = (Q(min_purchase__isnull=True) | 
+                             Q(min_purchase__lte=cart.total_price())
+        discount = self.active().get(total_price_valid, code=code)
         products = discount.products.all()
-        if products.count() > 0 and products.filter(variations__sku__in=
-            [item.sku for item in cart]).count() == 0:
-            raise self.model.DoesNotExist
+        if products.count() > 0:
+            skus = [item.sku for item in cart]
+            if products.filter(variations__sku__in=skus).count() == 0:
+                raise self.model.DoesNotExist
         return discount
