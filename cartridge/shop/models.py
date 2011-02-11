@@ -3,7 +3,7 @@ from datetime import datetime
 from decimal import Decimal
 
 from django.db import models
-from django.db.models import CharField
+from django.db.models import CharField, Q
 from django.db.models.base import ModelBase
 from django.utils.translation import ugettext_lazy as _
 
@@ -37,10 +37,50 @@ class Category(Page, Content):
     """
     A category of products on the website.
     """
+    
+    products = fields.ExistingManyToManyField("Product", blank=True, 
+                                		db_table="shop_product_categories")
+    options = models.ManyToManyField("ProductOption", blank=True,
+                                     related_name="product_options")
+    sale = models.ForeignKey("Sale", blank=True, null=True)
+    price_min = fields.MoneyField(_("Minimum price"), blank=True, null=True)
+    price_max = fields.MoneyField(_("Maximum price"), blank=True, null=True)
 
     class Meta:
         verbose_name = _("Product category")
         verbose_name_plural = _("Product categories")
+
+    def all_products(self):
+        """
+        Returns products for the category, combining those explicitly 
+        assigned plus those that fall within any filters specified.
+        """
+        filters = Q(id__in=self.products.only("id"))
+        options = self.options.as_fields()
+        options_lookup = dict([("%s__in" % k, v) for k, v in options.items()])
+        has_price_filter = self.price_min or self.price_max
+        if not (options_lookup or self.sale_id or price_filter):
+            # Bail with a normal lookup if no filters are specified.
+            return self.products.all()
+        if options_lookup:
+            variations = ProductVariation.objects.filter(**options_lookup)
+            products = Product.objects.filter(variations__in=variations)
+            filters = filters | Q(id__in=products.distinct().only("id"))
+        if self.sale_id:
+            filters = filters | Q(id__in=sale.products.only("id"))
+        if has_price_filter:
+            # Use either the unit price or sale price if valid.
+            now = datetime.now()
+            sale_from = Q(sale_from__isnull=True) | Q(sale_from__lte=now)
+            sale_to = Q(sale_to__isnull=True) | Q(sale_to__gte=now)
+            sale_date = sale_from & sale_to
+            if self.price_min:
+                sale = Q(sale_price__gte=self.price_min) & sale_date
+                filters = filters & Q(unit_price__gte=self.price_min) | sale
+            if self.price_max:
+                sale = Q(sale_price__lte=self.price_max) & sale_date
+                filters = filters & Q(unit_price__lte=self.price_max) | sale
+        return Product.objects.filter(filters)
 
 
 class Priced(models.Model):
@@ -62,8 +102,9 @@ class Priced(models.Model):
         """
         Returns True if the sale price is applicable.
         """
-        valid_from = self.sale_from is None or self.sale_from < datetime.now()
-        valid_to = self.sale_to is None or self.sale_to > datetime.now()
+        now = datetime.now()
+        valid_from = self.sale_from is None or self.sale_from < now
+        valid_to = self.sale_to is None or self.sale_to > now
         return self.sale_price is not None and valid_from and valid_to
 
     def has_price(self):
@@ -92,8 +133,7 @@ class Product(Displayable, Priced, Content):
 
     available = models.BooleanField(_("Available for purchase"), default=False)
     image = CharField(max_length=100, blank=True, null=True)
-    categories = models.ManyToManyField("Category", blank=True,
-                                        related_name="products")
+    categories = models.ManyToManyField("Category", blank=True)
     date_added = models.DateTimeField(_("Date added"), auto_now_add=True, 
                                       null=True)
 
@@ -488,7 +528,8 @@ class Discount(models.Model):
     title = CharField(max_length=100)
     active = models.BooleanField(_("Active"))
     products = models.ManyToManyField("Product", blank=True)
-    categories = models.ManyToManyField("Category", blank=True)
+    categories = models.ManyToManyField("Category", blank=True, 
+                                        related_name="%(class)s_related")
     discount_deduct = fields.MoneyField(_("Reduce by amount"))
     discount_percent = models.DecimalField(_("Reduce by percent"), 
                                            max_digits=4, decimal_places=2, 

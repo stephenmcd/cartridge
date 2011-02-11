@@ -13,5 +13,5 @@ def category_processor(request, page):
     """
     settings.use_editable()
     per_page = settings.SHOP_PER_PAGE_CATEGORY
-    products = page.category.products.all()
+    products = page.category.all_products()
     return {"products": product_list(products, request, per_page)}

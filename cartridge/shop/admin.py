@@ -23,12 +23,15 @@ shipping_fields = [f.name for f in Order._meta.fields
     if f.name.startswith("shipping_detail")]
 
 category_fieldsets = deepcopy(PageAdmin.fieldsets)
-category_fieldsets[0][1]["fields"].insert(3, "content")
-
+category_fieldsets[0][1]["fields"][3:4] = ["content", "products"]
+category_fieldsets += ((_("Filters"), {"fields": ("options", "sale", 
+                                                 ("price_min", "price_max")),
+                                      "classes": ("collapse-closed",)},),)
 
 class CategoryAdmin(PageAdmin):
     fieldsets = category_fieldsets
     formfield_overrides = {ImageField: {"widget": ImageWidget}}
+    filter_horizontal = ("products", "options",)
 
 
 class ProductVariationAdmin(admin.TabularInline):

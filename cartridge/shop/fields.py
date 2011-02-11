@@ -1,20 +1,30 @@
 """
-Various model fields that mostly provide default field sizes to ensure these 
-are consistant when used across multiple models.
+Various model fields that mostly provide default field sizes to ensure 
+these are consistant when used across multiple models.
 """
 
 from locale import localeconv
 
-from django.db.models import CharField, DecimalField
+from django.db.models import CharField, DecimalField, ManyToManyField
 from django.utils.translation import ugettext_lazy as _
 
 from cartridge.shop.utils import set_locale
 
 
+class ExistingManyToManyField(ManyToManyField):
+	"""
+	A ``ManyToManyField`` that is already defined on the other 
+	side of its relationship and as such, shouldn't create its 
+	relationship table.
+	"""
+	def __init__(self, *args, **kwargs):
+		self.creates_table = False
+		super(ExistingManyToManyField, self).__init__(*args, **kwargs)
+
 class OptionField(CharField):
     """
-    A field for a selectable option of a product such as colour or size. 
-    Ensure Null is True and provide a default field size.
+    A field for a selectable option of a product such as colour or 
+    size. Ensure Null is True and provide a default field size.
     """
     def __init__(self, *args, **kwargs):
         kwargs["null"] = True
@@ -24,7 +34,8 @@ class OptionField(CharField):
 
 class MoneyField(DecimalField):
     """
-    A field for a monetary amount. Provide the default size and precision.
+    A field for a monetary amount. Provide the default size and 
+    precision.
     """
     def __init__(self, *args, **kwargs):
         set_locale()
