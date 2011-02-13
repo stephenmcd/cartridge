@@ -5,26 +5,16 @@ these are consistant when used across multiple models.
 
 from locale import localeconv
 
-from django.db.models import CharField, DecimalField, ManyToManyField
+from django.db.models import CharField, DecimalField
 from django.utils.translation import ugettext_lazy as _
 
 from cartridge.shop.utils import set_locale
 
 
-class ExistingManyToManyField(ManyToManyField):
-	"""
-	A ``ManyToManyField`` that is already defined on the other 
-	side of its relationship and as such, shouldn't create its 
-	relationship table.
-	"""
-	def __init__(self, *args, **kwargs):
-		self.creates_table = False
-		super(ExistingManyToManyField, self).__init__(*args, **kwargs)
-
 class OptionField(CharField):
     """
     A field for a selectable option of a product such as colour or 
-    size. Ensure Null is True and provide a default field size.
+    size. Ensure ``null`` is ``True`` and provide a default field size.
     """
     def __init__(self, *args, **kwargs):
         kwargs["null"] = True

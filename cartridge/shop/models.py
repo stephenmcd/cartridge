@@ -1,6 +1,7 @@
 
 from datetime import datetime
 from decimal import Decimal
+from operator import iand, ior
 
 from django.db import models
 from django.db.models import CharField, Q
@@ -8,29 +9,11 @@ from django.db.models.base import ModelBase
 from django.utils.translation import ugettext_lazy as _
 
 from mezzanine.conf import settings
-from mezzanine.core.models import Displayable, Content
 from mezzanine.core.managers import DisplayableManager
+from mezzanine.core.models import Displayable, Content
 from mezzanine.pages.models import Page
 
 from cartridge.shop import fields, managers
-
-
-class ProductOption(models.Model):
-    """
-    A selectable option for a product such as size or colour.
-    """
-    type = models.IntegerField(_("Type"), 
-                               choices=settings.SHOP_OPTION_TYPE_CHOICES)
-    name = fields.OptionField(_("Name"))
-    
-    objects = managers.ProductOptionManager()
-
-    def __unicode__(self):
-        return "%s: %s" % (self.get_type_display(), self.name)
-
-    class Meta:
-        verbose_name = _("Product option")
-        verbose_name_plural = _("Product options")
 
 
 class Category(Page, Content):
@@ -38,49 +21,66 @@ class Category(Page, Content):
     A category of products on the website.
     """
     
-    products = fields.ExistingManyToManyField("Product", blank=True, 
-                                		db_table="shop_product_categories")
     options = models.ManyToManyField("ProductOption", blank=True,
                                      related_name="product_options")
     sale = models.ForeignKey("Sale", blank=True, null=True)
     price_min = fields.MoneyField(_("Minimum price"), blank=True, null=True)
     price_max = fields.MoneyField(_("Maximum price"), blank=True, null=True)
+    combined = models.BooleanField(default=True, help_text="If checked, "
+        "products must match all specified filters, otherwise products "
+        "can match any specified filter.")
 
     class Meta:
         verbose_name = _("Product category")
         verbose_name_plural = _("Product categories")
 
-    def all_products(self):
+    def filters(self):
         """
-        Returns products for the category, combining those explicitly 
-        assigned plus those that fall within any filters specified.
+        Returns product filters as a Q object for the category.
         """
-        filters = Q(id__in=self.products.only("id"))
+        # Build a list of Q objects to filter variations by.
+        filters = []
+        # Build a lookup dict of selected options for variations.
         options = self.options.as_fields()
-        options_lookup = dict([("%s__in" % k, v) for k, v in options.items()])
-        has_price_filter = self.price_min or self.price_max
-        if not (options_lookup or self.sale_id or price_filter):
-            # Bail with a normal lookup if no filters are specified.
-            return self.products.all()
-        if options_lookup:
-            variations = ProductVariation.objects.filter(**options_lookup)
-            products = Product.objects.filter(variations__in=variations)
-            filters = filters | Q(id__in=products.distinct().only("id"))
+        if options:
+            lookup = dict([("%s__in" % k, v) for k, v in options.items()])
+            filters.append(Q(**lookup))
+        # Q objects used against variations to ensure sale date is 
+        # valid when filtering by sale, or sale price.
+        now = datetime.now()
+        valid_sale_from = Q(sale_from__isnull=True) | Q(sale_from__lte=now)
+        valid_sale_to = Q(sale_to__isnull=True) | Q(sale_to__gte=now)
+        valid_sale_date = valid_sale_from & valid_sale_to
+        # Filter by variations with the selected sale if the sale date 
+        # is valid.
         if self.sale_id:
-            filters = filters | Q(id__in=sale.products.only("id"))
-        if has_price_filter:
-            # Use either the unit price or sale price if valid.
-            now = datetime.now()
-            sale_from = Q(sale_from__isnull=True) | Q(sale_from__lte=now)
-            sale_to = Q(sale_to__isnull=True) | Q(sale_to__gte=now)
-            sale_date = sale_from & sale_to
+            filters.append(Q(sale_id=self.sale_id) & valid_sale_date)
+        # If a price range is specified, use either the unit price or 
+        # a sale price if the sale date is valid.
+        if self.price_min or self.price_max:
+            prices = []
             if self.price_min:
-                sale = Q(sale_price__gte=self.price_min) & sale_date
-                filters = filters & Q(unit_price__gte=self.price_min) | sale
+                sale = Q(sale_price__gte=self.price_min) & valid_sale_date
+                prices.append(Q(unit_price__gte=self.price_min) | sale)
             if self.price_max:
-                sale = Q(sale_price__lte=self.price_max) & sale_date
-                filters = filters & Q(unit_price__lte=self.price_max) | sale
-        return Product.objects.filter(filters)
+                sale = Q(sale_price__lte=self.price_max) & valid_sale_date
+                prices.append(Q(unit_price__lte=self.price_max) | sale)
+            filters.append(reduce(iand, prices))
+        # Turn the variation filters into a product filter.
+        operator = iand if self.combined else ior
+        if filters:
+            filters = reduce(operator, filters)
+            variations = ProductVariation.objects.filter(filters)
+            filters = [Q(variations__in=variations)]
+        # Checking products have been selected is neccessary as 
+        # combining the variations with an empty ID list lookup and 
+        # ``AND`` will always result in an empty result.
+        if self.products.count() > 0:
+            filters.append(Q(id__in=self.products.only("id")))
+        # Return an empty filter if none have been built.
+        if not filters:
+            return Q(id__in=[])
+        return reduce(operator, filters)
 
 
 class Priced(models.Model):
@@ -133,7 +133,8 @@ class Product(Displayable, Priced, Content):
 
     available = models.BooleanField(_("Available for purchase"), default=False)
     image = CharField(max_length=100, blank=True, null=True)
-    categories = models.ManyToManyField("Category", blank=True)
+    categories = models.ManyToManyField("Category", blank=True, 
+                                        related_name="products")
     date_added = models.DateTimeField(_("Date added"), auto_now_add=True, 
                                       null=True)
 
@@ -193,6 +194,24 @@ class ProductImage(models.Model):
         if not value:
             value = ""
         return value
+
+
+class ProductOption(models.Model):
+    """
+    A selectable option for a product such as size or colour.
+    """
+    type = models.IntegerField(_("Type"), 
+                               choices=settings.SHOP_OPTION_TYPE_CHOICES)
+    name = fields.OptionField(_("Name"))
+    
+    objects = managers.ProductOptionManager()
+
+    def __unicode__(self):
+        return "%s: %s" % (self.get_type_display(), self.name)
+
+    class Meta:
+        verbose_name = _("Product option")
+        verbose_name_plural = _("Product options")
 
 
 class ProductVariationMetaclass(ModelBase):
@@ -520,7 +539,7 @@ class ProductAction(models.Model):
 class Discount(models.Model):
     """
     Abstract model representing one of several types of monetary 
-    reductions as well as a date range they're applicable for, and 
+    reductions, as well as a date range they're applicable for, and 
     the products and products in categories that the reduction is 
     applicable for.
     """
@@ -549,9 +568,9 @@ class Discount(models.Model):
         Return the selected products as well as the products in the 
         selected categories.
         """
-        products = models.Q(id__in=self.products.all())
-        categories = models.Q(categories__in=self.categories.all())
-        return Product.objects.filter(products | categories)
+        filters = [category.filters() for category in self.categories.all()]
+        filters = reduce(ior, filters + [Q(id__in=self.products.only("id"))])
+        return Product.objects.filter(filters)
 
 
 class Sale(Discount):

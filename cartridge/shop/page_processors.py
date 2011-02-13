@@ -2,7 +2,7 @@
 from mezzanine.pages.page_processors import processor_for
 from mezzanine.conf import settings
 
-from cartridge.shop.models import Category
+from cartridge.shop.models import Category, Product
 from cartridge.shop.views import product_list
 
 
@@ -13,5 +13,6 @@ def category_processor(request, page):
     """
     settings.use_editable()
     per_page = settings.SHOP_PER_PAGE_CATEGORY
-    products = page.category.all_products()
+    filters = page.category.filters()
+    products = Product.objects.published(for_user=request.user).filter(filters)
     return {"products": product_list(products, request, per_page)}
