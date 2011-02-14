@@ -1,4 +1,5 @@
 
+from datetime import datetime, timedelta
 from decimal import Decimal
 from operator import mul
 
@@ -91,6 +92,86 @@ class ShopTests(TestCase):
         variation = self._product.variations.all()[0]
         variation.num_in_stock = 0
         self.assertFalse(variation.has_stock())
+        
+    def assertCategoryFilteredProducts(self, num_products):
+        """
+        Tests the number of products returned by the category's 
+        current filters.
+        """
+        products = Product.objects.filter(self._category.filters())
+        self.assertEqual(products.distinct().count(), num_products)
+
+    def test_category_filters(self):
+        """
+        Test the category filters returns expected results.
+        """
+        self._product.variations.all().delete()
+        self.assertCategoryFilteredProducts(0)
+
+        # Test option filters - add a variation with one option, and 
+        # assign another option as a category filter. Check that no 
+        # products match the filters, then add the first option as a 
+        # category filter and check that the product is matched.
+        option_field, options = self._options.items()[0]
+        option1, option2 = options[:2]
+        # Variation with the first option.
+        self._product.variations.create_from_options({option_field: [option1]})
+        # Filter with the second option
+        option = ProductOption.objects.get(type=option_field[-1], name=option2)
+        self.assertCategoryFilteredProducts(0)
+        # First option as a filter.
+        option = ProductOption.objects.get(type=option_field[-1], name=option1)
+        self._category.options.add(option)
+        self.assertCategoryFilteredProducts(1)
+        
+        # Test price filters - add a price filter that when combined 
+        # with previously created filters, should match no products. 
+        # Update the variations to match the filter for a unit price, 
+        # then with sale prices, checking correct matches based on sale 
+        # dates.
+        self._category.combined = True  
+        self._category.price_min = TEST_PRICE
+        self.assertCategoryFilteredProducts(0)
+        self._product.variations.all().update(unit_price=TEST_PRICE)
+        self.assertCategoryFilteredProducts(1)
+        now = datetime.now()
+        day = timedelta(days=1)
+        self._product.variations.all().update(unit_price=0, 
+                                              sale_price=TEST_PRICE, 
+                                              sale_from=now + day)
+        self.assertCategoryFilteredProducts(0)
+        self._product.variations.all().update(sale_from=now - day)
+        self.assertCategoryFilteredProducts(1)
+
+        # Clean up previously added filters and check that explicitly 
+        # assigned products match.
+        [self._category.options.remove(o) for o in self._category.options.all()]
+        self._category.price_min = None
+        self.assertCategoryFilteredProducts(0)
+        self._category.products.add(self._product)
+        self.assertCategoryFilteredProducts(1)
+        
+        # Test the ``combined`` field - create a variation which 
+        # matches a price filter, and a separate variation which 
+        # matches an option filter, and check that the filters 
+        # have no results when ``combined`` is set, and that the 
+        # product matches when ``combined`` is disabled.
+        self._product.variations.all().delete()
+        self._product.variations.create_from_options({option_field: 
+                                                     [option1, option2]})
+        # Price variation and filter.
+        variation = self._product.variations.get(**{option_field: option1})
+        variation.unit_price = TEST_PRICE
+        variation.save()
+        self._category.price_min = TEST_PRICE
+        # Option variation and filter.
+        option = ProductOption.objects.get(type=option_field[-1], name=option2)
+        self._category.options.add(option)
+        # Check ``combined``.
+        self._category.combined = True
+        self.assertCategoryFilteredProducts(0)
+        self._category.combined = False
+        self.assertCategoryFilteredProducts(1)
 
     def test_cart(self):
         """
