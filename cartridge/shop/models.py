@@ -570,7 +570,7 @@ class Discount(models.Model):
         """
         filters = [category.filters() for category in self.categories.all()]
         filters = reduce(ior, filters + [Q(id__in=self.products.only("id"))])
-        return Product.objects.filter(filters)
+        return Product.objects.filter(filters).distinct()
 
 
 class Sale(Discount):

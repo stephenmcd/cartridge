@@ -13,6 +13,7 @@ def category_processor(request, page):
     """
     settings.use_editable()
     per_page = settings.SHOP_PER_PAGE_CATEGORY
+    published_products = Product.objects.published(for_user=request.user)
     filters = page.category.filters()
-    products = Product.objects.published(for_user=request.user).filter(filters)
+    products = published_products.filter(filters).distinct()
     return {"products": product_list(products, request, per_page)}
