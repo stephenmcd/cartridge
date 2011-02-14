@@ -68,19 +68,19 @@ class Category(Page, Content):
             filters.append(reduce(iand, prices))
         # Turn the variation filters into a product filter.
         operator = iand if self.combined else ior
+        products = Q(id__in=self.products.only("id"))
         if filters:
             filters = reduce(operator, filters)
             variations = ProductVariation.objects.filter(filters)
             filters = [Q(variations__in=variations)]
-        # Checking products have been selected is neccessary as 
-        # combining the variations with an empty ID list lookup and 
-        # ``AND`` will always result in an empty result.
-        if self.products.count() > 0:
-            filters.append(Q(id__in=self.products.only("id")))
-        # Return an empty filter if none have been built.
-        if not filters:
-            return Q(id__in=[])
-        return reduce(operator, filters)
+            # If filters exist, checking that products have been 
+            # selected is neccessary as combining the variations 
+            # with an empty ID list lookup and ``AND`` will always 
+            # result in an empty result.
+            if self.products.count() > 0:
+                filters.append(products)
+            return reduce(operator, filters)
+        return products
 
 
 class Priced(models.Model):
