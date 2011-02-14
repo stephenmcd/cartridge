@@ -52,8 +52,11 @@ class ProductImageAdmin(DynamicInlineAdmin):
 
 product_fieldsets = deepcopy(DisplayableAdmin.fieldsets)
 product_fieldsets[0][1]["fields"].extend(["available", "categories", 
-    "content"])
+                                          "content"])
 product_fieldsets = list(product_fieldsets)
+product_fieldsets.append((_("Other products"), 
+    {"classes": ("collapse-closed",), "fields": ("related_products", 
+                                                 "upsell_products")}))
 product_fieldsets.insert(1, (_("Create new variations"), 
     {"classes": ("create-variations",), "fields": option_fields}))
 
@@ -63,7 +66,7 @@ class ProductAdmin(DisplayableAdmin):
     list_display_links = ("admin_thumb", "title")
     list_editable = ("status", "available")
     list_filter = ("status", "available", "categories")
-    filter_horizontal = ("categories",)
+    filter_horizontal = ("categories", "related_products", "upsell_products")
     search_fields = ("title", "content", "categories__title", "variations__sku")
     inlines = (ProductImageAdmin, ProductVariationAdmin)
     form = ProductAdminForm

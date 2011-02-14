@@ -27,10 +27,10 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
 
 .confirmation {margin:5px 10px;}
 
-.category .products li {float:left; margin:10px 15px 0 0 !important; 
+.products li {float:left; margin:10px 15px 0 0 !important; 
     padding:10px; text-align:center; background:#ddd; width:95px; 
     height:210px;}
-.category .products li .img {width:90px; height:90px; margin:auto; 
+.products li .img {width:90px; height:90px; margin:auto; 
     padding:0 !important; border:2px solid #333; margin-bottom:5px;}
 .img img {margin:0;}
 .product-paging {float:left; margin-top:10px; width:100%;}
@@ -43,7 +43,7 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
     font-size:.8em;}
 .product-sorting ul {padding-top:2px !important;}
 .product-sorting li {margin:5px !important; display:inline;}
-.category .price {font-size:.8em;}
+.price {font-size:.8em;}
 .old-price {text-decoration: line-through;}
 
 #variations li, #product-images-large li, #product-images-thumb li {
@@ -63,3 +63,6 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
 
 .order-totals {text-align:right; width:250px;}
 .order-totals label {width:150px; float:left; text-align:left;}
+
+h2 {font-weight:normal; float:left;}
+.related {clear:left;}

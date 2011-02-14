@@ -131,12 +131,15 @@ class Product(Displayable, Priced, Content):
     all of its variations such as the product's title and description.
     """
 
-    available = models.BooleanField(_("Available for purchase"), default=False)
+    available = models.BooleanField(_("Available for purchase"), 
+                                    default=False)
     image = CharField(max_length=100, blank=True, null=True)
     categories = models.ManyToManyField("Category", blank=True, 
                                         related_name="products")
     date_added = models.DateTimeField(_("Date added"), auto_now_add=True, 
                                       null=True)
+    related_products = models.ManyToManyField("self", blank=True)
+    upsell_products = models.ManyToManyField("self", blank=True)
 
     objects = DisplayableManager()
 
@@ -467,15 +470,24 @@ class Cart(models.Model):
     
     def total_quantity(self):
         """
-        Template helper function - sum of all item quantities?
+        Template helper function - sum of all item quantities.
         """
         return sum([item.quantity for item in self])
         
     def total_price(self):
         """
-        Template helper function - sum of all costs of item quantities?
+        Template helper function - sum of all costs of item quantities.
         """
         return sum([item.total_price for item in self])
+
+    def upsell_products(self):
+        """
+        Returns the upsell products for each of the items in the cart.
+        """
+        skus = [item.sku for item in self]
+        cart = Product.objects.filter(variations__sku__in=skus)
+        upsell = Product.objects.published().filter(upsell_products__in=cart)
+        return list(upsell.distinct())
 
 
 class SelectedProduct(models.Model):

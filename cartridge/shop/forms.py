@@ -380,11 +380,17 @@ class ProductAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         """
         Set the choices for each of the fields for product options, 
-        hiding them if no choices exist.
+        hiding them if no choices exist. Also remove the current 
+        instance from choices for related and upsell products.
         """
         super(ProductAdminForm, self).__init__(*args, **kwargs)
         for field, options in ProductOption.objects.as_fields().items():
             self.fields[field].choices = make_choices(options)
+        instance = kwargs.get("instance")
+        if instance:
+            queryset = Product.objects.exclude(id=instance.id)
+            self.fields["related_products"].queryset = queryset
+            self.fields["upsell_products"].queryset = queryset
 
 
 class ProductVariationAdminForm(forms.ModelForm):

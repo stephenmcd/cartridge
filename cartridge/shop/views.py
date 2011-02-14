@@ -98,8 +98,10 @@ def product(request, slug, template="shop/product.html"):
         variation = dict([(f, getattr(variation, f)) for f in fields])
         variations_json.append(variation)
     variations_json = simplejson.dumps(variations_json)
+    related = product.related_products.published(for_user=request.user)
     context = {"product": product, "images": list(product.images.all()), 
                "variations": variations, "variations_json": variations_json,
+               "related_products": list(related),
                "add_product_form": add_product_form}
     return render_to_response(template, context, RequestContext(request))
 
