@@ -280,7 +280,7 @@ def checkout_steps(request):
                 # order, otherwise remove the cart items from stock 
                 # and send the order reciept email.
                 order = form.save(commit=False)
-                order.prepare(request)
+                order.setup(request)
                 # Try payment.
                 try:
                     payment_handler(request, form, order)

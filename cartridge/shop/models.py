@@ -357,7 +357,7 @@ class Order(models.Model):
     objects = managers.OrderManager()
 
     # These are fields that are stored in the session. They're copied to 
-    # the order in prepare() and removed from the session in complete().
+    # the order in setup() and removed from the session in complete().
     session_fields = ("shipping_type", "shipping_total", "discount_total")
     
     class Meta:
@@ -372,7 +372,7 @@ class Order(models.Model):
         return "%s %s" % (self.billing_detail_first_name, 
                           self.billing_detail_last_name)
 
-    def prepare(self, request):
+    def setup(self, request=None):
         """
         Set order fields that are stored in the session, item_total 
         and total based on the given cart, and copy the cart items 
