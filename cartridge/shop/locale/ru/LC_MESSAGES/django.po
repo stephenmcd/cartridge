@@ -1,0 +1,733 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Andrew Grigorev <andrew@ei-grad.ru>, 2011.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-02-22 03:59+0500\n"
+"PO-Revision-Date: 2011-02-22 04:46+0500\n"
+"Last-Translator: Andrew Grigorev <andrew@ei-grad.ru>\n"
+"Language-Team: Russian <>\n"
+"Language: Russian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<"
+"=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Lokalize 1.2\n"
+
+#: admin.py:27
+msgid "Product filters"
+msgstr "Фильтры товаров"
+
+#: admin.py:38
+msgid "Current variations"
+msgstr "Текущие вариации"
+
+#: admin.py:57
+msgid "Other products"
+msgstr "Другие товары"
+
+#: admin.py:60
+msgid "Create new variations"
+msgstr "Создать новые вариации"
+
+#: admin.py:109
+#, fuzzy
+msgid "Items"
+msgstr "Товары"
+
+#: admin.py:127
+msgid "Billing details"
+msgstr "Платежная информация"
+
+#: admin.py:128
+msgid "Shipping details"
+msgstr "Информация о доставке"
+
+#: admin.py:145 admin.py:165
+msgid "Apply to product and/or products in categories"
+msgstr "Применить к товарам и/или товарам в категориях"
+
+#: admin.py:147 admin.py:167
+msgid "Reduce unit price by"
+msgstr "Уменьшить цену на"
+
+#: admin.py:150
+msgid "Sale period"
+msgstr "Период распродажи"
+
+#: admin.py:170
+msgid "Valid for"
+msgstr "Действительно для"
+
+#: checkout.py:35
+#, fuzzy
+msgid "Flat rate shipping"
+msgstr "Фиксированная стоимость доставки"
+
+#: checkout.py:103
+#, fuzzy
+msgid "Order Receipt"
+msgstr "Товарный чек"
+
+#: checkout.py:110
+msgid "Details"
+msgstr "Подробности"
+
+#: checkout.py:114
+msgid "Address"
+msgstr "Адрес"
+
+#: checkout.py:116
+msgid "Payment"
+msgstr "Оплата"
+
+#: checkout.py:120
+msgid "Confirmation"
+msgstr "Подтверждение"
+
+#: defaults.py:121
+msgid "Size"
+msgstr "Размер"
+
+#: defaults.py:122
+msgid "Colour"
+msgstr "Цвет"
+
+#: defaults.py:138
+msgid "Unprocessed"
+msgstr "Не обработан"
+
+#: defaults.py:139
+msgid "Processed"
+msgstr "Обработан"
+
+#: defaults.py:170
+msgid "Relevance"
+msgstr "Релевантность"
+
+#: defaults.py:171
+msgid "Least expensive"
+msgstr "Наименее дорогие"
+
+#: defaults.py:172
+msgid "Most expensive"
+msgstr "Наиболее дорогие"
+
+#: defaults.py:173
+msgid "Recently added"
+msgstr "Недавно добавленные"
+
+#: defaults.py:211
+msgid "Sequence of setting names available within templates."
+msgstr "Последовательность имен параметров, доступных для внутри шаблонов."
+
+#: fields.py:43
+#, fuzzy
+msgid "SKU"
+msgstr "Артикул"
+
+#: forms.py:26
+msgid "The selected options are currently unavailable."
+msgstr "Выбранные опции в данное время не доступны."
+
+#: forms.py:27
+msgid "The selected options are currently not in stock."
+msgstr "Выбранных опций в настоящее время нет в наличии."
+
+#: forms.py:28
+msgid "The selected quantity is currently unavailable."
+msgstr "Запрашиваемое количество недоступно."
+
+#: forms.py:158
+msgid "My delivery details are the same as my billing details"
+msgstr "Информация о доставке такая же как об оплате"
+
+#: forms.py:160
+msgid "Remember my address for next time"
+msgstr "Запомнить мой адрес на будущее"
+
+#: forms.py:161
+msgid "Cardholder name"
+msgstr "Имя владельца карты"
+
+#: forms.py:162 models.py:206
+msgid "Type"
+msgstr "Тип"
+
+#: forms.py:164
+msgid "Card number"
+msgstr "Номер карты"
+
+#: forms.py:249
+#, fuzzy
+msgid "The discount code entered is invalid."
+msgstr "Введен неправильный код скидки."
+
+#: forms.py:267
+msgid "Email Address"
+msgstr "Адрес электронной почты"
+
+#: forms.py:268
+msgid "Password"
+msgstr "Пароль"
+
+#: forms.py:296
+msgid "This email is already registered"
+msgstr "Этот адрес уже зарегистрирован"
+
+#: forms.py:316
+msgid "Invalid email/password"
+msgstr "Неправильный email/пароль"
+
+#: forms.py:318
+msgid "Your account is inactive"
+msgstr "Этот пользователь неактивен."
+
+#: forms.py:416
+msgid "Only one variation can be checked as the default."
+msgstr "Только одна вариация может быть установлена по-умолчанию."
+
+#: forms.py:429
+#, fuzzy
+msgid "Please enter a value for only one type of reduction."
+msgstr "Введите значение только для одного типа сокращения."
+
+#: models.py:27
+msgid "Minimum price"
+msgstr "Минимальная цена"
+
+#: models.py:28
+msgid "Maximum price"
+msgstr "Максимальная цена"
+
+#: models.py:34
+msgid "Product category"
+msgstr "Категория товаров"
+
+#: models.py:35
+msgid "Product categories"
+msgstr "Категории товаров"
+
+#: models.py:92 models.py:501
+msgid "Unit price"
+msgstr "Цена за штуку"
+
+#: models.py:94
+msgid "Sale price"
+msgstr "Цена на распродаже"
+
+#: models.py:95
+msgid "Sale start"
+msgstr "Начало распродажи"
+
+#: models.py:96
+msgid "Sale end"
+msgstr "Конец распродажи"
+
+#: models.py:134
+msgid "Available for purchase"
+msgstr "Доступен для заказа"
+
+#: models.py:139
+msgid "Date added"
+msgstr "Дата добавления"
+
+#: models.py:147
+msgid "Product"
+msgstr "Продукт"
+
+#: models.py:148
+msgid "Products"
+msgstr "Продукты"
+
+#: models.py:185 models.py:190
+msgid "Image"
+msgstr "Изображение"
+
+#: models.py:186 models.py:499
+msgid "Description"
+msgstr "Описание"
+
+#: models.py:191
+msgid "Images"
+msgstr "Изображения"
+
+#: models.py:208
+msgid "Name"
+msgstr "Имя"
+
+#: models.py:216
+msgid "Product option"
+msgstr "Параметр товара"
+
+#: models.py:217
+msgid "Product options"
+msgstr "Параметры товара"
+
+#: models.py:241
+msgid "Number in stock"
+msgstr "Количество в магазине"
+
+#: models.py:243
+msgid "Default"
+msgstr "По-умолчанию"
+
+#: models.py:324 models.py:333
+msgid "First name"
+msgstr "Имя"
+
+#: models.py:325 models.py:334
+msgid "Last name"
+msgstr "Фамилия"
+
+#: models.py:326 models.py:335
+msgid "Street"
+msgstr "Улица"
+
+#: models.py:327 models.py:336
+msgid "City/Suburb"
+msgstr "Город"
+
+#: models.py:328 models.py:337
+msgid "State/Region"
+msgstr "Область"
+
+#: models.py:329 models.py:338
+msgid "Zip/Postcode"
+msgstr "Почтовый индекс"
+
+#: models.py:330 models.py:339
+msgid "Country"
+msgstr "Страна"
+
+#: models.py:331 models.py:340
+msgid "Phone"
+msgstr "Телефон"
+
+#: models.py:332
+msgid "Email"
+msgstr "Адрес электронной почты"
+
+#: models.py:341
+msgid "Additional instructions"
+msgstr "Дополнительная информация"
+
+#: models.py:343
+msgid "Time"
+msgstr "Время"
+
+#: models.py:346
+msgid "Shipping type"
+msgstr "Тип доставки"
+
+#: models.py:347
+msgid "Shipping total"
+msgstr "Стоимость доставки"
+
+#: models.py:348
+msgid "Item total"
+msgstr "Стоимость товара"
+
+#: models.py:349
+msgid "Discount code"
+msgstr "Код скидки"
+
+#: models.py:350
+msgid "Discount total"
+msgstr "Сумма скидки"
+
+#: models.py:351
+#, fuzzy
+msgid "Order total"
+msgstr "Итого по заказу"
+
+#: models.py:353
+msgid "Status"
+msgstr "Статус"
+
+#: models.py:364
+msgid "Order"
+msgstr "Заказ"
+
+#: models.py:365
+msgid "Orders"
+msgstr "Заказы"
+
+#: models.py:424
+msgid "Last updated"
+msgstr "Последнее изменение"
+
+#: models.py:500
+msgid "Quantity"
+msgstr "Количество"
+
+#: models.py:502
+#, fuzzy
+msgid "Total price"
+msgstr "Итого"
+
+#: models.py:560
+msgid "Active"
+msgstr "Активный"
+
+#: models.py:564
+msgid "Reduce by amount"
+msgstr "Снижение на определенную величину"
+
+#: models.py:565
+msgid "Reduce by percent"
+msgstr "Снижение на процент"
+
+#: models.py:568
+msgid "Reduce to amount"
+msgstr "Снижение до определенной величины"
+
+#: models.py:569
+msgid "Valid from"
+msgstr "Действует с"
+
+#: models.py:570
+msgid "Valid to"
+msgstr "Действует до"
+
+#: models.py:596
+msgid "Sale"
+msgstr "Распродажа"
+
+#: models.py:597
+msgid "Sales"
+msgstr "Распродажи"
+
+#: models.py:664
+msgid "Code"
+msgstr "Код"
+
+#: models.py:665
+msgid "Minimum total purchase"
+msgstr "Минимальная сумма заказа"
+
+#: models.py:666 views.py:271
+msgid "Free shipping"
+msgstr "Бесплатная доставка"
+
+#: utils.py:81
+#, python-format
+msgid "Invalid currency locale specified: %s"
+msgstr "Указана неверная валюта: %s"
+
+#: views.py:80 views.py:148
+msgid "Item added to cart"
+msgstr "Товар добавлен в корзину"
+
+#: views.py:87
+msgid "Item added to wishlist"
+msgstr "Товар добавлен в список желаний"
+
+#: views.py:137
+msgid "This item is no longer available"
+msgstr "Этот товар более не доступен"
+
+#: views.py:140
+msgid "This item is currently out of stock"
+msgstr "Этот товар в настоящее время отсутствует в магазине"
+
+#: views.py:151
+msgid "Item removed from wishlist"
+msgstr "Товар удален из списка желаний"
+
+#: views.py:177
+msgid "Item removed from cart"
+msgstr "Товар удален из корзины"
+
+#: views.py:195
+msgid "Successfully logged in"
+msgstr "Вход произведен успешно"
+
+#: views.py:201
+msgid "Successfully signed up"
+msgstr "Регистрация прошла успешно"
+
+#: views.py:215
+msgid "Successfully logged out"
+msgstr "Выход произведен успешно"
+
+#: templates/base.html:69
+#, python-format
+msgid ""
+"\n"
+"\t\t        Cart contains 1 item:\n"
+"\t\t        "
+msgid_plural ""
+"\n"
+"\t\t        Cart contains %(cart_quantity)s items:\n"
+"\t\t        "
+msgstr[0] ""
+"\n"
+"\t\t        В корзине 1 предмет:\n"
+"\t\t        "
+msgstr[1] ""
+"\n"
+"\t\t        В корзине %(cart_quantity)s предмета:\n"
+"\t\t        "
+msgstr[2] ""
+"\n"
+"\t\t        В корзине %(cart_quantity)s предметов:\n"
+"\t\t        "
+
+#: templates/base.html:76 templates/shop/wishlist.html:30
+msgid "Buy now"
+msgstr "Купить сейчас"
+
+#: templates/base.html:79
+#, python-format
+msgid ""
+"\n"
+"\t\t        Wishlist contains 1 item\n"
+"\t\t        "
+msgid_plural ""
+"\n"
+"\t\t        Wishlist contains %(wishlist_count)s items\n"
+"\t\t        "
+msgstr[0] ""
+"\n"
+"\t\t        В списке желаний 1 предмет\n"
+"\t\t        "
+msgstr[1] ""
+"\n"
+"\t\t        В списке желаний %(wishlist_count)s предмета\n"
+"\t\t        "
+msgstr[2] ""
+"\n"
+"\t\t        В списке желаний %(wishlist_count)s предметов\n"
+"\t\t        "
+
+#: templates/base.html:90
+msgid "Logged in as: "
+msgstr "Вошли как:"
+
+#: templates/base.html:92
+msgid "Log out"
+msgstr "Выйти"
+
+#: templates/base.html:95
+msgid "Log in or sign up"
+msgstr "Войти или зарегистрироваться"
+
+#: templates/base.html:104
+msgid "Powered by"
+msgstr "Основано на"
+
+#: templates/base.html:106
+msgid "and"
+msgstr "и"
+
+#: templates/base.html:109
+msgid "View Mobile Site"
+msgstr "Мобильная версия"
+
+#: templates/pages/category.html:40 templates/shop/cart.html:77
+#: templates/shop/product.html:107 templates/shop/product.html.py:143
+msgid "On sale:"
+msgstr "На распродаже:"
+
+#: templates/shop/account.html:4
+msgid "Login / Signup"
+msgstr "Вход / Регистрация"
+
+#: templates/shop/account.html:8 templates/shop/cart.html:8
+#: templates/shop/complete.html:60 templates/shop/product.html:64
+#: templates/shop/wishlist.html:8
+msgid "Home"
+msgstr "Начало"
+
+#: templates/shop/account.html:9
+msgid "Account"
+msgstr "Пользователь"
+
+#: templates/shop/account.html:16 templates/shop/account.html.py:21
+msgid "Login"
+msgstr "Вход"
+
+#: templates/shop/account.html:26 templates/shop/account.html.py:31
+msgid "Signup"
+msgstr "Регистрация"
+
+#: templates/shop/billing_shipping.html:41 templates/shop/confirmation.html:8
+msgid "Billing Details"
+msgstr "Платежная информация"
+
+#: templates/shop/billing_shipping.html:46
+msgid "Delivery Details"
+msgstr "Информация о доставке"
+
+#: templates/shop/cart.html:4 templates/shop/cart.html.py:9
+msgid "Your cart"
+msgstr "Ваша корзина"
+
+#: templates/shop/cart.html:17
+msgid "Item"
+msgstr "Товар"
+
+#: templates/shop/cart.html:18
+msgid "Unit Price"
+msgstr "Цена"
+
+#: templates/shop/cart.html:19
+msgid "Qty"
+msgstr "Кол-во"
+
+#: templates/shop/cart.html:20
+#, fuzzy
+msgid "Price"
+msgstr "Стоимость"
+
+#: templates/shop/cart.html:39 templates/shop/wishlist.html:29
+msgid "Remove"
+msgstr "Убрать"
+
+#: templates/shop/cart.html:45 templates/shop/order_totals.html:28
+#, fuzzy
+msgid "Total"
+msgstr "Итого"
+
+#: templates/shop/cart.html:53
+#, fuzzy
+msgid "Go to Checkout"
+msgstr "Перейти к оплате"
+
+#: templates/shop/cart.html:61
+msgid "You may also like:"
+msgstr "Вам так же может понравиться:"
+
+#: templates/shop/cart.html:89 templates/shop/checkout.html:52
+msgid "Your cart is empty."
+msgstr "Ваша корзина пуста."
+
+#: templates/shop/checkout.html:6 templates/shop/checkout.html.py:7
+#, fuzzy
+#: templates/shop/complete.html:61
+msgid "Checkout"
+msgstr "Оплата"
+
+#: templates/shop/checkout.html:7
+msgid "Step"
+msgstr "Шаг"
+
+#: templates/shop/checkout.html:7 templates/shop/product_paging.html:5
+msgid "of"
+msgstr "из"
+
+#: templates/shop/checkout.html:21
+msgid "Complete"
+msgstr "Завершено"
+
+#: templates/shop/checkout.html:47
+msgid "Next"
+msgstr "Далее"
+
+#: templates/shop/checkout.html:49
+msgid "Back"
+msgstr "Назад"
+
+#: templates/shop/complete.html:56
+#, fuzzy
+msgid "Order Complete"
+msgstr "Заказ завершен"
+
+#: templates/shop/complete.html:66
+#, fuzzy
+msgid "Order complete"
+msgstr "Заказ завершен"
+
+#: templates/shop/confirmation.html:17
+msgid "Shipping Details"
+msgstr "Информация о доставке"
+
+#: templates/shop/confirmation.html:29 templates/shop/payment_fields.html:3
+msgid "Payment Details"
+msgstr "Платежная информация"
+
+#: templates/shop/order_totals.html:4
+#, fuzzy
+msgid "Sub total"
+msgstr "Итого"
+
+#: templates/shop/order_totals.html:12
+msgid "Discount"
+msgstr "Скидка"
+
+#: templates/shop/order_totals.html:23
+msgid "Shipping"
+msgstr "Доставка"
+
+#: templates/shop/payment_fields.html:9
+#, fuzzy
+msgid "Expiry"
+msgstr "Истекает"
+
+#: templates/shop/product.html:111
+#, fuzzy
+msgid "Currently unavailable."
+msgstr "Недоступен в настоящее время."
+
+#: templates/shop/product.html:119
+msgid "Buy"
+msgstr "Купить"
+
+#: templates/shop/product.html:120
+msgid "Save for later"
+msgstr "Сохранить на будущее"
+
+#: templates/shop/product.html:123
+msgid "This product is currently unavailable."
+msgstr "Этот продукт недоступен в настоящее время."
+
+#: templates/shop/product.html:127
+msgid "Related Products"
+msgstr "Связанные продукты"
+
+#: templates/shop/product_paging.html:5
+msgid "Page"
+msgstr "Страница"
+
+#: templates/shop/wishlist.html:4 templates/shop/wishlist.html.py:9
+msgid "Your wishlist"
+msgstr "Ваш список желаний"
+
+#: templates/shop/wishlist.html:37
+msgid "Your wishlist is empty."
+msgstr "Ваш список желаний пуст."
+
+#: templates/shop/email/order_receipt.html:3
+msgid "Dear"
+msgstr "Уважаемый"
+
+#: templates/shop/email/order_receipt.html:5
+#, fuzzy
+msgid "Your order has been successful, details are below."
+msgstr "Ваш заказ успешно добавлен, подробности указаны ниже."
+
+#: templates/shop/email/order_receipt.html:7
+msgid "Order ID:"
+msgstr "Номер заказа:"
+
+#: templates/shop/email/order_receipt.html:9
+msgid "Billing Details:"
+msgstr "Платежная информация:"
+
+#: templates/shop/email/order_receipt.html:14
+msgid "Shipping Details:"
+msgstr "Информация о доставке:"
+
+#: templates/shop/email/order_receipt.html:19
+msgid "Items Ordered:"
+msgstr "Заказанные товары:"
+
+#: templates/shop/email/order_receipt.html:22
+msgid "each"
+msgstr "каждый"
+
