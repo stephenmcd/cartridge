@@ -64,5 +64,5 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
 .order-totals {text-align:right; width:250px;}
 .order-totals label {width:150px; float:left; text-align:left;}
 
-h2 {font-weight:normal; float:left;}
-.related {clear:left;}
+.related h2 {font-weight:normal; float:left;}
+.related ul {clear:left;}
