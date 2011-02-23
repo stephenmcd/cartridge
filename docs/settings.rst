@@ -45,7 +45,7 @@ Default: ``True``
 ``SHOP_CURRENCY_LOCALE``
 ------------------------
 
-Controls the formatting of monetary values accord to the locale module in the python standard library.
+Controls the formatting of monetary values accord to the locale module in the python standard library. If an empty string is used, will fall back to the system's locale.
 
 Default: ``''``
 
@@ -152,4 +152,4 @@ Default: ``((u'Relevance', None), (u'Least expensive', 'unit_price'), (u'Most ex
 
 If True, users will be automatically redirect to HTTPS for the checkout process.
 
-Default: ``[dynamic]``
+Default: ``False``
