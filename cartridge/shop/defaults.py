@@ -54,7 +54,8 @@ register_setting(
 register_setting(
     name="SHOP_CURRENCY_LOCALE",
     description="Controls the formatting of monetary values accord to "
-        "the locale module in the python standard library.",
+        "the locale module in the python standard library. If an empty "
+        "string is used, will fall back to the system's locale.",
     editable=False,
     default="",
 )
@@ -179,7 +180,7 @@ register_setting(
     description="If True, users will be automatically redirect to HTTPS "
         "for the checkout process.",
     editable=True,
-    default=not settings.DEBUG,
+    default=False,
 )
 
 # Decorator that wraps the given func in the CallableSetting object that calls 
