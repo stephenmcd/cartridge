@@ -93,14 +93,18 @@ def product(request, slug, template="shop/product.html"):
     fields.extend(["sku", "image_id"])
     variations = []
     variations_json = []
+    has_available_variations = False
     for variation in product.variations.all():
+        if not has_available_variations and variation.has_price():
+            has_available_variations = True
         variations.append(variation)
-        variation = dict([(f, getattr(variation, f)) for f in fields])
-        variations_json.append(variation)
+        variation_dict = dict([(f, getattr(variation, f)) for f in fields])
+        variations_json.append(variation_dict)
     variations_json = simplejson.dumps(variations_json)
     related = product.related_products.published(for_user=request.user)
     context = {"product": product, "images": list(product.images.all()), 
                "variations": variations, "variations_json": variations_json,
+               "has_available_variations": has_available_variations,
                "related_products": list(related),
                "add_product_form": add_product_form}
     return render_to_response(template, context, RequestContext(request))

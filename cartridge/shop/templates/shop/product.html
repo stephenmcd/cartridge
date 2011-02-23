@@ -96,7 +96,7 @@ $(function() {
 {{ product.content|safe }}
 {% endeditable %}
 
-{% if product.available %}
+{% if product.available and has_available_variations %}
 <ul id="variations">
 	{% for variation in variations %}
 	<li id="variation-{{ variation.sku }}"
@@ -108,7 +108,9 @@ $(function() {
 			{% endif %}
 			{{ variation.price|currency }}
 		{% else %}
-		{% trans "Currently unavailable." %} 
+		    {% if has_available_variations %}
+		    {% trans "The selected options are currently unavailable." %} 
+		    {% endif %}
 		{% endif %}
 	</li>
 	{% endfor %}
