@@ -34,7 +34,7 @@ $(function() {
 
 {% if not request.user.is_authenticated and settings.SHOP_CHECKOUT_ACCOUNT_ENABLED %}
 <p>If you have an existing account or would like to create one, please 
-    <a href="{{ settings.SHOP_LOGIN_URL }}">log in or sign up</a>.</p>
+    <a href="{{ settings.LOGIN_URL }}">log in or sign up</a>.</p>
 {% endif %}
 
 <fieldset>

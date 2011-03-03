@@ -5,8 +5,8 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
 .checkbox input {float:left;}
 
 #account, #cart-panel {margin:20px 0;}
-#cart-panel {background:#333; padding:10px;} 
-#cart-panel, #cart-panel a {color:#eee; font-weight:bold; line-height:20px;}
+#cart-panel {background:#555; padding:10px; border-radius:3px;} 
+#cart-panel, #cart-panel a {color:#fff; font-weight:bold; line-height:20px;}
 #product-images-thumb img {margin:10px; margin-left:0;}
 #variations {margin-bottom:20px;}
 
@@ -49,7 +49,8 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
 #variations li, #product-images-large li, #product-images-thumb li {
     margin:0; list-style-type:none; display:inline;}
 
-#checkout-form, #add-cart {width:100%; padding:10px 0;}
+.login-signup form, #checkout-form, #add-cart {width:100%; padding:10px 0;}
+.login-signup form {margin-bottom:20px;}
 #checkout-form p {margin:0 10px;}
 #checkout li {margin:2px 0; list-style-type:none;}
 
@@ -64,5 +65,5 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
 .order-totals {text-align:right; width:250px;}
 .order-totals label {width:150px; float:left; text-align:left;}
 
-h2 {font-weight:normal; float:left;}
-.related {clear:left;}
+.related h2 {font-weight:normal; float:left;}
+.related ul {clear:left;}

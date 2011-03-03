@@ -45,7 +45,7 @@ Default: ``True``
 ``SHOP_CURRENCY_LOCALE``
 ------------------------
 
-Controls the formatting of monetary values accord to the locale module in the python standard library.
+Controls the formatting of monetary values accord to the locale module in the python standard library. If an empty string is used, will fall back to the system's locale.
 
 Default: ``''``
 
@@ -90,13 +90,6 @@ Default: ``'cartridge.shop.checkout.default_order_handler'``
 Dotted package path and class name of the function that is called on submit of the payment checkout step. This is where integration with a payment gateway should be implemented.
 
 Default: ``'cartridge.shop.checkout.default_payment_handler'``
-
-``SHOP_LOGIN_URL``
-------------------
-
-Fall back to shop's login view if the view for LOGIN_URL hasn't been defined.
-
-Default: ``[dynamic]``
 
 ``SHOP_MAX_PAGING_LINKS``
 -------------------------
@@ -152,4 +145,4 @@ Default: ``((u'Relevance', None), (u'Least expensive', 'unit_price'), (u'Most ex
 
 If True, users will be automatically redirect to HTTPS for the checkout process.
 
-Default: ``[dynamic]``
+Default: ``False``

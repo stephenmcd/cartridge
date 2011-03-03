@@ -1,6 +1,6 @@
 
-import locale
 import hmac
+from locale import setlocale, LC_MONETARY
 from datetime import datetime, timedelta
 try:
     from hashlib import sha512 as digest
@@ -34,8 +34,8 @@ def set_cookie(response, name, value, secure=False):
     """
     Sets a cookie that expires in a year.
     """
-    expires = datetime.strftime(datetime.utcnow() + 
-        timedelta(seconds=365*24*60*60), "%a, %d-%b-%Y %H:%M:%S GMT")
+    year = datetime.utcnow() + timedelta(seconds=365*24*60*60)
+    expires = datetime.strftime(year, "%a, %d-%b-%Y %H:%M:%S GMT")
     response.set_cookie(name, value, expires=expires, secure=secure)
 
 
@@ -48,7 +48,7 @@ def sign(value):
 
 
 def send_mail_template(subject, template, addr_from, addr_to, context=None,
-    attachments=None, fail_silently=False):
+                       attachments=None, fail_silently=False):
     """
     Send email rendering text and html versions for the specified template name
     using the context dictionary passed in.
@@ -62,7 +62,7 @@ def send_mail_template(subject, template, addr_from, addr_to, context=None,
         addr_to = [addr_to]
     # Loads a template passing in vars as context.
     render = lambda type: loader.get_template("%s.%s" % 
-        (template, type)).render(Context(context))
+                          (template, type)).render(Context(context))
     # Create and send email.
     msg = EmailMultiAlternatives(subject, render("txt"), addr_from, addr_to)
     msg.attach_alternative(render("html"), "text/html")
@@ -75,8 +75,14 @@ def set_locale():
     """
     Sets the locale for currency formatting.
     """
+    currency_locale = settings.SHOP_CURRENCY_LOCALE
     try:
-        locale.setlocale(locale.LC_MONETARY, settings.SHOP_CURRENCY_LOCALE)
+        if setlocale(LC_MONETARY, currency_locale) == "C":
+            # C locale doesn't contain a suitable value for "frac_digits".
+            raise
     except:
-        raise ImproperlyConfigured(_("Invalid currency locale specified: %s") % 
-            settings.SHOP_CURRENCY_LOCALE)
+        msg = _("Invalid currency locale specified for SHOP_CURRENCY_LOCALE: "
+                "'%s'. You'll need to set the locale for your system, or "
+                "configure the SHOP_CURRENCY_LOCALE setting in your settings "
+                "module.")
+        raise ImproperlyConfigured(msg % currency_locale)
