@@ -1,7 +1,6 @@
 
 from socket import gethostname
 
-from django.conf import settings
 from django.utils.translation import ugettext as _
 
 from mezzanine.conf import register_setting
@@ -183,36 +182,12 @@ register_setting(
     default=False,
 )
 
-# Decorator that wraps the given func in the CallableSetting object that calls 
-# the func when it is cast to a string.
-callable_setting = lambda func: type("", (), {
-    "__str__": lambda self: func(), "__repr__": lambda self: "[dynamic]"})()
-
-@callable_setting
-def LOGIN_URL():
-    from django.core.urlresolvers import resolve, reverse, Resolver404
-    from mezzanine.pages.views import page
-    try:
-        if resolve(settings.LOGIN_URL)[0] is page:
-            raise Resolver404
-        return settings.LOGIN_URL
-    except Resolver404:
-        return reverse("shop_account")
-
-register_setting(
-    name="SHOP_LOGIN_URL",
-    description="Fall back to shop's login view if the view for LOGIN_URL "
-        "hasn't been defined.",
-    editable=False,
-    default=LOGIN_URL,
-)
-
 register_setting(
     name="TEMPLATE_ACCESSIBLE_SETTINGS", 
     description=_("Sequence of setting names available within templates."),
     editable=False,
-    default=("SHOP_CHECKOUT_ACCOUNT_ENABLED", "SHOP_CHECKOUT_STEPS_SPLIT", 
-        "SHOP_LOGIN_URL", "SHOP_MAX_PAGING_LINKS", 
+    default=("LOGIN_URL", "SHOP_CHECKOUT_ACCOUNT_ENABLED", 
+        "SHOP_CHECKOUT_STEPS_SPLIT", "SHOP_MAX_PAGING_LINKS", 
     ),
     append=True,
 )

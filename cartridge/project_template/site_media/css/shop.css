@@ -49,7 +49,8 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
 #variations li, #product-images-large li, #product-images-thumb li {
     margin:0; list-style-type:none; display:inline;}
 
-#checkout-form, #add-cart {width:100%; padding:10px 0;}
+.login-signup form, #checkout-form, #add-cart {width:100%; padding:10px 0;}
+.login-signup form {margin-bottom:20px;}
 #checkout-form p {margin:0 10px;}
 #checkout li {margin:2px 0; list-style-type:none;}
 

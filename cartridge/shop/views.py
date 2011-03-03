@@ -230,8 +230,8 @@ def checkout_steps(request):
     # LOGIN_URL and fall back to our own login view.
     authenticated = request.user.is_authenticated()
     if settings.SHOP_CHECKOUT_ACCOUNT_REQUIRED and not authenticated:
-        u = "%s?next=%s" % (settings.SHOP_LOGIN_URL, reverse("shop_checkout"))
-        return HttpResponseRedirect(u)
+        url = "%s?next=%s" % (settings.LOGIN_URL, reverse("shop_checkout"))
+        return HttpResponseRedirect(url)
     
     step = int(request.POST.get("step", checkout.CHECKOUT_STEP_FIRST))
     initial = checkout.initial_order_data(request)

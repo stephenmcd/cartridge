@@ -91,13 +91,6 @@ Dotted package path and class name of the function that is called on submit of t
 
 Default: ``'cartridge.shop.checkout.default_payment_handler'``
 
-``SHOP_LOGIN_URL``
-------------------
-
-Fall back to shop's login view if the view for LOGIN_URL hasn't been defined.
-
-Default: ``[dynamic]``
-
 ``SHOP_MAX_PAGING_LINKS``
 -------------------------
 

@@ -102,7 +102,7 @@
             <a href="{% url shop_logout %}?next={{ request.path }}"
                 >{% trans "Log out" %}</a>
             {% else %}
-            <a href="{{ settings.SHOP_LOGIN_URL }}?next={{ request.path }}"
+            <a href="{{ settings.LOGIN_URL }}?next={{ request.path }}"
                 >{% trans "Log in or sign up" %}</a>
             {% endif %}
         </div>
