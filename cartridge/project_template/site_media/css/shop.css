@@ -5,8 +5,8 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
 .checkbox input {float:left;}
 
 #account, #cart-panel {margin:20px 0;}
-#cart-panel {background:#333; padding:10px;} 
-#cart-panel, #cart-panel a {color:#eee; font-weight:bold; line-height:20px;}
+#cart-panel {background:#555; padding:10px; border-radius:3px;} 
+#cart-panel, #cart-panel a {color:#fff; font-weight:bold; line-height:20px;}
 #product-images-thumb img {margin:10px; margin-left:0;}
 #variations {margin-bottom:20px;}
 
