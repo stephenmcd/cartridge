@@ -224,4 +224,3 @@ latex_documents = [
 html_use_index = False
 html_theme_path = ["."]
 html_theme = "mezzanine_theme"
-
