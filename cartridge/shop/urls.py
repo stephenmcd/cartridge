@@ -13,7 +13,7 @@ urlpatterns = patterns("cartridge.shop.views",
     url("^checkout/complete/$", "complete", name="shop_complete"),
 )
 
-if settings.SHOP_CHECKOUT_ACCOUNT_ENABLED:
+if getattr(settings, "SHOP_CHECKOUT_ACCOUNT_ENABLED", False):
     urlpatterns += patterns("cartridge.shop.views",
         url("^account/$", "account", name="shop_account"),
         url("^logout/$", "logout", name="shop_logout"),

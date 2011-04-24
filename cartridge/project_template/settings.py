@@ -88,13 +88,10 @@ from mezzanine.project_template.settings import *
 # mezzanine.conf.defaults, but can be uncommented below in
 # order to override their defaults.
 
-# Name of the current theme to host during theme development.
-# THEME = ""
-
 # Controls the ordering and grouping of the admin menu.
 ADMIN_MENU_ORDER = (
-    (_("Content"), ("pages.Page", "blog.BlogPost", "blog.Comment",
-        (_("Media Library"), "fb_browse"),)),
+     (_("Content"), ("pages.Page", "blog.BlogPost",
+        "generic.ThreadedComment", (_("Media Library"), "fb_browse"),)),
     (_("Shop"), ("shop.Product", "shop.ProductOption", "shop.DiscountCode",
         "shop.Sale", "shop.Order")),
     (_("Site"), ("sites.Site", "redirects.Redirect", "conf.Setting")),
@@ -108,6 +105,14 @@ ADMIN_MENU_ORDER = (
 #     ("blog_tags.recent_comments",),
 #     ("mezzanine_tags.recent_actions",),
 # )
+
+# Name of the current theme to host during theme development.
+# THEME = ""
+
+# If True, the south application will be automatically added to the
+# INSTALLED_APPS setting. This setting is not defined in
+# mezzanine.conf.defaults as is the case with the above settings.
+USE_SOUTH = False
 
 
 ########################
