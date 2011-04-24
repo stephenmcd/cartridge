@@ -8,11 +8,11 @@ from mezzanine.project_template.settings import *
 # CARTRIDGE SETTINGS #
 ######################
 
-# The following Cartridge settings are already defined in 
-# cartridge.shop.defaults, but can be uncommented below in 
+# The following Cartridge settings are already defined in
+# cartridge.shop.defaults, but can be uncommented below in
 # order to override their defaults.
 
-# If True, users will be automatically redirect to HTTPS for the 
+# If True, users will be automatically redirect to HTTPS for the
 # checkout process.
 # SHOP_SSL_ENABLED = False
 
@@ -25,44 +25,44 @@ from mezzanine.project_template.settings import *
 # If True, users must create a login for the checkout process.
 # SHOP_CHECKOUT_ACCOUNT_REQUIRED = False
 
-# If True, the checkout process is split into separate 
+# If True, the checkout process is split into separate
 # billing/shipping and payment steps.
 # SHOP_CHECKOUT_STEPS_SPLIT = True
 
-# If True, the checkout process has a final confirmation step before 
+# If True, the checkout process has a final confirmation step before
 # completion.
 # SHOP_CHECKOUT_STEPS_CONFIRMATION = True
 
-# Controls the formatting of monetary values accord to the locale 
-# module in the python standard library. If an empty string is 
+# Controls the formatting of monetary values accord to the locale
+# module in the python standard library. If an empty string is
 # used, will fall back to the system's locale.
 # SHOP_CURRENCY_LOCALE = ""
 
 # Default cost of shipping when no custom shipping is implemented.
 # SHOP_DEFAULT_SHIPPING_VALUE = 10
 
-# Host name that the site should always be accessed via that matches 
+# Host name that the site should always be accessed via that matches
 # the SSL certificate.
 # SHOP_FORCE_HOST = ""
 
-# Sequence of view names that will be forced to run over SSL when 
+# Sequence of view names that will be forced to run over SSL when
 # SSL_ENABLED is True.
 # SHOP_FORCE_SSL_VIEWS = ("shop_checkout", "shop_complete", "shop_account")
 
-# Dotted package path and class name of the function that 
-# is called on submit of the billing/shipping checkout step. This 
-# is where shipping calculation can be performed and set using the 
+# Dotted package path and class name of the function that
+# is called on submit of the billing/shipping checkout step. This
+# is where shipping calculation can be performed and set using the
 # function ``cartridge.shop.utils.set_shipping``.
 # SHOP_HANDLER_BILLING_SHIPPING = "cartridge.shop.checkout.default_billship_handler"
 
-# Dotted package path and class name of the function that 
-# is called once an order is successful and all of the order 
-# object's data has been created. This is where any custom order 
+# Dotted package path and class name of the function that
+# is called once an order is successful and all of the order
+# object's data has been created. This is where any custom order
 # processing should be implemented.
 # SHOP_HANDLER_ORDER = "cartridge.shop.checkout.default_order_handler"
 
-# Dotted package path and class name of the function that 
-# is called on submit of the payment checkout step. This is where 
+# Dotted package path and class name of the function that
+# is called on submit of the payment checkout step. This is where
 # integration with a payment gateway should be implemented.
 # SHOP_HANDLER_PAYMENT = "cartridge.shop.checkout.default_payment_handler"
 
@@ -72,7 +72,7 @@ from mezzanine.project_template.settings import *
 #     (2, _("Processed")),
 # )
 
-# Sequence of value/name pairs for types of product options, 
+# Sequence of value/name pairs for types of product options,
 # eg Size, Colour.
 # SHOP_OPTION_TYPE_CHOICES = (
 #     (1, _("Size")),
@@ -84,24 +84,24 @@ from mezzanine.project_template.settings import *
 # MEZZANINE SETTINGS #
 ######################
 
-# The following Mezzanine settings are already defined in 
-# mezzanine.conf.defaults, but can be uncommented below in 
+# The following Mezzanine settings are already defined in
+# mezzanine.conf.defaults, but can be uncommented below in
 # order to override their defaults.
 
 # Name of the current theme to host during theme development.
 # THEME = ""
 
-# Controls the ordering and grouping of the admin menu. 
+# Controls the ordering and grouping of the admin menu.
 ADMIN_MENU_ORDER = (
     (_("Content"), ("pages.Page", "blog.BlogPost", "blog.Comment",
         (_("Media Library"), "fb_browse"),)),
-    (_("Shop"), ("shop.Product", "shop.ProductOption", "shop.DiscountCode", 
+    (_("Shop"), ("shop.Product", "shop.ProductOption", "shop.DiscountCode",
         "shop.Sale", "shop.Order")),
     (_("Site"), ("sites.Site", "redirects.Redirect", "conf.Setting")),
     (_("Users"), ("auth.User", "auth.Group",)),
 )
 
-# A three item sequence, each containing a sequence of template tags 
+# A three item sequence, each containing a sequence of template tags
 # used to render the admin dashboard.
 # DASHBOARD_TAGS = (
 #     ("blog_tags.quick_blog", "mezzanine_tags.app_list"),
@@ -134,8 +134,8 @@ TIME_ZONE = ""
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = "en"
 
-# A boolean that turns on/off debug mode. When set to ``True``, stack traces 
-# are displayed for error pages. Should always be set to ``False`` in 
+# A boolean that turns on/off debug mode. When set to ``True``, stack traces
+# are displayed for error pages. Should always be set to ``False`` in
 # production. Best set to ``True`` in local_settings.py
 DEBUG = False
 
@@ -197,8 +197,8 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 # Name of the directory for the project.
 PROJECT_DIRNAME = PROJECT_ROOT.split(os.sep)[-1]
 
-# Every cache key will get prefixed with this value - here we set it to 
-# the name of the directory the project is in to try and use something 
+# Every cache key will get prefixed with this value - here we set it to
+# the name of the directory the project is in to try and use something
 # project specific.
 CACHE_MIDDLEWARE_KEY_PREFIX = PROJECT_DIRNAME
 
@@ -252,8 +252,8 @@ MIDDLEWARE_CLASSES = tuple(MIDDLEWARE_CLASSES) + (
 # LOCAL SETTINGS #
 ##################
 
-# Allow any settings to be defined in local_settings.py which should be 
-# ignored in your version control system allowing for settings to be 
+# Allow any settings to be defined in local_settings.py which should be
+# ignored in your version control system allowing for settings to be
 # defined per machine.
 try:
     from local_settings import *
@@ -265,8 +265,8 @@ except ImportError:
 # DYNAMIC SETTINGS #
 ####################
 
-# set_dynamic_settings() will rewrite globals based on what has been 
-# defined so far, in order to provide some better defaults where 
+# set_dynamic_settings() will rewrite globals based on what has been
+# defined so far, in order to provide some better defaults where
 # applicable.
 from mezzanine.utils.conf import set_dynamic_settings
 set_dynamic_settings(globals())

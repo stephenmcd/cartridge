@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load mezzanine_tags shop_tags i18n %}
 
+{% block meta_title %}{% trans "Your cart" %}{% endblock %}
 {% block title %}{% trans "Your cart" %}{% endblock %}
 
 {% block breadcrumb_menu %}
@@ -49,7 +50,7 @@
 	<tr>
 		<td colspan="5">
 			<form action="{% url shop_checkout %}">
-				<input type="submit" class="button" 
+				<input type="submit" class="button"
 					value="{% trans "Go to Checkout" %}" />
 			</form>
 		</td>
@@ -91,4 +92,3 @@
 <p>{% trans "Your cart is empty." %}</p>
 {% endif %}
 {% endblock %}
-

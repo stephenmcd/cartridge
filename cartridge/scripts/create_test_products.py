@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
 """
-Stand-alone data generation routine that uses the ecommerce taxonomy found on 
-Google Base to generate a significant amount of category and product data, as 
-well as using the Flickr API to retrieve images for the products. The 
+Stand-alone data generation routine that uses the ecommerce taxonomy found on
+Google Base to generate a significant amount of category and product data, as
+well as using the Flickr API to retrieve images for the products. The
 multiprocessing module is also used for parallelization.
 
-The Django models and environment used here are specific to the Cartridge 
+The Django models and environment used here are specific to the Cartridge
 project but the approach could easily be reused with any ecommerce database.
 """
 
@@ -40,19 +40,19 @@ except ImportError:
 WORKERS = 10
 image_dir = join(settings.MEDIA_ROOT, "product")
 queue = Queue()
-product_options = {"Size": ("Small", "Medium", "Large"), 
+product_options = {"Size": ("Small", "Medium", "Large"),
     "Colour": ("Red", "Orange", "Yellow", "Green", "Blue", "Indigo", "Violet")}
 
 
 def create_products(queue):
     """
-    Download an image from Flickr for the product on the queue and if 
+    Download an image from Flickr for the product on the queue and if
     successful now or previously, create the applicable product records.
     """
 
     # Close the connection for this process to avoid the issue discussed here:
     # http://groups.google.com/group/django-users/browse_thread/thread/2c7421cdb9b99e48
-    connection.close() 
+    connection.close()
     product_options = ProductOption.objects.as_fields()
     while True:
 
@@ -83,8 +83,8 @@ def create_products(queue):
         # Create database records for the product.
         if exists(image):
             product = Category.objects.get(parent__title=main_category,
-                title=sub_category).products.create(title=product, 
-                available=True, status=CONTENT_STATUS_PUBLISHED, 
+                title=sub_category).products.create(title=product,
+                available=True, status=CONTENT_STATUS_PUBLISHED,
                 content="<p>%s</p>" % paragraph())
             image = "product/%s.jpg" % product.title
             product.images.create(file=image)
@@ -104,14 +104,14 @@ if __name__ == "__main__":
         print "Failed to load category data: %s" % e
         exit()
 
-    # Clear out the database, moving the product images to a temp location and 
+    # Clear out the database, moving the product images to a temp location and
     # restoring them so that they're not deleted.
     print "Resetting product options"
     ProductOption.objects.all().delete()
     for type, name in settings.SHOP_OPTION_TYPE_CHOICES:
         for name in product_options[unicode(name)]:
             ProductOption.objects.create(type=type, name=name)
-        
+
     Category.objects.all().delete()
     print "Deleting categories"
     Category.objects.all().delete()
@@ -122,9 +122,9 @@ if __name__ == "__main__":
     print "Restoring images"
     move("tmp_products", image_dir)
 
-    # Parse the category data into triples of main category, sub category and 
-    # product, create the categories and put the triples onto the queue. The 
-    # categories must be created here in a single process due to the non-atomic 
+    # Parse the category data into triples of main category, sub category and
+    # product, create the categories and put the triples onto the queue. The
+    # categories must be created here in a single process due to the non-atomic
     # nature of Django's Model.objects.get_or_create()
     print "Creating categories"
     for line in category_data.split("\n"):
@@ -147,4 +147,3 @@ if __name__ == "__main__":
         worker.start()
     for worker in workers:
         worker.join()
-
