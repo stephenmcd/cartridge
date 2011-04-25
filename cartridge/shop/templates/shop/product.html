@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load mezzanine_tags shop_tags i18n %}
+{% load mezzanine_tags shop_tags rating_tags i18n %}
 
 {% block meta_title %}{{ product.title }}{% endblock %}
 
@@ -21,7 +21,7 @@ $(function() {
 
 	var variations = {{ variations_json|safe }};
 	var selections = $('#add-cart select');
-	
+
 	var showImage = function(id) {
 		var image = $(id);
 		if (image.length == 1) {
@@ -29,10 +29,10 @@ $(function() {
 			image.show();
 		}
 	};
-	
-	// on selection of an option, reduce the list of variations to the one 
-	// matching all the selected options - if there is one, show it and hide 
-	// the others 
+
+	// on selection of an option, reduce the list of variations to the one
+	// matching all the selected options - if there is one, show it and hide
+	// the others
 	selections.change(function() {
 		var variation = $.grep(variations, function(v) {
 			var valid = true;
@@ -48,13 +48,13 @@ $(function() {
 		}
 	});
 	selections.change();
-	
+
 	// show enlarged image on thumbnail click
 	$('#product-images-thumb a').click(function() {
 		showImage('#' + $(this).attr('id') + '-large');
 		return false;
 	});
-	
+
 });
 </script>
 {% endblock %}
@@ -75,7 +75,7 @@ $(function() {
 {% if images %}
 <ul id="product-images-large">
 	{% for image in images %}
-	<li id="image-{{ image.id }}-large"{% if not forloop.first %} 
+	<li id="image-{{ image.id }}-large"{% if not forloop.first %}
 		style="display:none;"{% endif %}>
 		<a href="{{ MEDIA_URL }}{{ image.file }}"><img alt="{{ image.description }}"
 			src="{{ MEDIA_URL }}{% thumbnail image.file 0 300  %}" /></a></li>
@@ -84,7 +84,7 @@ $(function() {
 {% ifnotequal images|length 1 %}
 <ul id="product-images-thumb">
 	{% for image in images %}
-	<li><a id="image-{{ image.id }}" 
+	<li><a id="image-{{ image.id }}"
 		href="{{ MEDIA_URL }}{{ image.file }}"><img alt="{{ image.description }}"
 		src="{{ MEDIA_URL }}{% thumbnail image.file 75 75  %}" /></a></li>
 	{% endfor %}
@@ -109,7 +109,7 @@ $(function() {
 			{{ variation.price|currency }}
 		{% else %}
 		    {% if has_available_variations %}
-		    {% trans "The selected options are currently unavailable." %} 
+		    {% trans "The selected options are currently unavailable." %}
 		    {% endif %}
 		{% endif %}
 	</li>
@@ -124,6 +124,8 @@ $(function() {
 {% else %}
 <div>{% trans "This product is currently unavailable." %}</div>
 {% endif %}
+
+<div class="rating">{% rating_for product %}</div>
 
 {% if related_products %}
 <div class="related">

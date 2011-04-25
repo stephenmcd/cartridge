@@ -38,7 +38,7 @@ try:
         packages=find_packages(),
 
         install_requires=[
-            "mezzanine >= 0.10.3",
+            "mezzanine >= 0.11",
         ],
 
         classifiers=[

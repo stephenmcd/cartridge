@@ -11,6 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 from mezzanine.conf import settings
 from mezzanine.core.managers import DisplayableManager
 from mezzanine.core.models import Displayable, Content
+from mezzanine.generic.fields import RatingField
 from mezzanine.pages.models import Page
 
 from cartridge.shop import fields, managers
@@ -140,6 +141,7 @@ class Product(Displayable, Priced, Content):
                                       null=True)
     related_products = models.ManyToManyField("self", blank=True)
     upsell_products = models.ManyToManyField("self", blank=True)
+    rating = RatingField(verbose_name=_("Rating"))
 
     objects = DisplayableManager()
 

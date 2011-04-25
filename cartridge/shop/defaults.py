@@ -18,7 +18,7 @@ register_setting(
     description="Number of minutes of inactivity until carts are abandoned.",
     editable=False,
     default=30,
-) 
+)
 
 register_setting(
     name="SHOP_CHECKOUT_ACCOUNT_ENABLED",
@@ -32,7 +32,7 @@ register_setting(
     description="If True, users must create a login for the checkout process.",
     editable=False,
     default=False,
-)    
+)
 
 register_setting(
     name="SHOP_CHECKOUT_STEPS_SPLIT",
@@ -171,6 +171,7 @@ register_setting(
         (_("Least expensive"), "unit_price"),
         (_("Most expensive"), "-unit_price"),
         (_("Recently added"), "-date_added"),
+        (_("Highest rated"), "-rating_average"),
     ),
 )
 
@@ -183,11 +184,11 @@ register_setting(
 )
 
 register_setting(
-    name="TEMPLATE_ACCESSIBLE_SETTINGS", 
+    name="TEMPLATE_ACCESSIBLE_SETTINGS",
     description=_("Sequence of setting names available within templates."),
     editable=False,
-    default=("LOGIN_URL", "SHOP_CHECKOUT_ACCOUNT_ENABLED", 
-        "SHOP_CHECKOUT_STEPS_SPLIT", "SHOP_MAX_PAGING_LINKS", 
+    default=("LOGIN_URL", "SHOP_CHECKOUT_ACCOUNT_ENABLED",
+        "SHOP_CHECKOUT_STEPS_SPLIT", "SHOP_MAX_PAGING_LINKS",
     ),
     append=True,
 )
