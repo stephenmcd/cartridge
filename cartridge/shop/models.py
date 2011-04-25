@@ -20,7 +20,7 @@ class Category(Page, Content):
     """
     A category of products on the website.
     """
-    
+
     options = models.ManyToManyField("ProductOption", blank=True,
                                      related_name="product_options")
     sale = models.ForeignKey("Sale", blank=True, null=True)
@@ -45,17 +45,17 @@ class Category(Page, Content):
         if options:
             lookup = dict([("%s__in" % k, v) for k, v in options.items()])
             filters.append(Q(**lookup))
-        # Q objects used against variations to ensure sale date is 
+        # Q objects used against variations to ensure sale date is
         # valid when filtering by sale, or sale price.
         now = datetime.now()
         valid_sale_from = Q(sale_from__isnull=True) | Q(sale_from__lte=now)
         valid_sale_to = Q(sale_to__isnull=True) | Q(sale_to__gte=now)
         valid_sale_date = valid_sale_from & valid_sale_to
-        # Filter by variations with the selected sale if the sale date 
+        # Filter by variations with the selected sale if the sale date
         # is valid.
         if self.sale_id:
             filters.append(Q(sale_id=self.sale_id) & valid_sale_date)
-        # If a price range is specified, use either the unit price or 
+        # If a price range is specified, use either the unit price or
         # a sale price if the sale date is valid.
         if self.price_min or self.price_max:
             prices = []
@@ -73,9 +73,9 @@ class Category(Page, Content):
             filters = reduce(operator, filters)
             variations = ProductVariation.objects.filter(filters)
             filters = [Q(variations__in=variations)]
-            # If filters exist, checking that products have been 
-            # selected is neccessary as combining the variations 
-            # with an empty ID list lookup and ``AND`` will always 
+            # If filters exist, checking that products have been
+            # selected is neccessary as combining the variations
+            # with an empty ID list lookup and ``AND`` will always
             # result in an empty result.
             if self.products.count() > 0:
                 filters.append(products)
@@ -85,7 +85,7 @@ class Category(Page, Content):
 
 class Priced(models.Model):
     """
-    Abstract model with unit and sale price fields. Inherited by 
+    Abstract model with unit and sale price fields. Inherited by
     ``Product`` and ``ProductVariation`` models.
     """
 
@@ -111,11 +111,11 @@ class Priced(models.Model):
         """
         Returns True if there is a valid price.
         """
-        return self.on_sale() or self.unit_price is not None 
-    
+        return self.on_sale() or self.unit_price is not None
+
     def price(self):
         """
-        Returns the actual price - sale price if applicable otherwise 
+        Returns the actual price - sale price if applicable otherwise
         the unit price.
         """
         if self.on_sale():
@@ -127,16 +127,16 @@ class Priced(models.Model):
 
 class Product(Displayable, Priced, Content):
     """
-    Container model for a product that stores information common to 
+    Container model for a product that stores information common to
     all of its variations such as the product's title and description.
     """
 
-    available = models.BooleanField(_("Available for purchase"), 
+    available = models.BooleanField(_("Available for purchase"),
                                     default=False)
     image = CharField(max_length=100, blank=True, null=True)
-    categories = models.ManyToManyField("Category", blank=True, 
+    categories = models.ManyToManyField("Category", blank=True,
                                         related_name="products")
-    date_added = models.DateTimeField(_("Date added"), auto_now_add=True, 
+    date_added = models.DateTimeField(_("Date added"), auto_now_add=True,
                                       null=True)
     related_products = models.ManyToManyField("self", blank=True)
     upsell_products = models.ManyToManyField("self", blank=True)
@@ -175,21 +175,21 @@ class Product(Displayable, Priced, Content):
 
 class ProductImage(models.Model):
     """
-    An image for a product - a relationship is also defined with the 
-    product's variations so that each variation can potentially have 
-    it own image, while the relationship between the ``Product`` and 
-    ``ProductImage`` models ensures there is a single set of images 
+    An image for a product - a relationship is also defined with the
+    product's variations so that each variation can potentially have
+    it own image, while the relationship between the ``Product`` and
+    ``ProductImage`` models ensures there is a single set of images
     for the product.
     """
-    
+
     file = models.ImageField(_("Image"), upload_to="product")
     description = CharField(_("Description"), blank=True, max_length=100)
     product = models.ForeignKey("Product", related_name="images")
-    
+
     class Meta:
         verbose_name = _("Image")
         verbose_name_plural = _("Images")
-    
+
     def __unicode__(self):
         value = self.description
         if not value:
@@ -203,10 +203,10 @@ class ProductOption(models.Model):
     """
     A selectable option for a product such as size or colour.
     """
-    type = models.IntegerField(_("Type"), 
+    type = models.IntegerField(_("Type"),
                                choices=settings.SHOP_OPTION_TYPE_CHOICES)
     name = fields.OptionField(_("Name"))
-    
+
     objects = managers.ProductOptionManager()
 
     def __unicode__(self):
@@ -219,8 +219,8 @@ class ProductOption(models.Model):
 
 class ProductVariationMetaclass(ModelBase):
     """
-    Metaclass for the ``ProductVariation`` model that dynamcally 
-    assigns an ``fields.OptionField`` for each option in the 
+    Metaclass for the ``ProductVariation`` model that dynamcally
+    assigns an ``fields.OptionField`` for each option in the
     ``SHOP_PRODUCT_OPTIONS`` setting.
     """
     def __new__(cls, name, bases, attrs):
@@ -232,14 +232,14 @@ class ProductVariationMetaclass(ModelBase):
 
 class ProductVariation(Priced):
     """
-    A combination of selected options from 
+    A combination of selected options from
     ``SHOP_OPTION_TYPE_CHOICES`` for a ``Product`` instance.
     """
-    
+
     product = models.ForeignKey("Product", related_name="variations")
     sku = fields.SKUField(unique=True)
-    num_in_stock = models.IntegerField(_("Number in stock"), blank=True, 
-                                       null=True) 
+    num_in_stock = models.IntegerField(_("Number in stock"), blank=True,
+                                       null=True)
     default = models.BooleanField(_("Default"))
     image = models.ForeignKey("ProductImage", null=True, blank=True)
 
@@ -249,7 +249,7 @@ class ProductVariation(Priced):
 
     class Meta:
         ordering = ("-default",)
-        
+
     def __unicode__(self):
         """
         Display the option names and values for the variation.
@@ -257,14 +257,14 @@ class ProductVariation(Priced):
         options = []
         for field in self.option_fields():
             if getattr(self, field.name) is not None:
-                options.append("%s: %s" % (unicode(field.verbose_name), 
+                options.append("%s: %s" % (unicode(field.verbose_name),
                                            getattr(self, field.name)))
         return ("%s %s" % (unicode(self.product), ", ".join(options))).strip()
-    
+
     def save(self, *args, **kwargs):
         """
-        Use the variation's ID as the SKU when the variation is first 
-        created and set the variation's image to be the first image of 
+        Use the variation's ID as the SKU when the variation is first
+        created and set the variation's image to be the first image of
         the product if no image is chosen for the variation.
         """
         super(ProductVariation, self).save(*args, **kwargs)
@@ -286,24 +286,24 @@ class ProductVariation(Priced):
     @classmethod
     def option_fields(cls):
         """
-        Returns each of the model fields that are dynamically created 
-        from ``SHOP_OPTION_TYPE_CHOICES`` in 
+        Returns each of the model fields that are dynamically created
+        from ``SHOP_OPTION_TYPE_CHOICES`` in
         ``ProductVariationMetaclass``.
         """
         all_fields = cls._meta.fields
         return [f for f in all_fields if isinstance(f, fields.OptionField)]
-    
+
     def options(self):
         """
-        Returns the field values of each of the model fields that are 
-        dynamically created from ``SHOP_OPTION_TYPE_CHOICES`` in 
+        Returns the field values of each of the model fields that are
+        dynamically created from ``SHOP_OPTION_TYPE_CHOICES`` in
         ``ProductVariationMetaclass``.
         """
         return [getattr(self, field.name) for field in self.option_fields()]
 
     def has_stock(self, quantity=1):
         """
-        Checks the given quantity is in stock, taking into account the 
+        Checks the given quantity is in stock, taking into account the
         number in carts. Also caches the number for subsequent lookups.
         """
         if self.num_in_stock is None or quantity == 0:
@@ -338,7 +338,7 @@ class Order(models.Model):
     shipping_detail_postcode = CharField(_("Zip/Postcode"), max_length=10)
     shipping_detail_country = CharField(_("Country"), max_length=100)
     shipping_detail_phone = CharField(_("Phone"), max_length=20)
-    additional_instructions = models.TextField(_("Additional instructions"), 
+    additional_instructions = models.TextField(_("Additional instructions"),
                                                blank=True)
     time = models.DateTimeField(_("Time"), auto_now_add=True, null=True)
     key = CharField(max_length=40)
@@ -350,16 +350,16 @@ class Order(models.Model):
     discount_total = fields.MoneyField(_("Discount total"))
     total = fields.MoneyField(_("Order total"))
 
-    status = models.IntegerField(_("Status"), 
-                            choices=settings.SHOP_ORDER_STATUS_CHOICES, 
+    status = models.IntegerField(_("Status"),
+                            choices=settings.SHOP_ORDER_STATUS_CHOICES,
                             default=settings.SHOP_ORDER_STATUS_CHOICES[0][0])
 
     objects = managers.OrderManager()
 
-    # These are fields that are stored in the session. They're copied to 
+    # These are fields that are stored in the session. They're copied to
     # the order in setup() and removed from the session in complete().
     session_fields = ("shipping_type", "shipping_total", "discount_total")
-    
+
     class Meta:
         verbose_name = _("Order")
         verbose_name_plural = _("Orders")
@@ -369,18 +369,18 @@ class Order(models.Model):
         return "#%s %s %s" % (self.id, self.billing_name(), self.time)
 
     def billing_name(self):
-        return "%s %s" % (self.billing_detail_first_name, 
+        return "%s %s" % (self.billing_detail_first_name,
                           self.billing_detail_last_name)
 
     def setup(self, request=None):
         """
-        Set order fields that are stored in the session, item_total 
-        and total based on the given cart, and copy the cart items 
-        to the order. Called in the final step of the checkout process 
+        Set order fields that are stored in the session, item_total
+        and total based on the given cart, and copy the cart items
+        to the order. Called in the final step of the checkout process
         prior to the payment handler being called.
         """
         self.key = request.session.session_key
-        self.user_id = request.user.id    
+        self.user_id = request.user.id
         for field in self.session_fields:
             if field in request.session:
                 setattr(self, field, request.session[field])
@@ -398,8 +398,8 @@ class Order(models.Model):
 
     def complete(self, request):
         """
-        Remove order fields that are stored in the session, reduce 
-        the stock level for the items in the order, and then delete 
+        Remove order fields that are stored in the session, reduce
+        the stock level for the items in the order, and then delete
         the cart.
         """
         for field in self.session_fields:
@@ -421,26 +421,26 @@ class Order(models.Model):
 
 class Cart(models.Model):
 
-    last_updated = models.DateTimeField(_("Last updated"), auto_now=True, 
+    last_updated = models.DateTimeField(_("Last updated"), auto_now=True,
                                         null=True)
 
     objects = managers.CartManager()
 
     def __iter__(self):
         """
-        Allow the cart to be iterated giving access to the cart's items, 
+        Allow the cart to be iterated giving access to the cart's items,
         ensuring the items are only retrieved once and cached.
         """
         if not hasattr(self, "_cached_items"):
             self._cached_items = self.items.all()
         return iter(self._cached_items)
-        
+
     def add_item(self, variation, quantity):
         """
-        Increase quantity of existing item if SKU matches, otherwise create 
+        Increase quantity of existing item if SKU matches, otherwise create
         new.
         """
-        item, created = self.items.get_or_create(sku=variation.sku, 
+        item, created = self.items.get_or_create(sku=variation.sku,
                                                  unit_price=variation.price())
         if created:
             item.description = unicode(variation)
@@ -452,7 +452,7 @@ class Cart(models.Model):
             variation.product.actions.added_to_cart()
         item.quantity += quantity
         item.save()
-            
+
     def remove_item(self, item_id):
         """
         Remove item by SKU.
@@ -461,19 +461,19 @@ class Cart(models.Model):
             self.items.get(id=item_id).delete()
         except CartItem.DoesNotExist:
             pass
-        
+
     def has_items(self):
         """
         Template helper function - does the cart have items?
         """
-        return len(list(self)) > 0 
-    
+        return len(list(self)) > 0
+
     def total_quantity(self):
         """
         Template helper function - sum of all item quantities.
         """
         return sum([item.quantity for item in self])
-        
+
     def total_price(self):
         """
         Template helper function - sum of all costs of item quantities.
@@ -500,13 +500,13 @@ class SelectedProduct(models.Model):
     quantity = models.IntegerField(_("Quantity"), default=0)
     unit_price = fields.MoneyField(_("Unit price"), default=Decimal("0"))
     total_price = fields.MoneyField(_("Total price"), default=Decimal("0"))
-    
+
     class Meta:
         abstract = True
-        
+
     def __unicode__(self):
         return ""
-    
+
     def save(self, *args, **kwargs):
         self.total_price = self.unit_price * self.quantity
         super(SelectedProduct, self).save(*args, **kwargs)
@@ -517,7 +517,7 @@ class CartItem(SelectedProduct):
     cart = models.ForeignKey("Cart", related_name="items")
     url = CharField(max_length=200)
     image = CharField(max_length=200, null=True)
-    
+
     def get_absolute_url(self):
         return self.url
 
@@ -531,12 +531,12 @@ class OrderItem(SelectedProduct):
 
 class ProductAction(models.Model):
     """
-    Records an incremental value for an action against a product such 
-    as adding to cart or purchasing, for sales reporting and 
-    calculating popularity. Not yet used but will be used for product 
+    Records an incremental value for an action against a product such
+    as adding to cart or purchasing, for sales reporting and
+    calculating popularity. Not yet used but will be used for product
     popularity and sales reporting.
     """
-        
+
     product = models.ForeignKey("Product", related_name="actions")
     timestamp = models.IntegerField()
     total_cart = models.IntegerField(default=0)
@@ -550,20 +550,20 @@ class ProductAction(models.Model):
 
 class Discount(models.Model):
     """
-    Abstract model representing one of several types of monetary 
-    reductions, as well as a date range they're applicable for, and 
-    the products and products in categories that the reduction is 
+    Abstract model representing one of several types of monetary
+    reductions, as well as a date range they're applicable for, and
+    the products and products in categories that the reduction is
     applicable for.
     """
 
     title = CharField(max_length=100)
     active = models.BooleanField(_("Active"))
     products = models.ManyToManyField("Product", blank=True)
-    categories = models.ManyToManyField("Category", blank=True, 
+    categories = models.ManyToManyField("Category", blank=True,
                                         related_name="%(class)s_related")
     discount_deduct = fields.MoneyField(_("Reduce by amount"))
-    discount_percent = models.DecimalField(_("Reduce by percent"), 
-                                           max_digits=4, decimal_places=2, 
+    discount_percent = models.DecimalField(_("Reduce by percent"),
+                                           max_digits=4, decimal_places=2,
                                            blank=True, null=True)
     discount_exact = fields.MoneyField(_("Reduce to amount"))
     valid_from = models.DateTimeField(_("Valid from"), blank=True, null=True)
@@ -574,10 +574,10 @@ class Discount(models.Model):
 
     def __unicode__(self):
         return self.title
-        
+
     def all_products(self):
         """
-        Return the selected products as well as the products in the 
+        Return the selected products as well as the products in the
         selected categories.
         """
         filters = [category.filters() for category in self.categories.all()]
@@ -587,18 +587,18 @@ class Discount(models.Model):
 
 class Sale(Discount):
     """
-    Stores sales field values for price and date range which when saved 
-    are then applied across products and variations according to the 
+    Stores sales field values for price and date range which when saved
+    are then applied across products and variations according to the
     selected categories and products for the sale.
     """
-    
+
     class Meta:
         verbose_name = _("Sale")
         verbose_name_plural = _("Sales")
-    
+
     def save(self, *args, **kwargs):
         """
-        Apply sales field value to products and variations according 
+        Apply sales field value to products and variations according
         to the selected categories and products for the sale.
         """
         super(Sale, self).save(*args, **kwargs)
@@ -606,7 +606,7 @@ class Sale(Discount):
         if self.active:
             extra_filter = {}
             if self.discount_deduct is not None:
-                # Don't apply to prices that would be negative 
+                # Don't apply to prices that would be negative
                 # after deduction.
                 extra_filter["unit_price__gt"] = self.discount_deduct
                 sale_price = models.F("unit_price") - self.discount_deduct
@@ -614,7 +614,7 @@ class Sale(Discount):
                 sale_price = models.F("unit_price") - (
                     models.F("unit_price") / "100.0" * self.discount_percent)
             elif self.discount_exact is not None:
-                # Don't apply to prices that are cheaper than the sale 
+                # Don't apply to prices that are cheaper than the sale
                 # amount.
                 extra_filter["unit_price__gt"] = self.discount_exact
                 sale_price = self.discount_exact
@@ -623,20 +623,20 @@ class Sale(Discount):
             products = self.all_products()
             variations = ProductVariation.objects.filter(product__in=products)
             for priced_objects in (products, variations):
-                # MySQL will raise a 'Data truncated' warning here in 
-                # some scenarios, presumably when doing a calculation 
-                # that exceeds the precision of the price column. In 
-                # this case it's safe to ignore it and the calculation 
+                # MySQL will raise a 'Data truncated' warning here in
+                # some scenarios, presumably when doing a calculation
+                # that exceeds the precision of the price column. In
+                # this case it's safe to ignore it and the calculation
                 # will still be applied.
                 try:
-                    update = {"sale_id": self.id, 
-                              "sale_price": sale_price, 
-                              "sale_to": self.valid_to, 
+                    update = {"sale_id": self.id,
+                              "sale_price": sale_price,
+                              "sale_to": self.valid_to,
                               "sale_from": self.valid_from}
                     priced_objects.filter(**extra_filter).update(**update)
                 except Warning:
                     pass
-    
+
     def delete(self, *args, **kwargs):
         """
         Clear this sale from products when deleting the sale.
@@ -646,7 +646,7 @@ class Sale(Discount):
 
     def _clear(self):
         """
-        Clears previously applied sale field values from products prior 
+        Clears previously applied sale field values from products prior
         to updating the sale, when deactivating it or deleting it.
         """
         update = {"sale_id": None, "sale_price": None,
@@ -657,22 +657,22 @@ class Sale(Discount):
 
 class DiscountCode(Discount):
     """
-    A code that can be entered at the checkout process to have a 
+    A code that can be entered at the checkout process to have a
     discount applied to the total purchase amount.
     """
-    
+
     code = fields.DiscountCodeField(_("Code"), unique=True)
     min_purchase = fields.MoneyField(_("Minimum total purchase"))
     free_shipping = models.BooleanField(_("Free shipping"))
 
     objects = managers.DiscountCodeManager()
-    
+
     def calculate(self, amount):
         """
         Calculates the discount for the given amount.
         """
         if self.discount_deduct is not None:
-            # Don't apply to amounts that would be negative after 
+            # Don't apply to amounts that would be negative after
             # deduction.
             if self.discount_deduct < amount:
                 return self.discount_deduct
