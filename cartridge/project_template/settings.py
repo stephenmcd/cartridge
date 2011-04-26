@@ -235,7 +235,7 @@ LOGIN_URL = "/shop/account/"
 # APPLICATIONS #
 ################
 
-INSTALLED_APPS = ("cartridge.shop",) + tuple(INSTALLED_APPS)
+INSTALLED_APPS = tuple(INSTALLED_APPS) + ("cartridge.shop",)
 
 # List of processors used by RequestContext to populate the context.
 # Each one should be a callable that takes the request object as its
