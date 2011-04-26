@@ -42,7 +42,7 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
     .product-paging ul {float:left; padding:0 5px 0 0; margin:0;
     font-size:.8em;}
 .product-sorting ul {padding-top:2px !important;}
-.product-sorting li {margin:5px 2px !important; display:inline; font-size:.95em;}
+.product-sorting li {margin:5px 2px !important; display:inline; font-size:.9em;}
 .price {font-size:.8em;}
 .old-price {text-decoration: line-through;}
 

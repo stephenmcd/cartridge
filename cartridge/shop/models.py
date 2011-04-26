@@ -10,14 +10,14 @@ from django.utils.translation import ugettext_lazy as _
 
 from mezzanine.conf import settings
 from mezzanine.core.managers import DisplayableManager
-from mezzanine.core.models import Displayable, Content
+from mezzanine.core.models import Displayable, RichText
 from mezzanine.generic.fields import RatingField
 from mezzanine.pages.models import Page
 
 from cartridge.shop import fields, managers
 
 
-class Category(Page, Content):
+class Category(Page, RichText):
     """
     A category of products on the website.
     """
@@ -126,7 +126,7 @@ class Priced(models.Model):
         return Decimal("0")
 
 
-class Product(Displayable, Priced, Content):
+class Product(Displayable, Priced, RichText):
     """
     Container model for a product that stores information common to
     all of its variations such as the product's title and description.
