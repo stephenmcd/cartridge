@@ -235,7 +235,15 @@ LOGIN_URL = "/shop/account/"
 # APPLICATIONS #
 ################
 
-INSTALLED_APPS = tuple(INSTALLED_APPS) + ("cartridge.shop",)
+# django.contrib.sites should be before cartridge.shop to avoid a
+# foreign key error when installing the test fixtures with Postgres,
+# and cartridge.shop should be before mezzanine.core so that the
+# shop's base template is loaded over mezzanine's.
+
+INSTALLED_APPS = list(INSTALLED_APPS)
+INSTALLED_APPS.remove("django.contrib.sites")
+INSTALLED_APPS = tuple(INSTALLED_APPS)
+INSTALLED_APPS = ("django.contrib.sites", "cartridge.shop") + INSTALLED_APPS
 
 # List of processors used by RequestContext to populate the context.
 # Each one should be a callable that takes the request object as its
