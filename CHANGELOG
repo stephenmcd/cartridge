@@ -1,4 +1,73 @@
-Version 0.1.8 (Feb 04, 2011)
+Version 0.2 (Apr 30, 2011)
+--------------------------
+
+  * Added fieldset grouping of fields in checkout confirmation step - stephenmcd
+  * Restored messages in templates - stephenmcd
+  * Fixed settings name and sys.path change in dummy product script - stephenmcd
+  * Fixed minor formatting and spelling in billing/shipping form - stephenmcd
+  * Fixed ``CHECKOUT_STEP_FIRST`` template variable name in checkout - stephenmcd
+  * Added a SHOP_DEFAULT_SHIPPING_VALUE editable setting which is used in the default billing/shipping handler. Changed the prefix of default handlers from ``dummy_`` to ``default_``. Also changed the display of shipping to use the value of the shipping type - stephenmcd
+  * Added a "Powered by Cartridge" link - stephenmcd
+  * Cleaned up formatting in docstrings and made minor refactorings in view functions for readability - stephenmcd
+  * Hide the category add button in the product change form since the parent context of the category is not available - stephenmcd
+  * Added "Buy now" link to cart panel - stephenmcd
+  * added order_complete signal - Josh Cartmell
+  * Updated payment handler to expect an order to be returned.  By creating the order instance in the payment handler an order id can be sent to the payment gateway.  The order is deleted if payment fails - Josh Cartmell
+  * Changed ``shop.checkout.CHECKOUT_TEMPLATES`` to ``shop.checkout.CHECKOUT_STEPS`` which is a list of dicts. The template is now stored here along with a title and URL for each step. The steps are passed to the template and the title of each is used to replace the breadcrumb nav with a checkout progress indiciator. The URL for each step is assigned to a JavaScript variable which Mezzanine's Google Anayltics code will check for and use as a virtual pageview to track, allowing each checkout step to be tracked uniquely - stephenmcd
+  * added authorize.net payment module.  It is functional but does not include the cost of shipping.  Need to find a way to access shipping total - Josh Cartmell
+  * moved order creation and deletion out of payment processor - Josh Cartmell
+  * Added fixed-width formatting around the order totals HTML - stephenmcd
+  * Changed the text against the discount amount to use the title of the discount - stephenmcd
+  * Fixed free shipping discount by setting the shipping to free shipping when the discount is known - stephenmcd
+  * Refactored the checkout view so that the order object is created with totals available prior to the payment handler being called - stephenmcd
+  * Refactored checkout process - methods on order objects are now ``prepare`` and ``process`` which occur before and after the payment handler. The ``prepare`` method is responsible for creating all available order data such as totals and cart items. The ``process`` method is responsible for all cleanup such as reducing stock and removing session vars. Also moved the ``order_complete`` signal to a handler style method like billing/shipping and payment, defined by the setting ``SHOP_HANDLER_ORDER`` - stephenmcd
+  * Added Google Analytics order tracking - stephenmcd
+  * Formatting fixes - stephenmcd
+  * Fixed shipping details and commented out unused vars in authorize.net payment handler - stephenmcd
+  * Added tests for the order process - stephenmcd
+  * Removed debugging from tests - stephenmcd
+  * Changed checkout handler loading to allow for no handlers to be explicitly specified - stephenmcd
+  * Updated integration docs for latest version of checkout - stephenmcd
+  * Fixed formatting in managers module - stephenmcd
+  * Added initial version of category filters - stephenmcd
+  * Added Josh Cartmell to AUTHORS - stephenmcd
+  * Refactored category filters to ensure an empty explicit product list doesn't cancel out all filters, and that variation based filters when combined are applied in combination to individual variations. Also removed reverse related products field on category since this doesn't work in Django 1.2 and up - stephenmcd
+  * Added default ``combined`` value to category fixture - stephenmcd
+  * Refactored ``category.filters`` to not require extra products query if no filters are specified - stephenmcd
+  * Added ``distinct`` calls to each use of category filters - stephenmcd
+  * Added tests for category filters - stephenmcd
+  * Added migrations for category filters - stephenmcd
+  * Added initial versions of upsell and related products - stephenmcd
+  * Added russian translation - Andrew Grigorev
+  * Renamed Order.prepare() to Order.setup() to avoid collision with Django checking for prepare methods on models - stephenmcd
+  * Fixed the template logic around showing the cart/wishlist add form so that it isn't shown unless valid variations exist - stephenmcd
+  * Fixed CSS for related products - stephenmcd
+  * Added checking for C locale as invalid for currency - stephenmcd
+  * Added various Mezzanine and Cartridge settings, commented out, to the project template's settings module - stephenmcd
+  * Updated settings docs with new default for SHOP_SSL_ENABLED - stephenmcd
+  * Add first working version of import script from csv files - lexual
+  * import/export management command from/to csv - lexual
+  * Added Lex Hider to AUTHORS - stephenmcd
+  * make change for python < 2.7 as dictionary comprehensions not supported ;( - lexual
+  * Upgraded the default templates and CSS for the SITE_TITLE and SITE_TAGLINE settings - stephenmcd
+  * Removed the ``SHOP_LOGIN_URL`` setting and handling for consistency with Mezzanine's ``LOGIN_URL`` handling - stephenmcd
+  * Added Andrew Grigorev to AUTHORS - stephenmcd
+  * French locales - Dominique Guardiola
+  * Added Dominique Guardiola to AUTHORS - stephenmcd
+  * Fixed missing title in cart template - stephenmcd
+  * Removed tailing white-space - stephenmcd
+  * Added migration for Mezzanine's keywords and site fields - stephenmcd
+  * Update settings to the latest version of Mezzanine - stephenmcd
+  * Removed trailing white-space - stephenmcd
+  * Upgraded CSS files to latest Mezzanine versions - stephenmcd
+  * Added Mezzanine's ratings to products - stephenmcd
+  * Changed the order of shop in INSTALLED_APPS to avoid foreign key errors with Django's sites when installing demo fixtures with PostgreSQL - stephenmcd
+  * Fixed INSTALLED_APP ordering - stephenmcd
+  * Upgraded to Mezzanine's ``RichText`` model - stephenmcd
+  * Cleaned up white-space in docs - stephenmcd
+  * Updated auto-generated settings docs - stephenmcd
+
+Version 0.1.8 (Feb 03, 2011)
 ----------------------------
 
   * Fixed unicode errors with product names - stephenmcd
@@ -22,7 +91,7 @@ Version 0.1.7 (Jan 28, 2011)
   * Exposed handlers for billing_shipping and payment forms via settings - stephenmcd
   * Updated auto-generated settings docs - stephenmcd
 
-Version 0.1.6 (Dec 22, 2010)
+Version 0.1.6 (Dec 21, 2010)
 ----------------------------
 
   * Updated required Mezzanine version - stephenmcd
@@ -30,7 +99,7 @@ Version 0.1.6 (Dec 22, 2010)
   * Fixed minor bugs in checkout view - jdeblank
   * Updated setup script for Python 2.5 compatibility - stephenmcd
 
-Version 0.1.5 (Dec 22, 2010)
+Version 0.1.5 (Dec 21, 2010)
 ----------------------------
 
   * Fix with statement for Python 2.5 - stephenmcd
@@ -65,7 +134,7 @@ Version 0.1.5 (Dec 22, 2010)
   * Added link to mobile site in base template - stephenmcd
   * Added br tag to mobile link - stephenmcd
 
-Version 0.1.4 (Nov 10, 2010)
+Version 0.1.4 (Nov 09, 2010)
 ----------------------------
 
   * MySQL patches - stephenmcd
@@ -83,7 +152,7 @@ Version 0.1.4 (Nov 10, 2010)
   * Update documentation to automatically generate available settings - stephenmcd
   * Require the about to be released Mezzanine version - stephenmcd
 
-Version 0.1.2 (Sep 24, 2010)
+Version 0.1.2 (Sep 23, 2010)
 ----------------------------
 
   * Docs update - add more info and links around Mezzanine integration - stephenmcd
@@ -91,7 +160,7 @@ Version 0.1.2 (Sep 24, 2010)
   * Fixes to category template - stephenmcd
   * Bundle jQuery - stephenmcd
 
-Version 0.1.1 (Sep 20, 2010)
+Version 0.1.1 (Sep 19, 2010)
 ----------------------------
 
   * Add ``csrf_token`` to forms - stephenmcd
@@ -277,3 +346,4 @@ Version 0.1 (Sep 19, 2010)
   * Add content field to Category model - stephenmcd
   * Style old price for sales - stephenmcd
   * Add fixtures and images for dummy data - stephenmcd
+
