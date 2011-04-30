@@ -138,7 +138,7 @@ Default: ``10``
 
 Sequence of description/field+direction pairs defining the options available for sorting a list of products.
 
-Default: ``((u'Relevance', None), (u'Least expensive', 'unit_price'), (u'Most expensive', '-unit_price'), (u'Recently added', '-date_added'))``
+Default: ``((u'Relevance', None), (u'Least expensive', 'unit_price'), (u'Most expensive', '-unit_price'), (u'Recently added', '-date_added'), (u'Highest rated', '-rating_average'))``
 
 ``SHOP_SSL_ENABLED``
 --------------------
