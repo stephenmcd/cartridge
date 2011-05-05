@@ -80,6 +80,18 @@ Mercurial version control systems. These repositories are hosted on both
 forking the project on either of these sites and committing back your
 enhancements.
 
+Please note the following points around contributing:
+
+  * Contributed code must be written in the existing style. This is as simple as following the `Django coding style`_ and most importantly `PEP 8`_.
+  * Run the tests before committing your changes. If your changes causes the tests to break, they won't be accepted.
+  * If you're adding new functionality, you must include basics tests and documentation.
+
+Donating
+========
+
+If you would like to make a donation to continue development of the
+project, you can do so via the `Mezzanine`_ website.
+
 Support
 =======
 
