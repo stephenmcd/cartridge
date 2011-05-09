@@ -7,13 +7,14 @@
     <meta name="description" content="{% block meta_description %}{% endblock %}" /> 
     <title>{% block meta_title %}{% endblock %}{% if settings.SITE_TITLE %} | {{ settings.SITE_TITLE }}{% endif %}</title>
 
+    {% if "mezzanine.blog"|is_installed %}
     <link rel="alternate" type="application/rss+xml" title="RSS" 
         href="{% url blog_post_feed "rss" %}" />
     <link rel="alternate" type="application/atom+xml" title="Atom"  
         href="{% url blog_post_feed "atom" %}" />
+    {% endif %}
 
-    <script language="javascript" 
-        src="{{ MEDIA_URL }}js/jquery-1.4.2.min.js"></script>
+    <script language="javascript" src="{{ MEDIA_URL }}js/jquery-1.4.2.min.js"></script>
 
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/960.css" type="text/css" />
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/reset.css" type="text/css" />
@@ -109,7 +110,9 @@
         {% endif %}
         
         {% block right_panel %}
+            {% if "mezzanine.twitter"|is_installed %}
             {% include "twitter/tweets.html" %}
+            {% endif %}
         {% endblock %}
         <p class="mezzanine">
             {% trans "Powered by" %} 
