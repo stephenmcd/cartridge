@@ -5,7 +5,7 @@ from django.contrib import admin
 from django.db.models import ImageField
 from django.utils.translation import ugettext_lazy as _
 
-from mezzanine.core.admin import DisplayableAdmin, DynamicInlineAdmin
+from mezzanine.core.admin import DisplayableAdmin, TabularDynamicInlineAdmin
 from mezzanine.pages.admin import PageAdmin
 
 from cartridge.shop.fields import MoneyField
@@ -45,7 +45,7 @@ class ProductVariationAdmin(admin.TabularInline):
     formset = ProductVariationAdminFormset
 
 
-class ProductImageAdmin(DynamicInlineAdmin):
+class ProductImageAdmin(TabularDynamicInlineAdmin):
     model = ProductImage
     formfield_overrides = {ImageField: {"widget": ImageWidget}}
     
