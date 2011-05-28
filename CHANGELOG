@@ -1,3 +1,14 @@
+Version 0.2.1 (May 28, 2011)
+----------------------------
+
+  * Added donation notes to README - stephenmcd
+  * Fixed typo in README - stephenmcd
+  * Updated Mezzanine's old DynamicInlineAdmin with the new TabularDynamicInlineAdmin. Fixes #6 - stephenmcd
+  * Updated base template to include is_installed check for apps where applicable - stephenmcd
+  * Added missing links to README - stephenmcd
+  * Updated 960.gs to fluid version - stephenmcd
+  * Fixed footer alignment in base template - stephenmcd
+
 Version 0.2 (Apr 30, 2011)
 --------------------------
 
@@ -67,7 +78,7 @@ Version 0.2 (Apr 30, 2011)
   * Cleaned up white-space in docs - stephenmcd
   * Updated auto-generated settings docs - stephenmcd
 
-Version 0.1.8 (Feb 03, 2011)
+Version 0.1.8 (Feb 04, 2011)
 ----------------------------
 
   * Fixed unicode errors with product names - stephenmcd
@@ -91,7 +102,7 @@ Version 0.1.7 (Jan 28, 2011)
   * Exposed handlers for billing_shipping and payment forms via settings - stephenmcd
   * Updated auto-generated settings docs - stephenmcd
 
-Version 0.1.6 (Dec 21, 2010)
+Version 0.1.6 (Dec 22, 2010)
 ----------------------------
 
   * Updated required Mezzanine version - stephenmcd
@@ -99,7 +110,7 @@ Version 0.1.6 (Dec 21, 2010)
   * Fixed minor bugs in checkout view - jdeblank
   * Updated setup script for Python 2.5 compatibility - stephenmcd
 
-Version 0.1.5 (Dec 21, 2010)
+Version 0.1.5 (Dec 22, 2010)
 ----------------------------
 
   * Fix with statement for Python 2.5 - stephenmcd
@@ -134,7 +145,7 @@ Version 0.1.5 (Dec 21, 2010)
   * Added link to mobile site in base template - stephenmcd
   * Added br tag to mobile link - stephenmcd
 
-Version 0.1.4 (Nov 09, 2010)
+Version 0.1.4 (Nov 10, 2010)
 ----------------------------
 
   * MySQL patches - stephenmcd
@@ -152,7 +163,7 @@ Version 0.1.4 (Nov 09, 2010)
   * Update documentation to automatically generate available settings - stephenmcd
   * Require the about to be released Mezzanine version - stephenmcd
 
-Version 0.1.2 (Sep 23, 2010)
+Version 0.1.2 (Sep 24, 2010)
 ----------------------------
 
   * Docs update - add more info and links around Mezzanine integration - stephenmcd
@@ -160,7 +171,7 @@ Version 0.1.2 (Sep 23, 2010)
   * Fixes to category template - stephenmcd
   * Bundle jQuery - stephenmcd
 
-Version 0.1.1 (Sep 19, 2010)
+Version 0.1.1 (Sep 20, 2010)
 ----------------------------
 
   * Add ``csrf_token`` to forms - stephenmcd
