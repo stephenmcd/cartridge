@@ -100,7 +100,7 @@ $(function() {
 <ul id="variations">
 	{% for variation in variations %}
 	<li id="variation-{{ variation.sku }}"
-		{% if not variation.default %}" style="display:none;"{% endif %}>
+		{% if not variation.default %}style="display:none;"{% endif %}>
 		{% if variation.has_price %}
 			{% if variation.on_sale %}
 				<span class="old-price">{{ variation.unit_price|currency }}</span>
