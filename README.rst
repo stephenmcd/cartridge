@@ -99,6 +99,12 @@ For general questions or comments, please join the
 `mezzanine-users`_ mailing list. To report a bug or other type of issue,
 please use the `Github issue tracker`_.
 
+Sites Using Cartridge
+=====================
+
+  * `Ripe Maternity`_
+  * `Cotton On`_
+
 .. _`Django`: http://djangoproject.com/
 .. _`BSD licensed`: http://www.linfo.org/bsdlicense.html
 .. _`Mezzanine live demo`: http://mezzanine.jupo.org/
@@ -110,3 +116,6 @@ please use the `Github issue tracker`_.
 .. _`Github issue tracker`: http://github.com/stephenmcd/cartridge/issues
 .. _`Django coding style`: http://docs.djangoproject.com/en/dev/internals/contributing/#coding-style
 .. _`PEP 8`: http://www.python.org/dev/peps/pep-0008/
+.. _`Ripe Maternity`: http://www.ripematernity.com/
+.. _`Cotton On`: http://shop.cottonon.com/
+
