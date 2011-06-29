@@ -17,6 +17,11 @@ $(function() {
 				var shippingName = this.name.replace('billing_', 'shipping_');
 				$('input[name=' + shippingName + ']').attr('value', this.value);
 			});
+			$('select[name^=billing_]').each(function() {
+				var shippingSelected = $(this).children('option[selected]').val();
+				var shippingSelName = this.name.replace('billing_', 'shipping_');
+				$('select[name=' + shippingSelName + '] option[value=' + shippingSelected +']').attr('selected', 'selected');
+			});
 		}
 	});
 
