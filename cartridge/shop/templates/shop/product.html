@@ -100,13 +100,15 @@ $(function() {
 <ul id="variations">
 	{% for variation in variations %}
 	<li id="variation-{{ variation.sku }}"
-		{% if not variation.default %}" style="display:none;"{% endif %}>
-		{% if variation.has_price %}
+		{% if not variation.default %}style="display:none;"{% endif %}>
+                {% if variation.has_stock %}
+		    {% if variation.has_price %}
 			{% if variation.on_sale %}
 				<span class="old-price">{{ variation.unit_price|currency }}</span>
 				{% trans "On sale:" %}
 			{% endif %}
 			{{ variation.price|currency }}
+                    {% endif %}
 		{% else %}
 		    {% if has_available_variations %}
 		    {% trans "The selected options are currently unavailable." %}
