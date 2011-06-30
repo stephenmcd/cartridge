@@ -5,8 +5,8 @@
 <script>
 
 var decimal = function(amount) {
-    if (amount.indexOf('.') == -1) {
-        amout += '.00';
+    if (amount.toString().indexOf('.') == -1) {
+        amount += '.00';
     }
     return String(amount);
 };
