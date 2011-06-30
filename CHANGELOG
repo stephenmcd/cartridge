@@ -1,3 +1,15 @@
+Version 0.2.2 (Jun 30, 2011)
+----------------------------
+
+  * Edited cartridge/shop/templates/shop/billing_shipping.html via GitHub - jdeblank
+  * Remove extra quotation mark - jdeblank
+  * If product has stock, show price. Else show an error message - jdeblank
+  * Added Ripe and Cotton On to sites using Cartridge - stephenmcd
+  * Added Josh de Blank to AUTHORS - stephenmcd
+  * Backout hiding price when no stock available - stephenmcd
+  * Fixed an issue with Google Analytics where there was a type error and a variable misname. Ecom Analytics should work now - =
+  * Added Andrew Fisher to authors - =
+
 Version 0.2.1 (May 28, 2011)
 ----------------------------
 
