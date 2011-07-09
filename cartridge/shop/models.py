@@ -303,13 +303,14 @@ class ProductVariation(Priced):
         """
         return [getattr(self, field.name) for field in self.option_fields()]
 
-    def has_stock(self, quantity=1):
+    def live_num_in_stock(self):
         """
-        Checks the given quantity is in stock, taking into account the
-        number in carts. Also caches the number for subsequent lookups.
+        Returns the live number in stock, which is
+        ``self.num_in_stock - num in carts``. Also caches the value
+        for subsequent lookups.
         """
-        if self.num_in_stock is None or quantity == 0:
-            return True
+        if self.num_in_stock is None:
+            return None
         if not hasattr(self, "_cached_num_in_stock"):
             num_in_stock = self.num_in_stock
             items = CartItem.objects.filter(sku=self.sku)
@@ -318,7 +319,17 @@ class ProductVariation(Priced):
             if num_in_carts is not None:
                 num_in_stock = num_in_stock - num_in_carts
             self._cached_num_in_stock = num_in_stock
-        return self._cached_num_in_stock >= quantity
+        return self._cached_num_in_stock
+
+    def has_stock(self, quantity=1):
+        """
+        Returns ``True`` if the given quantity is in stock, by checking
+        against ``live_num_in_stock``. ``True`` is returned when
+        ``num_in_stock`` is ``None`` which is how stock control is
+        disabled.
+        """
+        live = self.live_num_in_stock()
+        return live is None or quantity == 0 or live >= quantity
 
 
 class Order(models.Model):
