@@ -31,22 +31,22 @@ ADD_PRODUCT_ERRORS = {
 
 def get_add_product_form(product):
     """
-    Return the form for adding the given product to the cart or the 
-    wishlist. 
+    Return the form for adding the given product to the cart or the
+    wishlist.
     """
 
     class AddProductForm(forms.Form):
 
         quantity = forms.IntegerField(min_value=1)
-        
+
         def __init__(self, *args, **kwargs):
             """
-            Create each ChoiceField for selecting from the product's 
+            Create each ChoiceField for selecting from the product's
             variations.
             """
             self._to_cart = kwargs.pop("to_cart", True)
             super(AddProductForm, self).__init__(*args, **kwargs)
-            option_names, option_labels = zip(*[(f.name, f.verbose_name) 
+            option_names, option_labels = zip(*[(f.name, f.verbose_name)
                 for f in ProductVariation.option_fields()])
             option_values = zip(*product.variations.filter(
                 unit_price__isnull=False).values_list(*option_names))
@@ -54,13 +54,13 @@ def get_add_product_form(product):
                 for i, name in enumerate(option_names):
                     values = filter(None, set(option_values[i]))
                     if values:
-                        field = forms.ChoiceField(label=option_labels[i], 
+                        field = forms.ChoiceField(label=option_labels[i],
                                                  choices=make_choices(values))
                         self.fields[name] = field
-    
+
         def clean(self):
             """
-            Set the form's selected variation if the selected options 
+            Set the form's selected variation if the selected options
             and quantity are valid.
             """
             options = self.cleaned_data.copy()
@@ -89,15 +89,15 @@ def get_add_product_form(product):
 
 class FormsetForm(object):
     """
-    Form mixin that provides template methods for iterating through 
-    sets of fields by prefix, single fields and finally remaning 
-    fields that haven't been iterated with each fieldset made up from 
+    Form mixin that provides template methods for iterating through
+    sets of fields by prefix, single fields and finally remaning
+    fields that haven't been iterated with each fieldset made up from
     a copy of the original form giving access to as_* methods.
     """
 
     def _fieldset(self, field_names):
         """
-        Return a subset of fields by making a copy of the form 
+        Return a subset of fields by making a copy of the form
         containing only the given field names.
         """
         fieldset = copy(self)
@@ -108,7 +108,7 @@ class FormsetForm(object):
         fieldset.fields = SortedDict([(f, self.fields[f]) for f in field_names])
         self._fields_done.extend(field_names)
         return fieldset
-        
+
     def values(self):
         """
         Return pairs of label and value for each field.
@@ -118,25 +118,25 @@ class FormsetForm(object):
             if label is None:
                 label = field[0].upper() + field[1:].replace("_", " ")
             yield (label, self.initial.get(field, self.data.get(field, "")))
-        
+
     def __getattr__(self, name):
         """
-        Dynamic fieldset caller - matches requested attribute name 
-        against pattern for creating the list of field names to use 
+        Dynamic fieldset caller - matches requested attribute name
+        against pattern for creating the list of field names to use
         for the fieldset.
         """
         if name == "errors":
             return None
         filters = (
-            ("^other_fields$", lambda: 
+            ("^other_fields$", lambda:
                 self.fields.keys()),
-            ("^(\w*)_fields$", lambda name: 
+            ("^(\w*)_fields$", lambda name:
                 [f for f in self.fields.keys() if f.startswith(name)]),
-            ("^(\w*)_field$", lambda name: 
+            ("^(\w*)_field$", lambda name:
                 [f for f in self.fields.keys() if f == name]),
-            ("^fields_before_(\w*)$", lambda name: 
+            ("^fields_before_(\w*)$", lambda name:
                 takewhile(lambda f: f != name, self.fields.keys())),
-            ("^fields_after_(\w*)$", lambda name: 
+            ("^fields_after_(\w*)$", lambda name:
                 list(dropwhile(lambda f: f != name, self.fields.keys()))[1:]),
         )
         for filter_exp, filter_func in filters:
@@ -148,37 +148,37 @@ class FormsetForm(object):
 
 class OrderForm(FormsetForm, forms.ModelForm):
     """
-    Main Form for the checkout process - ModelForm for the Order Model 
-    with extra fields for credit card. Used across each step of the 
+    Main Form for the checkout process - ModelForm for the Order Model
+    with extra fields for credit card. Used across each step of the
     checkout process with fields being hidden where applicable.
     """
-    
+
     step = forms.IntegerField(widget=forms.HiddenInput())
     same_billing_shipping = forms.BooleanField(required=False, initial=True,
         label=_("My delivery details are the same as my billing details"))
     remember = forms.BooleanField(required=False, initial=True,
         label=_("Remember my address for next time"))
     card_name = forms.CharField(label=_("Cardholder name"))
-    card_type = forms.ChoiceField(label=_("Type"), 
+    card_type = forms.ChoiceField(label=_("Type"),
         choices=make_choices(settings.SHOP_CARD_TYPES))
     card_number = forms.CharField(label=_("Card number"))
     card_expiry_month = forms.ChoiceField(
         choices=make_choices(["%02d" % i for i in range(1, 13)]))
     card_expiry_year = forms.ChoiceField()
     card_ccv = forms.CharField(label="CCV")
-    
+
     class Meta:
         model = Order
-        fields = [f.name for f in Order._meta.fields if 
-            f.name.startswith("billing_detail") or 
-            f.name.startswith("shipping_detail")] + ["additional_instructions",     
+        fields = [f.name for f in Order._meta.fields if
+            f.name.startswith("billing_detail") or
+            f.name.startswith("shipping_detail")] + ["additional_instructions",
             "discount_code"]
-            
+
     def __init__(self, request, step, data=None, initial=None, errors=None):
         """
-        Handle setting shipping field values to the same as billing 
-        field values in case JavaScript is disabled, hiding fields for 
-        current step and hiding discount_code field if there are 
+        Handle setting shipping field values to the same as billing
+        field values in case JavaScript is disabled, hiding fields for
+        current step and hiding discount_code field if there are
         currently no active discount codes.
         """
 
@@ -187,9 +187,9 @@ class OrderForm(FormsetForm, forms.ModelForm):
         last = step == checkout.CHECKOUT_STEP_LAST
         if (first and data is not None and "same_billing_shipping" in data):
             data = copy(data)
-            # Prevent second copy occuring for forcing step below when 
+            # Prevent second copy occuring for forcing step below when
             # moving backwards in steps.
-            data["step"] = step 
+            data["step"] = step
             for field in data:
                 billing = field.replace("shipping_detail", "billing_detail")
                 if "shipping_detail" in field and billing in data:
@@ -197,12 +197,12 @@ class OrderForm(FormsetForm, forms.ModelForm):
 
         if initial is not None:
             initial["step"] = step
-        # Force the specified step in the posted data - this is 
-        # required to allow moving backwards in steps. 
+        # Force the specified step in the posted data - this is
+        # required to allow moving backwards in steps.
         if data is not None and int(data["step"]) != step:
             data = copy(data)
             data["step"] = step
-            
+
         super(OrderForm, self).__init__(data=data, initial=initial)
         self._request = request
         self._checkout_errors = errors
@@ -224,7 +224,7 @@ class OrderForm(FormsetForm, forms.ModelForm):
                 if hidden(field):
                     self.fields[field].widget = forms.HiddenInput()
                     self.fields[field].required = False
-            
+
         # Hide Discount Code field if no codes are active.
         if DiscountCode.objects.active().count() == 0:
             self.fields["discount_code"].widget = forms.HiddenInput()
@@ -233,10 +233,10 @@ class OrderForm(FormsetForm, forms.ModelForm):
         year = datetime.now().year
         choices = make_choices(range(year, year + 21))
         self.fields["card_expiry_year"].choices = choices
-    
+
     def clean_discount_code(self):
         """
-        Validate the discount code if given, and attach the discount 
+        Validate the discount code if given, and attach the discount
         instance to the form.
         """
         code = self.cleaned_data.get("discount_code", "")
@@ -249,10 +249,10 @@ class OrderForm(FormsetForm, forms.ModelForm):
                 error = _("The discount code entered is invalid.")
                 raise forms.ValidationError(error)
         return code
-        
+
     def clean(self):
         """
-        Raise ``ValidationError`` if any errors have been assigned 
+        Raise ``ValidationError`` if any errors have been assigned
         externally, via one of the custom checkout step handlers.
         """
         if self._checkout_errors:
@@ -265,16 +265,16 @@ class UserForm(forms.Form):
     Fields for signup & login.
     """
     email = forms.EmailField(label=_("Email Address"))
-    password = forms.CharField(label=_("Password"), 
+    password = forms.CharField(label=_("Password"),
         widget=forms.PasswordInput(render_value=False))
 
     def authenticate(self):
         """
         Validate email and password as well as setting the user for login.
         """
-        self._user = authenticate(username=self.cleaned_data.get("email", ""), 
+        self._user = authenticate(username=self.cleaned_data.get("email", ""),
                                password=self.cleaned_data.get("password", ""))
-    
+
     def login(self, request):
         """
         Log the user in.
@@ -283,7 +283,7 @@ class UserForm(forms.Form):
 
 
 class SignupForm(UserForm):
-    
+
     def clean_email(self):
         """
         Ensure the email address is not already registered.
@@ -294,18 +294,18 @@ class SignupForm(UserForm):
         except User.DoesNotExist:
             return email
         raise forms.ValidationError(_("This email is already registered"))
-        
+
     def save(self):
         """
         Create the new user using their email address as their username.
         """
-        User.objects.create_user(self.cleaned_data["email"], 
+        User.objects.create_user(self.cleaned_data["email"],
             self.cleaned_data["email"], self.cleaned_data["password"])
         self.authenticate()
 
 
 class LoginForm(UserForm):
-    
+
     def clean(self):
         """
         Authenticate the email/password.
@@ -318,9 +318,9 @@ class LoginForm(UserForm):
                 raise forms.ValidationError(_("Your account is inactive"))
         return self.cleaned_data
 
-    
+
 #######################
-#    ADMIN WIDGETS    #    
+#    ADMIN WIDGETS    #
 #######################
 
 class ImageWidget(forms.FileInput):
@@ -333,7 +333,7 @@ class ImageWidget(forms.FileInput):
             orig_url = "%s%s" % (settings.MEDIA_URL, value)
             thumb_url = "%s%s" % (settings.MEDIA_URL, thumbnail(value, 48, 48))
             rendered = "<a target='_blank' href='%s'><img " \
-                "style='margin-right:6px;' src='%s' /></a>%s" % (orig_url, 
+                "style='margin-right:6px;' src='%s' /></a>%s" % (orig_url,
                 thumb_url, rendered)
         return mark_safe(rendered)
 
@@ -356,13 +356,13 @@ class MoneyWidget(forms.TextInput):
 
 class ProductAdminFormMetaclass(ModelFormMetaclass):
     """
-    Metaclass for the Product Admin form that dynamically assigns each 
-    of the types of product options as set of checkboxes for selecting 
+    Metaclass for the Product Admin form that dynamically assigns each
+    of the types of product options as set of checkboxes for selecting
     which options to use for creating new product variations.
     """
     def __new__(cls, name, bases, attrs):
         for option in settings.SHOP_OPTION_TYPE_CHOICES:
-            field = forms.MultipleChoiceField(label=option[1], 
+            field = forms.MultipleChoiceField(label=option[1],
                 required=False, widget=forms.CheckboxSelectMultiple)
             attrs["option%s" % option[0]] = field
         args = (cls, name, bases, attrs)
@@ -376,11 +376,11 @@ class ProductAdminForm(forms.ModelForm):
     __metaclass__ = ProductAdminFormMetaclass
     class Meta:
         model = Product
-        
+
     def __init__(self, *args, **kwargs):
         """
-        Set the choices for each of the fields for product options, 
-        hiding them if no choices exist. Also remove the current 
+        Set the choices for each of the fields for product options,
+        hiding them if no choices exist. Also remove the current
         instance from choices for related and upsell products.
         """
         super(ProductAdminForm, self).__init__(*args, **kwargs)
@@ -395,7 +395,7 @@ class ProductAdminForm(forms.ModelForm):
 
 class ProductVariationAdminForm(forms.ModelForm):
     """
-    Ensure the list of images for the variation are specific to the 
+    Ensure the list of images for the variation are specific to the
     variation's product.
     """
     def __init__(self, *args, **kwargs):
@@ -408,7 +408,7 @@ class ProductVariationAdminForm(forms.ModelForm):
 
 class ProductVariationAdminFormset(BaseInlineFormSet):
     """
-    Ensure no more than one variation is checked as default. 
+    Ensure no more than one variation is checked as default.
     """
     def clean(self):
         if len([f for f in self.forms if hasattr(f, "cleaned_data") and
@@ -419,7 +419,7 @@ class ProductVariationAdminFormset(BaseInlineFormSet):
 
 class DiscountAdminForm(forms.ModelForm):
     """
-    Ensure only one discount field is given a value and if not, assign 
+    Ensure only one discount field is given a value and if not, assign
     the error to the first discount field so that it displays correctly.
     """
     def clean(self):

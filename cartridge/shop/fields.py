@@ -1,5 +1,5 @@
 """
-Various model fields that mostly provide default field sizes to ensure 
+Various model fields that mostly provide default field sizes to ensure
 these are consistant when used across multiple models.
 """
 
@@ -13,7 +13,7 @@ from cartridge.shop.utils import set_locale
 
 class OptionField(CharField):
     """
-    A field for a selectable option of a product such as colour or 
+    A field for a selectable option of a product such as colour or
     size. Ensure ``null`` is ``True`` and provide a default field size.
     """
     def __init__(self, *args, **kwargs):
@@ -24,12 +24,12 @@ class OptionField(CharField):
 
 class MoneyField(DecimalField):
     """
-    A field for a monetary amount. Provide the default size and 
+    A field for a monetary amount. Provide the default size and
     precision.
     """
     def __init__(self, *args, **kwargs):
         set_locale()
-        defaults = {"null": True, "blank": True, "max_digits": 10, 
+        defaults = {"null": True, "blank": True, "max_digits": 10,
                     "decimal_places": localeconv()["frac_digits"]}
         defaults.update(kwargs)
         super(MoneyField, self).__init__(*args, **defaults)
@@ -58,7 +58,7 @@ class DiscountCodeField(CharField):
 # See http://south.aeracode.org/docs/customfields.html
 try:
     from south.modelsinspector import add_introspection_rules
-    add_introspection_rules(rules=[((OptionField, MoneyField, SKUField, 
+    add_introspection_rules(rules=[((OptionField, MoneyField, SKUField,
         DiscountCodeField), [], {})], patterns=["cartridge\.shop\.fields\."])
 except ImportError:
     pass

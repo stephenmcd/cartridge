@@ -16,7 +16,7 @@ AUTH_NET_TRANS_KEY = '425974X5vnpfGA3J'
 
 def process(request, order_form, order):
     """
-    Raise cartridge.shop.checkout.CheckoutError("error message") if 
+    Raise cartridge.shop.checkout.CheckoutError("error message") if
     payment is unsuccessful.
     """
 
@@ -68,13 +68,13 @@ def process(request, order_form, order):
         'x_card_code': order_form.cleaned_data['card_ccv'],
         'x_invoice_num': str(order.id)
     }
-    
+
     part1 = urlencode(trans['configuration']) + "&"
     part2 = "&" + urlencode(trans['custBillData'])
     part3 = "&" + urlencode(trans['custShipData'])
     trans['postString'] = part1 + urlencode(trans['transactionData']) + part2 + part3
-    
-    
+
+
     conn = urllib2.Request(url=trans['connection'], data=trans['postString'])
     # useful for debugging transactions
     #print trans['postString']
@@ -83,7 +83,7 @@ def process(request, order_form, order):
         all_results = f.read()
     except urllib2.URLError:
         raise CheckoutError("Could not talk to authorize.net payment gateway")
-    
+
     parsed_results = all_results.split(trans['configuration']['x_delim_char'])
     # print all_results
     # response and response_reason_codes with their meaning here:
@@ -95,6 +95,6 @@ def process(request, order_form, order):
     #response_text = parsed_results[3]
     #print "response: " + response_code + " response_reason_code: " + response_reason_code + " " + response_text
     #transaction_id = parsed_results[6]
-    success = response_code == '1'  
+    success = response_code == '1'
     if not success:
         raise CheckoutError("Transaction denied")

@@ -26,8 +26,8 @@ def currency(value):
     else:
         # based on locale.currency() in python >= 2.5
         conv = locale.localeconv()
-        value = [conv["currency_symbol"], conv["p_sep_by_space"] and " " or "", 
-            (("%%.%sf" % conv["frac_digits"]) % value).replace(".", 
+        value = [conv["currency_symbol"], conv["p_sep_by_space"] and " " or "",
+            (("%%.%sf" % conv["frac_digits"]) % value).replace(".",
             conv["mon_decimal_point"])]
         if not conv["p_cs_precedes"]:
             value.reverse()
@@ -37,8 +37,8 @@ def currency(value):
 
 def _order_totals(context):
     """
-    Add ``item_total``, ``shipping_total``, ``discount_total`` and 
-    ``order_total`` to the template context. Use the order object for 
+    Add ``item_total``, ``shipping_total``, ``discount_total`` and
+    ``order_total`` to the template context. Use the order object for
     email receipts, or the cart object for checkout.
     """
     if "order" in context:
@@ -47,7 +47,7 @@ def _order_totals(context):
     elif "cart" in context:
         context["item_total"] = context["cart"].total_price()
         if context["item_total"] == 0:
-            # Ignore session if cart has no items, as cart may have 
+            # Ignore session if cart has no items, as cart may have
             # expired sooner than the session.
             context["discount_total"] = context["shipping_total"] = 0
         else:
@@ -68,7 +68,7 @@ def order_totals(context):
     """
     return _order_totals(context)
 
-    
+
 @register.inclusion_tag("shop/order_totals.txt", takes_context=True)
 def order_totals_text(context):
     """
@@ -82,14 +82,14 @@ def product_sorting(context, products):
     """
     Renders the links for each product sort option.
     """
-    sort_options = [(option[0], slugify(option[0])) for option in 
+    sort_options = [(option[0], slugify(option[0])) for option in
                                         settings.SHOP_PRODUCT_SORT_OPTIONS]
     querystring = context["request"].REQUEST.get("query", "")
     if querystring:
         querystring = "&query=" + quote(querystring)
     else:
         del sort_options[0]
-    context.update({"selected_option": getattr(products, "sort"), 
+    context.update({"selected_option": getattr(products, "sort"),
                     "sort_options": sort_options, "querystring": querystring})
     return context
 
@@ -108,9 +108,9 @@ def product_paging(context, products):
     page_range = products.paginator.page_range
     page_links = settings.SHOP_MAX_PAGING_LINKS
     if len(page_range) > page_links:
-        start = min(products.paginator.num_pages - page_links, 
+        start = min(products.paginator.num_pages - page_links,
             max(0, products.number - (page_links / 2) - 1))
         page_range = page_range[start:start + page_links]
-    context.update({"products": products, "querystring": querystring, 
+    context.update({"products": products, "querystring": querystring,
                     "page_range": page_range})
     return context

@@ -5,9 +5,9 @@ from south.v2 import SchemaMigration
 from django.db import models
 
 class Migration(SchemaMigration):
-    
+
     def forwards(self, orm):
-        
+
         # Deleting field 'Product._keywords'
         db.delete_column('shop_product', '_keywords')
 
@@ -22,10 +22,10 @@ class Migration(SchemaMigration):
 
         # Changing field 'Product.description'
         db.alter_column('shop_product', 'description', self.gf('django.db.models.fields.TextField')(blank=True))
-    
-    
+
+
     def backwards(self, orm):
-        
+
         # Adding field 'Product._keywords'
         db.add_column('shop_product', '_keywords', self.gf('django.db.models.fields.CharField')(default='', max_length=500), keep_default=False)
 
@@ -45,8 +45,8 @@ class Migration(SchemaMigration):
 
         # Changing field 'Product.description'
         db.alter_column('shop_product', 'description', self.gf('mezzanine.core.fields.HtmlField')(blank=True))
-    
-    
+
+
     models = {
         'contenttypes.contenttype': {
             'Meta': {'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
@@ -257,5 +257,5 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         }
     }
-    
+
     complete_apps = ['shop']

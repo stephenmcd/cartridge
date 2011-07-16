@@ -5,9 +5,9 @@ from south.v2 import SchemaMigration
 from django.db import models
 
 class Migration(SchemaMigration):
-    
+
     def forwards(self, orm):
-        
+
         # Adding M2M table for field related_products on 'Product'
         db.create_table('shop_product_related_products', (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
@@ -23,17 +23,17 @@ class Migration(SchemaMigration):
             ('to_product', models.ForeignKey(orm['shop.product'], null=False))
         ))
         db.create_unique('shop_product_upsell_products', ['from_product_id', 'to_product_id'])
-    
-    
+
+
     def backwards(self, orm):
-        
+
         # Removing M2M table for field related_products on 'Product'
         db.delete_table('shop_product_related_products')
 
         # Removing M2M table for field upsell_products on 'Product'
         db.delete_table('shop_product_upsell_products')
-    
-    
+
+
     models = {
         'core.keyword': {
             'Meta': {'object_name': 'Keyword'},
@@ -222,5 +222,5 @@ class Migration(SchemaMigration):
             'valid_to': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'})
         }
     }
-    
+
     complete_apps = ['shop']

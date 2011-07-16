@@ -18,9 +18,9 @@ def create_initial_product(app, created_models, verbosity, **kwargs):
                 elif confirm == "no":
                     return
                 confirm = raw_input("Please enter either 'yes' or 'no': ")
-        print 
+        print
         print "Creating initial Category and Product."
-        print 
+        print
         call_command("loaddata", "cartridge.json")
 
 

@@ -5,9 +5,9 @@ from south.v2 import SchemaMigration
 from django.db import models
 
 class Migration(SchemaMigration):
-    
+
     def forwards(self, orm):
-        
+
         # Adding model 'ProductOption'
         db.create_table('shop_productoption', (
             ('type', self.gf('django.db.models.fields.IntegerField')()),
@@ -229,14 +229,14 @@ class Migration(SchemaMigration):
             ('category', models.ForeignKey(orm['shop.category'], null=False))
         ))
         db.create_unique('shop_discountcode_categories', ['discountcode_id', 'category_id'])
-    
+
         from cartridge.shop.management import create_initial_product
         from cartridge.shop.models import Product
         from atexit import register
         register(create_initial_product, None, (Product,), 1, interactive=True)
-    
+
     def backwards(self, orm):
-        
+
         # Deleting model 'ProductOption'
         db.delete_table('shop_productoption')
 
@@ -293,8 +293,8 @@ class Migration(SchemaMigration):
 
         # Removing M2M table for field categories on 'DiscountCode'
         db.delete_table('shop_discountcode_categories')
-    
-    
+
+
     models = {
         'core.keyword': {
             'Meta': {'object_name': 'Keyword'},
@@ -476,5 +476,5 @@ class Migration(SchemaMigration):
             'valid_to': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'})
         }
     }
-    
+
     complete_apps = ['shop']

@@ -5,25 +5,25 @@ from south.v2 import SchemaMigration
 from django.db import models
 
 class Migration(SchemaMigration):
-    
+
     def forwards(self, orm):
-        
+
         # Adding field 'Product.rating_count'
         db.add_column('shop_product', 'rating_count', self.gf('django.db.models.fields.IntegerField')(default=0), keep_default=False)
 
         # Adding field 'Product.rating_average'
         db.add_column('shop_product', 'rating_average', self.gf('django.db.models.fields.FloatField')(default=0), keep_default=False)
-    
-    
+
+
     def backwards(self, orm):
-        
+
         # Deleting field 'Product.rating_count'
         db.delete_column('shop_product', 'rating_count')
 
         # Deleting field 'Product.rating_average'
         db.delete_column('shop_product', 'rating_average')
-    
-    
+
+
     models = {
         'contenttypes.contenttype': {
             'Meta': {'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
@@ -244,5 +244,5 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         }
     }
-    
+
     complete_apps = ['shop']

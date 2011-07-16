@@ -5,25 +5,25 @@ from south.v2 import SchemaMigration
 from django.db import models
 
 class Migration(SchemaMigration):
-    
+
     def forwards(self, orm):
-        
+
         # Changing field 'Product.content'
         db.alter_column('shop_product', 'content', self.gf('mezzanine.core.fields.RichTextField')())
 
         # Changing field 'Category.content'
         db.alter_column('shop_category', 'content', self.gf('mezzanine.core.fields.RichTextField')())
-    
-    
+
+
     def backwards(self, orm):
-        
+
         # Changing field 'Product.content'
         db.alter_column('shop_product', 'content', self.gf('mezzanine.core.fields.HtmlField')())
 
         # Changing field 'Category.content'
         db.alter_column('shop_category', 'content', self.gf('mezzanine.core.fields.HtmlField')())
-    
-    
+
+
     models = {
         'contenttypes.contenttype': {
             'Meta': {'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
@@ -244,5 +244,5 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         }
     }
-    
+
     complete_apps = ['shop']

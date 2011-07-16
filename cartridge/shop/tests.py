@@ -46,7 +46,7 @@ class ShopTests(TestCase):
         self.assertEqual(response.status_code, 200)
         # Checkout.
         response = self.client.get(reverse("shop_checkout"))
-        self.assertEqual(response.status_code, 200 if not 
+        self.assertEqual(response.status_code, 200 if not
             settings.SHOP_CHECKOUT_ACCOUNT_REQUIRED else 302)
         # Login.
         if settings.SHOP_CHECKOUT_ACCOUNT_ENABLED:
@@ -55,7 +55,7 @@ class ShopTests(TestCase):
 
     def test_variations(self):
         """
-        Test creation of variations from options, and management of empty 
+        Test creation of variations from options, and management of empty
         variations.
         """
         total = reduce(mul, [len(v) for v in self._options.values()])
@@ -92,10 +92,10 @@ class ShopTests(TestCase):
         variation = self._product.variations.all()[0]
         variation.num_in_stock = 0
         self.assertFalse(variation.has_stock())
-        
+
     def assertCategoryFilteredProducts(self, num_products):
         """
-        Tests the number of products returned by the category's 
+        Tests the number of products returned by the category's
         current filters.
         """
         products = Product.objects.filter(self._category.filters())
@@ -108,9 +108,9 @@ class ShopTests(TestCase):
         self._product.variations.all().delete()
         self.assertCategoryFilteredProducts(0)
 
-        # Test option filters - add a variation with one option, and 
-        # assign another option as a category filter. Check that no 
-        # products match the filters, then add the first option as a 
+        # Test option filters - add a variation with one option, and
+        # assign another option as a category filter. Check that no
+        # products match the filters, then add the first option as a
         # category filter and check that the product is matched.
         option_field, options = self._options.items()[0]
         option1, option2 = options[:2]
@@ -123,41 +123,41 @@ class ShopTests(TestCase):
         option = ProductOption.objects.get(type=option_field[-1], name=option1)
         self._category.options.add(option)
         self.assertCategoryFilteredProducts(1)
-        
-        # Test price filters - add a price filter that when combined 
-        # with previously created filters, should match no products. 
-        # Update the variations to match the filter for a unit price, 
-        # then with sale prices, checking correct matches based on sale 
+
+        # Test price filters - add a price filter that when combined
+        # with previously created filters, should match no products.
+        # Update the variations to match the filter for a unit price,
+        # then with sale prices, checking correct matches based on sale
         # dates.
-        self._category.combined = True  
+        self._category.combined = True
         self._category.price_min = TEST_PRICE
         self.assertCategoryFilteredProducts(0)
         self._product.variations.all().update(unit_price=TEST_PRICE)
         self.assertCategoryFilteredProducts(1)
         now = datetime.now()
         day = timedelta(days=1)
-        self._product.variations.all().update(unit_price=0, 
-                                              sale_price=TEST_PRICE, 
+        self._product.variations.all().update(unit_price=0,
+                                              sale_price=TEST_PRICE,
                                               sale_from=now + day)
         self.assertCategoryFilteredProducts(0)
         self._product.variations.all().update(sale_from=now - day)
         self.assertCategoryFilteredProducts(1)
 
-        # Clean up previously added filters and check that explicitly 
+        # Clean up previously added filters and check that explicitly
         # assigned products match.
         [self._category.options.remove(o) for o in self._category.options.all()]
         self._category.price_min = None
         self.assertCategoryFilteredProducts(0)
         self._category.products.add(self._product)
         self.assertCategoryFilteredProducts(1)
-        
-        # Test the ``combined`` field - create a variation which 
-        # matches a price filter, and a separate variation which 
-        # matches an option filter, and check that the filters 
-        # have no results when ``combined`` is set, and that the 
+
+        # Test the ``combined`` field - create a variation which
+        # matches a price filter, and a separate variation which
+        # matches an option filter, and check that the filters
+        # have no results when ``combined`` is set, and that the
         # product matches when ``combined`` is disabled.
         self._product.variations.all().delete()
-        self._product.variations.create_from_options({option_field: 
+        self._product.variations.create_from_options({option_field:
                                                      [option1, option2]})
         # Price variation and filter.
         variation = self._product.variations.get(**{option_field: option1})
@@ -224,7 +224,7 @@ class ShopTests(TestCase):
 
     def test_order(self):
         """
-        Test that a completed order contains cart items and that 
+        Test that a completed order contains cart items and that
         they're removed from stock.
         """
 
@@ -264,7 +264,7 @@ class ShopTests(TestCase):
         """
         Run pyflakes across the code base to check for potential errors.
         """
-        ignore = ("redefinition of unused 'digest'", 
+        ignore = ("redefinition of unused 'digest'",
                   "redefinition of unused 'info'")
         warnings = run_pyflakes_for_package("cartridge", extra_ignore=ignore)
         if warnings:

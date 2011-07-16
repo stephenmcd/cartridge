@@ -5,9 +5,9 @@ from south.v2 import SchemaMigration
 from django.db import models
 
 class Migration(SchemaMigration):
-    
+
     def forwards(self, orm):
-        
+
         # Adding field 'Category.price_max'
         db.add_column('shop_category', 'price_max', self.gf('cartridge.shop.fields.MoneyField')(null=True, max_digits=10, decimal_places=2, blank=True), keep_default=False)
 
@@ -27,10 +27,10 @@ class Migration(SchemaMigration):
             ('productoption', models.ForeignKey(orm['shop.productoption'], null=False))
         ))
         db.create_unique('shop_category_options', ['category_id', 'productoption_id'])
-    
-    
+
+
     def backwards(self, orm):
-        
+
         # Deleting field 'Category.price_max'
         db.delete_column('shop_category', 'price_max')
 
@@ -45,8 +45,8 @@ class Migration(SchemaMigration):
 
         # Removing M2M table for field options on 'Category'
         db.delete_table('shop_category_options')
-    
-    
+
+
     models = {
         'core.keyword': {
             'Meta': {'object_name': 'Keyword'},
@@ -233,5 +233,5 @@ class Migration(SchemaMigration):
             'valid_to': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'})
         }
     }
-    
+
     complete_apps = ['shop']

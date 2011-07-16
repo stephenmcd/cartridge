@@ -28,7 +28,7 @@ order_handler = handler(settings.SHOP_HANDLER_ORDER)
 
 # Fall back to authenticated-only messaging if messages app is unavailable.
 try:
-    from django.contrib.messages import info 
+    from django.contrib.messages import info
 except ImportError:
     def info(request, message, fail_silently=True):
         if request.user.is_authenticated():
@@ -62,7 +62,7 @@ def product_list(products, request, per_page):
 
 def product(request, slug, template="shop/product.html"):
     """
-    Display a product - convert the product variations to JSON as well as 
+    Display a product - convert the product variations to JSON as well as
     handling adding the product to either the cart or the wishlist.
     """
     published_products = Product.objects.published(for_user=request.user)
@@ -75,7 +75,7 @@ def product(request, slug, template="shop/product.html"):
         if add_product_form.is_valid():
             if to_cart:
                 Cart.objects.from_request(request).add_item(
-                    add_product_form.variation, 
+                    add_product_form.variation,
                     add_product_form.cleaned_data["quantity"])
                 info(request, _("Item added to cart"), fail_silently=True)
                 return HttpResponseRedirect(reverse("shop_cart"))
@@ -102,7 +102,7 @@ def product(request, slug, template="shop/product.html"):
         variations_json.append(variation_dict)
     variations_json = simplejson.dumps(variations_json)
     related = product.related_products.published(for_user=request.user)
-    context = {"product": product, "images": list(product.images.all()), 
+    context = {"product": product, "images": list(product.images.all()),
                "variations": variations, "variations_json": variations_json,
                "has_available_variations": has_available_variations,
                "related_products": list(related),
@@ -121,10 +121,10 @@ def search(request, template="shop/search_results.html"):
     context = {"query": query, "results": results}
     return render_to_response(template, context, RequestContext(request))
 
-    
+
 def wishlist(request, template="shop/wishlist.html"):
     """
-    Display the wishlist and handle removing items from the wishlist and 
+    Display the wishlist and handle removing items from the wishlist and
     adding them to the cart.
     """
 
@@ -224,15 +224,15 @@ def checkout_steps(request):
     """
     Display the order form and handle processing of each step.
     """
-    
-    # Do the authentication check here rather than using standard 
-    # login_required decorator. This means we can check for a custom 
+
+    # Do the authentication check here rather than using standard
+    # login_required decorator. This means we can check for a custom
     # LOGIN_URL and fall back to our own login view.
     authenticated = request.user.is_authenticated()
     if settings.SHOP_CHECKOUT_ACCOUNT_REQUIRED and not authenticated:
         url = "%s?next=%s" % (settings.LOGIN_URL, reverse("shop_checkout"))
         return HttpResponseRedirect(url)
-    
+
     step = int(request.POST.get("step", checkout.CHECKOUT_STEP_FIRST))
     initial = checkout.initial_order_data(request)
     form = OrderForm(request, step, initial=initial)
@@ -240,20 +240,20 @@ def checkout_steps(request):
     checkout_errors = []
 
     if request.POST.get("back") is not None:
-        # Back button was pressed - load the order form for the 
+        # Back button was pressed - load the order form for the
         # previous step and maintain the field values entered.
         step -= 1
         form = OrderForm(request, step, initial=initial)
     elif request.method == "POST":
         form = OrderForm(request, step, initial=initial, data=data)
         if form.is_valid():
-            # Copy the current form fields to the session so that 
-            # they're maintained if the customer leaves the checkout 
-            # process, but remove sensitive fields from the session 
-            # such as the cart number so that they're never stored 
+            # Copy the current form fields to the session so that
+            # they're maintained if the customer leaves the checkout
+            # process, but remove sensitive fields from the session
+            # such as the cart number so that they're never stored
             # anywhere.
             request.session["order"] = dict(form.cleaned_data)
-            sensitive_card_fields = ("card_number", "card_expiry_month", 
+            sensitive_card_fields = ("card_number", "card_expiry_month",
                                      "card_expiry_year", "card_ccv")
             for field in sensitive_card_fields:
                 del request.session["order"][field]
@@ -264,8 +264,8 @@ def checkout_steps(request):
                     billship_handler(request, form)
                 except checkout.CheckoutError, e:
                     checkout_errors.append(e)
-                # The order form gets assigned a discount attribute 
-                # when the discount_code field is validated via 
+                # The order form gets assigned a discount attribute
+                # when the discount_code field is validated via
                 # clean_discount_code()
                 discount = getattr(form, "discount", None)
                 if discount is not None:
@@ -278,10 +278,10 @@ def checkout_steps(request):
 
             # FINAL CHECKOUT STEP - handle payment and process order.
             if step == checkout.CHECKOUT_STEP_LAST and not checkout_errors:
-                # Create and save the inital order object so that 
-                # the payment handler has access to all of the order 
-                # fields. If there is a payment error then delete the 
-                # order, otherwise remove the cart items from stock 
+                # Create and save the inital order object so that
+                # the payment handler has access to all of the order
+                # fields. If there is a payment error then delete the
+                # order, otherwise remove the cart items from stock
                 # and send the order reciept email.
                 order = form.save(commit=False)
                 order.setup(request)
@@ -295,51 +295,51 @@ def checkout_steps(request):
                     if settings.SHOP_CHECKOUT_STEPS_CONFIRMATION:
                         step -= 1
                 else:
-                    # Finalize order - ``order.complete()`` performs 
-                    # final cleanup of session and cart. 
-                    # ``order_handler()`` can be defined by the 
+                    # Finalize order - ``order.complete()`` performs
+                    # final cleanup of session and cart.
+                    # ``order_handler()`` can be defined by the
                     # developer to implement custom order processing.
                     # Then send the order email to the customer.
                     order.complete(request)
                     order_handler(request, form, order)
                     checkout.send_order_email(request, order)
-                    # Set the cookie for remembering address details 
+                    # Set the cookie for remembering address details
                     # if the "remember" checkbox was checked.
                     response = HttpResponseRedirect(reverse("shop_complete"))
                     if form.cleaned_data.get("remember") is not None:
                         remembered = "%s:%s" % (sign(order.key), order.key)
-                        set_cookie(response, "remember", remembered, 
+                        set_cookie(response, "remember", remembered,
                                    secure=request.is_secure())
                     else:
                         response.delete_cookie("remember")
                     return response
 
-            # If any checkout errors, assign them to a new form and 
+            # If any checkout errors, assign them to a new form and
             # re-run is_valid. If valid, then set form to the next step.
-            form = OrderForm(request, step, initial=initial, data=data, 
+            form = OrderForm(request, step, initial=initial, data=data,
                              errors=checkout_errors)
             if form.is_valid():
                 step += 1
                 form = OrderForm(request, step, initial=initial)
-    
+
     step_vars = checkout.CHECKOUT_STEPS[step - 1]
     template = "shop/%s.html" % step_vars["template"]
     CHECKOUT_STEP_FIRST = step == checkout.CHECKOUT_STEP_FIRST
-    context = {"form": form, "CHECKOUT_STEP_FIRST": CHECKOUT_STEP_FIRST, 
-               "step_title": step_vars["title"], "step_url": step_vars["url"], 
+    context = {"form": form, "CHECKOUT_STEP_FIRST": CHECKOUT_STEP_FIRST,
+               "step_title": step_vars["title"], "step_url": step_vars["url"],
                "steps": checkout.CHECKOUT_STEPS, "step": step}
     return render_to_response(template, context, RequestContext(request))
 
 
 def complete(request, template="shop/complete.html"):
     """
-    Redirected to once an order is complete - pass the order object 
-    for tracking items via Google Anayltics, and displaying in 
+    Redirected to once an order is complete - pass the order object
+    for tracking items via Google Anayltics, and displaying in
     the template if required.
     """
     order = Order.objects.from_request(request)
     items = order.items.all()
-    # Assign product names to each of the items since they're not 
+    # Assign product names to each of the items since they're not
     # stored.
     skus = [item.sku for item in items]
     variations = ProductVariation.objects.filter(sku__in=skus)
