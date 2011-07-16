@@ -9,7 +9,7 @@
     .create-variations li label {width:auto;}
     .create-variations input {margin:-1px 3px 0px 5px;}
     .create-variations {margin-top:20px;}
-    .sku input {width:100px !important;} 
+    .sku input {width:100px !important;}
     .tiny {font-size:70%;}
     .unit_price input, .sale_price input, .num_in_stock input {
         width:50px !important;}
@@ -17,7 +17,7 @@
     .viewsitelink {display:none !important;}
     tr.add-row {display:none;}
     #add_id_categories {display:none;}
-    
+
 </style>
 <script type="text/javascript">
 
@@ -30,11 +30,18 @@ $(function() {
     if (grappelli) {
         variationsFieldset = $('#id_variations-INITIAL_FORMS').parent();
     } else {
-        variationsFieldset = $('#id_variations-INITIAL_FORMS + ' + 
+        variationsFieldset = $('#id_variations-INITIAL_FORMS + ' +
             'fieldset').parent().parent();
     }
     $('.create-variations').insertAfter(variationsFieldset);
-    
+    // Hide empty option fields.
+    $('.create-variations .form-row').each(function(i, row) {
+        row = $(row);
+        if (row.find('li').length == 0) {
+            row.hide();
+        }
+    });
+
     // Deselect default variation when another is selected as default.
     var variationDefaults = variationsFieldset.find(' .default input:checkbox');
     variationDefaults.click(function() {
@@ -48,8 +55,8 @@ $(function() {
             });
         }
     });
-    
-    // Grappelli removes the string value of inline objects, so show these 
+
+    // Grappelli removes the string value of inline objects, so show these
     // for the product variations.
     if (grappelli) {
         $.each(variationsFieldset.find('h3'), function(i, variation) {
