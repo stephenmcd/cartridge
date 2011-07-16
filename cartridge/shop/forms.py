@@ -63,6 +63,8 @@ def get_add_product_form(product):
             Set the form's selected variation if the selected options
             and quantity are valid.
             """
+            if not self.is_valid():
+                return
             options = self.cleaned_data.copy()
             quantity = options.pop("quantity", 0)
             # Ensure the product has a price if adding to cart.
