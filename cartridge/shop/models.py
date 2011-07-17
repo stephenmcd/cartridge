@@ -499,7 +499,8 @@ class Cart(models.Model):
         """
         skus = [item.sku for item in self]
         cart = Product.objects.filter(variations__sku__in=skus)
-        upsell = Product.objects.published().filter(upsell_products__in=cart)
+        upsell = Product.objects.published().filter(
+                     upsell_products__in=cart).exclude(variations__sku__in=skus)
         return list(upsell.distinct())
 
 
