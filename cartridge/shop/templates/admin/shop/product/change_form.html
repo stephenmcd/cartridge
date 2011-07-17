@@ -4,8 +4,8 @@
 {% block extrahead %}{{ block.super }}
 <style type="text/css">
 
+    .create-variations ul {margin-left:130px !important;}
     .create-variations li {list-style-type:none; float:left;}
-    .create-variations label {width:120px;}
     .create-variations li label {width:auto;}
     .create-variations input {margin:-1px 3px 0px 5px;}
     .create-variations {margin-top:20px;}
@@ -30,8 +30,7 @@ $(function() {
     if (grappelli) {
         variationsFieldset = $('#id_variations-INITIAL_FORMS').parent();
     } else {
-        variationsFieldset = $('#id_variations-INITIAL_FORMS + ' +
-            'fieldset').parent().parent();
+        variationsFieldset = $('#id_variations-INITIAL_FORMS').parent().parent();
     }
     $('.create-variations').insertAfter(variationsFieldset);
     // Hide empty option fields.
