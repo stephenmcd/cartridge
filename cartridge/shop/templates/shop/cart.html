@@ -37,14 +37,14 @@
 			<form method="post">
                 {% csrf_token %}
 				<input type="hidden" name="item_id" value="{{ item.id }}" />
-				<input type="submit" value="{% trans "Remove" %}" />
+				<input type="submit" value="X" />
 			</form>
 		</td>
 	</tr>
 	{% endfor %}
 	<tr>
-		<td colspan="3">{% trans "Total" %}</td>
-		<td>{{ cart.total_price|currency }}</td>
+		<td colspan="2">&nbsp;</td>
+		<td colspan="2">{% order_totals %}</td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
@@ -56,6 +56,16 @@
 		</td>
 	</tr>
 </table>
+
+{% if discount_form %}
+<form method="post" class="discount-form">
+    {% csrf_token %}
+    <ul>
+        {{ discount_form.as_ul }}
+        <li><input type="submit" class="button" value="Apply"></li>
+    </ul>
+</form>
+{% endif %}
 
 {% with cart.upsell_products as upsell_products %}
 {% if upsell_products %}

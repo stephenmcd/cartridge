@@ -55,7 +55,7 @@ def get_add_product_form(product):
                     values = filter(None, set(option_values[i]))
                     if values:
                         field = forms.ChoiceField(label=option_labels[i],
-                                                 choices=make_choices(values))
+                                                  choices=make_choices(values))
                         self.fields[name] = field
 
         def clean(self):
@@ -148,7 +148,54 @@ class FormsetForm(object):
         raise AttributeError(name)
 
 
-class OrderForm(FormsetForm, forms.ModelForm):
+class DiscountForm(forms.ModelForm):
+
+    class Meta:
+        model = Order
+        fields = ("discount_code",)
+
+    def __init__(self, request, data=None, initial=None):
+        """
+        Store the request so that it can be used to retrieve the cart
+        which is required to validate the discount code when entered.
+        """
+        super(DiscountForm, self).__init__(data=data, initial=initial)
+        self._request = request
+        # Hide Discount Code field if no codes are active.
+        if DiscountCode.objects.active().count() == 0:
+            self.fields["discount_code"].widget = forms.HiddenInput()
+
+    def clean_discount_code(self):
+        """
+        Validate the discount code if given, and attach the discount
+        instance to the form.
+        """
+        code = self.cleaned_data.get("discount_code", "")
+        if code:
+            cart = Cart.objects.from_request(self._request)
+            try:
+                discount = DiscountCode.objects.get_valid(code=code, cart=cart)
+                self._discount = discount
+            except DiscountCode.DoesNotExist:
+                error = _("The discount code entered is invalid.")
+                raise forms.ValidationError(error)
+        return code
+
+    def set_discount(self):
+        """
+        Assigns the session variables for the discount.
+        """
+        discount = getattr(self, "_discount", None)
+        if discount is not None:
+            cart = Cart.objects.from_request(self._request)
+            discount_total = discount.calculate(cart.total_price())
+            if discount.free_shipping:
+                set_shipping(self._request, _("Free shipping"), 0)
+            self._request.session["free_shipping"] = discount.free_shipping
+            self._request.session["discount_total"] = discount_total
+
+
+class OrderForm(FormsetForm, DiscountForm):
     """
     Main Form for the checkout process - ModelForm for the Order Model
     with extra fields for credit card. Used across each step of the
@@ -171,17 +218,16 @@ class OrderForm(FormsetForm, forms.ModelForm):
 
     class Meta:
         model = Order
-        fields = [f.name for f in Order._meta.fields if
-            f.name.startswith("billing_detail") or
-            f.name.startswith("shipping_detail")] + ["additional_instructions",
-            "discount_code"]
+        fields = ([f.name for f in Order._meta.fields if
+                   f.name.startswith("billing_detail") or
+                   f.name.startswith("shipping_detail")] +
+                   ["additional_instructions", "discount_code"])
 
     def __init__(self, request, step, data=None, initial=None, errors=None):
         """
         Handle setting shipping field values to the same as billing
         field values in case JavaScript is disabled, hiding fields for
-        current step and hiding discount_code field if there are
-        currently no active discount codes.
+        the current step.
         """
 
         # Copy billing fields to shipping fields if "same" checked.
@@ -205,9 +251,11 @@ class OrderForm(FormsetForm, forms.ModelForm):
             data = copy(data)
             data["step"] = step
 
-        super(OrderForm, self).__init__(data=data, initial=initial)
-        self._request = request
+        super(OrderForm, self).__init__(request, data=data, initial=initial)
         self._checkout_errors = errors
+        settings.use_editable()
+        if settings.SHOP_DISCOUNT_FIELD_IN_CHECKOUT:
+            self.fields["discount_code"].widget = forms.HiddenInput()
 
         # Determine which sets of fields to hide for each checkout step.
         hidden = None
@@ -227,30 +275,10 @@ class OrderForm(FormsetForm, forms.ModelForm):
                     self.fields[field].widget = forms.HiddenInput()
                     self.fields[field].required = False
 
-        # Hide Discount Code field if no codes are active.
-        if DiscountCode.objects.active().count() == 0:
-            self.fields["discount_code"].widget = forms.HiddenInput()
-
         # Set the choices for the cc expiry year relative to the current year.
         year = datetime.now().year
         choices = make_choices(range(year, year + 21))
         self.fields["card_expiry_year"].choices = choices
-
-    def clean_discount_code(self):
-        """
-        Validate the discount code if given, and attach the discount
-        instance to the form.
-        """
-        code = self.cleaned_data.get("discount_code", "")
-        if code:
-            cart = Cart.objects.from_request(self._request)
-            try:
-                discount = DiscountCode.objects.get_valid(code=code, cart=cart)
-                self.discount = discount
-            except DiscountCode.DoesNotExist:
-                error = _("The discount code entered is invalid.")
-                raise forms.ValidationError(error)
-        return code
 
     def clean(self):
         """
@@ -359,8 +387,8 @@ class MoneyWidget(forms.TextInput):
 class ProductAdminFormMetaclass(ModelFormMetaclass):
     """
     Metaclass for the Product Admin form that dynamically assigns each
-    of the types of product options as set of checkboxes for selecting
-    which options to use for creating new product variations.
+    of the types of product options as sets of checkboxes for selecting
+    which options to use when creating new product variations.
     """
     def __new__(cls, name, bases, attrs):
         for option in settings.SHOP_OPTION_TYPE_CHOICES:

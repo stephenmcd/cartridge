@@ -49,6 +49,10 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
 #variations li, #product-images-large li, #product-images-thumb li {
     margin:0; list-style-type:none; display:inline;}
 
+.discount-form ul {float:right;}
+.discount-form li {list-style-type:none; display:inline;}
+.discount-form .button {float:none; margin:0;}
+
 .login-signup form, #checkout-form, #add-cart {width:100%; padding:10px 0;}
 .login-signup form {margin-bottom:20px;}
 #add-cart {margin-bottom:20px;}
@@ -62,9 +66,11 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
 #additional_instructions label {width:auto;}
 
 .current-step {font-weight:bold;}
-
-.order-totals {text-align:right; width:250px;}
-.order-totals label {width:150px; float:left; text-align:left;}
+.checkout-totals {margin:0 0 20px 0;}
+.checkout-totals .order-totals {text-align:right; width:250px;}
+.checkout-totals .order-totals label {width:150px; float:left; text-align:left;}
+.order-totals li {list-style-type:none; white-space:nowrap;}
+.order-totals label {margin-right:3px;}
 
 .related h2 {font-weight:normal; float:left;}
 .related ul {clear:left;}

@@ -24,7 +24,7 @@ var _gaq = [['_trackPageview', '{{ request.path }}{{ step_url }}/']];
 
 {% block main %}
 
-<p>{% order_totals %}</p>
+<div class="checkout-totals">{% order_totals %}</div>
 
 <form method="post" id="checkout-form" class="form">
     {% csrf_token %}
@@ -48,11 +48,10 @@ var _gaq = [['_trackPageview', '{{ request.path }}{{ step_url }}/']];
 	    {% if not CHECKOUT_STEP_FIRST %}
 	    <input type="submit" class="button" name="back" value="{% trans "Back" %}" />
 	    {% endif %}
-	{% else %} 
+	{% else %}
     	<p>{% trans "Your cart is empty." %}</p>
 	{% endif %}
 
 </form>
 
 {% endblock %}
-

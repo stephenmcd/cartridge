@@ -68,6 +68,20 @@ register_setting(
 )
 
 register_setting(
+    name="SHOP_DISCOUNT_FIELD_IN_CART",
+    description="Can discount codes be entered on the cart page.",
+    editable=True,
+    default=True,
+)
+
+register_setting(
+    name="SHOP_DISCOUNT_FIELD_IN_CHECKOUT",
+    description="Can discount codes be entered on the first checkpout step.",
+    editable=True,
+    default=True,
+)
+
+register_setting(
     name="SHOP_FORCE_HOST",
     description="Host name that the site should always be accessed via that "
         "matches the SSL certificate.",

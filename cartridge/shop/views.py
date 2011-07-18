@@ -14,7 +14,7 @@ from mezzanine.utils.importing import import_dotted_path
 from mezzanine.utils.views import render_to_response
 
 from cartridge.shop import checkout
-from cartridge.shop.forms import OrderForm, LoginForm, SignupForm
+from cartridge.shop.forms import OrderForm, LoginForm, SignupForm, DiscountForm
 from cartridge.shop.forms import get_add_product_form
 from cartridge.shop.models import Product, ProductVariation, Cart, Order
 from cartridge.shop.utils import set_cookie, set_shipping, sign
@@ -175,12 +175,21 @@ def cart(request, template="shop/cart.html"):
     """
     Display cart and handle removing items from the cart.
     """
+    discount_form = DiscountForm(request, request.POST or None)
     if request.method == "POST":
-        cart = Cart.objects.from_request(request)
-        cart.remove_item(request.POST.get("item_id"))
-        info(request, _("Item removed from cart"), fail_silently=True)
+        remove_sku = request.POST.get("item_id")
+        if remove_sku:
+            cart = Cart.objects.from_request(request)
+            cart.remove_item(remove_sku)
+            info(request, _("Item removed from cart"), fail_silently=True)
+        elif discount_form.is_valid():
+            discount_form.set_discount()
         return HttpResponseRedirect(reverse("shop_cart"))
-    return render_to_response(template, {}, RequestContext(request))
+    context = {}
+    settings.use_editable()
+    if settings.SHOP_DISCOUNT_FIELD_IN_CART:
+        context["discount_form"] = discount_form
+    return render_to_response(template, context, RequestContext(request))
 
 
 def account(request, template="shop/account.html"):
@@ -240,8 +249,8 @@ def checkout_steps(request):
     checkout_errors = []
 
     if request.POST.get("back") is not None:
-        # Back button was pressed - load the order form for the
-        # previous step and maintain the field values entered.
+        # Back button in the form was pressed - load the order form
+        # for the previous step and maintain the field values entered.
         step -= 1
         form = OrderForm(request, step, initial=initial)
     elif request.method == "POST":
@@ -250,8 +259,8 @@ def checkout_steps(request):
             # Copy the current form fields to the session so that
             # they're maintained if the customer leaves the checkout
             # process, but remove sensitive fields from the session
-            # such as the cart number so that they're never stored
-            # anywhere.
+            # such as the credit card fields so that they're never
+            # stored anywhere.
             request.session["order"] = dict(form.cleaned_data)
             sensitive_card_fields = ("card_number", "card_expiry_month",
                                      "card_expiry_year", "card_ccv")
@@ -264,17 +273,7 @@ def checkout_steps(request):
                     billship_handler(request, form)
                 except checkout.CheckoutError, e:
                     checkout_errors.append(e)
-                # The order form gets assigned a discount attribute
-                # when the discount_code field is validated via
-                # clean_discount_code()
-                discount = getattr(form, "discount", None)
-                if discount is not None:
-                    cart = Cart.objects.from_request(request)
-                    discount_total = discount.calculate(cart.total_price())
-                    if discount.free_shipping:
-                        set_shipping(request, _("Free shipping"), 0)
-                    request.session["free_shipping"] = discount.free_shipping
-                    request.session["discount_total"] = discount_total
+                form.set_discount()
 
             # FINAL CHECKOUT STEP - handle payment and process order.
             if step == checkout.CHECKOUT_STEP_LAST and not checkout_errors:
