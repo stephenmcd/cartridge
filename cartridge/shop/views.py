@@ -16,7 +16,8 @@ from mezzanine.utils.views import render_to_response
 from cartridge.shop import checkout
 from cartridge.shop.forms import OrderForm, LoginForm, SignupForm, DiscountForm
 from cartridge.shop.forms import get_add_product_form
-from cartridge.shop.models import Product, ProductVariation, Cart, Order
+from cartridge.shop.models import Product, ProductVariation
+from cartridge.shop.models import Cart, Order, DiscountCode
 from cartridge.shop.utils import set_cookie, set_shipping, sign
 
 
@@ -187,7 +188,8 @@ def cart(request, template="shop/cart.html"):
         return HttpResponseRedirect(reverse("shop_cart"))
     context = {}
     settings.use_editable()
-    if settings.SHOP_DISCOUNT_FIELD_IN_CART:
+    if (settings.SHOP_DISCOUNT_FIELD_IN_CART and
+        DiscountCode.objects.active().count() > 0):
         context["discount_form"] = discount_form
     return render_to_response(template, context, RequestContext(request))
 

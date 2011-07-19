@@ -161,9 +161,6 @@ class DiscountForm(forms.ModelForm):
         """
         super(DiscountForm, self).__init__(data=data, initial=initial)
         self._request = request
-        # Hide Discount Code field if no codes are active.
-        if DiscountCode.objects.active().count() == 0:
-            self.fields["discount_code"].widget = forms.HiddenInput()
 
     def clean_discount_code(self):
         """
@@ -254,7 +251,9 @@ class OrderForm(FormsetForm, DiscountForm):
         super(OrderForm, self).__init__(request, data=data, initial=initial)
         self._checkout_errors = errors
         settings.use_editable()
-        if settings.SHOP_DISCOUNT_FIELD_IN_CHECKOUT:
+        # Hide Discount Code field if no codes are active.
+        if (DiscountCode.objects.active().count() == 0 or
+            not settings.SHOP_DISCOUNT_FIELD_IN_CHECKOUT):
             self.fields["discount_code"].widget = forms.HiddenInput()
 
         # Determine which sets of fields to hide for each checkout step.
