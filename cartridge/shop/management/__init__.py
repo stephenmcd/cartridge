@@ -18,11 +18,11 @@ def create_initial_product(app, created_models, verbosity, **kwargs):
                 elif confirm == "no":
                     return
                 confirm = raw_input("Please enter either 'yes' or 'no': ")
-        print
-        print "Creating initial Category and Product."
-        print
+        if verbosity >= 1:
+            print
+            print "Creating initial Category and Product ..."
+            print
         call_command("loaddata", "cartridge.json")
 
 
-if "south" not in settings.INSTALLED_APPS:
-    post_syncdb.connect(create_initial_product, sender=shop_app)
+post_syncdb.connect(create_initial_product, sender=shop_app)
