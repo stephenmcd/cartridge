@@ -92,6 +92,7 @@
         "fields": {
             "product": 1,
             "description": "",
+            "_order": 1,
             "file": "product/red.png"
         }
     },
@@ -101,6 +102,7 @@
         "fields": {
             "product": 1,
             "description": "",
+            "_order": 2,
             "file": "product/yellow.png"
         }
     },
@@ -110,6 +112,7 @@
         "fields": {
             "product": 1,
             "description": "",
+            "_order": 3,
             "file": "product/green.png"
         }
     },
@@ -119,6 +122,7 @@
         "fields": {
             "product": 1,
             "description": "",
+            "_order": 4,
             "file": "product/blue.png"
         }
     },

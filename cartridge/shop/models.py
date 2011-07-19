@@ -10,7 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from mezzanine.conf import settings
 from mezzanine.core.managers import DisplayableManager
-from mezzanine.core.models import Displayable, RichText
+from mezzanine.core.models import Displayable, RichText, Orderable
 from mezzanine.generic.fields import RatingField
 from mezzanine.pages.models import Page
 
@@ -175,7 +175,7 @@ class Product(Displayable, Priced, RichText):
     admin_thumb.short_description = ""
 
 
-class ProductImage(models.Model):
+class ProductImage(Orderable):
     """
     An image for a product - a relationship is also defined with the
     product's variations so that each variation can potentially have
@@ -191,6 +191,7 @@ class ProductImage(models.Model):
     class Meta:
         verbose_name = _("Image")
         verbose_name_plural = _("Images")
+        order_with_respect_to = "product"
 
     def __unicode__(self):
         value = self.description
