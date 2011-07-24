@@ -467,15 +467,6 @@ class Cart(models.Model):
         item.quantity += quantity
         item.save()
 
-    def remove_item(self, item_id):
-        """
-        Remove item by SKU.
-        """
-        try:
-            self.items.get(id=item_id).delete()
-        except CartItem.DoesNotExist:
-            pass
-
     def has_items(self):
         """
         Template helper function - does the cart have items?

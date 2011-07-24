@@ -29,7 +29,7 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
 
 .products li {float:left; margin:10px 15px 0 0 !important;
     padding:10px; text-align:center; background:#ddd; width:95px;
-    height:210px;}
+    height:210px; list-style-type:none;}
 .products li .img {width:90px; height:90px; margin:auto;
     padding:0 !important; border:2px solid #333; margin-bottom:5px;}
 .img img {margin:0;}

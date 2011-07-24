@@ -13,6 +13,9 @@
 
 {% block main %}
 {% if cart.has_items %}
+<form method="post">
+{% csrf_token %}
+{{ cart_formset.management_form }}
 <table id="items" border="0" cellpadding="5" cellspacing="0">
 	<tr>
 		<th class="items-item">{% trans "Item" %}</th>
@@ -22,6 +25,8 @@
 		<th>&nbsp;</th>
 	</tr>
 	{% for item in cart %}
+    {% for form in cart_formset %}
+    {% ifequal form.instance item %}
 	<tr class="{% cycle 'row1' 'row2' %}">
 		<td class="items-item">
 			{% if item.image %}
@@ -31,16 +36,12 @@
 			<a href="{{ item.get_absolute_url }}">{{ item.description }}</a>
 		</td>
 		<td>{{ item.unit_price|currency }}</td>
-		<td>{{ item.quantity }}</td>
+		<td>{{ form.quantity }}</td>
 		<td>{{ item.total_price|currency }}</td>
-		<td class="buttons">
-			<form method="post">
-                {% csrf_token %}
-				<input type="hidden" name="item_id" value="{{ item.id }}" />
-				<input type="submit" value="X" />
-			</form>
-		</td>
+		<td>{{ form.delete }}</td>
 	</tr>
+    {% endifequal %}
+    {% endfor %}
 	{% endfor %}
 	<tr>
 		<td colspan="2">&nbsp;</td>
@@ -49,6 +50,7 @@
 	</tr>
 	<tr>
 		<td colspan="5">
+            <input type="submit" name="update_cart" value="Update Cart"></form>
 			<form action="{% url shop_checkout %}">
 				<input type="submit" class="button"
 					value="{% trans "Go to Checkout" %}" />

@@ -7,6 +7,7 @@ from re import match
 
 from django import forms
 from django.forms.models import BaseInlineFormSet, ModelFormMetaclass
+from django.forms.models import inlineformset_factory
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.utils.datastructures import SortedDict
@@ -18,7 +19,7 @@ from mezzanine.core.templatetags.mezzanine_tags import thumbnail
 
 from cartridge.shop import checkout
 from cartridge.shop.models import Product, ProductOption, ProductVariation
-from cartridge.shop.models import Cart, Order, DiscountCode
+from cartridge.shop.models import Cart, CartItem, Order, DiscountCode
 from cartridge.shop.utils import make_choices, set_locale
 
 
@@ -87,6 +88,22 @@ def get_add_product_form(product):
             return self.cleaned_data
 
     return AddProductForm
+
+class CartItemForm(forms.ModelForm):
+
+    class Meta:
+        model = CartItem
+        fields = ("quantity",)
+
+    def clean_quantity(self):
+        variation = ProductVariation.objects.get(sku=self.instance.sku)
+        quantity = self.cleaned_data["quantity"]
+        if not variation.has_stock(quantity - self.instance.quantity):
+            raise forms.ValidationError(ADD_PRODUCT_ERRORS["no_stock_quantity"])
+        return quantity
+
+CartItemFormSet = inlineformset_factory(Cart, CartItem, form=CartItemForm,
+                                        can_delete=True, extra=0)
 
 
 class FormsetForm(object):

@@ -15,7 +15,7 @@ from mezzanine.utils.views import render_to_response
 
 from cartridge.shop import checkout
 from cartridge.shop.forms import OrderForm, LoginForm, SignupForm, DiscountForm
-from cartridge.shop.forms import get_add_product_form
+from cartridge.shop.forms import get_add_product_form, CartItemFormSet
 from cartridge.shop.models import Product, ProductVariation
 from cartridge.shop.models import Cart, Order, DiscountCode
 from cartridge.shop.utils import set_cookie, set_shipping, sign
@@ -176,17 +176,23 @@ def cart(request, template="shop/cart.html"):
     """
     Display cart and handle removing items from the cart.
     """
+    cart = Cart.objects.from_request(request)
+    cart_formset = CartItemFormSet(request.POST or None, instance=cart)
     discount_form = DiscountForm(request, request.POST or None)
     if request.method == "POST":
-        remove_sku = request.POST.get("item_id")
-        if remove_sku:
-            cart = Cart.objects.from_request(request)
-            cart.remove_item(remove_sku)
-            info(request, _("Item removed from cart"), fail_silently=True)
-        elif discount_form.is_valid():
-            discount_form.set_discount()
-        return HttpResponseRedirect(reverse("shop_cart"))
-    context = {}
+        valid = True
+        if request.POST.get("update_cart"):
+            valid = cart_formset.is_valid()
+            if valid:
+                cart_formset.save()
+                info(request, _("Cart updated"), fail_silently=True)
+        else:
+            valid = discount_form.is_valid()
+            if valid:
+                discount_form.set_discount()
+        if valid:
+            return HttpResponseRedirect(reverse("shop_cart"))
+    context = {"cart_formset": cart_formset}
     settings.use_editable()
     if (settings.SHOP_DISCOUNT_FIELD_IN_CART and
         DiscountCode.objects.active().count() > 0):
