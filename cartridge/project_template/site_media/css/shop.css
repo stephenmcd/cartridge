@@ -16,7 +16,7 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
 #items .description {text-align:left !important; width:100%;}
 #items .image img {width:30px; height:30px;}
 #items .delete {text-align:center;}
-.quantity input {width:25px; text-align:center;}
+.quantity input, #id_quantity {width:30px; text-align:center;}
 .row1 {background:#eee;}
 .row2 {background:#ddd;}
 .row1 td, .row2 td {border-right:1px solid #ccc; vertical-align:middle;}

@@ -30,72 +30,108 @@ ADD_PRODUCT_ERRORS = {
 }
 
 
-def get_add_product_form(product):
+class AddProductForm(forms.Form):
     """
-    Return the form for adding the given product to the cart or the
+    A form for adding the given product to the cart or the
     wishlist.
     """
 
-    class AddProductForm(forms.Form):
+    quantity = forms.IntegerField(min_value=1)
+    sku = forms.CharField(required=False, widget=forms.HiddenInput())
 
-        quantity = forms.IntegerField(min_value=1)
+    def __init__(self, *xargs, **kwargs):
+        """
+        Handles adding a variation to the cart or wishlist.
 
-        def __init__(self, *args, **kwargs):
-            """
-            Create each ChoiceField for selecting from the product's
-            variations.
-            """
-            self._to_cart = kwargs.pop("to_cart", True)
-            super(AddProductForm, self).__init__(*args, **kwargs)
-            option_names, option_labels = zip(*[(f.name, f.verbose_name)
-                for f in ProductVariation.option_fields()])
-            option_values = zip(*product.variations.filter(
-                unit_price__isnull=False).values_list(*option_names))
-            if option_values:
-                for i, name in enumerate(option_names):
-                    values = filter(None, set(option_values[i]))
-                    if values:
-                        field = forms.ChoiceField(label=option_labels[i],
-                                                  choices=make_choices(values))
-                        self.fields[name] = field
+        When adding from the product page, the product is provided
+        from the view and a set of choice fields for all the
+        product options for this product's variations are added to
+        the form. When the form is validated, the selected options
+        are used to determine the chosen variation.
 
-        def clean(self):
-            """
-            Set the form's selected variation if the selected options
-            and quantity are valid.
-            """
-            if not self.is_valid():
-                return
-            options = self.cleaned_data.copy()
-            quantity = options.pop("quantity", 0)
-            # Ensure the product has a price if adding to cart.
+        A ``to_cart`` boolean keyword arg is also given specifying
+        whether the product is being added to a cart or wishlist.
+        If a product is being added to the cart, then its stock
+        level is also validated.
+
+        When adding to the cart from the wishlist page, a sku is
+        given for the variation, so the creation of choice fields
+        is skipped.
+        """
+        self._product = kwargs.pop("product", None)
+        self._to_cart = kwargs.pop("to_cart")
+        super(AddProductForm, self).__init__(*xargs, **kwargs)
+        # Adding from the wishlist with a sku, bail out.
+        if xargs[0] is not None and xargs[0].get("sku", None):
+            return
+        # Adding from the product page, remove the sku field
+        # and build the choice fields for the variations.
+        del self.fields["sku"]
+        option_names, option_labels = zip(*[(f.name, f.verbose_name)
+            for f in ProductVariation.option_fields()])
+        option_values = zip(*self._product.variations.filter(
+            unit_price__isnull=False).values_list(*option_names))
+        if option_values:
+            for i, name in enumerate(option_names):
+                values = filter(None, set(option_values[i]))
+                if values:
+                    field = forms.ChoiceField(label=option_labels[i],
+                                              choices=make_choices(values))
+                    self.fields[name] = field
+
+    def clean(self):
+        """
+        Determine the chosen variation, validate it and assign it as
+        an attribute to be used in views.
+        """
+        if not self.is_valid():
+            return
+        # Posted data will either be a sku, or product options for
+        # a variation.
+        data = self.cleaned_data.copy()
+        quantity = data.pop("quantity")
+        # Ensure the product has a price if adding to cart.
+        if self._to_cart:
+            data["unit_price__isnull"] = False
+        error = None
+        if self._product is not None:
+            # Chosen options will be passed to the product's
+            # variations.
+            qs = self._product.variations
+        else:
+            # A product hasn't been given since we have a direct sku.
+            qs = ProductVariation.objects
+        try:
+            variation = qs.get(**data)
+        except ProductVariation.DoesNotExist:
+            error = "invalid_options"
+        else:
+            # Validate stock if adding to cart.
             if self._to_cart:
-                options["unit_price__isnull"] = False
-            error = None
-            try:
-                variation = product.variations.get(**options)
-            except ProductVariation.DoesNotExist:
-                error = "invalid_options"
-            else:
-                if self._to_cart:
-                    if not variation.has_stock():
-                        error = "no_stock"
-                    elif not variation.has_stock(quantity):
-                        error = "no_stock_quantity"
-            if error is not None:
-                raise forms.ValidationError(ADD_PRODUCT_ERRORS[error])
-            self.variation = variation
-            return self.cleaned_data
+                if not variation.has_stock():
+                    error = "no_stock"
+                elif not variation.has_stock(quantity):
+                    error = "no_stock_quantity"
+        if error is not None:
+            raise forms.ValidationError(ADD_PRODUCT_ERRORS[error])
+        self.variation = variation
+        return self.cleaned_data
 
-    return AddProductForm
 
 class CartItemForm(forms.ModelForm):
+    """
+    Model form for each item in the cart - used for the
+    ``CartItemFormSet`` below which controls editing the entire cart.
+    """
 
     class Meta:
         model = CartItem
         fields = ("quantity",)
 
     def clean_quantity(self):
+        """
+        Validate that the given quantity is available.
+        """
         variation = ProductVariation.objects.get(sku=self.instance.sku)
         quantity = self.cleaned_data["quantity"]
         if not variation.has_stock(quantity - self.instance.quantity):

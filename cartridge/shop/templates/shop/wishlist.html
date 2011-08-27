@@ -11,6 +11,7 @@
 {% endblock %}
 
 {% block main %}
+{{ error }}
 {% if wishlist %}
 <table id="items" border="0" cellpadding="5" cellspacing="0">
 	{% for item in wishlist %}
@@ -26,6 +27,7 @@
 			<form method="post">
                 {% csrf_token %}
 				<input type="hidden" name="sku" value="{{ item.sku }}" />
+				<input type="hidden" name="quantity" value="1" />
 				<input type="submit" name="remove_wishlist" value="{% trans "Remove" %}" />
 				<input type="submit" name="add_cart" value="{% trans "Buy now" %}" />
 			</form>
@@ -37,4 +39,3 @@
 <p>{% trans "Your wishlist is empty." %}</p>
 {% endif %}
 {% endblock %}
-

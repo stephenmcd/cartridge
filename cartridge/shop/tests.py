@@ -213,8 +213,14 @@ class ShopTests(TestCase):
         self.assertEqual(cart.total_price(), TEST_PRICE * TEST_STOCK * 2)
 
         # Remove from cart.
-        for item in cart:
-            self.client.post(reverse("shop_cart"), {"item_id": item.id})
+        data = {"items-INITIAL_FORMS": 0, "items-TOTAL_FORMS": 0,
+                "update_cart": 1}
+        for i, item in enumerate(cart):
+            data["items-INITIAL_FORMS"] += 1
+            data["items-TOTAL_FORMS"] += 1
+            data["items-%s-id" % i] = item.id
+            data["items-%s-DELETE" % i] = "on"
+        self.client.post(reverse("shop_cart"), data)
         cart = Cart.objects.from_request(self.client)
         variation = self._product.variations.all()[0]
         self.assertTrue(variation.has_stock(TEST_STOCK * 2))

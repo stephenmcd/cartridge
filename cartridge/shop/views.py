@@ -15,7 +15,7 @@ from mezzanine.utils.views import render_to_response
 
 from cartridge.shop import checkout
 from cartridge.shop.forms import OrderForm, LoginForm, SignupForm, DiscountForm
-from cartridge.shop.forms import get_add_product_form, CartItemFormSet
+from cartridge.shop.forms import AddProductForm, CartItemFormSet
 from cartridge.shop.models import Product, ProductVariation
 from cartridge.shop.models import Cart, Order, DiscountCode
 from cartridge.shop.utils import set_cookie, sign
@@ -68,11 +68,10 @@ def product(request, slug, template="shop/product.html"):
     """
     published_products = Product.objects.published(for_user=request.user)
     product = get_object_or_404(published_products, slug=slug)
-    AddProductForm = get_add_product_form(product)
-    add_product_form = AddProductForm(initial={"quantity": 1})
+    to_cart = request.method == "POST" and request.POST.get("add_wishlist") is None
+    add_product_form = AddProductForm(request.POST or None, product=product,
+                                      initial={"quantity": 1}, to_cart=to_cart)
     if request.method == "POST":
-        to_cart = request.POST.get("add_wishlist") is None
-        add_product_form = AddProductForm(request.POST, to_cart=to_cart)
         if add_product_form.is_valid():
             if to_cart:
                 Cart.objects.from_request(request).add_item(
@@ -89,25 +88,20 @@ def product(request, slug, template="shop/product.html"):
                 response = HttpResponseRedirect(reverse("shop_wishlist"))
                 set_cookie(response, "wishlist", ",".join(skus))
                 return response
-    # Build variations JSON from list of variation dicts.
     fields = [f.name for f in ProductVariation.option_fields()]
-    fields.extend(["sku", "image_id"])
-    variations = []
-    variations_json = []
-    has_available_variations = False
-    for variation in product.variations.all():
-        if not has_available_variations and variation.has_price():
-            has_available_variations = True
-        variations.append(variation)
-        variation_dict = dict([(f, getattr(variation, f)) for f in fields])
-        variations_json.append(variation_dict)
-    variations_json = simplejson.dumps(variations_json)
-    related = product.related_products.published(for_user=request.user)
-    context = {"product": product, "images": list(product.images.all()),
-               "variations": variations, "variations_json": variations_json,
-               "has_available_variations": has_available_variations,
-               "related_products": list(related),
-               "add_product_form": add_product_form}
+    fields += ["sku", "image_id"]
+    variations = product.variations.all()
+    variations_json = simplejson.dumps([dict([(f, getattr(v, f)) for f in fields])
+                                        for v in variations])
+    context = {
+        "product": product,
+        "images": product.images.all(),
+        "variations": variations,
+        "variations_json": variations_json,
+        "has_available_variations": any([v.has_price() for v in variations]),
+        "related": product.related_products.published(for_user=request.user),
+        "add_product_form": add_product_form
+    }
     return render_to_response(template, context, RequestContext(request))
 
 
@@ -132,30 +126,25 @@ def wishlist(request, template="shop/wishlist.html"):
     skus = request.COOKIES.get("wishlist", "").split(",")
     error = None
     if request.method == "POST":
-        sku = request.POST.get("sku")
-        to_cart = request.POST.get("add_cart") is not None
+        to_cart = request.POST.get("add_cart")
+        add_product_form = AddProductForm(request.POST or None, to_cart=to_cart)
         if to_cart:
-            quantity = 1
-            try:
-                variation = ProductVariation.objects.get(sku=sku)
-            except ProductVariation:
-                error = _("This item is no longer available")
-            else:
-                if not variation.has_stock(quantity):
-                    error = _("This item is currently out of stock")
-                else:
-                    cart = Cart.objects.from_request(request)
-                    cart.add_item(variation, quantity)
-        if error is None:
-            if sku in skus:
-                skus.remove(sku)
-            if to_cart:
+            if add_product_form.is_valid():
+                Cart.objects.from_request(request).add_item(
+                    add_product_form.variation, 1)
                 message = _("Item added to cart")
-                response = HttpResponseRedirect(reverse("shop_cart"))
+                url = reverse("shop_cart")
             else:
-                message = _("Item removed from wishlist")
-                response = HttpResponseRedirect(reverse("shop_wishlist"))
+                error = add_product_form.errors.values()[0]
+        else:
+            message = _("Item removed from wishlist")
+            url = reverse("shop_wishlist")
+        sku = request.POST.get("sku")
+        if sku in skus:
+            skus.remove(sku)
+        if not error:
             info(request, message)
+            response = HttpResponseRedirect(url)
             set_cookie(response, "wishlist", ",".join(skus))
             return response
 
