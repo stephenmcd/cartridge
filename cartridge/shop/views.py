@@ -78,14 +78,14 @@ def product(request, slug, template="shop/product.html"):
                 Cart.objects.from_request(request).add_item(
                     add_product_form.variation,
                     add_product_form.cleaned_data["quantity"])
-                info(request, _("Item added to cart"), fail_silently=True)
+                info(request, _("Item added to cart"))
                 return HttpResponseRedirect(reverse("shop_cart"))
             else:
                 skus = request.COOKIES.get("wishlist", "").split(",")
                 sku = add_product_form.variation.sku
                 if sku not in skus:
                     skus.append(sku)
-                info(request, _("Item added to wishlist"), fail_silently=True)
+                info(request, _("Item added to wishlist"))
                 response = HttpResponseRedirect(reverse("shop_wishlist"))
                 set_cookie(response, "wishlist", ",".join(skus))
                 return response
@@ -155,7 +155,7 @@ def wishlist(request, template="shop/wishlist.html"):
             else:
                 message = _("Item removed from wishlist")
                 response = HttpResponseRedirect(reverse("shop_wishlist"))
-            info(request, message, fail_silently=True)
+            info(request, message)
             set_cookie(response, "wishlist", ",".join(skus))
             return response
 
@@ -187,13 +187,13 @@ def cart(request, template="shop/cart.html"):
             valid = cart.has_items()
             if not valid:
                 # Session timed out.
-                info(request, _("Your cart has expired"), fail_silently=True)
+                info(request, _("Your cart has expired"))
             else:
                 cart_formset = CartItemFormSet(request.POST, instance=cart)
                 valid = cart_formset.is_valid()
                 if valid:
                     cart_formset.save()
-                    info(request, _("Cart updated"), fail_silently=True)
+                    info(request, _("Cart updated"))
         else:
             valid = discount_form.is_valid()
             if valid:
@@ -230,7 +230,7 @@ def account(request, template="shop/account.html"):
                 message = _("Successfully signed up")
         if posted_form is not None:
             posted_form.login(request)
-            info(request, message, fail_silently=True)
+            info(request, message)
             return HttpResponseRedirect(request.GET.get("next", "/"))
     context = {"login_form": login_form, "signup_form": signup_form}
     return render_to_response(template, context, RequestContext(request))
@@ -241,7 +241,7 @@ def logout(request):
     Log the user out.
     """
     auth_logout(request)
-    info(request, _("Successfully logged out"), fail_silently=True)
+    info(request, _("Successfully logged out"))
     return HttpResponseRedirect(request.GET.get("next", "/"))
 
 

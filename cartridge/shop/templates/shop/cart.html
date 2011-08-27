@@ -15,6 +15,9 @@
 {% if cart.has_items %}
 <form method="post">
 {% csrf_token %}
+{% for error in cart_formset.errors %}
+{% if error.values.0 %}{{ error.values.0 }}{% endif %}
+{% endfor %}
 {{ cart_formset.management_form }}
 <table id="items" border="0" cellpadding="5" cellspacing="0">
 	<tr>
