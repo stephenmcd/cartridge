@@ -53,10 +53,10 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
 #variations li, #product-images-large li, #product-images-thumb li {
     margin:0; list-style-type:none; display:inline;}
 
-.discount-form ul {float:right;}
+.discount-form ul {text-align:right; background:#eee; width:100%; padding:10px 0;}
 .discount-form li {list-style-type:none; display:inline;}
-.discount-form .button {float:none; margin:0; padding:3px 10px;}
-.discount-form .errorlist {float:none; margin-bottom:5px;}
+.discount-form .button {float:none; margin:0 10px 0 0; padding:3px 10px;}
+.discount-form .errorlist {float:none;}
 
 .login-signup form, #checkout-form, #add-cart {width:100%; padding:10px 0;}
 .login-signup form {margin-bottom:20px;}
