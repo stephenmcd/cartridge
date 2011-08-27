@@ -44,7 +44,7 @@ var _gaq = [['_trackPageview', '{{ request.path }}{{ step_url }}/']];
 	{% block fields %}{% endblock %}
 
 	{% if cart.has_items %}
-	    <input type="submit" class="button" value="{% trans "Next" %}" />
+	    <input type="submit" class="button action" value="{% trans "Next" %}" />
 	    {% if not CHECKOUT_STEP_FIRST %}
 	    <input type="submit" class="button" name="back" value="{% trans "Back" %}" />
 	    {% endif %}

@@ -102,7 +102,7 @@ def send_order_email(request, order):
         order_context["order_%s_fields" % fieldset] = fields
     send_mail_template(_("Order Receipt"), "shop/email/order_receipt",
         settings.SHOP_ORDER_FROM_EMAIL, order.billing_detail_email,
-        context=order_context)
+        context=order_context, fail_silently=settings.DEBUG)
 
 
 # Set up some constants for identifying each checkout step.

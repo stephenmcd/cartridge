@@ -18,7 +18,7 @@ from cartridge.shop.forms import OrderForm, LoginForm, SignupForm, DiscountForm
 from cartridge.shop.forms import get_add_product_form, CartItemFormSet
 from cartridge.shop.models import Product, ProductVariation
 from cartridge.shop.models import Cart, Order, DiscountCode
-from cartridge.shop.utils import set_cookie, set_shipping, sign
+from cartridge.shop.utils import set_cookie, sign
 
 
 # Set up checkout handlers.
@@ -176,16 +176,24 @@ def cart(request, template="shop/cart.html"):
     """
     Display cart and handle removing items from the cart.
     """
+    if request.POST.get("checkout"):
+        return HttpResponseRedirect(reverse("shop_checkout"))
     cart = Cart.objects.from_request(request)
-    cart_formset = CartItemFormSet(request.POST or None, instance=cart)
+    cart_formset = CartItemFormSet(instance=cart)
     discount_form = DiscountForm(request, request.POST or None)
     if request.method == "POST":
         valid = True
         if request.POST.get("update_cart"):
-            valid = cart_formset.is_valid()
-            if valid:
-                cart_formset.save()
-                info(request, _("Cart updated"), fail_silently=True)
+            valid = cart.has_items()
+            if not valid:
+                # Session timed out.
+                info(request, _("Your cart has expired"), fail_silently=True)
+            else:
+                cart_formset = CartItemFormSet(request.POST, instance=cart)
+                valid = cart_formset.is_valid()
+                if valid:
+                    cart_formset.save()
+                    info(request, _("Cart updated"), fail_silently=True)
         else:
             valid = discount_form.is_valid()
             if valid:

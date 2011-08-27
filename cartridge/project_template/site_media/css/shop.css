@@ -13,12 +13,16 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
 #items {width:100%;}
 #items th, #items td {text-align:right; padding:5px; font-size:80%;}
 #items th {background:#ccc; white-space:nowrap;}
-.items-item {text-align:left !important; width:100%;}
-.items-item form {display:inline;}
-.items-item img {width:30px; height:30px; vertical-align:middle;
-    margin-right:5px;}
+#items .description {text-align:left !important; width:100%;}
+#items .image img {width:30px; height:30px;}
+#items .delete {text-align:center;}
+.quantity input {width:25px; text-align:center;}
 .row1 {background:#eee;}
 .row2 {background:#ddd;}
+.row1 td, .row2 td {border-right:1px solid #ccc; vertical-align:middle;}
+#items .image, #items .description, #items .delete {border-right:0;}
+#items .image, #items .description {vertical-align:top;}
+
 
 #checkout #grid-left *, #checkout #grid-right *,
     #checkout #breadcrum-menu {display:none;}
@@ -51,7 +55,8 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
 
 .discount-form ul {float:right;}
 .discount-form li {list-style-type:none; display:inline;}
-.discount-form .button {float:none; margin:0;}
+.discount-form .button {float:none; margin:0; padding:3px 10px;}
+.discount-form .errorlist {float:none; margin-bottom:5px;}
 
 .login-signup form, #checkout-form, #add-cart {width:100%; padding:10px 0;}
 .login-signup form {margin-bottom:20px;}
@@ -68,9 +73,20 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
 .current-step {font-weight:bold;}
 .checkout-totals {margin:0 0 20px 0;}
 .checkout-totals .order-totals {text-align:right; width:250px;}
-.checkout-totals .order-totals label {width:150px; float:left; text-align:left;}
-.order-totals li {list-style-type:none; white-space:nowrap;}
-.order-totals label {margin-right:3px;}
+.order-totals li {
+    list-style-type:none; white-space:nowrap; padding:3px 0;
+    border-bottom:1px solid #ccc;
+}
+.order-totals label {margin-right:3px; width:80px; float:left; text-align:left;}
 
 .related h2 {font-weight:normal; float:left;}
 .related ul {clear:left;}
+
+.button {margin-right:0; padding:10px 20px;
+    border-radius:5px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+}
+.action {margin-right:10px; padding:10px 30px; font-weight:bold;}
+
+#items .action {margin-right:-5px;}

@@ -20,7 +20,7 @@ from mezzanine.core.templatetags.mezzanine_tags import thumbnail
 from cartridge.shop import checkout
 from cartridge.shop.models import Product, ProductOption, ProductVariation
 from cartridge.shop.models import Cart, CartItem, Order, DiscountCode
-from cartridge.shop.utils import make_choices, set_locale
+from cartridge.shop.utils import make_choices, set_locale, set_shipping
 
 
 ADD_PRODUCT_ERRORS = {

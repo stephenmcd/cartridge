@@ -18,46 +18,49 @@
 {{ cart_formset.management_form }}
 <table id="items" border="0" cellpadding="5" cellspacing="0">
 	<tr>
-		<th class="items-item">{% trans "Item" %}</th>
+		<th class="description" colspan="2">{% trans "Item" %}</th>
 		<th>{% trans "Unit Price" %}</th>
 		<th>{% trans "Qty" %}</th>
 		<th>{% trans "Price" %}</th>
-		<th>&nbsp;</th>
+		<th>{% trans "Remove?" %}</th>
 	</tr>
 	{% for item in cart %}
     {% for form in cart_formset %}
     {% ifequal form.instance item %}
+    {{ form.id }}
 	<tr class="{% cycle 'row1' 'row2' %}">
-		<td class="items-item">
+		<td class="image">
 			{% if item.image %}
 			<a href="{{ item.get_absolute_url }}"><img alt="{{ item.description }}"
 				src="{{ MEDIA_URL }}{% thumbnail item.image 30 30 %}" /></a>
 			{% endif %}
-			<a href="{{ item.get_absolute_url }}">{{ item.description }}</a>
 		</td>
+		<td class="description">
+		    <a href="{{ item.get_absolute_url }}">{{ item.description }}</a>
+        </td>
 		<td>{{ item.unit_price|currency }}</td>
-		<td>{{ form.quantity }}</td>
+		<td class="quantity">{{ form.quantity }}</td>
 		<td>{{ item.total_price|currency }}</td>
-		<td>{{ form.delete }}</td>
+		<td class="delete">{{ form.DELETE }}</td>
 	</tr>
     {% endifequal %}
     {% endfor %}
 	{% endfor %}
 	<tr>
-		<td colspan="2">&nbsp;</td>
+		<td colspan="3">&nbsp;</td>
 		<td colspan="2">{% order_totals %}</td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
-		<td colspan="5">
-            <input type="submit" name="update_cart" value="Update Cart"></form>
-			<form action="{% url shop_checkout %}">
-				<input type="submit" class="button"
-					value="{% trans "Go to Checkout" %}" />
-			</form>
+		<td colspan="6">
+			<input type="submit" name="checkout"
+			    class="button action" value="{% trans "Go to Checkout" %}" />
+            <input type="submit" name="update_cart"
+                class="button" value="{% trans "Update cart" %}" />
 		</td>
 	</tr>
 </table>
+</form>
 
 {% if discount_form %}
 <form method="post" class="discount-form">

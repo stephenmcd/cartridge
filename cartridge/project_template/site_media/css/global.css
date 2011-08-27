@@ -75,7 +75,8 @@ pre {padding:15px;}
 .comment-removed {color:#f00;}
 ul .comment {display:none;}
 ul .posted {display:block !important;}
-.comment .errorlist li {color:#f00; float:left; width:100%; padding:0 !important;}
+.errorlist li {color:#f00; font-weight:bold;}
+.comment .errorlist li {float:left; width:100%; padding:0 !important;}
 
 /* Tags */
 .tags ul, .tags li {display:inline !important; margin:0 !important;}
