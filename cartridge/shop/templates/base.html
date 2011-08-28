@@ -3,14 +3,14 @@
 <head>
 
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" /> 
-    <meta name="keywords" content="{% block meta_keywords %}{% endblock %}" /> 
-    <meta name="description" content="{% block meta_description %}{% endblock %}" /> 
+    <meta name="keywords" content="{% block meta_keywords %}{% endblock %}" />
+    <meta name="description" content="{% block meta_description %}{% endblock %}" />
     <title>{% block meta_title %}{% endblock %}{% if settings.SITE_TITLE %} | {{ settings.SITE_TITLE }}{% endif %}</title>
 
     {% if "mezzanine.blog"|is_installed %}
-    <link rel="alternate" type="application/rss+xml" title="RSS" 
+    <link rel="alternate" type="application/rss+xml" title="RSS"
         href="{% url blog_post_feed "rss" %}" />
-    <link rel="alternate" type="application/atom+xml" title="Atom"  
+    <link rel="alternate" type="application/atom+xml" title="Atom"
         href="{% url blog_post_feed "atom" %}" />
     {% endif %}
 
@@ -99,7 +99,7 @@
         {% if settings.SHOP_CHECKOUT_ACCOUNT_ENABLED %}
         <div id="account">
             {% if request.user.is_authenticated %}
-            {% trans "Logged in as: " %}{{ request.user.username }} / 
+            {% trans "Logged in as: " %}{{ request.user.username }} /
             <a href="{% url shop_logout %}?next={{ request.path }}"
                 >{% trans "Log out" %}</a>
             {% else %}
@@ -108,16 +108,16 @@
             {% endif %}
         </div>
         {% endif %}
-        
+
         {% block right_panel %}
             {% if "mezzanine.twitter"|is_installed %}
             {% include "twitter/tweets.html" %}
             {% endif %}
         {% endblock %}
         <p class="mezzanine">
-            {% trans "Powered by" %} 
+            {% trans "Powered by" %}
             <a href="http://mezzanine.jupo.org">Mezzanine</a>
-            {% trans "and" %} 
+            {% trans "and" %}
             <a href="http://cartridge.jupo.org">Cartridge</a><br />
             <a href="{% url set_device "mobile" %}?next={{ request.path }}">
                 {% trans "View Mobile Site" %}
