@@ -5,8 +5,10 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
 .checkbox input {float:left;}
 
 #account, #cart-panel {margin:20px 0;}
-#cart-panel {background:#555; padding:10px; border-radius:3px;}
+#cart-panel {background:#555; padding:10px; border-radius:3px; text-align:center;}
 #cart-panel, #cart-panel a {color:#fff; font-weight:bold; line-height:20px;}
+#cart-panel form {text-align:center;}
+#cart-panel .button {float:none;}
 #product-images-thumb img {margin:10px; margin-left:0;}
 #variations {margin-bottom:20px;}
 
@@ -20,8 +22,12 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
 .row1 {background:#eee;}
 .row2 {background:#ddd;}
 .row1 td, .row2 td {border-right:1px solid #ccc; vertical-align:middle;}
-#items .image, #items .description, #items .delete {border-right:0;}
+.wishlist td, #items .image, #items .description, #items .delete {border-right:0;}
 #items .image, #items .description {vertical-align:top;}
+
+.wishlist .description img {vertical-align:middle !important; margin-right:5px;}
+.wishlist .buttons {white-space:nowrap;}
+.wishlist .button {padding:5px; margin:0 5px 0 0 !important;}
 
 
 #checkout #grid-left *, #checkout #grid-right *,
@@ -73,16 +79,17 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
 .current-step {font-weight:bold;}
 .checkout-totals {margin:0 0 20px 0;}
 .checkout-totals .order-totals {text-align:right; width:250px;}
+#items .order-totals {float:right;}
 .order-totals li {
     list-style-type:none; white-space:nowrap; padding:3px 0;
     border-bottom:1px solid #ccc;
 }
-.order-totals label {margin-right:3px; width:80px; float:left; text-align:left;}
+.order-totals label {margin-right:3px; width:150px; float:left; text-align:left;}
 
 .related h2 {font-weight:normal; float:left;}
 .related ul {clear:left;}
 
-.button {margin-right:0; padding:10px 20px;
+.button {padding:10px 20px;
     border-radius:5px;
     -moz-border-radius:5px;
     -webkit-border-radius:5px;

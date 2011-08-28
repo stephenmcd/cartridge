@@ -2,7 +2,7 @@
 {% load i18n shop_tags %}
 
 {% block fields %}
-{% if cart.has_items %}
+{% if request.cart.has_items %}
 
 <fieldset>
 	<legend>{% trans "Billing Details" %}</legend>
@@ -51,4 +51,3 @@
 
 {% endif %}
 {% endblock %}
-

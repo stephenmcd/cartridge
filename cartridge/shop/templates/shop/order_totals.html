@@ -18,10 +18,10 @@
 	<li>
 	    <label>
 	    {% if shipping_type %}
-	    {{ shipping_type }}
+	    {{ shipping_type }}:
 	    {% else %}
-	    {% trans "Shipping" %}
-	    {% endif %}:
+	    {% trans "Shipping" %}:
+	    {% endif %}
 	    </label> {{ shipping_total|currency }}
 	</li>
 	{% endif %}

@@ -11,12 +11,12 @@
 {% endblock %}
 
 {% block main %}
-{{ error }}
-{% if wishlist %}
-<table id="items" border="0" cellpadding="5" cellspacing="0">
-	{% for item in wishlist %}
+{% if error %}{{ error }}{% endif %}
+{% if request.wishlist %}
+<table id="items" class="wishlist" border="0" cellpadding="5" cellspacing="0">
+	{% for item in wishlist_items %}
 	<tr class="{% cycle 'row1' 'row2' %}">
-		<td class="items-item">
+		<td class="description">
 			{% if item.image %}
 			<a href="{{ item.get_absolute_url }}"><img alt="{{ item }}"
 				src="{{ MEDIA_URL }}{% thumbnail item.image.file 30 30 %}" /></a>
@@ -28,8 +28,8 @@
                 {% csrf_token %}
 				<input type="hidden" name="sku" value="{{ item.sku }}" />
 				<input type="hidden" name="quantity" value="1" />
-				<input type="submit" name="remove_wishlist" value="{% trans "Remove" %}" />
-				<input type="submit" name="add_cart" value="{% trans "Buy now" %}" />
+				<input type="submit" class="button action" name="add_cart" value="{% trans "Buy now" %}" />
+				<input type="submit" class="button" name="remove_wishlist" value="{% trans "Remove" %}" />
 			</form>
 		</td>
 	</tr>

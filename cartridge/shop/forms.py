@@ -221,8 +221,8 @@ class DiscountForm(forms.ModelForm):
         instance to the form.
         """
         code = self.cleaned_data.get("discount_code", "")
+        cart = self._request.cart
         if code:
-            cart = Cart.objects.from_request(self._request)
             try:
                 discount = DiscountCode.objects.get_valid(code=code, cart=cart)
                 self._discount = discount
@@ -237,8 +237,7 @@ class DiscountForm(forms.ModelForm):
         """
         discount = getattr(self, "_discount", None)
         if discount is not None:
-            cart = Cart.objects.from_request(self._request)
-            discount_total = discount.calculate(cart.total_price())
+            discount_total = discount.calculate(self._request.cart.total_price())
             if discount.free_shipping:
                 set_shipping(self._request, _("Free shipping"), 0)
             self._request.session["free_shipping"] = discount.free_shipping

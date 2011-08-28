@@ -386,7 +386,7 @@ class Order(models.Model):
         return "%s %s" % (self.billing_detail_first_name,
                           self.billing_detail_last_name)
 
-    def setup(self, request=None):
+    def setup(self, request):
         """
         Set order fields that are stored in the session, item_total
         and total based on the given cart, and copy the cart items
@@ -398,14 +398,13 @@ class Order(models.Model):
         for field in self.session_fields:
             if field in request.session:
                 setattr(self, field, request.session[field])
-        self.cart = Cart.objects.from_request(request)
-        self.total = self.item_total = self.cart.total_price()
+        self.total = self.item_total = request.cart.total_price()
         if self.shipping_total is not None:
             self.total += self.shipping_total
         if self.discount_total is not None:
             self.total -= self.discount_total
         self.save() # We need an ID before we can add related items.
-        for item in self.cart:
+        for item in request.cart:
             product_fields = [f.name for f in SelectedProduct._meta.fields]
             item = dict([(f, getattr(item, f)) for f in product_fields])
             self.items.create(**item)
@@ -420,7 +419,7 @@ class Order(models.Model):
             if field in request.session:
                 del request.session[field]
         del request.session["order"]
-        for item in self.cart:
+        for item in request.cart:
             try:
                 variation = ProductVariation.objects.get(sku=item.sku)
             except ProductVariation.DoesNotExist:
@@ -430,7 +429,7 @@ class Order(models.Model):
                     variation.num_in_stock -= item.quantity
                     variation.save()
                 variation.product.actions.purchased()
-        self.cart.delete()
+        request.cart.delete()
 
 
 class Cart(models.Model):
@@ -454,6 +453,7 @@ class Cart(models.Model):
         Increase quantity of existing item if SKU matches, otherwise create
         new.
         """
+        #import pdb; pdb.set_trace()
         item, created = self.items.get_or_create(sku=variation.sku,
                                                  unit_price=variation.price())
         if created:

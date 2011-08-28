@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block main %}
-{% if cart.has_items %}
+{% if request.cart.has_items %}
 <form method="post">
 {% csrf_token %}
 {% for error in cart_formset.errors %}
@@ -27,7 +27,7 @@
 		<th>{% trans "Price" %}</th>
 		<th>{% trans "Remove?" %}</th>
 	</tr>
-	{% for item in cart %}
+	{% for item in request.cart %}
     {% for form in cart_formset %}
     {% ifequal form.instance item %}
     {{ form.id }}
@@ -50,8 +50,7 @@
     {% endfor %}
 	{% endfor %}
 	<tr>
-		<td colspan="3">&nbsp;</td>
-		<td colspan="2">{% order_totals %}</td>
+		<td colspan="5">{% order_totals %}</td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
@@ -75,7 +74,7 @@
 </form>
 {% endif %}
 
-{% with cart.upsell_products as upsell_products %}
+{% with request.cart.upsell_products as upsell_products %}
 {% if upsell_products %}
 <div class="related">
     <h2>{% trans "You may also like:" %}</h2>

@@ -16,8 +16,7 @@ from mezzanine.utils.views import render_to_response
 from cartridge.shop import checkout
 from cartridge.shop.forms import OrderForm, LoginForm, SignupForm, DiscountForm
 from cartridge.shop.forms import AddProductForm, CartItemFormSet
-from cartridge.shop.models import Product, ProductVariation
-from cartridge.shop.models import Cart, Order, DiscountCode
+from cartridge.shop.models import Product, ProductVariation, Order, DiscountCode
 from cartridge.shop.utils import set_cookie, sign
 
 
@@ -74,13 +73,12 @@ def product(request, slug, template="shop/product.html"):
     if request.method == "POST":
         if add_product_form.is_valid():
             if to_cart:
-                Cart.objects.from_request(request).add_item(
-                    add_product_form.variation,
-                    add_product_form.cleaned_data["quantity"])
+                quantity = add_product_form.cleaned_data["quantity"]
+                request.cart.add_item(add_product_form.variation, quantity)
                 info(request, _("Item added to cart"))
                 return HttpResponseRedirect(reverse("shop_cart"))
             else:
-                skus = request.COOKIES.get("wishlist", "").split(",")
+                skus = request.wishlist
                 sku = add_product_form.variation.sku
                 if sku not in skus:
                     skus.append(sku)
@@ -123,15 +121,14 @@ def wishlist(request, template="shop/wishlist.html"):
     adding them to the cart.
     """
 
-    skus = request.COOKIES.get("wishlist", "").split(",")
+    skus = request.wishlist
     error = None
     if request.method == "POST":
         to_cart = request.POST.get("add_cart")
         add_product_form = AddProductForm(request.POST or None, to_cart=to_cart)
         if to_cart:
             if add_product_form.is_valid():
-                Cart.objects.from_request(request).add_item(
-                    add_product_form.variation, 1)
+                request.cart.add_item(add_product_form.variation, 1)
                 message = _("Item added to cart")
                 url = reverse("shop_cart")
             else:
@@ -153,7 +150,7 @@ def wishlist(request, template="shop/wishlist.html"):
     f = {"product__in": published_products, "sku__in": skus}
     wishlist = ProductVariation.objects.filter(**f).select_related(depth=1)
     wishlist = sorted(wishlist, key=lambda v: skus.index(v.sku))
-    context = {"wishlist": wishlist, "error": error}
+    context = {"wishlist_items": wishlist, "error": error}
     response = render_to_response(template, context, RequestContext(request))
     if len(wishlist) < len(skus):
         skus = [variation.sku for variation in wishlist]
@@ -167,18 +164,18 @@ def cart(request, template="shop/cart.html"):
     """
     if request.POST.get("checkout"):
         return HttpResponseRedirect(reverse("shop_checkout"))
-    cart = Cart.objects.from_request(request)
-    cart_formset = CartItemFormSet(instance=cart)
+    cart_formset = CartItemFormSet(instance=request.cart)
     discount_form = DiscountForm(request, request.POST or None)
     if request.method == "POST":
         valid = True
         if request.POST.get("update_cart"):
-            valid = cart.has_items()
+            valid = request.cart.has_items()
             if not valid:
                 # Session timed out.
                 info(request, _("Your cart has expired"))
             else:
-                cart_formset = CartItemFormSet(request.POST, instance=cart)
+                cart_formset = CartItemFormSet(request.POST,
+                                               instance=request.cart)
                 valid = cart_formset.is_valid()
                 if valid:
                     cart_formset.save()
