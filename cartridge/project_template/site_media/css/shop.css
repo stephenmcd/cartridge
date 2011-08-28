@@ -18,6 +18,9 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
 #items .description {text-align:left !important; width:100%;}
 #items .image img {width:30px; height:30px;}
 #items .delete {text-align:center;}
+#items form {display:inline;}
+#items .button {float:none; margin-left:0;}
+#items .buttons {text-align:right;}
 .quantity input, #id_quantity {width:30px; text-align:center;}
 .row1 {background:#eee;}
 .row2 {background:#ddd;}
@@ -42,6 +45,7 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
     height:210px; list-style-type:none;}
 .products li .img {width:90px; height:90px; margin:auto;
     padding:0 !important; border:2px solid #333; margin-bottom:5px;}
+.products .old-price {display:block;}
 .img img {margin:0;}
 .product-paging {float:left; margin-top:10px; width:100%;}
 .product-paging li {padding:0 5px;}

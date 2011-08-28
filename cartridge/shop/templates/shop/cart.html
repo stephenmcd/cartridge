@@ -27,9 +27,8 @@
 		<th>{% trans "Price" %}</th>
 		<th>{% trans "Remove?" %}</th>
 	</tr>
-	{% for item in request.cart %}
     {% for form in cart_formset %}
-    {% ifequal form.instance item %}
+    {% with form.instance as item %}
     {{ form.id }}
 	<tr class="{% cycle 'row1' 'row2' %}">
 		<td class="image">
@@ -46,19 +45,21 @@
 		<td>{{ item.total_price|currency }}</td>
 		<td class="delete">{{ form.DELETE }}</td>
 	</tr>
-    {% endifequal %}
-    {% endfor %}
+	{% endwith %}
 	{% endfor %}
 	<tr>
 		<td colspan="5">{% order_totals %}</td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
-		<td colspan="6">
-			<input type="submit" name="checkout"
-			    class="button action" value="{% trans "Go to Checkout" %}" />
+		<td colspan="6" class="buttons">
             <input type="submit" name="update_cart"
                 class="button" value="{% trans "Update cart" %}" />
+            </form>
+            <form action="{% url shop_checkout %}">
+			    <input type="submit" name="checkout"
+			        class="button action" value="{% trans "Go to Checkout" %}" />
+            </form>
 		</td>
 	</tr>
 </table>

@@ -162,8 +162,6 @@ def cart(request, template="shop/cart.html"):
     """
     Display cart and handle removing items from the cart.
     """
-    if request.POST.get("checkout"):
-        return HttpResponseRedirect(reverse("shop_checkout"))
     cart_formset = CartItemFormSet(instance=request.cart)
     discount_form = DiscountForm(request, request.POST or None)
     if request.method == "POST":
