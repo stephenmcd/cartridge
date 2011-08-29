@@ -2,9 +2,8 @@
 {% load i18n %}
 
 {% block fields %}
-{% if cart.has_items %}
+{% if request.cart.has_items %}
 {% include "shop/payment_fields.html" %}
 {{ form.other_fields.as_ul }}
 {% endif %}
 {% endblock %}
-

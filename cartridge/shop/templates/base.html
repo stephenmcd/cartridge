@@ -2,15 +2,15 @@
 <html>
 <head>
 
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" /> 
-    <meta name="keywords" content="{% block meta_keywords %}{% endblock %}" /> 
-    <meta name="description" content="{% block meta_description %}{% endblock %}" /> 
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="{% block meta_keywords %}{% endblock %}" />
+    <meta name="description" content="{% block meta_description %}{% endblock %}" />
     <title>{% block meta_title %}{% endblock %}{% if settings.SITE_TITLE %} | {{ settings.SITE_TITLE }}{% endif %}</title>
 
     {% if "mezzanine.blog"|is_installed %}
-    <link rel="alternate" type="application/rss+xml" title="RSS" 
+    <link rel="alternate" type="application/rss+xml" title="RSS"
         href="{% url blog_post_feed "rss" %}" />
-    <link rel="alternate" type="application/atom+xml" title="Atom"  
+    <link rel="alternate" type="application/atom+xml" title="Atom"
         href="{% url blog_post_feed "atom" %}" />
     {% endif %}
 
@@ -78,28 +78,31 @@
 
         <div id="cart-panel">
 	        <a href="{% url shop_cart %}">
-		        {% blocktrans count cart.total_quantity as cart_quantity %}
+		        {% blocktrans count request.cart.total_quantity as cart_quantity %}
 		        Cart contains 1 item:
 		        {% plural %}
 		        Cart contains {{ cart_quantity }} items:
 		        {% endblocktrans %}
-		        {{ cart.total_price|currency }}</a>
-		    {% ifnotequal cart.total_quantity 0 %}
-	         / <a href="{% url shop_checkout %}">{% trans "Buy now" %}</a>
-	        {% endifnotequal %}<br />
-	        <a href="{% url shop_wishlist %}" class="wishlist">
-		        {% blocktrans count wishlist|length as wishlist_count %}
+		        {{ request.cart.total_price|currency }}
+	        </a>
+            {% ifnotequal request.cart.total_quantity 0 %}
+            <form action="{% url shop_checkout %}">
+                <input type="submit" class="button action" value="{% trans "Go to Checkout" %}" />
+            </form>
+            {% endifnotequal %}
+    	    <a href="{% url shop_wishlist %}" class="wishlist">
+		        {% blocktrans count request.wishlist|length as wishlist_count %}
 		        Wishlist contains 1 item
 		        {% plural %}
 		        Wishlist contains {{ wishlist_count }} items
 		        {% endblocktrans %}
-	        </a>
+		    </a>
         </div>
 
         {% if settings.SHOP_CHECKOUT_ACCOUNT_ENABLED %}
         <div id="account">
             {% if request.user.is_authenticated %}
-            {% trans "Logged in as: " %}{{ request.user.username }} / 
+            {% trans "Logged in as: " %}{{ request.user.username }} /
             <a href="{% url shop_logout %}?next={{ request.path }}"
                 >{% trans "Log out" %}</a>
             {% else %}
@@ -108,16 +111,16 @@
             {% endif %}
         </div>
         {% endif %}
-        
+
         {% block right_panel %}
             {% if "mezzanine.twitter"|is_installed %}
             {% include "twitter/tweets.html" %}
             {% endif %}
         {% endblock %}
         <p class="mezzanine">
-            {% trans "Powered by" %} 
+            {% trans "Powered by" %}
             <a href="http://mezzanine.jupo.org">Mezzanine</a>
-            {% trans "and" %} 
+            {% trans "and" %}
             <a href="http://cartridge.jupo.org">Cartridge</a><br />
             <a href="{% url set_device "mobile" %}?next={{ request.path }}">
                 {% trans "View Mobile Site" %}

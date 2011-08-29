@@ -5,7 +5,6 @@ from operator import mul
 
 from django.core.urlresolvers import reverse
 from django.test import TestCase
-
 from mezzanine.conf import settings
 from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
 from mezzanine.utils.tests import run_pyflakes_for_package
@@ -134,13 +133,13 @@ class ShopTests(TestCase):
         self.assertCategoryFilteredProducts(0)
         self._product.variations.all().update(unit_price=TEST_PRICE)
         self.assertCategoryFilteredProducts(1)
-        now = datetime.now()
-        day = timedelta(days=1)
+        now, day = datetime.now(), timedelta(days=1)
+        tomorrow, yesterday = now + day, now - day
         self._product.variations.all().update(unit_price=0,
                                               sale_price=TEST_PRICE,
-                                              sale_from=now + day)
+                                              sale_from=tomorrow)
         self.assertCategoryFilteredProducts(0)
-        self._product.variations.all().update(sale_from=now - day)
+        self._product.variations.all().update(sale_from=yesterday)
         self.assertCategoryFilteredProducts(1)
 
         # Clean up previously added filters and check that explicitly
@@ -190,6 +189,7 @@ class ShopTests(TestCase):
         self.assertEqual(cart.total_quantity(), 0)
         self.assertEqual(cart.total_price(), Decimal("0"))
 
+
         # Add quantity and check stock levels / cart totals.
         field_names = [f.name for f in ProductVariation.option_fields()]
         data = dict(zip(field_names, variation.options()))
@@ -213,8 +213,14 @@ class ShopTests(TestCase):
         self.assertEqual(cart.total_price(), TEST_PRICE * TEST_STOCK * 2)
 
         # Remove from cart.
-        for item in cart:
-            self.client.post(reverse("shop_cart"), {"item_id": item.id})
+        data = {"items-INITIAL_FORMS": 0, "items-TOTAL_FORMS": 0,
+                "update_cart": 1}
+        for i, item in enumerate(cart):
+            data["items-INITIAL_FORMS"] += 1
+            data["items-TOTAL_FORMS"] += 1
+            data["items-%s-id" % i] = item.id
+            data["items-%s-DELETE" % i] = "on"
+        self.client.post(reverse("shop_cart"), data)
         cart = Cart.objects.from_request(self.client)
         variation = self._product.variations.all()[0]
         self.assertTrue(variation.has_stock(TEST_STOCK * 2))

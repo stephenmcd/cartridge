@@ -23,13 +23,12 @@ def default_billship_handler(request, order_form):
     """
     Default billing/shipping handler - called when the first step in
     the checkout process with billing/shipping address fields is
-    submitted. Implement your own and specify
-    the path to import it from via the setting
-    ``SHOP_HANDLER_BILLING_SHIPPING``. This function will typically
-    contain any shipping calculation where the shipping amount can
-    then be set using the function
+    submitted. Implement your own and specify the path to import it
+    from via the setting ``SHOP_HANDLER_BILLING_SHIPPING``.
+    This function will typically contain any shipping calculation
+    where the shipping amount can then be set using the function
     ``cartridge.shop.utils.set_shipping``. The Cart object is also
-    accessible via ``Cart.objects.from_request(request)``
+    accessible via ``request.cart``
     """
     settings.use_editable()
     set_shipping(request, _("Flat rate shipping"),
@@ -102,7 +101,7 @@ def send_order_email(request, order):
         order_context["order_%s_fields" % fieldset] = fields
     send_mail_template(_("Order Receipt"), "shop/email/order_receipt",
         settings.SHOP_ORDER_FROM_EMAIL, order.billing_detail_email,
-        context=order_context)
+        context=order_context, fail_silently=settings.DEBUG)
 
 
 # Set up some constants for identifying each checkout step.

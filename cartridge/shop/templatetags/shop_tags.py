@@ -19,7 +19,7 @@ def currency(value):
     Format a value as currency according to locale.
     """
     set_locale()
-    if len(str(value)) == 0:
+    if not value:
         value = 0
     if hasattr(locale, "currency"):
         value = locale.currency(value)
@@ -44,8 +44,8 @@ def _order_totals(context):
     if "order" in context:
         for f in ("item_total", "shipping_total", "discount_total"):
             context[f] = getattr(context["order"], f)
-    elif "cart" in context:
-        context["item_total"] = context["cart"].total_price()
+    else:
+        context["item_total"] = context["request"].cart.total_price()
         if context["item_total"] == 0:
             # Ignore session if cart has no items, as cart may have
             # expired sooner than the session.

@@ -249,16 +249,16 @@ INSTALLED_APPS = ("django.contrib.sites", "cartridge.shop") + INSTALLED_APPS
 # Each one should be a callable that takes the request object as its
 # only parameter and returns a dictionary to add to the context.
 
-TEMPLATE_CONTEXT_PROCESSORS = tuple(TEMPLATE_CONTEXT_PROCESSORS) + (
-    "cartridge.shop.context_processors.shop_globals",
-)
+# Just use those imported from Mezzanine
+# TEMPLATE_CONTEXT_PROCESSORS = tuple(TEMPLATE_CONTEXT_PROCESSORS) + (
+# )
 
 # List of middleware classes to use. Order is important; in the request phase,
 # this middleware classes will be applied in the order given, and in the
 # response phase the middleware will be applied in reverse order.
 
 MIDDLEWARE_CLASSES = tuple(MIDDLEWARE_CLASSES) + (
-    "cartridge.shop.middleware.SSLRedirect",
+    "cartridge.shop.middleware.ShopMiddleware",
 )
 
 ##################

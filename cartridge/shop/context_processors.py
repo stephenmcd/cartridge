@@ -1,12 +1,9 @@
 
-from cartridge.shop.models import Cart
+from mezzanine.conf import settings
 
 
-def shop_globals(request):
-    """
-    Make the cart and wishlist globally available.
-    """
-    wishlist = request.COOKIES.get("wishlist", "").split(",")
-    if not wishlist[0]:
-        wishlist = []
-    return {"cart": Cart.objects.from_request(request), "wishlist": wishlist}
+if "cartridge.shop.context_processors.shop_globals" in settings.TEMPLATE_CONTEXT_PROCESSORS:
+    from warnings import warn
+    warn("shop_globals deprecated; use cartridge.shop.middleware.ShopMiddleware")
+    def shop_globals(request):
+        return {"cart": request.cart, "wishlist": request.wishlist}

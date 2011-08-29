@@ -2,7 +2,7 @@
 
 {% ifnotequal products.paginator.num_pages 1 %}
 <div class="product-paging">
-    <p>{% trans "Page" %} {{ products.number }} {% trans "of" %} 
+    <p>{% trans "Page" %} {{ products.number }} {% trans "of" %}
         {{ products.paginator.num_pages }}:</p>
     <ul>
 	    {% if products.has_previous %}
@@ -17,7 +17,7 @@
 	       	<a href="?page={{ page }}{{ querystring }}">{{ page }}</a>
 		    {% endifequal %}
 	    </li>
-	    {% endfor %} 
+	    {% endfor %}
 	    {% if products.has_next %}
 	    <li><a href="?page={{ products.next_page_number }}{{ querystring }}"
 	        >&gt;</a></li>
@@ -25,4 +25,3 @@
     </ul>
 </div>
 {% endifnotequal %}
-

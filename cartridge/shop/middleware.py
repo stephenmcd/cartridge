@@ -1,18 +1,26 @@
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect
-
 from mezzanine.conf import settings
 
+from cartridge.shop.models import Cart
 
-class SSLRedirect(object):
+
+class ShopMiddleware(object):
 
     def process_request(self, request):
         """
-        If SHOP_FORCE_HOST is set and is not the current host, redirect to it
-        if SHOP_SSL_ENABLED is True, ensure checkout views are accessed over
-        HTTPS and all other views are accessed over HTTP.
+        Adds cart and wishlist attributes to the current request, and
+        handles any redirections required for SSL. If SHOP_FORCE_HOST
+        is set and is not the current host, redirect to it if
+        SHOP_SSL_ENABLED is True, and ensure checkout views are
+        accessed over HTTPS and all other views are accessed over HTTP.
         """
+        request.cart = Cart.objects.from_request(request)
+        wishlist = request.COOKIES.get("wishlist", "").split(",")
+        if not wishlist[0]:
+            wishlist = []
+        request.wishlist = wishlist
         settings.use_editable()
         force_host = settings.SHOP_FORCE_HOST
         if force_host and request.get_host().split(":")[0] != force_host:
@@ -25,3 +33,9 @@ class SSLRedirect(object):
                     return HttpResponseRedirect("https://%s" % url)
             elif request.is_secure():
                 return HttpResponseRedirect("http://%s" % url)
+
+
+if "cartridge.shop.middleware.SSLRedirect" in settings.MIDDLEWARE_CLASSES:
+    import warnings
+    warnings.warn("SSLRedirect is deprecated; use cartridge.shop.middleware.ShopMiddleware",)
+    SSLRedirect = ShopMiddleware
