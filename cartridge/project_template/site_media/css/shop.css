@@ -84,9 +84,8 @@ legend {font-weight:bold; padding:15px 10px; font-size:130%;}
 .checkout-totals {margin:0 0 20px 0;}
 .checkout-totals .order-totals {text-align:right; width:250px;}
 #items .order-totals {float:right;}
-.order-totals li {
-    list-style-type:none; white-space:nowrap; padding:3px 0;
-    border-bottom:1px solid #ccc;
+.order-totals div {
+    white-space:nowrap; padding:3px 0; border-bottom:1px solid #ccc;
 }
 .order-totals label {margin-right:3px; width:150px; float:left; text-align:left;}
 

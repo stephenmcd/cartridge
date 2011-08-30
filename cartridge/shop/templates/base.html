@@ -89,6 +89,8 @@
             <form action="{% url shop_checkout %}">
                 <input type="submit" class="button action" value="{% trans "Go to Checkout" %}" />
             </form>
+            {% else %}
+            <br />
             {% endifnotequal %}
     	    <a href="{% url shop_wishlist %}" class="wishlist">
 		        {% blocktrans count request.wishlist|length as wishlist_count %}
