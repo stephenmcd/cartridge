@@ -39,6 +39,7 @@ try:
 
         install_requires=[
             "mezzanine >= 0.11",
+            "pisa >= 3.0.33",
         ],
 
         classifiers=[

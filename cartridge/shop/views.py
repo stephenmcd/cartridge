@@ -2,7 +2,7 @@
 from django.contrib.auth import logout as auth_logout
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
@@ -10,6 +10,7 @@ from django.utils import simplejson
 from django.utils.translation import ugettext as _
 
 from mezzanine.conf import settings
+from mezzanine.template import get_template
 from mezzanine.utils.importing import import_dotted_path
 from mezzanine.utils.views import render_to_response
 
@@ -349,3 +350,29 @@ def complete(request, template="shop/complete.html"):
         setattr(items[i], "name", names[item.sku])
     context = {"order": order, "items": items}
     return render_to_response(template, context, RequestContext(request))
+
+def invoice(request, order_id, template="shop/order_invoice.html"):
+    """
+    Display a plain text invoice for the given order. The order must
+    belong to the user which is checked via session or ID if
+    authenticated, or if the current user is staff.
+    """
+    lookup = {"id": order_id}
+    if not request.user.is_authenticated():
+        lookup["key"] = request.session.session_key
+    elif not request.user.is_staff:
+        lookup["user_id"] = request.user.id
+    order = get_object_or_404(Order, **lookup)
+    context = {"order": order}
+    context.update(order.details_as_dict())
+    request_context = RequestContext(request, context)
+    html = get_template(template, request_context).render(request_context)
+    if request.GET.get("format") == "pdf":
+        response = HttpResponse(mimetype="application/pdf")
+        name = slugify("%s-invoice-%s" % (settings.SITE_TITLE, order.id))
+        response["Content-Disposition"] = "attachment; filename=%s.pdf" % name
+        import ho.pisa
+        ho.pisa.CreatePDF(html, response)
+    else:
+        response = HttpResponse(html)
+    return response

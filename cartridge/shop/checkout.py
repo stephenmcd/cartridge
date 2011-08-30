@@ -94,11 +94,8 @@ def send_order_email(request, order):
     """
     settings.use_editable()
     order_context = {"order": order, "request": request,
-        "order_items": order.items.all()}
-    for fieldset in ("billing_detail", "shipping_detail"):
-        fields = [(f.verbose_name, getattr(order, f.name)) for f in
-            order._meta.fields if f.name.startswith(fieldset)]
-        order_context["order_%s_fields" % fieldset] = fields
+                     "order_items": order.items.all()}
+    order_context.update(order.details_as_dict())
     send_mail_template(_("Order Receipt"), "shop/email/order_receipt",
         settings.SHOP_ORDER_FROM_EMAIL, order.billing_detail_email,
         context=order_context, fail_silently=settings.DEBUG)

@@ -431,6 +431,20 @@ class Order(models.Model):
                 variation.product.actions.purchased()
         request.cart.delete()
 
+    def details_as_dict(self):
+        """
+        Returns the billing_detail_* and shipping_detail_* fields
+        as two name/value pairs of fields in a dict for each type.
+        Used in template contexts for rendering each type as groups
+        of names/values.
+        """
+        context = {}
+        for fieldset in ("billing_detail", "shipping_detail"):
+            fields = [(f.verbose_name, getattr(self, f.name)) for f in
+                self._meta.fields if f.name.startswith(fieldset)]
+            context["order_%s_fields" % fieldset] = fields
+        return context
+
 
 class Cart(models.Model):
 
