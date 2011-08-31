@@ -25,12 +25,15 @@ Features
   * Easily configurable product options (colours, sizes, etc.)
   * Hooks for shipping calculations and payment gateway
   * Sale pricing
-  * Stock management
+  * Promotional discount codes
+  * PDF invoice generation (for packing slips)
+  * Stock control
   * Product popularity
   * Thumbnail generation
   * Built-in test suite
   * Separation of presentation (no embedded markup)
   * Smart categories (by price range, colour, etc)
+  * Registered or anonymous checkout
   * Configurable nunber of checkout steps
   * Denormalised data for accessiblilty and performance
 
