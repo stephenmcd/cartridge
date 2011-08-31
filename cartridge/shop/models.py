@@ -3,10 +3,11 @@ from datetime import datetime
 from decimal import Decimal
 from operator import iand, ior
 
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import CharField, Q
 from django.db.models.base import ModelBase
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext, ugettext_lazy as _
 
 from mezzanine.conf import settings
 from mezzanine.core.managers import DisplayableManager
@@ -444,6 +445,17 @@ class Order(models.Model):
                 self._meta.fields if f.name.startswith(fieldset)]
             context["order_%s_fields" % fieldset] = fields
         return context
+
+    def invoice(self):
+        """
+        Returns the HTML for a link to the PDF invoice for use in the
+        order listing view of the admin.
+        """
+        url = reverse("shop_invoice", args=(self.id,))
+        text = ugettext("Download PDF invoice")
+        return "<a href='%s?format=pdf'>%s</a>" % (url, text)
+    invoice.allow_tags = True
+    invoice.short_description = ""
 
 
 class Cart(models.Model):

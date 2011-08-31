@@ -1,0 +1,12 @@
+{% extends "admin/change_form.html" %}
+
+{% load i18n %}
+
+{% block object-tools %}
+{% if change %}{% if not is_popup %}
+  <ul class="object-tools">
+  <li><a href="{% url shop_invoice object_id %}?format=pdf">{% trans "Download PDF invoice" %}</a></li>
+  <li><a href="history/" class="historylink">{% trans "History" %}</a></li>
+  </ul>
+{% endif %}{% endif %}
+{% endblock %}

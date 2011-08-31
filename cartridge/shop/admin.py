@@ -114,7 +114,7 @@ class OrderItemInline(admin.TabularInline):
 
 class OrderAdmin(admin.ModelAdmin):
     ordering = ("status", "-id")
-    list_display = ("id", "billing_name", "total", "time", "status")
+    list_display = ("id", "billing_name", "total", "time", "status", "invoice")
     list_editable = ("status",)
     list_filter = ("status", "time")
     list_display_links = ("id", "billing_name",)
