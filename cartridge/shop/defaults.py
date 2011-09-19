@@ -201,8 +201,8 @@ register_setting(
     name="TEMPLATE_ACCESSIBLE_SETTINGS",
     description=_("Sequence of setting names available within templates."),
     editable=False,
-    default=("LOGIN_URL", "SHOP_CHECKOUT_ACCOUNT_ENABLED",
-        "SHOP_CHECKOUT_STEPS_SPLIT", "SHOP_MAX_PAGING_LINKS",
+    default=("LOGIN_URL", "SHOP_CHECKOUT_ACCOUNT_ENABLED", "SHOP_CARD_TYPES",
+             "SHOP_CHECKOUT_STEPS_SPLIT", "SHOP_MAX_PAGING_LINKS",
     ),
     append=True,
 )
