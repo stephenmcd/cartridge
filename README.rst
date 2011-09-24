@@ -70,13 +70,18 @@ similar fashion to ``django-admin.py``::
 You can then run your project with the usual Django steps::
 
     $ cd project_name
-    $ python manage.py install --noinput
+    $ python manage.py createdb --noinput
     $ python manage.py runserver
+
+.. note::
+
+    The ``createdb`` command performs the same task as Django's ``syncdb``
+    command, and also handles setting the initial migration state for `South`_.
 
 You should then be able to browse to http://127.0.0.1:8000/admin/ and log
 in using the default account (``username: admin, password: default``). If
 you'd like to specify a different username and password during set up, simply
-exclude the ``--noinput`` option included above when running ``install``.
+exclude the ``--noinput`` option included above when running ``createdb``.
 
 Contributing
 ============
@@ -125,4 +130,3 @@ Sites Using Cartridge
 .. _`PEP 8`: http://www.python.org/dev/peps/pep-0008/
 .. _`Ripe Maternity`: http://www.ripematernity.com/
 .. _`Cotton On`: http://shop.cottonon.com/
-
