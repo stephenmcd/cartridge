@@ -52,6 +52,7 @@ register_setting(
 
 register_setting(
     name="SHOP_CURRENCY_LOCALE",
+    label=_("Currency Locale"),
     description="Controls the formatting of monetary values accord to "
         "the locale module in the python standard library. If an empty "
         "string is used, will fall back to the system's locale.",
@@ -61,6 +62,7 @@ register_setting(
 
 register_setting(
     name="SHOP_DEFAULT_SHIPPING_VALUE",
+    label=_("Default Shipping Cost"),
     description="Default cost of shipping when no custom shipping is "
         "implemented.",
     editable=True,
@@ -69,6 +71,7 @@ register_setting(
 
 register_setting(
     name="SHOP_DISCOUNT_FIELD_IN_CART",
+    label=_("Discoutn in Cart"),
     description="Can discount codes be entered on the cart page.",
     editable=True,
     default=True,
@@ -76,6 +79,7 @@ register_setting(
 
 register_setting(
     name="SHOP_DISCOUNT_FIELD_IN_CHECKOUT",
+    label=_("Discount in Checkout"),
     description="Can discount codes be entered on the first checkpout step.",
     editable=True,
     default=True,
@@ -83,6 +87,7 @@ register_setting(
 
 register_setting(
     name="SHOP_FORCE_HOST",
+    label=_("Force Host"),
     description="Host name that the site should always be accessed via that "
         "matches the SSL certificate.",
     editable=True,
@@ -99,6 +104,7 @@ register_setting(
 
 register_setting(
     name="SHOP_HANDLER_BILLING_SHIPPING",
+    label=_("Billing & Shipping Handler"),
     description="Dotted package path and class name of the function that "
         "is called on submit of the billing/shipping checkout step. This "
         "is where shipping calculation can be performed and set using the "
@@ -109,6 +115,7 @@ register_setting(
 
 register_setting(
     name="SHOP_HANDLER_ORDER",
+    label=_("Order Handler"),
     description="Dotted package path and class name of the function that "
         "is called once an order is successful and all of the order "
         "object's data has been created. This is where any custom order "
@@ -119,6 +126,7 @@ register_setting(
 
 register_setting(
     name="SHOP_HANDLER_PAYMENT",
+    label=_("Payment Handler"),
     description="Dotted package path and class name of the function that "
         "is called on submit of the payment checkout step. This is where "
         "integration with a payment gateway should be implemented.",
@@ -139,6 +147,7 @@ register_setting(
 
 register_setting(
     name="SHOP_ORDER_FROM_EMAIL",
+    label=_("From Email"),
     description="Email address that order receipts should be emailed from.",
     editable=True,
     default="do_not_reply@%s" % gethostname(),
@@ -156,6 +165,7 @@ register_setting(
 
 register_setting(
     name="SHOP_PER_PAGE_CATEGORY",
+    label=_("Products Per Category Page"),
     description="Number of products to display per category page.",
     editable=True,
     default=10,
@@ -163,6 +173,7 @@ register_setting(
 
 register_setting(
     name="SHOP_PER_PAGE_SEARCH",
+    label=_("Search Products Per Page"),
     description="Number of products to display per page for search results.",
     editable=True,
     default=10,
@@ -170,6 +181,7 @@ register_setting(
 
 register_setting(
     name="SHOP_MAX_PAGING_LINKS",
+    label=_("Number of Paging Links"),
     description="Maximum number of paging links to show.",
     editable=True,
     default=15,
@@ -191,6 +203,7 @@ register_setting(
 
 register_setting(
     name="SHOP_SSL_ENABLED",
+    label=_("Enable SSL"),
     description="If True, users will be automatically redirect to HTTPS "
         "for the checkout process.",
     editable=True,
