@@ -56,6 +56,20 @@ Default cost of shipping when no custom shipping is implemented.
 
 Default: ``10``
 
+``SHOP_DISCOUNT_FIELD_IN_CART``
+-------------------------------
+
+Can discount codes be entered on the cart page.
+
+Default: ``True``
+
+``SHOP_DISCOUNT_FIELD_IN_CHECKOUT``
+-----------------------------------
+
+Can discount codes be entered on the first checkpout step.
+
+Default: ``True``
+
 ``SHOP_FORCE_HOST``
 -------------------
 

@@ -1,3 +1,36 @@
+Version 0.3 (Nov 05, 2011)
+--------------------------
+
+  * Added live_num_in_stock method to the variation model for displaying actual number of items available - stephenmcd
+  * Added an extra guard in AddProductForm to ensure valid options are selected - stephenmcd
+  * Made empty product options hidden in product edit view - stephenmcd
+  * Fixed styling of long lists of product options - stephenmcd
+  * Fixed upsell products to exclude items already in cart - stephenmcd
+  * Added options for configuring where the discount field is located throughout the shop process - stephenmcd
+  * Made relevant updates for Mezzanine's install management command - stephenmcd
+  * Fixed logic around displaying discount code field - stephenmcd
+  * Made product images orderable - stephenmcd
+  * Initial layout of editable cart formset - stephenmcd
+  * Refined styles for cart - stephenmcd
+  * Added error display to cart form - stephenmcd
+  * Refined discount form styling - stephenmcd
+  * Refactored AddProductForm to not use a wrapper function and to also handle adding items to the cart from the wishlist - stephenmcd
+  * Cleaned up whitespace - stephenmcd
+  * Refactored loading of cart and wishlist moving it from context processors into a single shop middleware shared with SSL redirection - stephenmcd
+  * Cleaned up cart rendering logic - stephenmcd
+  * Added next param to login/signup link on checkout - stephenmcd
+  * Initial view for printable PDF invoices - stephenmcd
+  * Interface tweaks - stephenmcd
+  * Added invoice links to order complete page and order admin list/change views - stephenmcd
+  * Added PDF generation to feature list in README - stephenmcd
+  * Made the SHOP_CARD_TYPES setting available to templates - stephenmcd
+  * Updated install instructions in README tp use Mezzanine's new createdb command - stephenmcd
+  * Add lables to editable settings - Ken Bolton
+  * Updated to latest Mezzanine settings and syntax checking tests, and many PEP8 fixes - stephenmcd
+  * Added Ken Bolton to AUTHORS - stephenmcd
+  * Updated Mezzanine version requirement - stephenmcd
+  * Fixed typo - stephenmcd
+
 Version 0.2.2 (Jun 30, 2011)
 ----------------------------
 
