@@ -27,7 +27,7 @@
 		<th>{% trans "Price" %}</th>
 		<th>{% trans "Remove?" %}</th>
 	</tr>
-    {% for form in cart_formset %}
+    {% for form in cart_formset.forms %}
     {% with form.instance as item %}
     {{ form.id }}
 	<tr class="{% cycle 'row1' 'row2' %}">
