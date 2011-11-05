@@ -9,10 +9,12 @@ from mezzanine.core.admin import DisplayableAdmin, TabularDynamicInlineAdmin
 from mezzanine.pages.admin import PageAdmin
 
 from cartridge.shop.fields import MoneyField
-from cartridge.shop.forms import ProductAdminForm, ProductVariationAdminForm, \
-    ProductVariationAdminFormset, DiscountAdminForm, ImageWidget, MoneyWidget
-from cartridge.shop.models import Category, Product, ProductImage, \
-    ProductVariation, ProductOption, Order, OrderItem, Sale, DiscountCode
+from cartridge.shop.forms import ProductAdminForm, ProductVariationAdminForm
+from cartridge.shop.forms import ProductVariationAdminFormset
+from cartridge.shop.forms import DiscountAdminForm, ImageWidget, MoneyWidget
+from cartridge.shop.models import Category, Product, ProductImage
+from cartridge.shop.models import ProductVariation, ProductOption, Order
+from cartridge.shop.models import OrderItem, Sale, DiscountCode
 
 
 # Lists of field names.
@@ -23,15 +25,16 @@ shipping_fields = [f.name for f in Order._meta.fields
     if f.name.startswith("shipping_detail")]
 
 category_fieldsets = deepcopy(PageAdmin.fieldsets)
-category_fieldsets[0][1]["fields"][3:3] = ["content"]#, "products"]
+category_fieldsets[0][1]["fields"][3:3] = ["content"]  # , "products"]
 category_fieldsets += ((_("Product filters"), {
     "fields": ("options", "sale", ("price_min", "price_max"), "combined"),
     "classes": ("collapse-closed",)},),)
 
+
 class CategoryAdmin(PageAdmin):
     fieldsets = category_fieldsets
     formfield_overrides = {ImageField: {"widget": ImageWidget}}
-    filter_horizontal = ("options",)# "products", )
+    filter_horizontal = ("options",)  # "products", )
 
 
 class ProductVariationAdmin(admin.TabularInline):
@@ -60,14 +63,17 @@ product_fieldsets.append((_("Other products"),
 product_fieldsets.insert(1, (_("Create new variations"),
     {"classes": ("create-variations",), "fields": option_fields}))
 
+
 class ProductAdmin(DisplayableAdmin):
 
-    list_display = ("admin_thumb", "title", "status", "available", "admin_link")
+    list_display = ("admin_thumb", "title", "status", "available",
+                    "admin_link")
     list_display_links = ("admin_thumb", "title")
     list_editable = ("status", "available")
     list_filter = ("status", "available", "categories")
     filter_horizontal = ("categories", "related_products", "upsell_products")
-    search_fields = ("title", "content", "categories__title", "variations__sku")
+    search_fields = ("title", "content", "categories__title",
+                     "variations__sku")
     inlines = (ProductImageAdmin, ProductVariationAdmin)
     form = ProductAdminForm
     fieldsets = product_fieldsets
@@ -128,7 +134,7 @@ class OrderAdmin(admin.ModelAdmin):
         (_("Shipping details"), {"fields": (tuple(shipping_fields),)}),
         (None, {"fields": ("additional_instructions", ("shipping_total",
             "shipping_type"), ("discount_total", "discount_code"),
-            "item_total",("total", "status"))}),
+            "item_total", ("total", "status"))}),
     )
 
 

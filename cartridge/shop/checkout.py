@@ -83,7 +83,8 @@ def initial_order_data(request):
             # whether both sets of address fields are all equal.
             shipping = lambda f: "shipping_%s" % f[len("billing_"):]
             if any([f for f in initial if f.startswith("billing_") and
-                shipping(f) in initial and initial[f] != initial[shipping(f)]]):
+                shipping(f) in initial and
+                initial[f] != initial[shipping(f)]]):
                 initial["same_billing_shipping"] = False
     return initial
 

@@ -135,7 +135,8 @@ class CartItemForm(forms.ModelForm):
         variation = ProductVariation.objects.get(sku=self.instance.sku)
         quantity = self.cleaned_data["quantity"]
         if not variation.has_stock(quantity - self.instance.quantity):
-            raise forms.ValidationError(ADD_PRODUCT_ERRORS["no_stock_quantity"])
+            error = ADD_PRODUCT_ERRORS["no_stock_quantity"]
+            raise forms.ValidationError(error)
         return quantity
 
 CartItemFormSet = inlineformset_factory(Cart, CartItem, form=CartItemForm,
@@ -159,9 +160,9 @@ class FormsetForm(object):
         if not hasattr(self, "_fields_done"):
             self._fields_done = []
         fieldset.non_field_errors = lambda *args: None
-        field_names = filter(lambda f: f not in self._fields_done, field_names)
-        fieldset.fields = SortedDict([(f, self.fields[f]) for f in field_names])
-        self._fields_done.extend(field_names)
+        names = filter(lambda f: f not in self._fields_done, field_names)
+        fieldset.fields = SortedDict([(f, self.fields[f]) for f in names])
+        self._fields_done.extend(names)
         return fieldset
 
     def values(self):
@@ -237,11 +238,11 @@ class DiscountForm(forms.ModelForm):
         """
         discount = getattr(self, "_discount", None)
         if discount is not None:
-            discount_total = discount.calculate(self._request.cart.total_price())
+            total = discount.calculate(self._request.cart.total_price())
             if discount.free_shipping:
                 set_shipping(self._request, _("Free shipping"), 0)
             self._request.session["free_shipping"] = discount.free_shipping
-            self._request.session["discount_total"] = discount_total
+            self._request.session["discount_total"] = total
 
 
 class OrderForm(FormsetForm, DiscountForm):
@@ -455,6 +456,7 @@ class ProductAdminForm(forms.ModelForm):
     Admin form for the Product model.
     """
     __metaclass__ = ProductAdminFormMetaclass
+
     class Meta:
         model = Product
 

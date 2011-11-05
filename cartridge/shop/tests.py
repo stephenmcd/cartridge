@@ -8,6 +8,7 @@ from django.test import TestCase
 from mezzanine.conf import settings
 from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
 from mezzanine.utils.tests import run_pyflakes_for_package
+from mezzanine.utils.tests import run_pep8_for_package
 
 from cartridge.shop.models import Product, ProductOption, ProductVariation
 from cartridge.shop.models import Category, Cart, Order
@@ -144,7 +145,8 @@ class ShopTests(TestCase):
 
         # Clean up previously added filters and check that explicitly
         # assigned products match.
-        [self._category.options.remove(o) for o in self._category.options.all()]
+        for option in self._category.options.all():
+            self._category.options.remove(option)
         self._category.price_min = None
         self.assertCategoryFilteredProducts(0)
         self._category.products.add(self._product)
@@ -188,7 +190,6 @@ class ShopTests(TestCase):
         self.assertFalse(cart.has_items())
         self.assertEqual(cart.total_quantity(), 0)
         self.assertEqual(cart.total_price(), Decimal("0"))
-
 
         # Add quantity and check stock levels / cart totals.
         field_names = [f.name for f in ProductVariation.option_fields()]
@@ -266,13 +267,15 @@ class ShopTests(TestCase):
         self.assertEqual(variation.num_in_stock, TEST_STOCK)
         self.assertEqual(order.item_total, TEST_PRICE * TEST_STOCK)
 
-    def test_with_pyflakes(self):
+    def test_syntax(self):
         """
-        Run pyflakes across the code base to check for potential errors.
+        Run pyflakes/pep8 across the code base to check for potential errors.
         """
-        ignore = ("redefinition of unused 'digest'",
-                  "redefinition of unused 'info'")
-        warnings = run_pyflakes_for_package("cartridge", extra_ignore=ignore)
+        extra_ignore = ("redefinition of unused 'digest'",
+                        "redefinition of unused 'info'")
+        warnings = []
+        warnings.extend(run_pyflakes_for_package("cartridge",
+                                                 extra_ignore=extra_ignore))
+        warnings.extend(run_pep8_for_package("cartridge"))
         if warnings:
-            warnings.insert(0, "pyflakes warnings:")
-            self.fail("\n".join(warnings))
+            self.fail("Syntax warnings!\n\n%s" % "\n".join(warnings))

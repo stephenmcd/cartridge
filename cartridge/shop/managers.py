@@ -26,7 +26,7 @@ class CartManager(Manager):
             cart = self.create()
             request.session["cart"] = cart.id
         else:
-            cart.save() # Update timestamp.
+            cart.save()  # Update timestamp.
         return cart
 
 

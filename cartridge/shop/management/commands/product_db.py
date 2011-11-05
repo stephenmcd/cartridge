@@ -164,7 +164,8 @@ def import_products(csv_file):
                                                 row[SALE_END_TIME])
         for option in TYPE_CHOICES:
             if row[option]:
-                setattr(variation, "option%s" % TYPE_CHOICES[option], row[option])
+                name = "option%s" % TYPE_CHOICES[option]
+                setattr(variation, name, row[option])
                 new_option, created = ProductOption.objects.get_or_create(
                     type=TYPE_CHOICES[option],  # TODO: set dynamically
                     name=row[option])

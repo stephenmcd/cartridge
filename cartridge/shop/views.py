@@ -12,12 +12,14 @@ from django.utils.translation import ugettext as _
 from mezzanine.conf import settings
 from mezzanine.template import get_template
 from mezzanine.utils.importing import import_dotted_path
+from mezzanine.utils.messages import info
 from mezzanine.utils.views import render_to_response
 
 from cartridge.shop import checkout
 from cartridge.shop.forms import OrderForm, LoginForm, SignupForm, DiscountForm
 from cartridge.shop.forms import AddProductForm, CartItemFormSet
-from cartridge.shop.models import Product, ProductVariation, Order, DiscountCode
+from cartridge.shop.models import Product, ProductVariation, Order
+from cartridge.shop.models import DiscountCode
 from cartridge.shop.utils import set_cookie, sign
 
 
@@ -26,14 +28,6 @@ handler = lambda s: import_dotted_path(s) if s else lambda *args: None
 billship_handler = handler(settings.SHOP_HANDLER_BILLING_SHIPPING)
 payment_handler = handler(settings.SHOP_HANDLER_PAYMENT)
 order_handler = handler(settings.SHOP_HANDLER_ORDER)
-
-# Fall back to authenticated-only messaging if messages app is unavailable.
-try:
-    from django.contrib.messages import info
-except ImportError:
-    def info(request, message, fail_silently=True):
-        if request.user.is_authenticated():
-            request.user.message_set.create(message=message)
 
 
 def product_list(products, request, per_page):
@@ -68,7 +62,8 @@ def product(request, slug, template="shop/product.html"):
     """
     published_products = Product.objects.published(for_user=request.user)
     product = get_object_or_404(published_products, slug=slug)
-    to_cart = request.method == "POST" and request.POST.get("add_wishlist") is None
+    to_cart = (request.method == "POST" and
+               request.POST.get("add_wishlist") is None)
     add_product_form = AddProductForm(request.POST or None, product=product,
                                       initial={"quantity": 1}, to_cart=to_cart)
     if request.method == "POST":
@@ -90,7 +85,8 @@ def product(request, slug, template="shop/product.html"):
     fields = [f.name for f in ProductVariation.option_fields()]
     fields += ["sku", "image_id"]
     variations = product.variations.all()
-    variations_json = simplejson.dumps([dict([(f, getattr(v, f)) for f in fields])
+    variations_json = simplejson.dumps([dict([(f, getattr(v, f))
+                                        for f in fields])
                                         for v in variations])
     context = {
         "product": product,
@@ -126,7 +122,8 @@ def wishlist(request, template="shop/wishlist.html"):
     error = None
     if request.method == "POST":
         to_cart = request.POST.get("add_cart")
-        add_product_form = AddProductForm(request.POST or None, to_cart=to_cart)
+        add_product_form = AddProductForm(request.POST or None,
+                                          to_cart=to_cart)
         if to_cart:
             if add_product_form.is_valid():
                 request.cart.add_item(add_product_form.variation, 1)
@@ -350,6 +347,7 @@ def complete(request, template="shop/complete.html"):
         setattr(items[i], "name", names[item.sku])
     context = {"order": order, "items": items}
     return render_to_response(template, context, RequestContext(request))
+
 
 def invoice(request, order_id, template="shop/order_invoice.html"):
     """

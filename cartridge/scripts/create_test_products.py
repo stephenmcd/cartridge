@@ -10,7 +10,8 @@ The Django models and environment used here are specific to the Cartridge
 project but the approach could easily be reused with any ecommerce database.
 """
 
-import sys, os
+import sys
+import os
 path = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(path, "..", ".."))
 os.environ["DJANGO_SETTINGS_MODULE"] = "cartridge.project_template.settings"
@@ -51,7 +52,8 @@ def create_products(queue):
     """
 
     # Close the connection for this process to avoid the issue discussed here:
-    # http://groups.google.com/group/django-users/browse_thread/thread/2c7421cdb9b99e48
+    # http://groups.google.com/group/django-users/
+    # browse_thread/thread/2c7421cdb9b99e48
     connection.close()
     product_options = ProductOption.objects.as_fields()
     while True:

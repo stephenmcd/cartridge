@@ -404,7 +404,7 @@ class Order(models.Model):
             self.total += self.shipping_total
         if self.discount_total is not None:
             self.total -= self.discount_total
-        self.save() # We need an ID before we can add related items.
+        self.save()  # We need an ID before we can add related items.
         for item in request.cart:
             product_fields = [f.name for f in SelectedProduct._meta.fields]
             item = dict([(f, getattr(item, f)) for f in product_fields])
@@ -517,9 +517,10 @@ class Cart(models.Model):
         """
         skus = [item.sku for item in self]
         cart = Product.objects.filter(variations__sku__in=skus)
-        upsell = Product.objects.published().filter(
-                     upsell_products__in=cart).exclude(variations__sku__in=skus)
-        return list(upsell.distinct())
+        published_products = Product.objects.published()
+        for_cart = published_products.filter(upsell_products__in=cart)
+        with_cart_excluded = for_cart.exclude(variations__sku__in=skus)
+        return list(with_cart_excluded.distinct())
 
 
 class SelectedProduct(models.Model):

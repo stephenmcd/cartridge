@@ -34,8 +34,9 @@ class ShopMiddleware(object):
             elif request.is_secure():
                 return HttpResponseRedirect("http://%s" % url)
 
-
-if "cartridge.shop.middleware.SSLRedirect" in settings.MIDDLEWARE_CLASSES:
+name = "cartridge.shop.middleware.SSLRedirect"
+if name in settings.MIDDLEWARE_CLASSES:
     import warnings
-    warnings.warn("SSLRedirect is deprecated; use cartridge.shop.middleware.ShopMiddleware",)
+    warnings.warn(name + " deprecated; "
+                  "use cartridge.shop.middleware.ShopMiddleware",)
     SSLRedirect = ShopMiddleware

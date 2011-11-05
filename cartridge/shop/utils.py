@@ -34,7 +34,7 @@ def set_cookie(response, name, value, secure=False):
     """
     Sets a cookie that expires in a year.
     """
-    year = datetime.utcnow() + timedelta(seconds=365*24*60*60)
+    year = datetime.utcnow() + timedelta(seconds=365 * 24 * 60 * 60)
     expires = datetime.strftime(year, "%a, %d-%b-%Y %H:%M:%S GMT")
     response.set_cookie(name, value, expires=expires, secure=secure)
 

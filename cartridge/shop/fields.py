@@ -22,6 +22,7 @@ class OptionField(CharField):
         defaults.update(kwargs)
         super(OptionField, self).__init__(*args, **defaults)
 
+
 class MoneyField(DecimalField):
     """
     A field for a monetary amount. Provide the default size and
@@ -34,6 +35,7 @@ class MoneyField(DecimalField):
         defaults.update(kwargs)
         super(MoneyField, self).__init__(*args, **defaults)
 
+
 class SKUField(CharField):
     """
     A field for a product SKU. Provide the name and default field size.
@@ -44,6 +46,7 @@ class SKUField(CharField):
         defaults = {"max_length": 20}
         defaults.update(kwargs)
         super(SKUField, self).__init__(*args, **defaults)
+
 
 class DiscountCodeField(CharField):
     """
