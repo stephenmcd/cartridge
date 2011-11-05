@@ -1,3 +1,9 @@
+Version 0.3.1 (Nov 05, 2011)
+----------------------------
+
+  * Updated auto-generated CHANGELOG and settings docs - stephenmcd
+  * Fixed formset iteration for Django <= 1.2 - stephenmcd
+
 Version 0.3 (Nov 05, 2011)
 --------------------------
 
