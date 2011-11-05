@@ -71,7 +71,7 @@ register_setting(
 
 register_setting(
     name="SHOP_DISCOUNT_FIELD_IN_CART",
-    label=_("Discoutn in Cart"),
+    label=_("Discount in Cart"),
     description="Can discount codes be entered on the cart page.",
     editable=True,
     default=True,
