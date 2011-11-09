@@ -712,3 +712,28 @@ class DiscountCode(Discount):
         elif self.discount_percent is not None:
             return amount / Decimal("100") * self.discount_percent
         return 0
+
+ 
+   
+    def calculate_cart(self, cart):
+        """
+        Calculates the discount based on the items in a cart, some might have the discount, others might not.
+        """
+        #if not applied to individual products or categories, discount the entire cart (as per the original cartridge functionality)
+        if self.products.count() == 0 and self.categories.count() == 0:
+            return self.calculate(cart.total_price())
+        #or, since code applies to some products or categories, loop through cart and calc.
+        discount = Decimal("0")
+
+        #get all the products this discount code applies to in this cart (either per product or per category)
+        skus = cart.items.all().values_list("sku", flat=True)
+        discount_products = self.products.filter(variations__sku__in=skus) | Product.objects.filter(categories=self.categories.all(), variations__sku__in=skus)
+        discount_products = products.distinct()
+
+        for item in cart:
+            if discount_products.filter(variations__sku=item.sku).count()>0: #discount applies to this product
+                discount += self.calculate(item.total_price)
+        discount = discount.quantize(Decimal('0.01'), rounding=ROUND_UP)
+        return discount
+
+ 
