@@ -4,4 +4,5 @@ host = https://www.transifex.net
 [cartridge.default]
 source_file = cartridge/locale/en/LC_MESSAGES/django.po
 source_lang = en
+trans.es = cartridge/locale/es/LC_MESSAGES/django.po
 
