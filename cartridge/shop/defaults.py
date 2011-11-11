@@ -66,7 +66,7 @@ register_setting(
     description="Default cost of shipping when no custom shipping is "
         "implemented.",
     editable=True,
-    default=10,
+    default=10.0,
 )
 
 register_setting(

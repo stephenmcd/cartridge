@@ -364,6 +364,7 @@ class Order(models.Model):
     discount_code = fields.DiscountCodeField(_("Discount code"), blank=True)
     discount_total = fields.MoneyField(_("Discount total"))
     total = fields.MoneyField(_("Order total"))
+    transaction_id = CharField(_("Transaction ID"), max_length=255, blank=True)
 
     status = models.IntegerField(_("Status"),
                             choices=settings.SHOP_ORDER_STATUS_CHOICES,
@@ -401,7 +402,7 @@ class Order(models.Model):
                 setattr(self, field, request.session[field])
         self.total = self.item_total = request.cart.total_price()
         if self.shipping_total is not None:
-            self.total += self.shipping_total
+            self.total += Decimal(self.shipping_total)
         if self.discount_total is not None:
             self.total -= self.discount_total
         self.save()  # We need an ID before we can add related items.
@@ -416,6 +417,7 @@ class Order(models.Model):
         the stock level for the items in the order, and then delete
         the cart.
         """
+        self.save() # Save the transaction ID.
         for field in self.session_fields:
             if field in request.session:
                 del request.session[field]

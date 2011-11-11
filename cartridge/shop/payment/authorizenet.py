@@ -98,4 +98,5 @@ def process(request, order_form, order):
     #transaction_id = parsed_results[6]
     success = response_code == '1'
     if not success:
-        raise CheckoutError("Transaction denied")
+        raise CheckoutError("Transaction declined: " + parsed_results[2])
+    return parsed_results[6]

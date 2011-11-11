@@ -284,7 +284,7 @@ def checkout_steps(request):
                 order.setup(request)
                 # Try payment.
                 try:
-                    payment_handler(request, form, order)
+                    order.transaction_id = payment_handler(request, form, order)
                 except checkout.CheckoutError, e:
                     # Error in payment handler.
                     order.delete()

@@ -83,17 +83,23 @@ form is submitted. It defaults to the value
 
 .. note::
 
+    The payment handler function can optionally return a transaction ID
+    which will be stored against a successful order for display in the
+    admin.
+
+Unlike the billing / shipping handler, the payment handler has access
+to the order object which contains fields for the order sub total,
+shipping, discount and tax amounts. If there is a payment error
+(see :ref:`ref-error-handling`) then the order is deleted.
+
+.. note::
+
     When Cartridge is configured to display a final confirmation step
     after payment info is entered, the handler function defined by
     ``SHOP_HANDLER_PAYMENT`` won't be called until after the
     confirmation step. If there is no confirmation step, then the
     handler function will be called directly upon the customer
     submitting payment info.
-
-Unlike the billing / shipping handler, the payment handler has access
-to the order object which contains fields for the order sub total,
-shipping, discount and tax amounts. If there is a payment error
-(see :ref:`ref-error-handling`) then the order is deleted.
 
 Order Processing
 ================

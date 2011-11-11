@@ -120,11 +120,13 @@ class OrderItemInline(admin.TabularInline):
 
 class OrderAdmin(admin.ModelAdmin):
     ordering = ("status", "-id")
-    list_display = ("id", "billing_name", "total", "time", "status", "invoice")
+    list_display = ("id", "billing_name", "total", "time", "status",
+                    "transaction_id", "invoice")
     list_editable = ("status",)
     list_filter = ("status", "time")
     list_display_links = ("id", "billing_name",)
-    search_fields = ["id", "status"] + billing_fields + shipping_fields
+    search_fields = (["id", "status", "transaction_id"] +
+                     billing_fields + shipping_fields)
     date_hierarchy = "time"
     radio_fields = {"status": admin.HORIZONTAL}
     inlines = (OrderItemInline,)
@@ -134,7 +136,7 @@ class OrderAdmin(admin.ModelAdmin):
         (_("Shipping details"), {"fields": (tuple(shipping_fields),)}),
         (None, {"fields": ("additional_instructions", ("shipping_total",
             "shipping_type"), ("discount_total", "discount_code"),
-            "item_total", ("total", "status"))}),
+            "item_total", ("total", "status"), "transaction_id")}),
     )
 
 
