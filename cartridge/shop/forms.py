@@ -238,7 +238,7 @@ class DiscountForm(forms.ModelForm):
         """
         discount = getattr(self, "_discount", None)
         if discount is not None:
-            total = discount.calculate(self._request.cart.total_price())
+            total = discount.calculate_cart(self._request.cart)
             if discount.free_shipping:
                 set_shipping(self._request, _("Free shipping"), 0)
             self._request.session["free_shipping"] = discount.free_shipping
