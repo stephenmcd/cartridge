@@ -1,4 +1,5 @@
 
+from decimal import Decimal
 import locale
 from urllib import quote
 
@@ -55,7 +56,7 @@ def _order_totals(context):
                 context[f] = context["request"].session.get(f, None)
     context["order_total"] = context.get("item_total", None)
     if context.get("shipping_total", None) is not None:
-        context["order_total"] += context["shipping_total"]
+        context["order_total"] += Decimal(context["shipping_total"])
     if context.get("discount_total", None) is not None:
         context["order_total"] -= context["discount_total"]
     return context
