@@ -1,0 +1,8 @@
+[main]
+host = https://www.transifex.net
+
+[cartridge.default]
+source_file = cartridge/shop/locale/en/LC_MESSAGES/django.po
+source_lang = en
+trans.es = cartridge/shop/locale/es/LC_MESSAGES/django.po
+
