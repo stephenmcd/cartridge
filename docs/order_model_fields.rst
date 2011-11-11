@@ -26,4 +26,5 @@
   * ``discount_code``
   * ``discount_total``
   * ``total``
+  * ``transaction_id``
   * ``status``

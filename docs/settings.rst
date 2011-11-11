@@ -54,7 +54,7 @@ Default: ``''``
 
 Default cost of shipping when no custom shipping is implemented.
 
-Default: ``10``
+Default: ``10.0``
 
 ``SHOP_DISCOUNT_FIELD_IN_CART``
 -------------------------------

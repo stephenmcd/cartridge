@@ -1,3 +1,13 @@
+Version 0.3.2 (Nov 11, 2011)
+----------------------------
+
+  * Fixed type error with decimal shipping values - stephenmcd
+  * Added the Order.transaction_id field that is populated by the return value of payment handlers - stephenmcd
+  * Added a payment handler for ANZ eGate - stephenmcd
+  * Fixed egate exception handling - stephenmcd
+  * Allow nulls in Order.transaction_id - stephenmcd
+  * PEP8 fixes - stephenmcd
+
 Version 0.3.1 (Nov 05, 2011)
 ----------------------------
 
