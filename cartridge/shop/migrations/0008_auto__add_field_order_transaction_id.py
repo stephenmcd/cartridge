@@ -9,7 +9,7 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         
         # Adding field 'Order.transaction_id'
-        db.add_column('shop_order', 'transaction_id', self.gf('django.db.models.fields.CharField')(default='', max_length=255, blank=True), keep_default=False)
+        db.add_column('shop_order', 'transaction_id', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True), keep_default=False)
 
 
     def backwards(self, orm):
@@ -142,7 +142,7 @@ class Migration(SchemaMigration):
             'status': ('django.db.models.fields.IntegerField', [], {'default': '1'}),
             'time': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
             'total': ('cartridge.shop.fields.MoneyField', [], {'null': 'True', 'max_digits': '10', 'decimal_places': '2', 'blank': 'True'}),
-            'transaction_id': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'transaction_id': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'user_id': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
         },
         'shop.orderitem': {
