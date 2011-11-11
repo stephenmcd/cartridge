@@ -284,7 +284,7 @@ def checkout_steps(request):
                 order.setup(request)
                 # Try payment.
                 try:
-                    order.transaction_id = payment_handler(request, form, order)
+                    transaction_id = payment_handler(request, form, order)
                 except checkout.CheckoutError, e:
                     # Error in payment handler.
                     order.delete()
@@ -297,6 +297,7 @@ def checkout_steps(request):
                     # ``order_handler()`` can be defined by the
                     # developer to implement custom order processing.
                     # Then send the order email to the customer.
+                    order.transaction_id = transaction_id
                     order.complete(request)
                     order_handler(request, form, order)
                     checkout.send_order_email(request, order)
