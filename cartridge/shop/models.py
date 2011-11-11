@@ -401,9 +401,10 @@ class Order(models.Model):
         for field in self.session_fields:
             if field in request.session:
                 setattr(self, field, request.session[field])
+        self.shipping_total = Decimal(str(self.shipping_total))
         self.total = self.item_total = request.cart.total_price()
         if self.shipping_total is not None:
-            self.total += Decimal(self.shipping_total)
+            self.total += self.shipping_total
         if self.discount_total is not None:
             self.total -= self.discount_total
         self.save()  # We need an ID before we can add related items.
