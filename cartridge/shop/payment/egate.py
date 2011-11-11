@@ -40,7 +40,7 @@ def process(request, order_form, order):
     # a CheckoutError.
     try:
         response = QueryDict(urlopen(GATEWAY_URL, urlencode(post_data)).read())
-    except (Exception, e):
+    except Exception, e:
         raise CheckoutError(_("A general error occured: ") + e)
     else:
         if response["vpc_TxnResponseCode"] != "0":
