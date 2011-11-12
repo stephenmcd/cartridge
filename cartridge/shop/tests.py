@@ -11,7 +11,7 @@ from mezzanine.utils.tests import run_pyflakes_for_package
 from mezzanine.utils.tests import run_pep8_for_package
 
 from cartridge.shop.models import Product, ProductOption, ProductVariation
-from cartridge.shop.models import Category, Cart, Order
+from cartridge.shop.models import Category, Cart, Order, DiscountCode
 from cartridge.shop.checkout import CHECKOUT_STEPS
 
 
@@ -22,9 +22,12 @@ TEST_PRICE = Decimal("20")
 class ShopTests(TestCase):
 
     def setUp(self):
-        published = {"status": CONTENT_STATUS_PUBLISHED}
-        self._category = Category.objects.create(**published)
-        self._product = Product.objects.create(**published)
+        """
+        Set up test data - category, product and options.
+        """
+        self._published = {"status": CONTENT_STATUS_PUBLISHED}
+        self._category = Category.objects.create(**self._published)
+        self._product = Product.objects.create(**self._published)
         for option_type in settings.SHOP_OPTION_TYPE_CHOICES:
             for i in range(10):
                 name = "test%s" % i
@@ -174,9 +177,33 @@ class ShopTests(TestCase):
         self._category.combined = False
         self.assertCategoryFilteredProducts(1)
 
-    def test_cart(self):
+    def _add_to_cart(self, variation, quantity):
         """
-        Test the cart object and cart add/remove forms.
+        Given a variation, creates the dict for posting to the cart
+        form to add the variation, and posts it.
+        """
+        field_names = [f.name for f in ProductVariation.option_fields()]
+        data = dict(zip(field_names, variation.options()))
+        data["quantity"] = quantity
+        self.client.post(variation.product.get_absolute_url(), data)
+
+    def _empty_cart(self, cart):
+        """
+        Given a cart, creates the dict for posting to the cart form
+        to remove all items from the cart, and posts it.
+        """
+        data = {"items-INITIAL_FORMS": 0, "items-TOTAL_FORMS": 0,
+                "update_cart": 1}
+        for i, item in enumerate(cart):
+            data["items-INITIAL_FORMS"] += 1
+            data["items-TOTAL_FORMS"] += 1
+            data["items-%s-id" % i] = item.id
+            data["items-%s-DELETE" % i] = "on"
+        self.client.post(reverse("shop_cart"), data)
+
+    def _reset_variations(self):
+        """
+        Recreates variations and sets up the first.
         """
         self._product.variations.all().delete()
         self._product.variations.create_from_options(self._options)
@@ -185,6 +212,11 @@ class ShopTests(TestCase):
         variation.num_in_stock = TEST_STOCK * 2
         variation.save()
 
+    def test_cart(self):
+        """
+        Test the cart object and cart add/remove forms.
+        """
+
         # Test initial cart.
         cart = Cart.objects.from_request(self.client)
         self.assertFalse(cart.has_items())
@@ -192,10 +224,9 @@ class ShopTests(TestCase):
         self.assertEqual(cart.total_price(), Decimal("0"))
 
         # Add quantity and check stock levels / cart totals.
-        field_names = [f.name for f in ProductVariation.option_fields()]
-        data = dict(zip(field_names, variation.options()))
-        data["quantity"] = TEST_STOCK
-        self.client.post(self._product.get_absolute_url(), data)
+        self._reset_variations()
+        variation = self._product.variations.all()[0]
+        self._add_to_cart(variation, TEST_STOCK)
         cart = Cart.objects.from_request(self.client)
         variation = self._product.variations.all()[0]
         self.assertTrue(variation.has_stock(TEST_STOCK))
@@ -205,7 +236,7 @@ class ShopTests(TestCase):
         self.assertEqual(cart.total_price(), TEST_PRICE * TEST_STOCK)
 
         # Add remaining quantity and check again.
-        self.client.post(self._product.get_absolute_url(), data)
+        self._add_to_cart(variation, TEST_STOCK)
         cart = Cart.objects.from_request(self.client)
         variation = self._product.variations.all()[0]
         self.assertFalse(variation.has_stock())
@@ -214,14 +245,7 @@ class ShopTests(TestCase):
         self.assertEqual(cart.total_price(), TEST_PRICE * TEST_STOCK * 2)
 
         # Remove from cart.
-        data = {"items-INITIAL_FORMS": 0, "items-TOTAL_FORMS": 0,
-                "update_cart": 1}
-        for i, item in enumerate(cart):
-            data["items-INITIAL_FORMS"] += 1
-            data["items-TOTAL_FORMS"] += 1
-            data["items-%s-id" % i] = item.id
-            data["items-%s-DELETE" % i] = "on"
-        self.client.post(reverse("shop_cart"), data)
+        self._empty_cart(cart)
         cart = Cart.objects.from_request(self.client)
         variation = self._product.variations.all()[0]
         self.assertTrue(variation.has_stock(TEST_STOCK * 2))
@@ -229,25 +253,69 @@ class ShopTests(TestCase):
         self.assertEqual(cart.total_quantity(), 0)
         self.assertEqual(cart.total_price(), Decimal("0"))
 
+    def test_discount_codes(self):
+        """
+        Test that all types of discount codes are applied.
+        """
+
+        self._reset_variations()
+        variation = self._product.variations.all()[0]
+        invalid_product = Product.objects.create(**self._published)
+        invalid_product.variations.create_from_options(self._options)
+        invalid_variation = invalid_product.variations.all()[0]
+        invalid_variation.unit_price = TEST_PRICE
+        invalid_variation.num_in_stock = TEST_STOCK * 2
+        invalid_variation.save()
+        discount_value = TEST_PRICE / 2
+
+        # Set up discounts with and without a specific product, for
+        # each type of discount.
+        for discount_target in ("cart", "item"):
+            for discount_type in ("percent", "deduct"):
+                code = "%s_%s" % (discount_target, discount_type)
+                kwargs = {
+                    "code": code,
+                    "discount_%s" % discount_type: discount_value,
+                    "active": True,
+                }
+                cart = Cart.objects.from_request(self.client)
+                self._empty_cart(cart)
+                self._add_to_cart(variation, 1)
+                self._add_to_cart(invalid_variation, 1)
+                discount = DiscountCode.objects.create(**kwargs)
+                if discount_target == "item":
+                    discount.products.add(variation.product)
+                post_data = {"discount_code": code}
+                self.client.post(reverse("shop_cart"), post_data)
+                discount_total = self.client.session["discount_total"]
+                if discount_type == "percent":
+                    expected = TEST_PRICE / Decimal("100") * discount_value
+                    if discount_target == "cart":
+                        # Excpected amount applies to entire cart.
+                        cart = Cart.objects.from_request(self.client)
+                        expected *= cart.items.count()
+                elif discount_type == "deduct":
+                    expected = discount_value
+                self.assertEqual(discount_total, expected)
+                if discount_target == "item":
+                    # Test discount isn't applied for an invalid product.
+                    cart = Cart.objects.from_request(self.client)
+                    self._empty_cart(cart)
+                    self._add_to_cart(invalid_variation, 1)
+                    self.client.post(reverse("shop_cart"), post_data)
+                    discount_total = self.client.session.get("discount_total")
+                    self.assertEqual(discount_total, None)
+
     def test_order(self):
         """
         Test that a completed order contains cart items and that
         they're removed from stock.
         """
 
-        # Get a variation.
-        self._product.variations.all().delete()
-        self._product.variations.create_from_options(self._options)
-        variation = self._product.variations.all()[0]
-        variation.unit_price = TEST_PRICE
-        variation.num_in_stock = TEST_STOCK * 2
-        variation.save()
-
         # Add to cart.
-        field_names = [f.name for f in ProductVariation.option_fields()]
-        data = dict(zip(field_names, variation.options()))
-        data["quantity"] = TEST_STOCK
-        self.client.post(self._product.get_absolute_url(), data)
+        self._reset_variations()
+        variation = self._product.variations.all()[0]
+        self._add_to_cart(variation, TEST_STOCK)
         cart = Cart.objects.from_request(self.client)
 
         # Post order.
