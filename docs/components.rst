@@ -173,6 +173,13 @@ required for applying the discount and a BooleanField
 ``DiscountCode.free_shipping`` which can be checked to provide free
 shipping for the discount code.
 
+.. note::
+
+    Discounts are applied to individual cart items when the discount code
+    is assigned to one or more products (individually or by category) that
+    are in the cart. If the discount code is not assigned to any products,
+    then the discount will be applied to the entire cart.
+
 Sales
 -----
 
