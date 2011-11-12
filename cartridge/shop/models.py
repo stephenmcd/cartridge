@@ -1,6 +1,6 @@
 
 from datetime import datetime
-from decimal import Decimal, ROUND_UP
+from decimal import Decimal
 from operator import iand, ior
 
 from django.core.urlresolvers import reverse
@@ -401,9 +401,9 @@ class Order(models.Model):
         for field in self.session_fields:
             if field in request.session:
                 setattr(self, field, request.session[field])
-        self.shipping_total = Decimal(str(self.shipping_total))
         self.total = self.item_total = request.cart.total_price()
         if self.shipping_total is not None:
+            self.shipping_total = Decimal(str(self.shipping_total))
             self.total += self.shipping_total
         if self.discount_total is not None:
             self.total -= self.discount_total
@@ -483,9 +483,8 @@ class Cart(models.Model):
         Increase quantity of existing item if SKU matches, otherwise create
         new.
         """
-        #import pdb; pdb.set_trace()
-        item, created = self.items.get_or_create(sku=variation.sku,
-                                                 unit_price=variation.price())
+        kwargs = {"sku": variation.sku, "unit_price": variation.price()}
+        item, created = self.items.get_or_create(**kwargs)
         if created:
             item.description = unicode(variation)
             item.unit_price = variation.price()
@@ -515,16 +514,42 @@ class Cart(models.Model):
         """
         return sum([item.total_price for item in self])
 
+    def skus(self):
+        """
+        Returns a list of skus for items in the cart. Used by
+        ``upsell_products`` and ``calculate_discount``.
+        """
+        return [item.sku for item in self]
+
     def upsell_products(self):
         """
         Returns the upsell products for each of the items in the cart.
         """
-        skus = [item.sku for item in self]
-        cart = Product.objects.filter(variations__sku__in=skus)
+        cart = Product.objects.filter(variations__sku__in=self.skus())
         published_products = Product.objects.published()
         for_cart = published_products.filter(upsell_products__in=cart)
-        with_cart_excluded = for_cart.exclude(variations__sku__in=skus)
+        with_cart_excluded = for_cart.exclude(variations__sku__in=self.skus())
         return list(with_cart_excluded.distinct())
+
+    def calculate_discount(self, discount):
+        """
+        Calculates the discount based on the items in a cart, some
+        might have the discount, others might not.
+        """
+        # Discount applies to cart total if not product specific.
+        products = discount.products.all()
+        if products.count() == 0:
+            return discount.calculate(self.total_price())
+        total = Decimal("0")
+        # Create a list of skus in the cart that are applicable to
+        # the discount, and total the discount for appllicable items.
+        discountable_skus = ProductVariation.objects.filter(
+            product__in=products,
+            sku__in=self.skus()).values_list("sku", flat=True)
+        for item in self:
+            if item.sku in discountable_skus:
+                total += discount.calculate(item.total_price)
+        return total
 
 
 class SelectedProduct(models.Model):
@@ -716,34 +741,3 @@ class DiscountCode(Discount):
         elif self.discount_percent is not None:
             return amount / Decimal("100") * self.discount_percent
         return 0
-
- 
-   
-    def calculate_cart(self, cart):
-        """
-        Calculates the discount based on the items in a cart, some might have 
-        the discount, others might not.
-        """
-        # blanket discounts, apply to the entire cart (as per the original 
-        # cartridge functionality)
-        if self.products.count() == 0 and self.categories.count() == 0:
-            return self.calculate(cart.total_price())
-
-        discount = Decimal("0")
-
-        # get all the products this discount code applies to in this cart
-        # (either per product or per category)
-        skus = cart.items.all().values_list("sku", flat=True)
-        discount_products = self.products.filter(variations__sku__in=skus) | \
-            Product.objects.filter(categories=self.categories.all(),
-                    variations__sku__in=skus)
-        discount_products = discount_products.distinct()
-
-        for item in cart:
-            #discount applies to this product
-            if discount_products.filter(variations__sku=item.sku).count()>0: 
-                discount += self.calculate(item.total_price)
-        discount = discount.quantize(Decimal('0.01'), rounding=ROUND_UP)
-        return discount
-
- 

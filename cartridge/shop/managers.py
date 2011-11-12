@@ -161,7 +161,6 @@ class DiscountCodeManager(Manager):
         discount = self.active().get(total_price_valid, code=code)
         products = discount.products.all()
         if products.count() > 0:
-            skus = [item.sku for item in cart]
-            if products.filter(variations__sku__in=skus).count() == 0:
+            if products.filter(variations__sku__in=cart.skus()).count() == 0:
                 raise self.model.DoesNotExist
         return discount
