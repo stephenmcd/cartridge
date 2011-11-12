@@ -159,7 +159,7 @@ class DiscountCodeManager(Manager):
         total_price_valid = (Q(min_purchase__isnull=True) |
                              Q(min_purchase__lte=cart.total_price()))
         discount = self.active().get(total_price_valid, code=code)
-        products = discount.products.all()
+        products = discount.all_products()
         if products.count() > 0:
             if products.filter(variations__sku__in=cart.skus()).count() == 0:
                 raise self.model.DoesNotExist

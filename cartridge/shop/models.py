@@ -537,17 +537,17 @@ class Cart(models.Model):
         might have the discount, others might not.
         """
         # Discount applies to cart total if not product specific.
-        products = discount.products.all()
+        products = discount.all_products()
         if products.count() == 0:
             return discount.calculate(self.total_price())
         total = Decimal("0")
         # Create a list of skus in the cart that are applicable to
         # the discount, and total the discount for appllicable items.
-        discountable_skus = ProductVariation.objects.filter(
-            product__in=products,
-            sku__in=self.skus()).values_list("sku", flat=True)
+        lookup = {"product__in": products, "sku__in": self.skus()}
+        discount_variations = ProductVariation.objects.filter(**lookup)
+        discount_skus = discount_variations.values_list("sku", flat=True)
         for item in self:
-            if item.sku in discountable_skus:
+            if item.sku in discount_skus:
                 total += discount.calculate(item.total_price)
         return total
 
