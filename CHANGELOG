@@ -1,3 +1,16 @@
+Version 0.3.4 (Nov 13, 2011)
+----------------------------
+
+  * Added Sebastián Magrí to AUTHORS - stephenmcd
+  * Update transifex configuration adding ru and fr and moving locale/ into cartridge/shop/ - Sebastián Ramírez Magrí
+  * Update spanish translations - Sebastián Ramírez Magrí
+  * Refactored discount code calculation per product to not use DB queries per cart item - stephenmcd
+  * Added handling for recalculating discount codes on cart changes - stephenmcd
+  * Added discount code tests - stephenmcd
+  * Added Luke Miller to AUTHORS - stephenmcd
+  * Added a note to docs about discounts per cart item versus entire cart - stephenmcd
+  * Fixed incorrect calls for rerieving all products for a discount - stephenmcd
+
 Version 0.3.3 (Nov 11, 2011)
 ----------------------------
 
@@ -7,6 +20,14 @@ Version 0.3.3 (Nov 11, 2011)
 Version 0.3.2 (Nov 11, 2011)
 ----------------------------
 
+  * DiscountCodes can be applied to specific products or categories - Luke Miller
+  * tidy up code - Luke Miller
+  * Add english locale .po file for transifex - Sebastián Ramírez Magrí
+  * Add config file for transifex - Sebastián Ramírez Magrí
+  * Add Spanish translation and update transifex configuration to reflect that - Sebastián Ramírez Magrí
+  * Automated transifex changes to spanish .po file - Sebastián Ramírez Magrí
+  * Add Spanish translations from transifex and process mo files - Sebastián Ramírez Magrí
+  * Finish Spanish translations - Sebastián Ramírez Magrí
   * Fixed type error with decimal shipping values - stephenmcd
   * Added the Order.transaction_id field that is populated by the return value of payment handlers - stephenmcd
   * Added a payment handler for ANZ eGate - stephenmcd
