@@ -35,6 +35,13 @@ register_setting(
 )
 
 register_setting(
+    name="SHOP_CHECKOUT_FORM_CLASS",
+    description="Dotted path to the Form class to be used at checkout.",
+    editable=True,
+    default="cartridge.shop.forms.OrderForm",
+)
+
+register_setting(
     name="SHOP_CHECKOUT_STEPS_SPLIT",
     description="If True, the checkout process is split into separate "
         "billing/shipping and payment steps.",
