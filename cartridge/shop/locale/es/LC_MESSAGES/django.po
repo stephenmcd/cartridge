@@ -1,21 +1,22 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # Sebastián Ramírez Magrí <sebasmagri@gmail.com>, 2011.
 msgid ""
 msgstr ""
 "Project-Id-Version: Cartridge\n"
-"Report-Msgid-Bugs-To: https://github.com/stephenmcd/cartridge/issues\n"
-"POT-Creation-Date: 2011-11-11 19:06-0430\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-11-26 10:10-0430\n"
 "PO-Revision-Date: 2011-11-12 02:06+0000\n"
 "Last-Translator: sebasmagri <sebasmagri@gmail.com>\n"
-"Language-Team: Spanish (Castilian) (http://www.transifex.net/projects/p/cartridge/team/es/)\n"
+"Language-Team: Spanish (Castilian) (http://www.transifex.net/projects/p/"
+"cartridge/team/es/)\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #: admin.py:29
@@ -198,55 +199,55 @@ msgstr "La cantidad seleccionada no está disponible."
 msgid "The discount code entered is invalid."
 msgstr "El código de descuento ingresado es inválido."
 
-#: forms.py:243 models.py:703
+#: forms.py:243 models.py:728
 msgid "Free shipping"
 msgstr "Envío gratuito"
 
-#: forms.py:257
+#: forms.py:258
 msgid "My delivery details are the same as my billing details"
 msgstr "Mis detalles de entrega son los mismos que mis detalles de cobro"
 
-#: forms.py:259
+#: forms.py:260
 msgid "Remember my address for next time"
 msgstr "Recordar mi dirección para la próxima ocasión"
 
-#: forms.py:260
+#: forms.py:261
 msgid "Cardholder name"
 msgstr "Nombre del tarjetahabiente"
 
-#: forms.py:261 models.py:210
+#: forms.py:262 models.py:210
 msgid "Type"
 msgstr "Tipo"
 
-#: forms.py:263
+#: forms.py:264
 msgid "Card number"
 msgstr "Número de tarjeta"
 
-#: forms.py:349
+#: forms.py:350
 msgid "Email Address"
 msgstr "Dirección de Correo Electrónico"
 
-#: forms.py:350
+#: forms.py:351
 msgid "Password"
 msgstr "Contraseña"
 
-#: forms.py:378
+#: forms.py:379
 msgid "This email is already registered"
 msgstr "Este correo electrónico ya está registrado"
 
-#: forms.py:398
+#: forms.py:399
 msgid "Invalid email/password"
 msgstr "Correo electrónico o contraseña inválidos"
 
-#: forms.py:400
+#: forms.py:401
 msgid "Your account is inactive"
 msgstr "Su cuenta está inactiva"
 
-#: forms.py:499
+#: forms.py:500
 msgid "Only one variation can be checked as the default."
 msgstr "Solo puede indicar una variación por defecto"
 
-#: forms.py:512
+#: forms.py:513
 msgid "Please enter a value for only one type of reduction."
 msgstr "Por favor introduzca un valor para solo un tipo de reducción"
 
@@ -266,7 +267,7 @@ msgstr "Categoría del producto"
 msgid "Product categories"
 msgstr "Categorías del producto"
 
-#: models.py:94 models.py:538
+#: models.py:94 models.py:563
 msgid "Unit price"
 msgstr "Precio unitario"
 
@@ -306,7 +307,7 @@ msgstr "Productos"
 msgid "Image"
 msgstr "Imagen"
 
-#: models.py:189 models.py:536 management/commands/product_db.py:32
+#: models.py:189 models.py:561 management/commands/product_db.py:32
 msgid "Description"
 msgstr "Descripción"
 
@@ -427,55 +428,55 @@ msgstr "Descargar factura en PDF"
 msgid "Last updated"
 msgstr "Actualizado por última vez"
 
-#: models.py:537
+#: models.py:562
 msgid "Quantity"
 msgstr "Cantidad"
 
-#: models.py:539
+#: models.py:564
 msgid "Total price"
 msgstr "Precio total"
 
-#: models.py:597
+#: models.py:622
 msgid "Active"
 msgstr "Activo"
 
-#: models.py:601
+#: models.py:626
 msgid "Reduce by amount"
 msgstr "Reducir por cantidad"
 
-#: models.py:602
+#: models.py:627
 msgid "Reduce by percent"
 msgstr "Reducir por porcentaje"
 
-#: models.py:605
+#: models.py:630
 msgid "Reduce to amount"
 msgstr "Reducir hasta cantidad"
 
-#: models.py:606
+#: models.py:631
 msgid "Valid from"
 msgstr "Válido desde"
 
-#: models.py:607
+#: models.py:632
 msgid "Valid to"
 msgstr "Válido hasta"
 
-#: models.py:633
+#: models.py:658
 msgid "Sale"
 msgstr "Venta"
 
-#: models.py:634
+#: models.py:659
 msgid "Sales"
 msgstr "Ventas"
 
-#: models.py:701
+#: models.py:726
 msgid "Code"
 msgstr "Código"
 
-#: models.py:702
+#: models.py:727
 msgid "Minimum total purchase"
 msgstr "Compra mínima total"
 
-#: utils.py:84
+#: utils.py:103
 #, python-format
 msgid ""
 "Invalid currency locale specified for SHOP_CURRENCY_LOCALE: '%s'. You'll "
@@ -486,35 +487,35 @@ msgstr ""
 "favor configure la localización de su sistema o configure la opción "
 "SHOP_CURRENCY_LOCALE en su módulo settings"
 
-#: views.py:74 views.py:130
+#: views.py:75 views.py:132
 msgid "Item added to cart"
 msgstr "Ítem añadido al carrito de compras"
 
-#: views.py:81
+#: views.py:82
 msgid "Item added to wishlist"
 msgstr "Ítem añadido a la lista de deseos"
 
-#: views.py:135
+#: views.py:137
 msgid "Item removed from wishlist"
 msgstr "Ítem borrado de la lista de deseos"
 
-#: views.py:171
+#: views.py:173
 msgid "Your cart has expired"
 msgstr "Su carrito de compras ha expirado"
 
-#: views.py:178
+#: views.py:181
 msgid "Cart updated"
 msgstr "Carrito de compras actualizado"
 
-#: views.py:206
+#: views.py:209
 msgid "Successfully logged in"
 msgstr "Ha ingresado con éxito"
 
-#: views.py:212
+#: views.py:215
 msgid "Successfully signed up"
 msgstr "Se ha registrado con éxito"
 
-#: views.py:226
+#: views.py:229
 msgid "Successfully logged out"
 msgstr "Ha salido con éxito"
 
@@ -862,5 +863,3 @@ msgstr "Querido(a)"
 #: templates/shop/email/order_receipt.html:5
 msgid "Your order has been successful, details are below."
 msgstr "Su orden ha sido exitosa, los detalles se pueden encontrar debajo."
-
-

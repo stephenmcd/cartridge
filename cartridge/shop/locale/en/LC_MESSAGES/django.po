@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-11 19:06-0430\n"
+"POT-Creation-Date: 2011-11-26 10:10-0430\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -197,55 +197,55 @@ msgstr ""
 msgid "The discount code entered is invalid."
 msgstr ""
 
-#: forms.py:243 models.py:703
+#: forms.py:243 models.py:728
 msgid "Free shipping"
 msgstr ""
 
-#: forms.py:257
+#: forms.py:258
 msgid "My delivery details are the same as my billing details"
 msgstr ""
 
-#: forms.py:259
+#: forms.py:260
 msgid "Remember my address for next time"
 msgstr ""
 
-#: forms.py:260
+#: forms.py:261
 msgid "Cardholder name"
 msgstr ""
 
-#: forms.py:261 models.py:210
+#: forms.py:262 models.py:210
 msgid "Type"
 msgstr ""
 
-#: forms.py:263
+#: forms.py:264
 msgid "Card number"
 msgstr ""
 
-#: forms.py:349
+#: forms.py:350
 msgid "Email Address"
 msgstr ""
 
-#: forms.py:350
+#: forms.py:351
 msgid "Password"
 msgstr ""
 
-#: forms.py:378
+#: forms.py:379
 msgid "This email is already registered"
 msgstr ""
 
-#: forms.py:398
+#: forms.py:399
 msgid "Invalid email/password"
 msgstr ""
 
-#: forms.py:400
+#: forms.py:401
 msgid "Your account is inactive"
 msgstr ""
 
-#: forms.py:499
+#: forms.py:500
 msgid "Only one variation can be checked as the default."
 msgstr ""
 
-#: forms.py:512
+#: forms.py:513
 msgid "Please enter a value for only one type of reduction."
 msgstr ""
 
@@ -265,7 +265,7 @@ msgstr ""
 msgid "Product categories"
 msgstr ""
 
-#: models.py:94 models.py:538
+#: models.py:94 models.py:563
 msgid "Unit price"
 msgstr ""
 
@@ -305,7 +305,7 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: models.py:189 models.py:536 management/commands/product_db.py:32
+#: models.py:189 models.py:561 management/commands/product_db.py:32
 msgid "Description"
 msgstr ""
 
@@ -426,55 +426,55 @@ msgstr ""
 msgid "Last updated"
 msgstr ""
 
-#: models.py:537
+#: models.py:562
 msgid "Quantity"
 msgstr ""
 
-#: models.py:539
+#: models.py:564
 msgid "Total price"
 msgstr ""
 
-#: models.py:597
+#: models.py:622
 msgid "Active"
 msgstr ""
 
-#: models.py:601
+#: models.py:626
 msgid "Reduce by amount"
 msgstr ""
 
-#: models.py:602
+#: models.py:627
 msgid "Reduce by percent"
 msgstr ""
 
-#: models.py:605
+#: models.py:630
 msgid "Reduce to amount"
 msgstr ""
 
-#: models.py:606
+#: models.py:631
 msgid "Valid from"
 msgstr ""
 
-#: models.py:607
+#: models.py:632
 msgid "Valid to"
 msgstr ""
 
-#: models.py:633
+#: models.py:658
 msgid "Sale"
 msgstr ""
 
-#: models.py:634
+#: models.py:659
 msgid "Sales"
 msgstr ""
 
-#: models.py:701
+#: models.py:726
 msgid "Code"
 msgstr ""
 
-#: models.py:702
+#: models.py:727
 msgid "Minimum total purchase"
 msgstr ""
 
-#: utils.py:84
+#: utils.py:103
 #, python-format
 msgid ""
 "Invalid currency locale specified for SHOP_CURRENCY_LOCALE: '%s'. You'll "
@@ -482,35 +482,35 @@ msgid ""
 "SHOP_CURRENCY_LOCALE setting in your settings module."
 msgstr ""
 
-#: views.py:74 views.py:130
+#: views.py:75 views.py:132
 msgid "Item added to cart"
 msgstr ""
 
-#: views.py:81
+#: views.py:82
 msgid "Item added to wishlist"
 msgstr ""
 
-#: views.py:135
+#: views.py:137
 msgid "Item removed from wishlist"
 msgstr ""
 
-#: views.py:171
+#: views.py:173
 msgid "Your cart has expired"
 msgstr ""
 
-#: views.py:178
+#: views.py:181
 msgid "Cart updated"
 msgstr ""
 
-#: views.py:206
+#: views.py:209
 msgid "Successfully logged in"
 msgstr ""
 
-#: views.py:212
+#: views.py:215
 msgid "Successfully signed up"
 msgstr ""
 
-#: views.py:226
+#: views.py:229
 msgid "Successfully logged out"
 msgstr ""
 
