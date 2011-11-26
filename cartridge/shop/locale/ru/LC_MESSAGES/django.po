@@ -1,22 +1,22 @@
+# SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
+# Translators:
 # Andrew Grigorev <andrew@ei-grad.ru>, 2011.
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
+"Project-Id-Version: Cartridge\n"
+"Report-Msgid-Bugs-To: https://github.com/stephenmcd/cartridge/issues\n"
 "POT-Creation-Date: 2011-11-11 19:06-0430\n"
-"PO-Revision-Date: 2011-02-22 04:46+0500\n"
-"Last-Translator: Andrew Grigorev <andrew@ei-grad.ru>\n"
-"Language-Team: Russian <>\n"
-"Language: Russian\n"
+"PO-Revision-Date: 2011-11-12 02:06+0000\n"
+"Last-Translator: sebasmagri <sebasmagri@gmail.com>\n"
+"Language-Team: Russian (http://www.transifex.net/projects/p/cartridge/team/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Lokalize 1.2\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
 
 #: admin.py:29
 msgid "Product filters"
@@ -35,9 +35,8 @@ msgid "Create new variations"
 msgstr "Создать новые вариации"
 
 #: admin.py:115
-#, fuzzy
 msgid "Items"
-msgstr "Товары"
+msgstr ""
 
 #: admin.py:135
 msgid "Billing details"
@@ -64,14 +63,12 @@ msgid "Valid for"
 msgstr "Действительно для"
 
 #: checkout.py:34
-#, fuzzy
 msgid "Flat rate shipping"
-msgstr "Фиксированная стоимость доставки"
+msgstr ""
 
 #: checkout.py:100
-#, fuzzy
 msgid "Order Receipt"
-msgstr "Товарный чек"
+msgstr ""
 
 #: checkout.py:107
 msgid "Details"
@@ -94,19 +91,16 @@ msgid "Currency Locale"
 msgstr ""
 
 #: defaults.py:65
-#, fuzzy
 msgid "Default Shipping Cost"
-msgstr "Стоимость доставки"
+msgstr ""
 
 #: defaults.py:74
-#, fuzzy
 msgid "Discount in Cart"
-msgstr "Сумма скидки"
+msgstr ""
 
 #: defaults.py:82
-#, fuzzy
 msgid "Discount in Checkout"
-msgstr "Код скидки"
+msgstr ""
 
 #: defaults.py:90
 msgid "Force Host"
@@ -117,14 +111,12 @@ msgid "Billing & Shipping Handler"
 msgstr ""
 
 #: defaults.py:118
-#, fuzzy
 msgid "Order Handler"
-msgstr "Итого по заказу"
+msgstr ""
 
 #: defaults.py:129
-#, fuzzy
 msgid "Payment Handler"
-msgstr "Платежная информация"
+msgstr ""
 
 #: defaults.py:143
 msgid "Size"
@@ -135,9 +127,8 @@ msgid "Colour"
 msgstr "Цвет"
 
 #: defaults.py:150
-#, fuzzy
 msgid "From Email"
-msgstr "Адрес электронной почты"
+msgstr ""
 
 #: defaults.py:161
 msgid "Unprocessed"
@@ -148,9 +139,8 @@ msgid "Processed"
 msgstr "Обработан"
 
 #: defaults.py:168
-#, fuzzy
 msgid "Products Per Category Page"
-msgstr "Категория товаров"
+msgstr ""
 
 #: defaults.py:176
 msgid "Search Products Per Page"
@@ -189,9 +179,8 @@ msgid "Sequence of setting names available within templates."
 msgstr "Последовательность имен параметров, доступных для внутри шаблонов."
 
 #: fields.py:45 management/commands/product_db.py:33
-#, fuzzy
 msgid "SKU"
-msgstr "Артикул"
+msgstr ""
 
 #: forms.py:27 templates/shop/product.html:112
 msgid "The selected options are currently unavailable."
@@ -206,9 +195,8 @@ msgid "The selected quantity is currently unavailable."
 msgstr "Запрашиваемое количество недоступно."
 
 #: forms.py:231
-#, fuzzy
 msgid "The discount code entered is invalid."
-msgstr "Введен неправильный код скидки."
+msgstr ""
 
 #: forms.py:243 models.py:703
 msgid "Free shipping"
@@ -259,9 +247,8 @@ msgid "Only one variation can be checked as the default."
 msgstr "Только одна вариация может быть установлена по-умолчанию."
 
 #: forms.py:512
-#, fuzzy
 msgid "Please enter a value for only one type of reduction."
-msgstr "Введите значение только для одного типа сокращения."
+msgstr ""
 
 #: models.py:29
 msgid "Minimum price"
@@ -412,9 +399,8 @@ msgid "Discount total"
 msgstr "Сумма скидки"
 
 #: models.py:366
-#, fuzzy
 msgid "Order total"
-msgstr "Итого по заказу"
+msgstr ""
 
 #: models.py:367
 msgid "Transaction ID"
@@ -446,9 +432,8 @@ msgid "Quantity"
 msgstr "Количество"
 
 #: models.py:539
-#, fuzzy
 msgid "Total price"
-msgstr "Итого"
+msgstr ""
 
 #: models.py:597
 msgid "Active"
@@ -511,14 +496,12 @@ msgid "Item removed from wishlist"
 msgstr "Товар удален из списка желаний"
 
 #: views.py:171
-#, fuzzy
 msgid "Your cart has expired"
-msgstr "Ваша корзина пуста."
+msgstr ""
 
 #: views.py:178
-#, fuzzy
 msgid "Cart updated"
-msgstr "Последнее изменение"
+msgstr ""
 
 #: views.py:206
 msgid "Successfully logged in"
@@ -549,9 +532,8 @@ msgid "Sub-Category"
 msgstr ""
 
 #: management/commands/product_db.py:38
-#, fuzzy
 msgid "Number in Stock"
-msgstr "Количество в магазине"
+msgstr ""
 
 #: management/commands/product_db.py:39 templates/shop/cart.html:25
 #: templates/shop/order_details.html:38
@@ -559,34 +541,28 @@ msgid "Unit Price"
 msgstr "Цена"
 
 #: management/commands/product_db.py:40
-#, fuzzy
 msgid "Sale Price"
-msgstr "Цена на распродаже"
+msgstr ""
 
 #: management/commands/product_db.py:41
-#, fuzzy
 msgid "Sale Start Date"
-msgstr "Начало распродажи"
+msgstr ""
 
 #: management/commands/product_db.py:42
-#, fuzzy
 msgid "Sale Start Time"
-msgstr "Начало распродажи"
+msgstr ""
 
 #: management/commands/product_db.py:43
-#, fuzzy
 msgid "Sale End Date"
-msgstr "Конец распродажи"
+msgstr ""
 
 #: management/commands/product_db.py:44
-#, fuzzy
 msgid "Sale End Time"
-msgstr "Конец распродажи"
+msgstr ""
 
 #: management/commands/product_db.py:47
-#, fuzzy
 msgid "product"
-msgstr "Продукт"
+msgstr ""
 
 #: management/commands/product_db.py:64
 msgid "Import/Export products from a csv file."
@@ -639,9 +615,8 @@ msgstr[1] ""
 msgstr[2] ""
 
 #: templates/base.html:90 templates/shop/cart.html:61
-#, fuzzy
 msgid "Go to Checkout"
-msgstr "Перейти к оплате"
+msgstr ""
 
 #: templates/base.html:96
 #, python-format
@@ -735,14 +710,12 @@ msgid "Qty"
 msgstr "Кол-во"
 
 #: templates/shop/cart.html:27 templates/shop/order_details.html:40
-#, fuzzy
 msgid "Price"
-msgstr "Стоимость"
+msgstr ""
 
 #: templates/shop/cart.html:28
-#, fuzzy
 msgid "Remove?"
-msgstr "Убрать"
+msgstr ""
 
 #: templates/shop/cart.html:57
 msgid "Update cart"
@@ -758,9 +731,8 @@ msgstr "Ваша корзина пуста."
 
 #: templates/shop/checkout.html:6 templates/shop/checkout.html.py:7
 #: templates/shop/complete.html:63
-#, fuzzy
 msgid "Checkout"
-msgstr "Оплата"
+msgstr ""
 
 #: templates/shop/checkout.html:7
 msgid "Step"
@@ -783,9 +755,8 @@ msgid "Back"
 msgstr "Назад"
 
 #: templates/shop/complete.html:4 templates/shop/complete.html.py:58
-#, fuzzy
 msgid "Order Complete"
-msgstr "Заказ завершен"
+msgstr ""
 
 #: templates/shop/complete.html:68
 msgid ""
@@ -810,19 +781,16 @@ msgid "Order ID:"
 msgstr "Номер заказа:"
 
 #: templates/shop/order_details.html:10
-#, fuzzy
 msgid "Your Details"
-msgstr "Подробности"
+msgstr ""
 
 #: templates/shop/order_details.html:34
-#, fuzzy
 msgid "Items Ordered"
-msgstr "Заказанные товары:"
+msgstr ""
 
 #: templates/shop/order_totals.html:4
-#, fuzzy
 msgid "Sub total"
-msgstr "Итого"
+msgstr ""
 
 #: templates/shop/order_totals.html:12
 msgid "Discount"
@@ -833,14 +801,12 @@ msgid "Shipping"
 msgstr "Доставка"
 
 #: templates/shop/order_totals.html:28
-#, fuzzy
 msgid "Total"
-msgstr "Итого"
+msgstr ""
 
 #: templates/shop/payment_fields.html:8
-#, fuzzy
 msgid "Expiry"
-msgstr "Истекает"
+msgstr ""
 
 #: templates/shop/product.html:121
 msgid "Buy"
@@ -883,35 +849,7 @@ msgid "Dear"
 msgstr "Уважаемый"
 
 #: templates/shop/email/order_receipt.html:5
-#, fuzzy
 msgid "Your order has been successful, details are below."
-msgstr "Ваш заказ успешно добавлен, подробности указаны ниже."
+msgstr ""
 
-#~ msgid "Invalid currency locale specified: %s"
-#~ msgstr "Указана неверная валюта: %s"
 
-#~ msgid "This item is no longer available"
-#~ msgstr "Этот товар более не доступен"
-
-#~ msgid "This item is currently out of stock"
-#~ msgstr "Этот товар в настоящее время отсутствует в магазине"
-
-#~ msgid "Item removed from cart"
-#~ msgstr "Товар удален из корзины"
-
-#, fuzzy
-#~ msgid "Order complete"
-#~ msgstr "Заказ завершен"
-
-#, fuzzy
-#~ msgid "Currently unavailable."
-#~ msgstr "Недоступен в настоящее время."
-
-#~ msgid "Billing Details:"
-#~ msgstr "Платежная информация:"
-
-#~ msgid "Shipping Details:"
-#~ msgstr "Информация о доставке:"
-
-#~ msgid "each"
-#~ msgstr "каждый"
