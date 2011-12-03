@@ -1,3 +1,12 @@
+Version 0.3.5 (Dec 03, 2011)
+----------------------------
+
+  * Update PO files from transifex - Sebastián Ramírez Magrí
+  * Synchronize PO files with latest tip - Sebastián Ramírez Magrí
+  * PayPal doDirectPayment Website Payments Pro NVP API payment processor - Ken Bolton
+  * Fix mistake in the urllib2 request.Add COUNTRIES - Ken Bolton
+  * pep8 fixes - stephenmcd
+
 Version 0.3.4 (Nov 13, 2011)
 ----------------------------
 
