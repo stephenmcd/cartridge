@@ -21,25 +21,29 @@ PAYPAL_SIGNATURE = settings.PAYPAL_SIGNATURE
 def process(request, order_form, order):
     """
     Paypal direct payment processor.
-    PayPal is picky. 
-    - https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_api_nvp_r_DoDirectPayment
-    - https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_api_nvp_errorcodes
+    PayPal is picky.
+    - https://cms.paypal.com/us/cgi-bin/?cmd=_render-content
+      &content_ID=developer/e_howto_api_nvp_r_DoDirectPayment
+    - https://cms.paypal.com/us/cgi-bin/?cmd=_render-content
+      &content_ID=developer/e_howto_api_nvp_errorcodes
     Paypal requires the countrycode, and that it be specified in 2 single-
     byte characters. Import the COUNTRIES tuple-of-tuples, included below,
     and subclass OrderForm in my app, e.g.:
 
     from cartridge.shop.payment.paypal import COUNTRIES
 
-        class OrderForm(OrderForm):
-            def __init__(self,*args,**kwrds):
-                super(OrderForm, self).__init__(*args, **kwrds)
-                self.fields['billing_detail_country'].widget = forms.Select(choices=COUNTRIES)
-                self.fields['shipping_detail_country'].widget = forms.Select(choices=COUNTRIES)
+    class OrderForm(OrderForm):
+        def __init__(self,*args,**kwrds):
+            super(OrderForm, self).__init__(*args, **kwrds)
+            billing_country = forms.Select(choices=COUNTRIES)
+            shipping_country = forms.Select(choices=COUNTRIES)
+            self.fields['billing_detail_country'].widget = billing_country
+            self.fields['shipping_detail_country'].widget = shipping_country
 
     Raise cartride.shop.checkout.CheckoutError("error message") if
     payment is unsuccessful.
 
-   """
+    """
     trans = {}
     amount = order.total
     trans['amount'] = amount
@@ -56,10 +60,10 @@ def process(request, order_form, order):
         trans['connection'] = PAYPAL_NVP_API_ENDPOINT
 
     trans['configuration'] = {
-        'USER' : PAYPAL_USER,
-        'PWD' : PAYPAL_PASSWORD,
-        'SIGNATURE' : PAYPAL_SIGNATURE,
-        'VERSION' : '53.0',
+        'USER': PAYPAL_USER,
+        'PWD': PAYPAL_PASSWORD,
+        'SIGNATURE': PAYPAL_SIGNATURE,
+        'VERSION': '53.0',
         'METHOD': 'DoDirectPayment',
         'PAYMENTACTION': 'Sale',
         'RETURNFMFDETAILS': 0,
@@ -80,8 +84,8 @@ def process(request, order_form, order):
         'EMAIL': data['billing_detail_email'],
     }
     trans['custShipData'] = {
-        'SHIPTONAME': (data['shipping_detail_first_name'] + ' ' + 
-                data['shipping_detail_last_name']),
+        'SHIPTONAME': (data['shipping_detail_first_name'] + ' ' +
+                       data['shipping_detail_last_name']),
         'SHIPTOSTREET': data['shipping_detail_street'],
         'SHIPTOCITY': data['shipping_detail_city'],
         'SHIPTOSTATE': data['shipping_detail_state'],
