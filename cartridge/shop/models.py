@@ -17,6 +17,15 @@ from mezzanine.pages.models import Page
 
 from cartridge.shop import fields, managers
 
+try:
+    from _mysql_exceptions import OperationalError
+except ImportError:
+    class OperationalError(StandardError):
+        """
+        This class is purely to prevent a NameError if
+        _mysql_exceptions.OperationalError is not available.
+        """
+
 
 class Category(Page, RichText):
     """
@@ -696,6 +705,19 @@ class Sale(Discount):
                               "sale_to": self.valid_to,
                               "sale_from": self.valid_from}
                     priced_objects.filter(**extra_filter).update(**update)
+                except OperationalError:
+                    # Work around for MySQL which does not allow update
+                    # to operate on subquery where the FROM clause would
+                    # have it operate on the same table.
+                    #
+                    # http://dev.mysql.com/doc/refman/5.0/en/subquery-errors.html
+                    try:
+                        for priced_object in priced_objects.filter(**extra_filter):
+                            for field, value in update.items():
+                                setattr(priced_object, field, value)
+                            priced_object.save()
+                    except Warning:
+                        pass
                 except Warning:
                     pass
 
