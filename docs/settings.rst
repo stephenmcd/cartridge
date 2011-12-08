@@ -28,6 +28,13 @@ If True, users must create a login for the checkout process.
 
 Default: ``False``
 
+``SHOP_CHECKOUT_FORM_CLASS``
+----------------------------
+
+Dotted path to the Form class to be used at checkout.
+
+Default: ``'cartridge.shop.forms.OrderForm'``
+
 ``SHOP_CHECKOUT_STEPS_CONFIRMATION``
 ------------------------------------
 

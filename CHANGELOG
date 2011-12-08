@@ -1,6 +1,13 @@
+Version 0.3.6 (Dec 09, 2011)
+----------------------------
+
+  * Fix for subquery update in MySQL.See http://dev.mysql.com/doc/refman/5.0/en/subquery-errors.html - Gary Reynolds
+  * Added Gary Reynolds to AUTHORS - stephenmcd
+
 Version 0.3.5 (Dec 03, 2011)
 ----------------------------
 
+  * Add the ability for a developer to replace the OrderForm class with a setting.This would usually be a subclass of `cartridge.shops.forms.OrderForm` however we do not enfore this and leave it to the developer to ensure that the interface requirements are met in the form they define - Gary Reynolds
   * Update PO files from transifex - Sebastián Ramírez Magrí
   * Synchronize PO files with latest tip - Sebastián Ramírez Magrí
   * PayPal doDirectPayment Website Payments Pro NVP API payment processor - Ken Bolton
@@ -23,7 +30,6 @@ Version 0.3.4 (Nov 13, 2011)
 Version 0.3.3 (Nov 11, 2011)
 ----------------------------
 
-  * Updated auto-generated CHANGELOG and docs - stephenmcd
   * Type fixes on shipping - stephenmcd
 
 Version 0.3.2 (Nov 11, 2011)
@@ -47,7 +53,6 @@ Version 0.3.2 (Nov 11, 2011)
 Version 0.3.1 (Nov 05, 2011)
 ----------------------------
 
-  * Updated auto-generated CHANGELOG and settings docs - stephenmcd
   * Fixed formset iteration for Django <= 1.2 - stephenmcd
 
 Version 0.3 (Nov 05, 2011)
@@ -163,7 +168,6 @@ Version 0.2 (Apr 30, 2011)
   * French locales - Dominique Guardiola
   * Added Dominique Guardiola to AUTHORS - stephenmcd
   * Fixed missing title in cart template - stephenmcd
-  * Removed tailing white-space - stephenmcd
   * Added migration for Mezzanine's keywords and site fields - stephenmcd
   * Update settings to the latest version of Mezzanine - stephenmcd
   * Removed trailing white-space - stephenmcd
@@ -182,7 +186,6 @@ Version 0.1.8 (Feb 04, 2011)
   * Change docs theme to Mezzanine's - stephenmcd
   * Move settings docs into a sub-section - stephenmcd
   * Use Mezzanine's settings and CHANGELOG generation - stephenmcd
-  * Added auto-generated CHANGELOG - stephenmcd
   * Add Mezzanine to sys.path when generating docs - stephenmcd
   * Update to new path setting names from Mezzanine - stephenmcd
   * Fix setting names - stephenmcd
