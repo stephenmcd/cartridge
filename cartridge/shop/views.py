@@ -1,6 +1,6 @@
 
 from django.contrib.auth import logout as auth_logout
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import get_callable, reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404
@@ -16,7 +16,7 @@ from mezzanine.utils.messages import info
 from mezzanine.utils.views import render_to_response
 
 from cartridge.shop import checkout
-from cartridge.shop.forms import OrderForm, LoginForm, SignupForm, DiscountForm
+from cartridge.shop.forms import LoginForm, SignupForm, DiscountForm
 from cartridge.shop.forms import AddProductForm, CartItemFormSet
 from cartridge.shop.models import Product, ProductVariation, Order
 from cartridge.shop.models import DiscountCode
@@ -243,9 +243,12 @@ def checkout_steps(request):
         url = "%s?next=%s" % (settings.LOGIN_URL, reverse("shop_checkout"))
         return HttpResponseRedirect(url)
 
+    # Determine the Form class to use during the checkout process
+    form_class = get_callable(settings.SHOP_CHECKOUT_FORM_CLASS)
+
     step = int(request.POST.get("step", checkout.CHECKOUT_STEP_FIRST))
     initial = checkout.initial_order_data(request)
-    form = OrderForm(request, step, initial=initial)
+    form = form_class(request, step, initial=initial)
     data = request.POST
     checkout_errors = []
 
@@ -253,9 +256,9 @@ def checkout_steps(request):
         # Back button in the form was pressed - load the order form
         # for the previous step and maintain the field values entered.
         step -= 1
-        form = OrderForm(request, step, initial=initial)
+        form = form_class(request, step, initial=initial)
     elif request.method == "POST":
-        form = OrderForm(request, step, initial=initial, data=data)
+        form = form_class(request, step, initial=initial, data=data)
         if form.is_valid():
             # Copy the current form fields to the session so that
             # they're maintained if the customer leaves the checkout
@@ -317,11 +320,11 @@ def checkout_steps(request):
 
             # If any checkout errors, assign them to a new form and
             # re-run is_valid. If valid, then set form to the next step.
-            form = OrderForm(request, step, initial=initial, data=data,
+            form = form_class(request, step, initial=initial, data=data,
                              errors=checkout_errors)
             if form.is_valid():
                 step += 1
-                form = OrderForm(request, step, initial=initial)
+                form = form_class(request, step, initial=initial)
 
     step_vars = checkout.CHECKOUT_STEPS[step - 1]
     template = "shop/%s.html" % step_vars["template"]
