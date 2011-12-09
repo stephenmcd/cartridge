@@ -1,3 +1,8 @@
+Version 0.3.7 (Dec 09, 2011)
+----------------------------
+
+  * Discount should apply to each unit not just once per SKU. Previously only percentage based discounts worked for quantity greater than 1 - Gary Reynolds
+
 Version 0.3.6 (Dec 09, 2011)
 ----------------------------
 
