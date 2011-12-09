@@ -557,7 +557,7 @@ class Cart(models.Model):
         discount_skus = discount_variations.values_list("sku", flat=True)
         for item in self:
             if item.sku in discount_skus:
-                total += discount.calculate(item.total_price)
+                total += discount.calculate(item.unit_price) * item.quantity
         return total
 
 
