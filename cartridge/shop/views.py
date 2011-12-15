@@ -2,7 +2,7 @@
 from django.contrib.auth import logout as auth_logout
 from django.core.urlresolvers import get_callable, reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
@@ -341,7 +341,10 @@ def complete(request, template="shop/complete.html"):
     for tracking items via Google Anayltics, and displaying in
     the template if required.
     """
-    order = Order.objects.from_request(request)
+    try:
+        order = Order.objects.from_request(request)
+    except Order.DoesNotExist:
+        raise Http404
     items = order.items.all()
     # Assign product names to each of the items since they're not
     # stored.
