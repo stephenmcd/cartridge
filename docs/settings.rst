@@ -126,6 +126,13 @@ Sequence of value/name pairs for types of product options, eg Size, Colour.
 
 Default: ``((1, u'Size'), (2, u'Colour'))``
 
+``SHOP_ORDER_EMAIL_SUBJECT``
+----------------------------
+
+Subject to be used when sending the order receipt email.
+
+Default: ``'Order Receipt'``
+
 ``SHOP_ORDER_FROM_EMAIL``
 -------------------------
 

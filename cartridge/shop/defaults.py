@@ -153,6 +153,14 @@ register_setting(
 )
 
 register_setting(
+    name="SHOP_ORDER_EMAIL_SUBJECT",
+    label=_("Order Email Subject"),
+    description="Subject to be used when sending the order receipt email.",
+    editable=True,
+    default=_("Order Receipt"),
+)
+
+register_setting(
     name="SHOP_ORDER_FROM_EMAIL",
     label=_("From Email"),
     description="Email address that order receipts should be emailed from.",

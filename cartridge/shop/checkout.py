@@ -97,9 +97,10 @@ def send_order_email(request, order):
     order_context = {"order": order, "request": request,
                      "order_items": order.items.all()}
     order_context.update(order.details_as_dict())
-    send_mail_template(_("Order Receipt"), "shop/email/order_receipt",
-        settings.SHOP_ORDER_FROM_EMAIL, order.billing_detail_email,
-        context=order_context, fail_silently=settings.DEBUG)
+    send_mail_template(settings.SHOP_ORDER_EMAIL_SUBJECT,
+        "shop/email/order_receipt", settings.SHOP_ORDER_FROM_EMAIL,
+        order.billing_detail_email, context=order_context,
+        fail_silently=settings.DEBUG)
 
 
 # Set up some constants for identifying each checkout step.
