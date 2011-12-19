@@ -116,6 +116,7 @@ Sites Using Cartridge
 
   * `Ripe Maternity`_
   * `Cotton On`_
+  * `Coopers Store`_
 
 .. _`Django`: http://djangoproject.com/
 .. _`BSD licensed`: http://www.linfo.org/bsdlicense.html
@@ -130,3 +131,4 @@ Sites Using Cartridge
 .. _`PEP 8`: http://www.python.org/dev/peps/pep-0008/
 .. _`Ripe Maternity`: http://www.ripematernity.com/
 .. _`Cotton On`: http://shop.cottonon.com/
+.. _`Coopers Store`: http://store.coopers.com.au/
