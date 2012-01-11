@@ -259,9 +259,9 @@ class OrderForm(FormsetForm, DiscountForm):
     remember = forms.BooleanField(required=False, initial=True,
         label=_("Remember my address for next time"))
     card_name = forms.CharField(label=_("Cardholder name"))
-    card_type = forms.ChoiceField(label=_("Type"),
+    card_type = forms.ChoiceField(widget=forms.RadioSelect,
         choices=make_choices(settings.SHOP_CARD_TYPES))
-    card_number = forms.CharField(label=_("Card number"))
+    card_number = forms.CharField()
     card_expiry_month = forms.ChoiceField(
         choices=make_choices(["%02d" % i for i in range(1, 13)]))
     card_expiry_year = forms.ChoiceField()
@@ -332,6 +332,20 @@ class OrderForm(FormsetForm, DiscountForm):
         year = datetime.now().year
         choices = make_choices(range(year, year + 21))
         self.fields["card_expiry_year"].choices = choices
+
+    def clean_card_expiry_year(self):
+        """
+        Ensure the card expiry doesn't occur in the past.
+        """
+        try:
+            month = int(self.cleaned_data["card_expiry_month"])
+            year = int(self.cleaned_data["card_expiry_year"])
+        except ValueError:
+            # Haven't reached payment step yet.
+            return
+        now = datetime.now()
+        if year == now.year and month < now.month:
+            raise forms.ValidationError(_("A valid expiry date is required."))
 
     def clean(self):
         """
