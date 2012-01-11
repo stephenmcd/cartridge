@@ -8,11 +8,9 @@
 {{ page.category.content|safe }}
 {% endeditable %}
 
-<div>
-
 {% with page.category.children.active as child_categories %}
 {% if child_categories %}
-<ul class="categories">
+<ul class="unstyled categories">
 	{% for category in child_categories %}
 	<li><a href="{{ category.get_absolute_url }}">{{ category.title }}</a></li>
 	{% endfor %}
@@ -21,33 +19,29 @@
 {% endwith %}
 
 {% ifnotequal products.paginator.count 0 %}
-    {% product_sorting products %}
-    <ul class="products">
-	    {% for product in products.object_list %}
-	    <li>
-		    <a href="{{ product.get_absolute_url }}">
-		        <div class="img">
-			        {% if product.image %}
-			        <img src="{{ MEDIA_URL }}{% thumbnail product.image 90 90 %}" />
-			        {% endif %}
-		        </div>
-		        {{ product }}
-	        </a>
-            {% if product.has_price %}
-	        <p class="price">
-	            {% if product.on_sale %}
-		            <span class="old-price">{{ product.unit_price|currency }}</span>
-		            {% trans "On sale:" %}
-	            {% endif %}
-	            {{ product.price|currency }}
-	        </p>
+{% product_sorting products %}
+<ul class="unstyled products">
+    {% for product in products.object_list %}
+    <li>
+	    <a href="{{ product.get_absolute_url }}">
+	        {% if product.image %}
+	        <img src="{{ MEDIA_URL }}{% thumbnail product.image 90 90 %}"><br>
+	        {% endif %}
+	        {{ product }}
+        </a>
+        {% if product.has_price %}
+            {% if product.on_sale %}
+            <span class="old-price">{{ product.unit_price|currency }}</span>
+            {% trans "On sale:" %}
             {% endif %}
-	    </li>
-	    {% endfor %}
-    </ul>
-    {% product_paging products %}
+            {{ product.price|currency }}
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+<br clear="all">
+{% product_paging products %}
 {% endifnotequal %}
 
-</div>
 {% endblock %}
 

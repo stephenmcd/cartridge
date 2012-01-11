@@ -4,48 +4,52 @@
 {% block fields %}
 {% if request.cart.has_items %}
 
-<fieldset>
+<fieldset class="confirmation">
 	<legend>{% trans "Billing Details" %}</legend>
-	<ul>
+    <ul class="unstyled">
 	    {% for field, value in form.billing_detail_fields.values %}
-        <li>{{ field }}: {{ value }}</li>
+        <li><label>{{ field }}:</label> {{ value }}</li>
 	    {% endfor %}
 	</ul>
 </fieldset>
 
-<fieldset>
+<fieldset class="confirmation">
 	<legend>{% trans "Shipping Details" %}</legend>
-	<ul>
+	<ul class="unstyled">
 	    {% for field, value in form.shipping_detail_fields.values %}
-        <li>{{ field }}: {{ value }}</li>
+        <li><label>{{ field }}:</label> {{ value }}</li>
 	    {% endfor %}
 	    {% for field, value in form.additional_instructions_field.values %}
-        <li>{{ field }}: {{ value }}</li>
+        <li><label>{{ field }}:</label> {{ value }}</li>
 	    {% endfor %}
 	</ul>
 </fieldset>
 
-<fieldset>
+{% comment %}
+<br clear="all">
+<fieldset class="confirmation">
 	<legend>{% trans "Payment Details" %}</legend>
-	<ul>
+	<ul class="unstyled">
 	    {% for field, value in form.card_name_field.values %}
-        <li>{{ field }}: {{ value }}</li>
+        <li><label>{{ field }}:</label> {{ value }}</li>
         {% endfor %}
 	    {% for field, value in form.card_type_field.values %}
-        <li>{{ field }}: {{ value }}</li>
+        <li><label>{{ field }}:</label> {{ value }}</li>
         {% endfor %}
         <li>
     	    {% with form.card_expiry_fields.values as expiry_fields %}
     	        {% with expiry_fields.next as month_field %}
-    	        {{ month_field.0 }}: {{ month_field.1 }}/{{ expiry_fields.next.1 }}
+    	        <label>{{ month_field.0 }}:</label> {{ month_field.1 }}/{{ expiry_fields.next.1 }}
     	        {% endwith %}
             {% endwith %}
         </li>
 	    {% for field, value in form.card_fields.values %}
-        <li>{{ field }}: {{ value }}</li>
+        <li><label>{{ field }}:</label> {{ value }}</li>
         {% endfor %}
 	</ul>
 </fieldset>
+{% endcomment %}
+<br clear="all">
 
 {% for field in form %}{{ field }}{% endfor %}
 

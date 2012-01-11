@@ -1,27 +1,23 @@
 {% load shop_tags i18n %}
 
-{% ifnotequal products.paginator.num_pages 1 %}
-<div class="product-paging">
-    <p>{% trans "Page" %} {{ products.number }} {% trans "of" %}
-        {{ products.paginator.num_pages }}:</p>
-    <ul>
-	    {% if products.has_previous %}
-	    <li><a href="?page={{ products.previous_page_number }}{{ querystring }}"
-	        >&lt;</a></li>
-	    {% endif %}
-	    {% for page in page_range %}
-	    <li>
-		    {% ifequal page products.number %}
-	       	<strong>{{ page }}</strong>
-		    {% else %}
-	       	<a href="?page={{ page }}{{ querystring }}">{{ page }}</a>
-		    {% endifequal %}
-	    </li>
-	    {% endfor %}
-	    {% if products.has_next %}
-	    <li><a href="?page={{ products.next_page_number }}{{ querystring }}"
-	        >&gt;</a></li>
-	    {% endif %}
-    </ul>
+<div class="pagination">
+<ul>
+
+<li class="disabled">
+    <a>{% trans "Page" %} {{ products.number }} {% trans "of" %}
+        {{ products.paginator.num_pages }}</a>
+</li>
+<li class="prev{% if not products.has_previous %} disabled{% endif %}">
+    <a{% if products.has_previous %} href="?page={{ products.previous_page_number }}{{ querystring }}"{% endif %}>&larr;</a>
+</li>
+{% for page in page_range %}
+<li{% ifequal page products.number %} class="active"{% endifequal %}>
+    <a href="?page={{ page }}{{ querystring }}">{{ page }}</a>
+</li>
+{% endfor %}
+<li class="next{% if not products.has_next %} disabled{% endif %}">
+    <a{% if products.has_next %} href="?page={{ products.next_page_number }}{{ querystring }}"{% endif %}>&rarr;</a>
+</li>
+
+</ul>
 </div>
-{% endifnotequal %}

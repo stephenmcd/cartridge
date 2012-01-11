@@ -1,10 +1,9 @@
 {% extends "base.html" %}
-{% load shop_tags i18n %}
-
-{% block body_id %}checkout{% endblock %}
+{% load shop_tags mezzanine_tags i18n %}
 
 {% block meta_title %}{% trans "Checkout" %} - {{ step_title }}{% endblock %}
 {% block title %}{% trans "Checkout" %} - {% trans "Step" %} {{ step }} {% trans "of" %} {{ steps|length }}{% endblock %}
+{% block body_id %}checkout{% endblock %}
 
 {% block extra_head %}
 <script>
@@ -13,29 +12,51 @@ var _gaq = [['_trackPageview', '{{ request.path }}{{ step_url }}/']];
 {% endblock %}
 
 {% block breadcrumb_menu %}
-<ul>
-    {% for step in steps %}
-    <li{% ifequal step.title step_title %} class="current-step"{% endifequal %}
-        >{{ step.title }} &gt;</li>
-    {% endfor %}
-    <li>{% trans "Complete" %}</li>
-</ul><br />
+{% for step in steps %}
+<li>
+    {% ifequal step.title step_title %}
+    <strong>{{ step.title }}</strong>
+    {% else %}
+    {{ step.title }}
+    {% endifequal %}
+    <span class="divider">/</span>
+</li>
+{% endfor %}
+<li>{% trans "Complete" %}</li>
 {% endblock %}
 
 {% block main %}
 
-<div class="checkout-totals">{% order_totals %}</div>
+{% if request.cart.has_items %}
+<div class="panel checkout-panel">
+<ul class="unstyled">
+{% for item in request.cart %}
+<li>
+    {% if item.image %}
+    <img alt="{{ item.description }}" src="{{ MEDIA_URL }}{% thumbnail item.image 30 30 %}">
+    {% endif %}
+    {{ item.quantity }} x {{ item.description }}
+    <span class="price">{{ item.total_price|currency }}</span>
+    <br clear="all">
+</li>
+{% endfor %}
+</ul>
+{% order_totals %}
+<br clear="all">
+<a class="btn small" href="{% url shop_cart %}">Edit Cart</a>
+</div>
+{% endif %}
 
-<form method="post" id="checkout-form" class="form">
+<form method="post" id="checkout-form">
     {% csrf_token %}
 
 	{% with form.non_field_errors as errors %}
 	    {% if errors or form.errors %}
-	    <ul class="errorlist">
+	    <ul class="unstyled error">
 	        {% for error in errors %}
-	        <li>{{ error }}</li>
+	        <li class="helpt-text">{{ error }}</li>
 	        {% empty %}
-            <li>Please correct the errors below.</li>
+            <li class="helpt-text">Please correct the errors below.</li>
             {% endfor %}
 	    </ul>
 	    {% endif %}
@@ -44,12 +65,19 @@ var _gaq = [['_trackPageview', '{{ request.path }}{{ step_url }}/']];
 	{% block fields %}{% endblock %}
 
 	{% if request.cart.has_items %}
-	    <input type="submit" class="button action" value="{% trans "Next" %}" />
-	    {% if not CHECKOUT_STEP_FIRST %}
-	    <input type="submit" class="button" name="back" value="{% trans "Back" %}" />
-	    {% endif %}
+    <div class="actions clearfix">
+        <div class="actions-wrap">
+	    <input type="submit" class="btn large primary" value="{% trans "Next" %}">
+        {% if not CHECKOUT_STEP_FIRST %}
+        <input type="submit" class="btn large" name="back" value="{% trans "Back" %}">
+        {% endif %}
+        </div>
+    </div>
 	{% else %}
-    	<p>{% trans "Your cart is empty." %}</p>
+    <p>{% trans "Your cart is empty." %}</p>
+    <p>
+        <a class="btn large primary" href="{% url page "shop" %}">{% trans "Continue Shopping" %}</a>
+    </p>
 	{% endif %}
 
 </form>

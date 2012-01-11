@@ -1,0 +1,35 @@
+{% load i18n shop_tags %}
+<div class="panel">
+    <a href="{% url shop_cart %}">
+        {% blocktrans count request.cart.total_quantity as cart_quantity %}
+        1 item{% plural %}{{ cart_quantity }} items
+        {% endblocktrans %}
+        {% trans "in cart" %}:
+        {{ request.cart.total_price|currency }}
+    </a><br>
+    {% ifnotequal request.cart.total_quantity 0 %}
+    <a href="{% url shop_checkout %}" class="btn small primary">
+        {% trans "Go to Checkout" %}
+    </a><br>
+    {% endifnotequal %}
+    <a href="{% url shop_wishlist %}" class="wishlist-btn">
+        {% blocktrans count request.wishlist|length as wishlist_count %}
+        Wishlist contains 1 item
+        {% plural %}
+        Wishlist contains {{ wishlist_count }} items
+        {% endblocktrans %}
+    </a>
+    {% if settings.SHOP_CHECKOUT_ACCOUNT_ENABLED %}
+    <br>
+    {% if request.user.is_authenticated %}
+    <a class="btn small account-btn" href="{% url shop_logout %}?next={{ request.path }}"
+        >{% trans "Log out" %}</a>
+    {% trans "Logged in as: " %}{{ request.user.username }}
+    {% else %}
+    <a class="btn small account-btn" href="{{ settings.LOGIN_URL }}?next={{ request.path }}"
+        >{% trans "Log in or sign up" %}</a>
+    {% trans "Not logged in" %}
+    {% endif %}
+    <br clear="all">
+    {% endif %}
+</div>

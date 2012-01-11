@@ -355,7 +355,8 @@ def complete(request, template="shop/complete.html"):
         names[variation.sku] = variation.product.title
     for i, item in enumerate(items):
         setattr(items[i], "name", names[item.sku])
-    context = {"order": order, "items": items}
+    context = {"order": order, "items": items,
+               "steps": checkout.CHECKOUT_STEPS}
     return render_to_response(template, context, RequestContext(request))
 
 
