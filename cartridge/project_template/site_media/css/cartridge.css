@@ -3,7 +3,7 @@
 .wishlist-btn {line-height:30px;}
 .product-sorting {background:#fcfcfc; text-align:right; padding:10px;}
 .product-sorting label {float:none;}
-.products li {float:left; background:#fcfcfc; padding:20px; margin:0 22px 22px 0;}
+.products li {float:left; background:#fcfcfc; padding:20px; margin:11px; min-width:90px; min-height:170px;}
 .products li * {display:block;}
 .old-price {text-decoration:line-through;}
 #product-images-thumb li {display:inline; margin-right:10px;}
