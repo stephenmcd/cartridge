@@ -19,7 +19,21 @@
 {% endwith %}
 
 {% ifnotequal products.paginator.count 0 %}
-{% product_sorting products %}
+
+<form class="product-sorting">
+    <label>{% trans "Sort by" %}</label>
+    <select onchange="location.href = this[this.selectedIndex].value;">
+    {% for name, option in settings.SHOP_PRODUCT_SORT_OPTIONS %}
+    {% with name|slugify as option_slug %}
+    <option{% ifequal option_slug products.sort %} selected{% endifequal %}
+        value="{{ category.get_absolute_url }}?sort={{ option_slug }}{{ querystring }}"
+        >{{ name }}
+    </option>
+    {% endwith %}
+    {% endfor %}
+    </select>
+</form>
+
 <ul class="unstyled products">
     {% for product in products.object_list %}
     <li>
@@ -39,8 +53,10 @@
     </li>
     {% endfor %}
 </ul>
+
 <br clear="all">
-{% product_paging products %}
+{% pagination_for products %}
+
 {% endifnotequal %}
 
 {% endblock %}

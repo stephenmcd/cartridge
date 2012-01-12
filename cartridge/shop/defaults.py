@@ -187,32 +187,15 @@ register_setting(
 )
 
 register_setting(
-    name="SHOP_PER_PAGE_SEARCH",
-    label=_("Search Products Per Page"),
-    description="Number of products to display per page for search results.",
-    editable=True,
-    default=10,
-)
-
-register_setting(
-    name="SHOP_MAX_PAGING_LINKS",
-    label=_("Number of Paging Links"),
-    description="Maximum number of paging links to show.",
-    editable=True,
-    default=15,
-)
-
-register_setting(
     name="SHOP_PRODUCT_SORT_OPTIONS",
     description="Sequence of description/field+direction pairs defining "
         "the options available for sorting a list of products.",
     editable=False,
     default=(
-        (_("Relevance"), None),
-        (_("Least expensive"), "unit_price"),
-        (_("Most expensive"), "-unit_price"),
         (_("Recently added"), "-date_added"),
         (_("Highest rated"), "-rating_average"),
+        (_("Least expensive"), "unit_price"),
+        (_("Most expensive"), "-unit_price"),
     ),
 )
 
@@ -230,7 +213,7 @@ register_setting(
     description=_("Sequence of setting names available within templates."),
     editable=False,
     default=("LOGIN_URL", "SHOP_CHECKOUT_ACCOUNT_ENABLED", "SHOP_CARD_TYPES",
-             "SHOP_CHECKOUT_STEPS_SPLIT", "SHOP_MAX_PAGING_LINKS",
+             "SHOP_CHECKOUT_STEPS_SPLIT", "SHOP_PRODUCT_SORT_OPTIONS",
     ),
     append=True,
 )
