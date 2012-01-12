@@ -28,7 +28,7 @@
     {% for form in cart_formset.forms %}
     {% with form.instance as item %}
 	<tr>
-		<td>
+		<td width="30">
             {{ form.id }}
 			{% if item.image %}
 			<a href="{{ item.get_absolute_url }}">

@@ -1,7 +1,6 @@
 
 from django.contrib.auth import logout as auth_logout
 from django.core.urlresolvers import get_callable, reverse
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext

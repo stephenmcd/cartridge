@@ -4,6 +4,8 @@
 {% block meta_title %}{% trans "Order Complete" %}{% endblock %}
 
 {% block extra_head %}
+{{ block.super }}
+{% if settings.GOOGLE_ANALYTICS_ID %}
 <script>
 
 var decimal = function(amount) {
@@ -53,6 +55,7 @@ _gaq.push(['_addItem',
 _gaq.push(['_trackTrans']);
 
 </script>
+{% endif %}
 {% endblock %}
 
 {% block title %}{% trans "Order Complete" %}{% endblock %}
