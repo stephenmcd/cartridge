@@ -183,7 +183,7 @@ register_setting(
     label=_("Products Per Category Page"),
     description="Number of products to display per category page.",
     editable=True,
-    default=10,
+    default=12,
 )
 
 register_setting(

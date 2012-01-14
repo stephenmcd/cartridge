@@ -2,6 +2,7 @@
 body {padding-top:60px;}
 h5 {line-height:140%; margin:20px 0 10px 0;}
 h6 a {color:#666;}
+.middle img {max-width:600px;}
 .middle h6 {line-height:100%; margin:10px 0 15px 0;}
 .right h6 {margin-top:-5px;}
 .panel {background:#fcfcfc; padding:10px; margin-bottom:20px;
@@ -63,7 +64,7 @@ a.large, input.large {width:auto; min-width:100px; margin-right:10px;}
 .timespan {color:#bbb;}
 
 /* Ratings */
-.rating {padding:15px 20px;}
+.rating {padding:15px 20px; margin-right:10px;}
 .rating * {display:inline; list-style-type:none;}
 .rating p {float:left; margin:5px 10px 0 0;}
 .rating label {width:auto; margin-right:15px; float:none;}

@@ -1,6 +1,7 @@
 {% extends "pages/page.html" %}
 
 {% load mezzanine_tags shop_tags i18n %}
+{% block body_id %}category{% endblock %}
 
 {% block main %}{{ block.super }}
 
@@ -26,35 +27,38 @@
     {% for name, option in settings.SHOP_PRODUCT_SORT_OPTIONS %}
     {% with name|slugify as option_slug %}
     <option{% ifequal option_slug products.sort %} selected{% endifequal %}
-        value="{{ category.get_absolute_url }}?sort={{ option_slug }}{{ querystring }}"
-        >{{ name }}
+        value="{{ category.get_absolute_url }}?sort={{ option_slug }}{{ querystring }}">
+        {{ name }}
     </option>
     {% endwith %}
     {% endfor %}
     </select>
 </form>
 
-<ul class="unstyled products">
-    {% for product in products.object_list %}
-    <li>
-	    <a href="{{ product.get_absolute_url }}">
-	        {% if product.image %}
-	        <img src="{{ MEDIA_URL }}{% thumbnail product.image 90 90 %}"><br>
-	        {% endif %}
-	        {{ product }}
-        </a>
+<ul class="media-grid">
+{% for product in products.object_list %}
+<li>
+    <a href="{{ product.get_absolute_url }}">
+        {% if product.image %}
+        <img src="{{ MEDIA_URL }}{% thumbnail product.image 90 90 %}">
+        {% else %}
+        <div class="placeholder"></div>
+        {% endif %}
+        <h6>{{ product }}</h6>
         {% if product.has_price %}
             {% if product.on_sale %}
             <span class="old-price">{{ product.unit_price|currency }}</span>
             {% trans "On sale:" %}
             {% endif %}
             {{ product.price|currency }}
+        {% else %}
+        {% trans "Coming soon" %}
         {% endif %}
-    </li>
-    {% endfor %}
+    </a>
+</li>
+{% endfor %}
 </ul>
 
-<br clear="all">
 {% pagination_for products %}
 
 {% endifnotequal %}

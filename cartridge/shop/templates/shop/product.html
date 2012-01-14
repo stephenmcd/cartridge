@@ -72,7 +72,7 @@ $(function() {
 
 {% if images %}
 {% spaceless %}
-<ul id="product-images-large" class="unstyled">
+<ul id="product-images-large" class="media-grid">
     {% for image in images %}
     <li id="image-{{ image.id }}-large"{% if not forloop.first %}style="display:none;"{% endif %}>
     	<a href="{{ MEDIA_URL }}{{ image.file }}">
@@ -83,7 +83,7 @@ $(function() {
 </ul>
 
 {% ifnotequal images|length 1 %}
-<ul id="product-images-thumb" class="unstyled">
+<ul id="product-images-thumb" class="media-grid">
 	{% for image in images %}
 	<li>
         <a id="image-{{ image.id }}" href="{{ MEDIA_URL }}{{ image.file }}">
