@@ -10,6 +10,7 @@
 #category .media-grid .placeholder {width:90px; height:90px; background:#eee;}
 .old-price {text-decoration:line-through; display:block;}
 #product-images-thumb li {display:inline; margin-right:10px;}
+.product-image-full {background:#fff; padding:20px;}
 
 /* Cart */
 .cart th {white-space:nowrap; text-align:right;}

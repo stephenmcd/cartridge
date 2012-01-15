@@ -9,5 +9,6 @@ cartridge/project_template/site_media/product/*
 build/*
 docs/build/*
 dist/*
+site_media/uploads/*
 Cartridge.egg-info/*
 
