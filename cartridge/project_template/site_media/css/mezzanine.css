@@ -83,15 +83,15 @@ a.large, input.large {width:auto; min-width:100px; margin-right:10px;}
 .reply-form textarea {width:270px; margin-bottom:10px;}
 .input_id_honeypot {display:none;}
 
-/* Photos */
+/* Galleries */
 .gallery {margin-top:20px;}
-.photo-overlay {text-align:center; width:100%;}
-.photo-overlay p {color:#fff; font-size:16px; display:inline-block; margin-top:5px;}
-.photo-overlay-prev,
-.photo-overlay-next {position:absolute; top:40%; color:#999; font-size:100px;
+.image-overlay {text-align:center; width:100%;}
+.image-overlay p {color:#fff; font-size:16px; display:inline-block; margin-top:5px;}
+.image-overlay-prev,
+.image-overlay-next {position:absolute; top:40%; color:#999; font-size:100px;
                      border:0 !important; background:#333; height:43px;}
-.photo-overlay-prev:hover,
-.photo-overlay-next:hover {color:#fff; text-decoration:none; background:#222;}
-.photo-overlay-prev {left:30px;}
-.photo-overlay-next {right:30px;}
-.photo-overlay-full {border-radius:5px;}
+.image-overlay-prev:hover,
+.image-overlay-next:hover {color:#fff; text-decoration:none; background:#222;}
+.image-overlay-prev {left:30px;}
+.image-overlay-next {right:30px;}
+.image-overlay-full {border-radius:5px; max-width:none !important; box-shadow:0 0 30px #222;}
