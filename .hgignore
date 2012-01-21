@@ -5,10 +5,11 @@ syntax: glob
 .DS_Store
 .coverage
 local_settings.py
-cartridge/project_template/site_media/product/*
 build/*
-docs/build/*
 dist/*
+*.egg-info/*
+
 site_media/uploads/*
-Cartridge.egg-info/*
+site_media/galleries/*
+site_media/product/*
 
