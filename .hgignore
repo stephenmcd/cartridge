@@ -2,11 +2,14 @@ syntax: glob
 *.pyc
 *.pyo
 *.db
+.DS_Store
 .coverage
 local_settings.py
-cartridge/project_template/site_media/product/*
 build/*
-docs/build/*
 dist/*
-Cartridge.egg-info/*
+*.egg-info/*
+
+site_media/uploads/*
+site_media/galleries/*
+site_media/product/*
 

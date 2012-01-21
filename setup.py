@@ -38,7 +38,7 @@ try:
         packages=find_packages(),
 
         install_requires=[
-            "mezzanine >= 0.12",
+            "mezzanine >= 0.13",
             "pisa >= 3.0.33",
         ],
 

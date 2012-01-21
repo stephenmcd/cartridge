@@ -6,7 +6,6 @@ from mezzanine.conf import settings
 
 urlpatterns = patterns("cartridge.shop.views",
     url("^product/(?P<slug>.*)/$", "product", name="shop_product"),
-    url("^search/$", "search", name="shop_search"),
     url("^wishlist/$", "wishlist", name="shop_wishlist"),
     url("^cart/$", "cart", name="shop_cart"),
     url("^checkout/$", "checkout_steps", name="shop_checkout"),

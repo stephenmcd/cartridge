@@ -16,7 +16,8 @@
 
 {% block extra_head %}
 {{ block.super }}
-<script type="text/javascript">
+<script src="{{ settings.CONTENT_MEDIA_URL }}js/jquery.tools.js"></script>
+<script>
 $(function() {
 
 	var variations = {{ variations_json|safe }};
@@ -55,15 +56,18 @@ $(function() {
 		return false;
 	});
 
+    // Add overlay to large image.
+    var expose = {color: '#333', loadSpeed: 200, opacity: 0.9};
+    var overlay = {expose: expose, close: '*'};
+    $('.product-image-large').overlay(overlay);
+
 });
 </script>
 {% endblock %}
 
 {% block breadcrumb_menu %}
-<ul>
-    <li><a href="{% url home %}">{% trans "Home" %}</a> &gt;</li>
-    <li>{{ product.title }}</li>
-</ul><br />
+{{ block.super }}
+<li>{{ product.title }}</li>
 {% endblock %}
 
 {% block title %}
@@ -73,23 +77,33 @@ $(function() {
 {% block main %}
 
 {% if images %}
-<ul id="product-images-large">
-	{% for image in images %}
-	<li id="image-{{ image.id }}-large"{% if not forloop.first %}
-		style="display:none;"{% endif %}>
-		<a href="{{ MEDIA_URL }}{{ image.file }}"><img alt="{{ image.description }}"
-			src="{{ MEDIA_URL }}{% thumbnail image.file 0 300  %}" /></a></li>
-	{% endfor %}
+{% spaceless %}
+<ul id="product-images-large" class="media-grid">
+    {% for image in images %}
+    <li id="image-{{ image.id }}-large"{% if not forloop.first %}style="display:none;"{% endif %}>
+    	<a class="product-image-large" rel="#image-full-{{ image.id }}" href="{{ MEDIA_URL }}{{ image.file }}">
+            <img alt="{{ image.description }}" src="{{ MEDIA_URL }}{% thumbnail image.file 0 300 %}">
+        </a>
+        <div class="product-image-full" style="display:none;" id="image-full-{{ image.id }}">
+            <img src="{{ MEDIA_URL }}{{ image.file }}">
+        </div>
+    </li>
+    {% endfor %}
 </ul>
+
 {% ifnotequal images|length 1 %}
-<ul id="product-images-thumb">
+<ul id="product-images-thumb" class="media-grid">
 	{% for image in images %}
-	<li><a id="image-{{ image.id }}"
-		href="{{ MEDIA_URL }}{{ image.file }}"><img alt="{{ image.description }}"
-		src="{{ MEDIA_URL }}{% thumbnail image.file 75 75  %}" /></a></li>
+	<li>
+        <a id="image-{{ image.id }}" href="{{ MEDIA_URL }}{{ image.file }}">
+            <img alt="{{ image.description }}" src="{{ MEDIA_URL }}{% thumbnail image.file 75 75 %}">
+        </a>
+    </li>
 	{% endfor %}
 </ul>
 {% endifnotequal %}
+
+{% endspaceless %}
 {% endif %}
 
 {% editable product.content %}
@@ -97,7 +111,7 @@ $(function() {
 {% endeditable %}
 
 {% if product.available and has_available_variations %}
-<ul id="variations">
+<ul id="variations" class="unstyled">
 	{% for variation in variations %}
 	<li id="variation-{{ variation.sku }}"
 		{% if not variation.default %}style="display:none;"{% endif %}>
@@ -115,45 +129,41 @@ $(function() {
 	</li>
 	{% endfor %}
 </ul>
-<form method="post" id="add-cart" class="form">
+<form method="post" id="add-cart">
     {% csrf_token %}
-	<ul>{{ add_product_form.as_ul }}</ul>
-	<input type="submit" class="button action" name="add_cart" value="{% trans "Buy" %}" />
-	<input type="submit" class="button" name="add_wishlist" value="{% trans "Save for later" %}" />
+    {% fields_for add_product_form %}
+    <div class="actions">
+        <input type="submit" class="btn primary large" name="add_cart" value="{% trans "Buy" %}">
+        <input type="submit" class="btn large" name="add_wishlist" value="{% trans "Save for later" %}">
+    </div>
 </form>
 {% else %}
 <div>{% trans "This product is currently unavailable." %}</div>
 {% endif %}
 
-<div class="rating">{% rating_for product %}</div>
+{% rating_for product %}
 
 {% if related_products %}
-<div class="related">
-    <h2>{% trans "Related Products" %}</h2>
-    <ul class="products">
-        {% for product in related_products %}
-        <li>
-	        <a href="{{ product.get_absolute_url }}">
-	            <div class="img">
-		            {% if product.image %}
-		            <img src="{{ MEDIA_URL }}{% thumbnail product.image 90 90 %}" />
-		            {% endif %}
-	            </div>
-	            {{ product }}
-            </a>
-            {% if product.has_price %}
-            <p class="price">
-                {% if product.on_sale %}
-	                <span class="old-price">{{ product.unit_price|currency }}</span>
-	                {% trans "On sale:" %}
-                {% endif %}
-                {{ product.price|currency }}
-            </p>
+<h2>{% trans "Related Products" %}</h2>
+<ul class="products unstyled">
+    {% for product in related_products %}
+    <li>
+        <a href="{{ product.get_absolute_url }}">
+            {% if product.image %}
+            <img src="{{ MEDIA_URL }}{% thumbnail product.image 90 90 %}"><br>
             {% endif %}
-        </li>
-        {% endfor %}
-    </ul>
-</div>
+            {{ product }}
+        </a>
+        {% if product.has_price %}
+            {% if product.on_sale %}
+            <span class="old-price">{{ product.unit_price|currency }}</span>
+            {% trans "On sale:" %}
+            {% endif %}
+            {{ product.price|currency }}
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
 {% endif %}
 
 {% endblock %}

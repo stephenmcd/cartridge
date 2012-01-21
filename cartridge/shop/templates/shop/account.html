@@ -1,34 +1,35 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n mezzanine_tags %}
 
+{% block meta_title %}{% trans "Login / Signup" %}{% endblock %}
 {% block title %}{% trans "Login / Signup" %}{% endblock %}
 
 {% block breadcrumb_menu %}
-<ul>
-    <li><a href="{% url home %}">{% trans "Home" %}</a> &gt;</li>
-    <li>{% trans "Account" %}</li>
-</ul><br />
+{{ block.super }}
+<li>{% trans "Account" %}</li>
 {% endblock %}
 
 {% block main %}
 
-<fieldset class="login-signup">
+<fieldset>
 	<legend>{% trans "Login" %}</legend>
-    <form method="post" class="form">
+    <form method="post">
     {% csrf_token %}
-	<ul>{{ login_form.as_ul }}</ul>
-	<input class="button" type="submit" 
-	    name="login" value="{% trans "Login" %}" />
+    {% fields_for login_form %}
+    <div class="actions">
+        <input class="btn primary" name="login" type="submit" value="{% trans "Login" %}">
+    </div>
     </form>
 </fieldset>
 
-<fieldset class="login-signup">
+<fieldset>
 	<legend>{% trans "Signup" %}</legend>
-    <form method="post" class="form">
+    <form method="post">
     {% csrf_token %}
-	<ul>{{ signup_form.as_ul }}</ul>
-	<input class="button" type="submit" 
-	    name="signup" value="{% trans "Signup" %}" />
+    {% fields_for signup_form %}
+    <div class="actions">
+        <input class="btn primary" name="signup" type="submit" value="{% trans "Signup" %}">
+    </div>
     </form>
 </fieldset>
 

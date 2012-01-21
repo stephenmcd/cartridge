@@ -1,7 +1,6 @@
 
 from django.contrib.auth import logout as auth_logout
 from django.core.urlresolvers import get_callable, reverse
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
@@ -28,31 +27,6 @@ handler = lambda s: import_dotted_path(s) if s else lambda *args: None
 billship_handler = handler(settings.SHOP_HANDLER_BILLING_SHIPPING)
 payment_handler = handler(settings.SHOP_HANDLER_PAYMENT)
 order_handler = handler(settings.SHOP_HANDLER_ORDER)
-
-
-def product_list(products, request, per_page):
-    """
-    Handle pagination and sorting for the given products.
-    """
-    sort_options = settings.SHOP_PRODUCT_SORT_OPTIONS
-    sort_options = [(slugify(o[0]), o[1]) for o in sort_options]
-    if "query" not in request.REQUEST:
-        del sort_options[0]
-    sort_name = request.GET.get("sort", sort_options[0][0])
-    sort_value = dict(sort_options).get(sort_name)
-    if sort_value is not None:
-        products = products.order_by(sort_value)
-    paginator = Paginator(products, per_page)
-    try:
-        page_num = int(request.GET.get("page", 1))
-    except ValueError:
-        page_num = 1
-    try:
-        products = paginator.page(page_num)
-    except (EmptyPage, InvalidPage):
-        products = paginator.page(paginator.num_pages)
-    products.sort = sort_name
-    return products
 
 
 def product(request, slug, template="shop/product.html"):
@@ -98,18 +72,6 @@ def product(request, slug, template="shop/product.html"):
         "related": product.related_products.published(for_user=request.user),
         "add_product_form": add_product_form
     }
-    return render_to_response(template, context, RequestContext(request))
-
-
-def search(request, template="shop/search_results.html"):
-    """
-    Display product search results.
-    """
-    settings.use_editable()
-    query = request.REQUEST.get("query", "")
-    results = Product.objects.published_for(user=request.user).search(query)
-    results = product_list(results, request, settings.SHOP_PER_PAGE_SEARCH)
-    context = {"query": query, "results": results}
     return render_to_response(template, context, RequestContext(request))
 
 
@@ -355,7 +317,8 @@ def complete(request, template="shop/complete.html"):
         names[variation.sku] = variation.product.title
     for i, item in enumerate(items):
         setattr(items[i], "name", names[item.sku])
-    context = {"order": order, "items": items}
+    context = {"order": order, "items": items,
+               "steps": checkout.CHECKOUT_STEPS}
     return render_to_response(template, context, RequestContext(request))
 
 

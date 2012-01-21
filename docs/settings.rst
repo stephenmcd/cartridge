@@ -112,13 +112,6 @@ Dotted package path and class name of the function that is called on submit of t
 
 Default: ``'cartridge.shop.checkout.default_payment_handler'``
 
-``SHOP_MAX_PAGING_LINKS``
--------------------------
-
-Maximum number of paging links to show.
-
-Default: ``15``
-
 ``SHOP_OPTION_TYPE_CHOICES``
 ----------------------------
 
@@ -131,7 +124,7 @@ Default: ``((1, u'Size'), (2, u'Colour'))``
 
 Subject to be used when sending the order receipt email.
 
-Default: ``'Order Receipt'``
+Default: ``u'Order Receipt'``
 
 ``SHOP_ORDER_FROM_EMAIL``
 -------------------------
@@ -154,19 +147,12 @@ Number of products to display per category page.
 
 Default: ``10``
 
-``SHOP_PER_PAGE_SEARCH``
-------------------------
-
-Number of products to display per page for search results.
-
-Default: ``10``
-
 ``SHOP_PRODUCT_SORT_OPTIONS``
 -----------------------------
 
 Sequence of description/field+direction pairs defining the options available for sorting a list of products.
 
-Default: ``((u'Relevance', None), (u'Least expensive', 'unit_price'), (u'Most expensive', '-unit_price'), (u'Recently added', '-date_added'), (u'Highest rated', '-rating_average'))``
+Default: ``((u'Recently added', '-date_added'), (u'Highest rated', '-rating_average'), (u'Least expensive', 'unit_price'), (u'Most expensive', '-unit_price'))``
 
 ``SHOP_SSL_ENABLED``
 --------------------

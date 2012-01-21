@@ -1,0 +1,56 @@
+/* Shop */
+.account-btn {float:right; margin:0 5px 0 0;}
+.wishlist-btn {line-height:30px;}
+.product-sorting {margin-top:20px;}
+.product-sorting label {float:none; margin-right:5px;}
+#category .media-grid {margin-left:-25px;}
+#category .media-grid h6 {color:#777; height:50px; margin:10px 0 5px 0; border-bottom:1px dashed #ddd;}
+#category .media-grid a {width:90px; height:200px; color:#666; padding:20px; margin:10px 0 15px 25px;}
+#category .media-grid a:hover {text-decoration:none;}
+#category .media-grid .placeholder {width:90px; height:90px; background:#eee;}
+.old-price {text-decoration:line-through; display:block;}
+#product-images-thumb li {display:inline; margin-right:10px;}
+.product-image-full {background:#fff; padding:20px;}
+
+/* Cart */
+.cart th {white-space:nowrap; text-align:right;}
+.cart td {text-align:right; vertical-align:middle;}
+.cart .left {text-align:left;}
+.cart .center {text-align:center;}
+.cart .quantity input {width:25px; text-align:center;}
+.cart label {float:none; margin-right:10px; font-weight:bold;}
+
+/* Checkout forms */
+#checkout .left, #checkout .right {display:none !important;}
+#checkout .middle {width:100%;}
+.checkout-account {margin:10px 0 30px 70px;}
+.checkout-panel {float:right; margin-right:20px; width:240px;}
+.checkout-panel li {border-bottom:1px dashed #eee; padding:10px 0;}
+.checkout-panel img {float:left; margin-right:10px;}
+.checkout-panel .price {float:right; line-height:20px; color:#000;}
+.checkout-panel .btn {float:right; margin-top:15px;}
+.order-totals label {float:none; margin-right:10px;}
+.order-totals {float:right;}
+.checkout-panel .order-totals {text-align:right;}
+#checkout-form fieldset {background:#fcfcfc; padding:20px; width:600px;}
+#checkout-form .input input, #checkout-form textarea {width:340px;}
+#checkout-form p {margin:15px 0 30px 0;}
+#checkout-form .actions input {float:right;}
+#checkout-form .actions-wrap {float:left;}
+.input_id_same_billing_shipping .input, .input_id_remember .input {float:left;}
+.input_id_same_billing_shipping input, .input_id_remember input {width:auto !important;}
+.input_id_same_billing_shipping label, .input_id_remember label {float:none; margin-left:10px;}
+.input_id_card_type_0 input {width:auto !important;}
+.input_id_card_type_0 .input label {float:none;}
+.input_id_card_type_0 li {display:inline; line-height:30px; margin-right:10px;}
+.card-expiry-fields select {width:auto;}
+.card-expiry-fields .input-wrap {float:left; margin:0;}
+.card-expiry-fields .input-wrap label {display:none;}
+.input_id_card_expiry_month .input {margin-left:20px;}
+.input_id_card_expiry_year .input {margin-left:10px;}
+.input_id_card_expiry_year .help-block {margin:5px 0 0 -55px;}
+#id_card_ccv {width:50px !important;}
+.confirmation {width:30% !important; float:left; margin-right:20px;}
+.confirmation legend {padding-left:50px;}
+.confirmation li {margin:5px 0;}
+.confirmation label {float:none; padding-right:5px;}
