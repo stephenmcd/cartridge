@@ -7,11 +7,11 @@
         {% trans "in cart" %}:
         {{ request.cart.total_price|currency }}
     </a><br>
-    {% ifnotequal request.cart.total_quantity 0 %}
+    {% if request.cart.total_quantity != 0 %}
     <a href="{% url shop_checkout %}" class="btn small primary">
         {% trans "Go to Checkout" %}
     </a><br>
-    {% endifnotequal %}
+    {% endif %}
     <a href="{% url shop_wishlist %}" class="wishlist-btn">
         {% blocktrans count request.wishlist|length as wishlist_count %}
         Wishlist contains 1 item

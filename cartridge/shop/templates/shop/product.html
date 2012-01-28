@@ -47,7 +47,7 @@
     {% endfor %}
 </ul>
 
-{% ifnotequal images|length 1 %}
+{% if images|length != 1 %}
 <ul id="product-images-thumb" class="media-grid">
 	{% for image in images %}
 	<li>
@@ -57,7 +57,7 @@
     </li>
 	{% endfor %}
 </ul>
-{% endifnotequal %}
+{% endif %}
 
 {% endspaceless %}
 {% endif %}

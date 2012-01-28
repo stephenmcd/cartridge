@@ -15,11 +15,11 @@ $(function() {$('.middle :input:visible:enabled:first').focus();});
 {% block breadcrumb_menu %}
 {% for step in steps %}
 <li>
-    {% ifequal step.title step_title %}
+    {% if step.title == step_title %}
     <strong>{{ step.title }}</strong>
     {% else %}
     {{ step.title }}
-    {% endifequal %}
+    {% endif %}
     <span class="divider">/</span>
 </li>
 {% endfor %}

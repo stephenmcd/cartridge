@@ -19,14 +19,14 @@
 {% endif %}
 {% endwith %}
 
-{% ifnotequal products.paginator.count 0 %}
+{% if products.paginator.count != 0 %}
 
 <form class="product-sorting">
     <label>{% trans "Sort by" %}</label>
     <select onchange="location.href = this[this.selectedIndex].value;">
     {% for name, option in settings.SHOP_PRODUCT_SORT_OPTIONS %}
     {% with name|slugify as option_slug %}
-    <option{% ifequal option_slug products.sort %} selected{% endifequal %}
+    <option{% if option_slug == products.sort %} selected{% endif %}
         value="{{ category.get_absolute_url }}?sort={{ option_slug }}{{ querystring }}">
         {{ name }}
     </option>
@@ -61,7 +61,7 @@
 
 {% pagination_for products %}
 
-{% endifnotequal %}
+{% endif %}
 
 {% endblock %}
 
