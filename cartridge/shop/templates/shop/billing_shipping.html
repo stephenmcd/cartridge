@@ -29,7 +29,7 @@
 </fieldset>
 
 {% if not settings.SHOP_CHECKOUT_STEPS_SPLIT %}
-{% include "shop/payment_fields.html" %}
+{% include "shop/includes/payment_fields.html" %}
 {% endif %}
 
 {% fields_for form.remember_field %}

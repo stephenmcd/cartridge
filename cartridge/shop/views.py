@@ -2,17 +2,17 @@
 from django.contrib.auth import logout as auth_logout
 from django.contrib.messages import info
 from django.core.urlresolvers import get_callable, reverse
-from django.http import HttpResponseRedirect, HttpResponse, Http404
-from django.shortcuts import get_object_or_404
+from django.http import Http404, HttpResponse
+from django.shortcuts import get_object_or_404, redirect
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
+from django.template.loader import get_template
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
 
 from mezzanine.conf import settings
-from mezzanine.template import get_template
 from mezzanine.utils.importing import import_dotted_path
-from mezzanine.utils.views import render_to_response
+from mezzanine.utils.views import render
 
 from cartridge.shop import checkout
 from cartridge.shop.forms import LoginForm, SignupForm, DiscountForm
@@ -47,14 +47,14 @@ def product(request, slug, template="shop/product.html"):
                 request.cart.add_item(add_product_form.variation, quantity)
                 recalculate_discount(request)
                 info(request, _("Item added to cart"))
-                return HttpResponseRedirect(reverse("shop_cart"))
+                return redirect("shop_cart")
             else:
                 skus = request.wishlist
                 sku = add_product_form.variation.sku
                 if sku not in skus:
                     skus.append(sku)
                 info(request, _("Item added to wishlist"))
-                response = HttpResponseRedirect(reverse("shop_wishlist"))
+                response = redirect("shop_wishlist")
                 set_cookie(response, "wishlist", ",".join(skus))
                 return response
     fields = [f.name for f in ProductVariation.option_fields()]
@@ -72,7 +72,7 @@ def product(request, slug, template="shop/product.html"):
         "related": product.related_products.published(for_user=request.user),
         "add_product_form": add_product_form
     }
-    return render_to_response(template, context, RequestContext(request))
+    return render(request, template, context)
 
 
 def wishlist(request, template="shop/wishlist.html"):
@@ -92,18 +92,18 @@ def wishlist(request, template="shop/wishlist.html"):
                 request.cart.add_item(add_product_form.variation, 1)
                 recalculate_discount(request)
                 message = _("Item added to cart")
-                url = reverse("shop_cart")
+                url = "shop_cart"
             else:
                 error = add_product_form.errors.values()[0]
         else:
             message = _("Item removed from wishlist")
-            url = reverse("shop_wishlist")
+            url = "shop_wishlist"
         sku = request.POST.get("sku")
         if sku in skus:
             skus.remove(sku)
         if not error:
             info(request, message)
-            response = HttpResponseRedirect(url)
+            response = redirect(url)
             set_cookie(response, "wishlist", ",".join(skus))
             return response
 
@@ -113,7 +113,7 @@ def wishlist(request, template="shop/wishlist.html"):
     wishlist = ProductVariation.objects.filter(**f).select_related(depth=1)
     wishlist = sorted(wishlist, key=lambda v: skus.index(v.sku))
     context = {"wishlist_items": wishlist, "error": error}
-    response = render_to_response(template, context, RequestContext(request))
+    response = render(request, template, context)
     if len(wishlist) < len(skus):
         skus = [variation.sku for variation in wishlist]
         set_cookie(response, "wishlist", ",".join(skus))
@@ -146,13 +146,13 @@ def cart(request, template="shop/cart.html"):
             if valid:
                 discount_form.set_discount()
         if valid:
-            return HttpResponseRedirect(reverse("shop_cart"))
+            return redirect("shop_cart")
     context = {"cart_formset": cart_formset}
     settings.use_editable()
     if (settings.SHOP_DISCOUNT_FIELD_IN_CART and
         DiscountCode.objects.active().count() > 0):
         context["discount_form"] = discount_form
-    return render_to_response(template, context, RequestContext(request))
+    return render(request, template, context)
 
 
 def account(request, template="shop/account.html"):
@@ -178,9 +178,9 @@ def account(request, template="shop/account.html"):
         if posted_form is not None:
             posted_form.login(request)
             info(request, message)
-            return HttpResponseRedirect(request.GET.get("next", "/"))
+            return redirect(request.GET.get("next", "/"))
     context = {"login_form": login_form, "signup_form": signup_form}
-    return render_to_response(template, context, RequestContext(request))
+    return render(request, template, context)
 
 
 def logout(request):
@@ -189,7 +189,7 @@ def logout(request):
     """
     auth_logout(request)
     info(request, _("Successfully logged out"))
-    return HttpResponseRedirect(request.GET.get("next", "/"))
+    return redirect(request.GET.get("next", "/"))
 
 
 def checkout_steps(request):
@@ -203,7 +203,7 @@ def checkout_steps(request):
     authenticated = request.user.is_authenticated()
     if settings.SHOP_CHECKOUT_ACCOUNT_REQUIRED and not authenticated:
         url = "%s?next=%s" % (settings.LOGIN_URL, reverse("shop_checkout"))
-        return HttpResponseRedirect(url)
+        return redirect(url)
 
     # Determine the Form class to use during the checkout process
     form_class = get_callable(settings.SHOP_CHECKOUT_FORM_CLASS)
@@ -271,7 +271,7 @@ def checkout_steps(request):
                     checkout.send_order_email(request, order)
                     # Set the cookie for remembering address details
                     # if the "remember" checkbox was checked.
-                    response = HttpResponseRedirect(reverse("shop_complete"))
+                    response = redirect("shop_complete")
                     if form.cleaned_data.get("remember") is not None:
                         remembered = "%s:%s" % (sign(order.key), order.key)
                         set_cookie(response, "remember", remembered,
@@ -294,7 +294,7 @@ def checkout_steps(request):
     context = {"form": form, "CHECKOUT_STEP_FIRST": CHECKOUT_STEP_FIRST,
                "step_title": step_vars["title"], "step_url": step_vars["url"],
                "steps": checkout.CHECKOUT_STEPS, "step": step}
-    return render_to_response(template, context, RequestContext(request))
+    return render(request, template, context)
 
 
 def complete(request, template="shop/complete.html"):
@@ -319,7 +319,7 @@ def complete(request, template="shop/complete.html"):
         setattr(items[i], "name", names[item.sku])
     context = {"order": order, "items": items,
                "steps": checkout.CHECKOUT_STEPS}
-    return render_to_response(template, context, RequestContext(request))
+    return render(request, template, context)
 
 
 def invoice(request, order_id, template="shop/order_invoice.html"):
@@ -336,14 +336,13 @@ def invoice(request, order_id, template="shop/order_invoice.html"):
     order = get_object_or_404(Order, **lookup)
     context = {"order": order}
     context.update(order.details_as_dict())
-    request_context = RequestContext(request, context)
-    html = get_template(template, request_context).render(request_context)
+    context = RequestContext(request, context)
     if request.GET.get("format") == "pdf":
         response = HttpResponse(mimetype="application/pdf")
         name = slugify("%s-invoice-%s" % (settings.SITE_TITLE, order.id))
         response["Content-Disposition"] = "attachment; filename=%s.pdf" % name
+        html = get_template(template).render(context)
         import ho.pisa
         ho.pisa.CreatePDF(html, response)
-    else:
-        response = HttpResponse(html)
-    return response
+        return response
+    return render(request, template, context)
