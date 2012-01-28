@@ -1,26 +1,3 @@
-{% extends "admin/change_form.html" %}
-{% load adminmedia i18n %}
-
-{% block extrahead %}{{ block.super }}
-<style type="text/css">
-
-    .create-variations ul {margin-left:130px !important;}
-    .create-variations li {list-style-type:none; float:left;}
-    .create-variations li label {width:auto;}
-    .create-variations input {margin:-1px 3px 0px 5px;}
-    .create-variations {margin-top:20px;}
-    .sku input {width:100px !important;}
-    .tiny {font-size:70%;}
-    .unit_price input, .sale_price input, .num_in_stock input {
-        width:50px !important;}
-    .item img {vertical-align:middle; margin-right:10px !important;}
-    .viewsitelink {display:none !important;}
-    tr.add-row {display:none;}
-    #add_id_categories {display:none;}
-
-</style>
-<script type="text/javascript">
-
 $(function() {
 
     var grappelli = $('.admin-title').length == 1;
@@ -60,13 +37,10 @@ $(function() {
     if (grappelli) {
         $.each(variationsFieldset.find('h3'), function(i, variation) {
             variation = $(variation);
-            var title = variation.html().split('</b>')[1];
-            variation.parent().find('.sku input').before(
-                '<div class="tiny">' + title + '</div>');
+            var titleText = variation.html().split('</b>')[1];
+            var titleHtml = '<div class="tiny">' + titleText + '</div>';
+            variation.parent().find('.sku input').before(titleHtml);
         });
     }
 
 });
-
-</script>
-{% endblock %}

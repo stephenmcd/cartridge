@@ -16,53 +16,9 @@
 
 {% block extra_head %}
 {{ block.super }}
-<script src="{{ settings.CONTENT_MEDIA_URL }}js/jquery.tools.js"></script>
-<script>
-$(function() {
-
-	var variations = {{ variations_json|safe }};
-	var selections = $('#add-cart select');
-
-	var showImage = function(id) {
-		var image = $(id);
-		if (image.length == 1) {
-			$('#product-images-large li').hide();
-			image.show();
-		}
-	};
-
-	// on selection of an option, reduce the list of variations to the one
-	// matching all the selected options - if there is one, show it and hide
-	// the others
-	selections.change(function() {
-		var variation = $.grep(variations, function(v) {
-			var valid = true;
-			$.each(selections, function() {
-				valid = valid && v[this.name] == this[this.selectedIndex].value;
-			});
-			return valid;
-		});
-		if (variation.length == 1) {
-			$('#variations li').hide();
-			$('#variation-' + variation[0].sku).show();
-			showImage('#image-' + variation[0].image_id + '-large');
-		}
-	});
-	selections.change();
-
-	// show enlarged image on thumbnail click
-	$('#product-images-thumb a').click(function() {
-		showImage('#' + $(this).attr('id') + '-large');
-		return false;
-	});
-
-    // Add overlay to large image.
-    var expose = {color: '#333', loadSpeed: 200, opacity: 0.9};
-    var overlay = {expose: expose, close: '*'};
-    $('.product-image-large').overlay(overlay);
-
-});
-</script>
+<script src="{{ STATIC_URL }}mezzanine/js/jquery.tools.js"></script>
+<script>var variations = {{ variations_json|safe }};</script>
+<script src="{{ STATIC_URL }}cartridge/js/product_variations.js"></script>
 {% endblock %}
 
 {% block breadcrumb_menu %}
@@ -150,7 +106,7 @@ $(function() {
     <li>
         <a href="{{ product.get_absolute_url }}">
             {% if product.image %}
-            <img src="{{ MEDIA_URL }}{% thumbnail product.image 90 90 %}"><br>
+            <img src="{{ STATIC_URL }}{% thumbnail product.image 90 90 %}"><br>
             {% endif %}
             {{ product }}
         </a>

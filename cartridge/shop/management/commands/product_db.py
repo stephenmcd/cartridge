@@ -20,7 +20,7 @@ from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
 
 # images get copied from thie directory
 LOCAL_IMAGE_DIR = "/tmp/orig"
-# images get copied to this directory under MEDIA_ROOT
+# images get copied to this directory under STATIC_ROOT
 IMAGE_SUFFIXES = [".jpg", ".JPG", ".jpeg", ".JPEG", ".tif", ".gif", ".GIF"]
 EMPTY_IMAGE_ENTRIES = ["Please add", "N/A", ""]
 DATE_FORMAT = "%Y-%m-%d"
@@ -45,7 +45,7 @@ SALE_END_TIME = _("Sale End Time")
 
 DATETIME_FORMAT = "%s %s" % (DATE_FORMAT, TIME_FORMAT)
 SITE_MEDIA_IMAGE_DIR = _("product")
-PRODUCT_IMAGE_DIR = os.path.join(settings.MEDIA_ROOT, SITE_MEDIA_IMAGE_DIR)
+PRODUCT_IMAGE_DIR = os.path.join(settings.STATIC_ROOT, SITE_MEDIA_IMAGE_DIR)
 # python < 2.7 doesn't have dictionary comprehensions ;(
 #TYPE_CHOICES = {choice:id for id, choice in settings.SHOP_OPTION_TYPE_CHOICES}
 TYPE_CHOICES = dict()

@@ -265,7 +265,8 @@ class OrderForm(FormsetForm, DiscountForm):
     card_expiry_month = forms.ChoiceField(
         choices=make_choices(["%02d" % i for i in range(1, 13)]))
     card_expiry_year = forms.ChoiceField()
-    card_ccv = forms.CharField(label="CCV")
+    card_ccv = forms.CharField(label="CCV", help_text=_("A security code, "
+        "usually the last 3 digits found on the back of your card."))
 
     class Meta:
         model = Order

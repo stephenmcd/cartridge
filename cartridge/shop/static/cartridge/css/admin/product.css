@@ -1,0 +1,13 @@
+.create-variations ul {margin-left:130px !important;}
+.create-variations li {list-style-type:none; float:left;}
+.create-variations li label {width:auto;}
+.create-variations input {margin:-1px 3px 0px 5px;}
+.create-variations {margin-top:20px;}
+.sku input {width:100px !important;}
+.tiny {font-size:70%;}
+.unit_price input, .sale_price input, .num_in_stock input {
+    width:50px !important;}
+.item img {vertical-align:middle; margin-right:10px !important;}
+.viewsitelink {display:none !important;}
+tr.add-row {display:none;}
+#add_id_categories {display:none;}

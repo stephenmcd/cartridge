@@ -39,7 +39,7 @@ except ImportError:
     exit()
 
 WORKERS = 10
-image_dir = join(settings.MEDIA_ROOT, "product")
+image_dir = join(settings.STATIC_ROOT, "product")
 queue = Queue()
 product_options = {"Size": ("Small", "Medium", "Large"),
     "Colour": ("Red", "Orange", "Yellow", "Green", "Blue", "Indigo", "Violet")}

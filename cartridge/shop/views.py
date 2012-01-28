@@ -1,5 +1,6 @@
 
 from django.contrib.auth import logout as auth_logout
+from django.contrib.messages import info
 from django.core.urlresolvers import get_callable, reverse
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import get_object_or_404
@@ -11,7 +12,6 @@ from django.utils.translation import ugettext as _
 from mezzanine.conf import settings
 from mezzanine.template import get_template
 from mezzanine.utils.importing import import_dotted_path
-from mezzanine.utils.messages import info
 from mezzanine.utils.views import render_to_response
 
 from cartridge.shop import checkout

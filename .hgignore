@@ -1,15 +1,1 @@
-syntax: glob
-*.pyc
-*.pyo
-*.db
-.DS_Store
-.coverage
-local_settings.py
-build/*
-dist/*
-*.egg-info/*
-
-site_media/uploads/*
-site_media/galleries/*
-site_media/product/*
-
+../mezzanine/.hgignore

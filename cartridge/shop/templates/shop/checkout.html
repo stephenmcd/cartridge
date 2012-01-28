@@ -8,6 +8,7 @@
 {% block extra_head %}
 <script>
 var _gaq = [['_trackPageview', '{{ request.path }}{{ step_url }}/']];
+$(function() {$('.middle :input:visible:enabled:first').focus();});
 </script>
 {% endblock %}
 

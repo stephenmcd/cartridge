@@ -19,10 +19,9 @@ from cartridge.shop.models import OrderItem, Sale, DiscountCode
 
 # Lists of field names.
 option_fields = [f.name for f in ProductVariation.option_fields()]
-billing_fields = [f.name for f in Order._meta.fields
-    if f.name.startswith("billing_detail")]
-shipping_fields = [f.name for f in Order._meta.fields
-    if f.name.startswith("shipping_detail")]
+_flds = lambda s: [f.name for f in Order._meta.fields if f.name.startswith(s)]
+billing_fields = _flds("billing_detail")
+shipping_fields = _flds("shipping_detail")
 
 category_fieldsets = deepcopy(PageAdmin.fieldsets)
 category_fieldsets[0][1]["fields"][3:3] = ["content"]  # , "products"]
@@ -41,7 +40,7 @@ class ProductVariationAdmin(admin.TabularInline):
     verbose_name_plural = _("Current variations")
     model = ProductVariation
     fields = ("sku", "default", "num_in_stock", "unit_price", "sale_price",
-        "sale_from", "sale_to", "image")
+              "sale_from", "sale_to", "image")
     extra = 0
     formfield_overrides = {MoneyField: {"widget": MoneyWidget}}
     form = ProductVariationAdminForm
@@ -54,17 +53,21 @@ class ProductImageAdmin(TabularDynamicInlineAdmin):
 
 
 product_fieldsets = deepcopy(DisplayableAdmin.fieldsets)
-product_fieldsets[0][1]["fields"].extend(["available", "categories",
-                                          "content"])
+product_fieldsets[0][1]["fields"][1] = ("status", "available")
+product_fieldsets[0][1]["fields"].extend(["categories", "content"])
 product_fieldsets = list(product_fieldsets)
-product_fieldsets.append((_("Other products"),
-    {"classes": ("collapse-closed",), "fields": ("related_products",
-                                                 "upsell_products")}))
+product_fieldsets.append((_("Other products"), {
+    "classes": ("collapse-closed",),
+    "fields": ("related_products", "upsell_products")}))
 product_fieldsets.insert(1, (_("Create new variations"),
     {"classes": ("create-variations",), "fields": option_fields}))
 
 
 class ProductAdmin(DisplayableAdmin):
+
+    class Media:
+        js = ("cartridge/js/admin/product_variations.js",)
+        css = {"all": ("cartridge/css/admin/product.css",)}
 
     list_display = ("admin_thumb", "title", "status", "available",
                     "admin_link")

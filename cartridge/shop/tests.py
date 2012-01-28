@@ -339,8 +339,11 @@ class ShopTests(TestCase):
         """
         Run pyflakes/pep8 across the code base to check for potential errors.
         """
-        extra_ignore = ("redefinition of unused 'digest'",
-                        "redefinition of unused 'OperationalError'",)
+        extra_ignore = (
+                "redefinition of unused 'digest'",
+                "redefinition of unused 'OperationalError'",
+                "'from mezzanine.project_template.settings import *' used",
+        )
         warnings = []
         warnings.extend(run_pyflakes_for_package("cartridge",
                                                  extra_ignore=extra_ignore))
