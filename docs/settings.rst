@@ -145,7 +145,7 @@ Default: ``((1, u'Unprocessed'), (2, u'Processed'))``
 
 Number of products to display per category page.
 
-Default: ``10``
+Default: ``12``
 
 ``SHOP_PRODUCT_SORT_OPTIONS``
 -----------------------------

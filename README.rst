@@ -121,8 +121,10 @@ Sites Using Cartridge
 .. _`Django`: http://djangoproject.com/
 .. _`BSD licensed`: http://www.linfo.org/bsdlicense.html
 .. _`Mezzanine live demo`: http://mezzanine.jupo.org/
+.. _`pip`: http://www.pip-installer.org/
 .. _`setuptools`: http://pypi.python.org/pypi/setuptools
 .. _`Mezzanine`: http://mezzanine.jupo.org/
+.. _`South`: http://south.aeracode.org/
 .. _`Github`: http://github.com/stephenmcd/cartridge/
 .. _`Bitbucket`: http://bitbucket.org/stephenmcd/cartridge/
 .. _`mezzanine-users`: http://groups.google.com/group/mezzanine-users

@@ -21,10 +21,11 @@ sys.path.insert(0, os.path.join(docs_path, "..", "..", "mezzanine"))
 os.environ["DJANGO_SETTINGS_MODULE"] = "cartridge.project_template.settings"
 
 import cartridge
-from mezzanine.utils.docs import build_settings_docs, build_changelog
+from mezzanine.utils import docs
 
-build_settings_docs(docs_path, prefix="SHOP_")
-build_changelog(docs_path, package_name="cartridge")
+docs.build_settings_docs(docs_path, prefix="SHOP_")
+docs.build_changelog(docs_path, package_name="cartridge")
+docs.build_modelgraph(docs_path, package_name="cartridge")
 
 try:
     from cartridge.shop.models import Order

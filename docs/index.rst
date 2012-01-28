@@ -13,13 +13,15 @@ To learn more about Cartridge please read the :doc:`overview` which contains
 a feature list, installation guide and other general information.
 
 .. toctree::
-	:maxdepth: 2
+    :maxdepth: 2
 
-	overview
-	components
-	integration
-	configuration
-	colophon
+    overview
+    components
+    integration
+    configuration
+    model-graph
+    colophon
+
 
 .. _`Django`: http://djangoproject.com/
 .. _`BSD licensed`: http://www.linfo.org/bsdlicense.html
