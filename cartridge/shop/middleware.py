@@ -38,5 +38,5 @@ name = "cartridge.shop.middleware.SSLRedirect"
 if name in settings.MIDDLEWARE_CLASSES:
     import warnings
     warnings.warn(name + " deprecated; "
-                  "use cartridge.shop.middleware.ShopMiddleware",)
+                  "use mezzanine.core.middleware.SSLMiddleware",)
     SSLRedirect = ShopMiddleware
