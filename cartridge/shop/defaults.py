@@ -209,6 +209,17 @@ register_setting(
 )
 
 register_setting(
+    name="SITE_FORCE_SSL_URL_PREFIXES",
+    description="Sequence of prefixes.  URLs that start with any of them "
+                "will be forced to run over SSL when SITE_SSL_ENABLED is "
+                "True. i.e. ('/admin', '/example') would force all urls "
+                "beginning with /admin or /example to run over ssl.",
+    editable=False,
+    default=('/shop/checkout', '/shop/account'),
+    append=True,
+)
+
+register_setting(
     name="TEMPLATE_ACCESSIBLE_SETTINGS",
     description=_("Sequence of setting names available within templates."),
     editable=False,
