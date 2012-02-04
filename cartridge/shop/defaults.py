@@ -93,23 +93,6 @@ register_setting(
 )
 
 register_setting(
-    name="SHOP_FORCE_HOST",
-    label=_("Force Host"),
-    description="Host name that the site should always be accessed via that "
-        "matches the SSL certificate.",
-    editable=True,
-    default="",
-)
-
-register_setting(
-    name="SHOP_FORCE_SSL_VIEWS",
-    description="Sequence of view names that will be forced to run over SSL "
-        "when SSL_ENABLED is True.",
-    editable=False,
-    default=("shop_checkout", "shop_complete", "shop_account"),
-)
-
-register_setting(
     name="SHOP_HANDLER_BILLING_SHIPPING",
     label=_("Billing & Shipping Handler"),
     description="Dotted package path and class name of the function that "
@@ -200,12 +183,14 @@ register_setting(
 )
 
 register_setting(
-    name="SHOP_SSL_ENABLED",
-    label=_("Enable SSL"),
-    description="If True, users will be automatically redirect to HTTPS "
-        "for the checkout process.",
-    editable=True,
-    default=False,
+    name="SSL_FORCE_URL_PREFIXES",
+    description="Sequence of URL prefixes that will be forced to run over "
+                "SSL when ``SSL_ENABLED`` is ``True``. i.e. "
+                "('/admin', '/example') would force all URLs beginning with "
+                "/admin or /example to run over SSL.",
+    editable=False,
+    default=("/shop/checkout", "/shop/account"),
+    append=True,
 )
 
 register_setting(

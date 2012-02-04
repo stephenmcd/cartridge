@@ -15,10 +15,6 @@ from mezzanine.project_template.settings import *
 # cartridge.shop.defaults, but can be uncommented below in
 # order to override their defaults.
 
-# If True, users will be automatically redirect to HTTPS for the
-# checkout process.
-# SHOP_SSL_ENABLED = False
-
 # Sequence of available credit card types for payment.
 # SHOP_CARD_TYPES = ("Mastercard", "Visa", "Diners", "Amex")
 
@@ -46,14 +42,6 @@ from mezzanine.project_template.settings import *
 
 # Default cost of shipping when no custom shipping is implemented.
 # SHOP_DEFAULT_SHIPPING_VALUE = 10
-
-# Host name that the site should always be accessed via that matches
-# the SSL certificate.
-# SHOP_FORCE_HOST = ""
-
-# Sequence of view names that will be forced to run over SSL when
-# SSL_ENABLED is True.
-# SHOP_FORCE_SSL_VIEWS = ("shop_checkout", "shop_complete", "shop_account")
 
 # Dotted package path and class name of the function that
 # is called on submit of the billing/shipping checkout step. This
@@ -85,7 +73,6 @@ from mezzanine.project_template.settings import *
 #     (1, _("Size")),
 #     (2, _("Colour")),
 # )
-
 
 ######################
 # MEZZANINE SETTINGS #
@@ -147,6 +134,23 @@ ADMIN_MENU_ORDER = (
 # Setting to turn on featured images for blog posts. Defaults to False.
 #
 # BLOG_USE_FEATURED_IMAGE = True
+
+# If ``True``, users will be automatically redirect to HTTPS
+# for the URLs soecified by the ``SSL_FORCE_URL_PREFIXES`` setting.
+#
+# SSL_ENABLED = True
+
+# Host name that the site should always be accessed via that matches
+# the SSL certificate.
+#
+# SSL_FORCE_HOST = "www.example.com"
+
+# Sequence of URL prefixes that will be forced to run over
+# SSL when ``SSL_ENABLED`` is ``True``. i.e.
+# ('/admin', '/example') would force all URLs beginning with
+# /admin or /example to run over SSL.
+#
+# SSL_FORCE_URL_PREFIXES = ('/shop/checkout', '/shop/account')
 
 # If True, the south application will be automatically added to the
 # INSTALLED_APPS setting. This setting is not defined in
@@ -311,6 +315,7 @@ INSTALLED_APPS = ("django.contrib.sites", "cartridge.shop") + INSTALLED_APPS
 
 MIDDLEWARE_CLASSES = tuple(MIDDLEWARE_CLASSES) + (
     "cartridge.shop.middleware.ShopMiddleware",
+    "mezzanine.core.middleware.SSLRedirectMiddleware",
 )
 
 ##################
