@@ -90,18 +90,66 @@ class ProductAdmin(DisplayableAdmin):
 
     def save_formset(self, request, form, formset, change):
         """
-        Create variations for selected options if they don't exist, manage the
-        default empty variation creating it if no variations exist or removing
-        it if multiple variations exist, and copy the pricing and image fields
-        from the default variation to the product.
+
+        Here be dragons. We want to perform these steps sequentially:
+
+        - Save variations formset
+        - Run the required variation manager methods:
+          (create_from_options, manage_empty, etc)
+        - Save the images formset
+
+        The variations formset needs to be saved first for the manager
+        methods to have access to the correct variations. The images
+        formset needs to be run last, because if images are deleted that
+        are selected for variations, the variations formset will raise
+        errors when saving due to invalid image selections. This gets
+        addressed in the set_default_images method.
+
+        An additional problem is the actual ordering of the inlines,
+        which are in reverse order we want to achieve the above. To
+        address this, we store the images formset as an attribute, and
+        then call save on it after the other required steps have occurred.
+
         """
-        super(ProductAdmin, self).save_formset(request, form, formset, change)
-        if isinstance(formset, ProductVariationAdminFormset):
+
+        # Store the images formset for later saving, otherwise save the
+        # formset.
+        if formset.model == ProductImage:
+            self._images_formset = formset
+        else:
+            super(ProductAdmin, self).save_formset(request, form, formset,
+                                                   change)
+
+        # Run each of the variation manager methods if we're saving
+        # the variations formset.
+        if formset.model == ProductVariation:
+
+            # Build up selected options for new variations.
             options = dict([(f, request.POST.getlist(f)) for f in option_fields
-                if request.POST.getlist(f)])
+                             if request.POST.getlist(f)])
+            # Create a list of image IDs that have been marked to delete.
+            deleted_images = [request.POST.get(f.replace("-DELETE", "-id"))
+                              for f in request.POST if f.startswith("images-")
+                              and f.endswith("-DELETE")]
+
+            # Create new variations for selected options.
             self._product.variations.create_from_options(options)
+            # Create a default variation if there are nonw.
             self._product.variations.manage_empty()
+            # Copy duplicate fields (``Priced`` fields) from the default
+            # variation to the prodyct.
             self._product.copy_default_variation()
+            # Remove any images deleted just now from variations they're
+            # assigned to, and set an image for any variations without one.
+            self._product.variations.set_default_images(deleted_images)
+
+            # Save the images formset stored previously.
+            super(ProductAdmin, self).save_formset(request, form,
+                                                 self._images_formset, change)
+
+            # Run again to allow for no images existing previously, with
+            # new images added which can be used as defaults for variations.
+            self._product.variations.set_default_images(deleted_images)
 
 
 class ProductOptionAdmin(admin.ModelAdmin):

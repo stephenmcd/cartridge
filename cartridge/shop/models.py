@@ -277,20 +277,11 @@ class ProductVariation(Priced):
     def save(self, *args, **kwargs):
         """
         Use the variation's ID as the SKU when the variation is first
-        created and set the variation's image to be the first image of
-        the product if no image is chosen for the variation.
+        created.
         """
         super(ProductVariation, self).save(*args, **kwargs)
-        save = False
         if not self.sku:
             self.sku = self.id
-            save = True
-        if not self.image:
-            image = self.product.images.all()[:1]
-            if len(image) == 1:
-                self.image = image[0]
-                save = True
-        if save:
             self.save()
 
     def get_absolute_url(self):

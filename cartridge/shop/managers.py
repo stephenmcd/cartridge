@@ -110,6 +110,29 @@ class ProductVariationManager(Manager):
             first_variation.default = True
             first_variation.save()
 
+    def set_default_images(self, deleted_image_ids):
+        """
+        Assign the first image for the product to each variation that
+        doesn't have an image. Also remove any images that have been
+        deleted via the admin to avoid invalid image selections.
+        """
+        variations = self.all()
+        if not variations:
+            return
+        image = variations[0].product.images.exclude(id__in=deleted_image_ids)
+        if image:
+            image = image[0]
+        for variation in variations:
+            save = False
+            if unicode(variation.image_id) in deleted_image_ids:
+                variation.image = None
+                save = True
+            if image and not variation.image:
+                variation.image = image
+                save = True
+            if save:
+                variation.save()
+
 
 class ProductActionManager(Manager):
 
