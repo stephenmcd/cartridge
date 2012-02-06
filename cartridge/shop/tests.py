@@ -51,10 +51,6 @@ class ShopTests(TestCase):
         response = self.client.get(reverse("shop_checkout"))
         self.assertEqual(response.status_code, 200 if not
             settings.SHOP_CHECKOUT_ACCOUNT_REQUIRED else 302)
-        # Login.
-        if settings.SHOP_CHECKOUT_ACCOUNT_ENABLED:
-            response = self.client.get(reverse("shop_account"))
-            self.assertEqual(response.status_code, 200)
 
     def test_variations(self):
         """

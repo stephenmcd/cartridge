@@ -1,5 +1,4 @@
 
-from django.utils.translation import ugettext_lazy as _
 # Allow the development version of Mezzanine to be picked up.
 import os
 import sys
@@ -11,9 +10,9 @@ from mezzanine.project_template.settings import *
 # CARTRIDGE SETTINGS #
 ######################
 
-# The following Cartridge settings are already defined in
-# cartridge.shop.defaults, but can be uncommented below in
-# order to override their defaults.
+# The following settings are already defined in cartridge.conf.defaults
+# with default values, but are common enough to be put here, commented
+# out, for convenient overriding.
 
 # Sequence of available credit card types for payment.
 # SHOP_CARD_TYPES = ("Mastercard", "Visa", "Diners", "Amex")
@@ -78,19 +77,21 @@ from mezzanine.project_template.settings import *
 # MEZZANINE SETTINGS #
 ######################
 
-# The following Mezzanine settings are already defined in
-# mezzanine.conf.defaults, but can be uncommented below in
-# order to override their defaults.
+# The following settings are already defined in mezzanine.conf.defaults
+# with default values, but are common enough to be put here, commented
+# out, for convenient overriding.
 
 # Controls the ordering and grouping of the admin menu.
-ADMIN_MENU_ORDER = (
-     (_("Content"), ("pages.Page", "blog.BlogPost",
-        "generic.ThreadedComment", (_("Media Library"), "fb_browse"),)),
-    (_("Shop"), ("shop.Product", "shop.ProductOption", "shop.DiscountCode",
-        "shop.Sale", "shop.Order")),
-    (_("Site"), ("sites.Site", "redirects.Redirect", "conf.Setting")),
-    (_("Users"), ("auth.User", "auth.Group",)),
-)
+#
+# from django.utils.translation import ugettext_lazy as _
+# ADMIN_MENU_ORDER = (
+#     (_("Content"), ("pages.Page", "blog.BlogPost",
+#         "generic.ThreadedComment", (_("Media Library"), "fb_browse"),)),
+#     (_("Shop"), ("shop.Product", "shop.ProductOption", "shop.DiscountCode",
+#         "shop.Sale", "shop.Order")),
+#     (_("Site"), ("sites.Site", "redirects.Redirect", "conf.Setting")),
+#     (_("Users"), ("auth.User", "auth.Group",)),
+# )
 
 # A three item sequence, each containing a sequence of template tags
 # used to render the admin dashboard.
@@ -135,8 +136,14 @@ ADMIN_MENU_ORDER = (
 #
 # BLOG_USE_FEATURED_IMAGE = True
 
-# If ``True``, users will be automatically redirect to HTTPS
-# for the URLs soecified by the ``SSL_FORCE_URL_PREFIXES`` setting.
+# Turns on accounts for website visitors. Will add the
+# LOGIN_URL/LOGOUT_URL values to urlpatterns, and show login/logout
+# links in templates/includes/user_panel.html. Defaults to False.
+#
+# ACCOUNTS_ENABLED = True
+
+# If ``True``, users will be automatically redirected to HTTPS
+# for the URLs specified by the ``SSL_FORCE_URL_PREFIXES`` setting.
 #
 # SSL_ENABLED = True
 
@@ -148,9 +155,9 @@ ADMIN_MENU_ORDER = (
 # Sequence of URL prefixes that will be forced to run over
 # SSL when ``SSL_ENABLED`` is ``True``. i.e.
 # ('/admin', '/example') would force all URLs beginning with
-# /admin or /example to run over SSL.
+# /admin or /example to run over SSL. Defaults to:
 #
-# SSL_FORCE_URL_PREFIXES = ('/shop/checkout', '/shop/account')
+# SSL_FORCE_URL_PREFIXES = ("/admin", "/account", "/shop/checkout",)
 
 # If True, the south application will be automatically added to the
 # INSTALLED_APPS setting. This setting is not defined in
@@ -210,6 +217,10 @@ TEMPLATE_LOADERS = (
     "django.template.loaders.filesystem.Loader",
     "django.template.loaders.app_directories.Loader",
 )
+
+# URLs used for login/logout when ACCOUNTS_ENABLED is set to True.
+LOGIN_URL = "/account/"
+LOGOUT_URL = "/account/logout/"
 
 
 #############
@@ -283,8 +294,6 @@ ROOT_URLCONF = "%s.urls" % PROJECT_DIRNAME
 # Always use forward slashes, even on Windows.
 # Don't forget to use absolute paths, not relative paths.
 TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "templates"),)
-
-LOGIN_URL = "/shop/account/"
 
 
 ################

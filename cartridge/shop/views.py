@@ -1,5 +1,4 @@
 
-from django.contrib.auth import logout as auth_logout
 from django.contrib.messages import info
 from django.core.urlresolvers import get_callable, reverse
 from django.http import Http404, HttpResponse
@@ -15,8 +14,7 @@ from mezzanine.utils.importing import import_dotted_path
 from mezzanine.utils.views import render
 
 from cartridge.shop import checkout
-from cartridge.shop.forms import LoginForm, SignupForm, DiscountForm
-from cartridge.shop.forms import AddProductForm, CartItemFormSet
+from cartridge.shop.forms import AddProductForm, DiscountForm, CartItemFormSet
 from cartridge.shop.models import Product, ProductVariation, Order
 from cartridge.shop.models import DiscountCode
 from cartridge.shop.utils import recalculate_discount, set_cookie, sign
@@ -153,43 +151,6 @@ def cart(request, template="shop/cart.html"):
         DiscountCode.objects.active().count() > 0):
         context["discount_form"] = discount_form
     return render(request, template, context)
-
-
-def account(request, template="shop/account.html"):
-    """
-    Display and handle both the login and signup forms.
-    """
-    login_form = LoginForm()
-    signup_form = SignupForm()
-    if request.method == "POST":
-        posted_form = None
-        message = ""
-        if request.POST.get("login") is not None:
-            login_form = LoginForm(request.POST)
-            if login_form.is_valid():
-                posted_form = login_form
-                message = _("Successfully logged in")
-        else:
-            signup_form = SignupForm(request.POST)
-            if signup_form.is_valid():
-                signup_form.save()
-                posted_form = signup_form
-                message = _("Successfully signed up")
-        if posted_form is not None:
-            posted_form.login(request)
-            info(request, message)
-            return redirect(request.GET.get("next", "/"))
-    context = {"login_form": login_form, "signup_form": signup_form}
-    return render(request, template, context)
-
-
-def logout(request):
-    """
-    Log the user out.
-    """
-    auth_logout(request)
-    info(request, _("Successfully logged out"))
-    return redirect(request.GET.get("next", "/"))
 
 
 def checkout_steps(request):

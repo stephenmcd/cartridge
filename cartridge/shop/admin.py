@@ -100,15 +100,16 @@ class ProductAdmin(DisplayableAdmin):
 
         The variations formset needs to be saved first for the manager
         methods to have access to the correct variations. The images
-        formset needs to be run last, because if images are deleted that
-        are selected for variations, the variations formset will raise
-        errors when saving due to invalid image selections. This gets
-        addressed in the set_default_images method.
+        formset needs to be run last, because if images are deleted
+        that are selected for variations, the variations formset will
+        raise errors when saving due to invalid image selections. This
+        gets addressed in the set_default_images method.
 
         An additional problem is the actual ordering of the inlines,
-        which are in reverse order we want to achieve the above. To
+        which are in the reverse order for achieving the above. To
         address this, we store the images formset as an attribute, and
-        then call save on it after the other required steps have occurred.
+        then call save on it after the other required steps have
+        occurred.
 
         """
 

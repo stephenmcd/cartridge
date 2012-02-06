@@ -6,6 +6,66 @@ from django.utils.translation import ugettext as _
 from mezzanine.conf import register_setting
 
 
+##################################################
+#  These first set of settings already exist in  #
+#  mezzanine.conf.defaults, and are overridden   #
+#  or appended to here, with Cartridge values.   #
+##################################################
+
+# Default to False in Mezzanine, change to True so checkout can have
+# an account option.
+register_setting(
+    name="ACCOUNTS_ENABLED",
+    description="If True, users can create an account.",
+    editable=False,
+    default=True,
+)
+
+# Add shop admin modules to the admin menu.
+register_setting(
+    name="ADMIN_MENU_ORDER",
+    description=_("Controls the ordering and grouping of the admin menu."),
+    editable=False,
+    default=(
+        (_("Content"), ("pages.Page", "blog.BlogPost",
+            "generic.ThreadedComment", (_("Media Library"), "fb_browse"),)),
+        (_("Shop"), ("shop.Product", "shop.ProductOption", "shop.DiscountCode",
+            "shop.Sale", "shop.Order")),
+        (_("Site"), ("sites.Site", "redirects.Redirect", "conf.Setting")),
+        (_("Users"), ("auth.User", "auth.Group",)),
+    ),
+)
+
+# Add the checkout URLs prefix to those forced to run over SSL.
+# Only relevant if SSL_ENABLED (defined in Mezzanine) is True.
+register_setting(
+    name="SSL_FORCE_URL_PREFIXES",
+    description="Sequence of URL prefixes that will be forced to run over "
+                "SSL when ``SSL_ENABLED`` is ``True``. i.e. "
+                "('/admin', '/example') would force all URLs beginning with "
+                "/admin or /example to run over SSL.",
+    editable=False,
+    default=("/shop/checkout",),
+    append=True,
+)
+
+# Append the Cartridge settings used in templates to the list of settings
+# accessible in templates.
+register_setting(
+    name="TEMPLATE_ACCESSIBLE_SETTINGS",
+    description=_("Sequence of setting names available within templates."),
+    editable=False,
+    default=("SHOP_CARD_TYPES", "SHOP_CHECKOUT_STEPS_SPLIT",
+             "SHOP_PRODUCT_SORT_OPTIONS",),
+    append=True,
+)
+
+
+##########################################
+#  Remaning settings are all defined by  #
+#  Cartridge, prefixed with "SHOP_".     #
+##########################################
+
 register_setting(
     name="SHOP_CARD_TYPES",
     description="Sequence of available credit card types for payment.",
@@ -18,13 +78,6 @@ register_setting(
     description="Number of minutes of inactivity until carts are abandoned.",
     editable=False,
     default=30,
-)
-
-register_setting(
-    name="SHOP_CHECKOUT_ACCOUNT_ENABLED",
-    description="If True, users can create a login for the checkout process.",
-    editable=False,
-    default=True,
 )
 
 register_setting(
@@ -180,25 +233,4 @@ register_setting(
         (_("Least expensive"), "unit_price"),
         (_("Most expensive"), "-unit_price"),
     ),
-)
-
-register_setting(
-    name="SSL_FORCE_URL_PREFIXES",
-    description="Sequence of URL prefixes that will be forced to run over "
-                "SSL when ``SSL_ENABLED`` is ``True``. i.e. "
-                "('/admin', '/example') would force all URLs beginning with "
-                "/admin or /example to run over SSL.",
-    editable=False,
-    default=("/shop/checkout", "/shop/account"),
-    append=True,
-)
-
-register_setting(
-    name="TEMPLATE_ACCESSIBLE_SETTINGS",
-    description=_("Sequence of setting names available within templates."),
-    editable=False,
-    default=("LOGIN_URL", "SHOP_CHECKOUT_ACCOUNT_ENABLED", "SHOP_CARD_TYPES",
-             "SHOP_CHECKOUT_STEPS_SPLIT", "SHOP_PRODUCT_SORT_OPTIONS",
-    ),
-    append=True,
 )
