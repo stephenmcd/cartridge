@@ -117,6 +117,7 @@ Sites Using Cartridge
   * `Ripe Maternity`_
   * `Cotton On`_
   * `Coopers Store`_
+  * `Sheer Ethic`_
 
 .. _`Django`: http://djangoproject.com/
 .. _`BSD licensed`: http://www.linfo.org/bsdlicense.html
@@ -134,3 +135,4 @@ Sites Using Cartridge
 .. _`Ripe Maternity`: http://www.ripematernity.com/
 .. _`Cotton On`: http://shop.cottonon.com/
 .. _`Coopers Store`: http://store.coopers.com.au/
+.. _`Sheer Ethic`: http://sheerethic.com/
