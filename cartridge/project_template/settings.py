@@ -1,11 +1,4 @@
 
-# Allow the development version of Mezzanine to be picked up.
-import os
-import sys
-sys.path.insert(0, os.path.join("..", "..", "..", "mezzanine"))
-from mezzanine.project_template.settings import *
-
-
 ######################
 # CARTRIDGE SETTINGS #
 ######################
@@ -300,32 +293,79 @@ TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "templates"),)
 # APPLICATIONS #
 ################
 
-# django.contrib.sites should be before cartridge.shop to avoid a
-# foreign key error when installing the test fixtures with Postgres,
-# and cartridge.shop should be before mezzanine.core so that the
-# shop's base template is loaded over mezzanine's.
-
-INSTALLED_APPS = list(INSTALLED_APPS)
-INSTALLED_APPS.remove("django.contrib.sites")
-INSTALLED_APPS = tuple(INSTALLED_APPS)
-INSTALLED_APPS = ("django.contrib.sites", "cartridge.shop") + INSTALLED_APPS
+INSTALLED_APPS = (
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.redirects",
+    "django.contrib.sessions",
+    "django.contrib.sites",
+    "django.contrib.sitemaps",
+    "django.contrib.staticfiles",
+    "cartridge.shop",
+    "mezzanine.boot",
+    "mezzanine.conf",
+    "mezzanine.core",
+    "mezzanine.generic",
+    "mezzanine.blog",
+    "mezzanine.forms",
+    "mezzanine.pages",
+    "mezzanine.galleries",
+    "mezzanine.twitter",
+    #"mezzanine.mobile",
+)
 
 # List of processors used by RequestContext to populate the context.
 # Each one should be a callable that takes the request object as its
 # only parameter and returns a dictionary to add to the context.
-
-# Just use those imported from Mezzanine
-# TEMPLATE_CONTEXT_PROCESSORS = tuple(TEMPLATE_CONTEXT_PROCESSORS) + (
-# )
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.static",
+    "django.core.context_processors.media",
+    "django.core.context_processors.request",
+    "mezzanine.conf.context_processors.settings",
+)
 
 # List of middleware classes to use. Order is important; in the request phase,
 # this middleware classes will be applied in the order given, and in the
 # response phase the middleware will be applied in reverse order.
-
-MIDDLEWARE_CLASSES = tuple(MIDDLEWARE_CLASSES) + (
-    "cartridge.shop.middleware.ShopMiddleware",
+MIDDLEWARE_CLASSES = (
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.redirects.middleware.RedirectFallbackMiddleware",
+    "mezzanine.core.middleware.DeviceAwareUpdateCacheMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "mezzanine.core.middleware.TemplateForDeviceMiddleware",
+    "mezzanine.core.middleware.DeviceAwareFetchFromCacheMiddleware",
+    "mezzanine.core.middleware.AdminLoginInterfaceSelectorMiddleware",
     "mezzanine.core.middleware.SSLRedirectMiddleware",
+    "cartridge.shop.middleware.ShopMiddleware",
 )
+
+# Store these package names here as they may change in the future since
+# at the moment we are using custom forks of them.
+PACKAGE_NAME_FILEBROWSER = "filebrowser_safe"
+PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
+
+
+#########################
+# OPTIONAL APPLICATIONS #
+#########################
+
+# These will be added to ``INSTALLED_APPS``, only if available.
+OPTIONAL_APPS = (
+    "debug_toolbar",
+    "django_extensions",
+    PACKAGE_NAME_FILEBROWSER,
+    PACKAGE_NAME_GRAPPELLI,
+)
+
+DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
+
 
 ##################
 # LOCAL SETTINGS #
