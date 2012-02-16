@@ -30,9 +30,10 @@ def default_billship_handler(request, order_form):
     ``cartridge.shop.utils.set_shipping``. The Cart object is also
     accessible via ``request.cart``
     """
-    settings.use_editable()
-    set_shipping(request, _("Flat rate shipping"),
-                 settings.SHOP_DEFAULT_SHIPPING_VALUE)
+    if not request.session.get('free_shipping'):
+        settings.use_editable()
+        set_shipping(request, _("Flat rate shipping"),
+                    settings.SHOP_DEFAULT_SHIPPING_VALUE)
 
 
 def default_payment_handler(request, order_form, order):
