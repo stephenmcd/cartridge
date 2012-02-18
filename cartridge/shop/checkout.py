@@ -111,8 +111,9 @@ CHECKOUT_STEP_FIRST = CHECKOUT_STEP_PAYMENT = CHECKOUT_STEP_LAST = 1
 if settings.SHOP_CHECKOUT_STEPS_SPLIT:
     CHECKOUT_STEPS[0].update({"url": "billing-shipping",
                               "title": _("Address")})
-    CHECKOUT_STEPS.append({"template": "payment", "url": "payment",
-                           "title": _("Payment")})
+    if settings.SHOP_PAYMENT_STEP_ENABLED:
+        CHECKOUT_STEPS.append({"template": "payment", "url": "payment",
+                                "title": _("Payment")})
     CHECKOUT_STEP_PAYMENT = CHECKOUT_STEP_LAST = 2
 if settings.SHOP_CHECKOUT_STEPS_CONFIRMATION:
     CHECKOUT_STEPS.append({"template": "confirmation", "url": "confirmation",

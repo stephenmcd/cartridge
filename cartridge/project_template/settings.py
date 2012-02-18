@@ -27,6 +27,9 @@
 # completion.
 # SHOP_CHECKOUT_STEPS_CONFIRMATION = True
 
+# If False, there is no payment step on the checkout process.
+# SHOP_PAYMENT_STEP_ENABLED = True
+
 # Controls the formatting of monetary values accord to the locale
 # module in the python standard library. If an empty string is
 # used, will fall back to the system's locale.

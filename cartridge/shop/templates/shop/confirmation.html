@@ -24,7 +24,7 @@
 	    {% endfor %}
 	</ul>
 </fieldset>
-
+{% if settings.SHOP_PAYMENT_STEP_ENABLED %}
 {% comment %}
 <br clear="all">
 <fieldset class="confirmation">
@@ -49,6 +49,7 @@
 	</ul>
 </fieldset>
 {% endcomment %}
+{% endif %}
 <br clear="all">
 
 {% for field in form %}{{ field }}{% endfor %}
