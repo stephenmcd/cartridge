@@ -318,6 +318,9 @@ class OrderForm(FormsetForm, DiscountForm):
             elif step == checkout.CHECKOUT_STEP_PAYMENT:
                 # Hide the non-cc fields for payment if steps are split.
                 hidden = lambda f: not f.startswith("card_")
+        elif not settings.SHOP_PAYMENT_STEP_ENABLED:
+            # Hide all the cc fields if payment step is not enabled.
+            hidden = lambda f: f.startswith("card_")
         if settings.SHOP_CHECKOUT_STEPS_CONFIRMATION and last:
             # Hide all fields for the confirmation step.
             hidden = lambda f: True
