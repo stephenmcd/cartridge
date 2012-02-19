@@ -8,11 +8,10 @@
 
 {% block fields %}
 {% if request.cart.has_items %}
-
-{% if not request.user.is_authenticated and settings.SHOP_CHECKOUT_ACCOUNT_ENABLED %}
-<p class="checkout-account">
-	If you have an existing account or would like to create one, please
-    <a href="{{ settings.LOGIN_URL }}?next={{ request.path }}">log in or sign up</a>.
+{% if not request.user.is_authenticated and settings.ACCOUNTS_ENABLED %}
+<p>
+If you have an existing account or would like to create one, please
+<a href="{{ settings.LOGIN_URL }}?next={{ request.path }}">log in or sign up</a>.
 </p>
 {% endif %}
 
@@ -26,13 +25,13 @@
 	{% fields_for form.same_billing_shipping_field %}
 	<div id="shipping_fields">{% fields_for form.shipping_detail_fields %}</div>
 	{% fields_for form.additional_instructions_field %}
+    {% fields_for form.remember_field %}
 </fieldset>
 
 {% if not settings.SHOP_CHECKOUT_STEPS_SPLIT %}
 {% include "shop/includes/payment_fields.html" %}
 {% endif %}
 
-{% fields_for form.remember_field %}
 {% fields_for form.other_fields %}
 
 {% endif %}

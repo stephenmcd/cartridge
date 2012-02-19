@@ -34,10 +34,10 @@
 
 {% if images %}
 {% spaceless %}
-<ul id="product-images-large" class="media-grid">
+<ul id="product-images-large" class="thumbnails">
     {% for image in images %}
     <li id="image-{{ image.id }}-large"{% if not forloop.first %}style="display:none;"{% endif %}>
-    	<a class="product-image-large" rel="#image-full-{{ image.id }}" href="{{ MEDIA_URL }}{{ image.file }}">
+    	<a class="product-image-large thumbnail" rel="#image-full-{{ image.id }}" href="{{ MEDIA_URL }}{{ image.file }}">
             <img alt="{{ image.description }}" src="{{ MEDIA_URL }}{% thumbnail image.file 0 300 %}">
         </a>
         <div class="product-image-full" style="display:none;" id="image-full-{{ image.id }}">
@@ -48,10 +48,10 @@
 </ul>
 
 {% if images|length != 1 %}
-<ul id="product-images-thumb" class="media-grid">
+<ul id="product-images-thumb" class="thumbnails">
 	{% for image in images %}
 	<li>
-        <a id="image-{{ image.id }}" href="{{ MEDIA_URL }}{{ image.file }}">
+        <a class="thumbnail" id="image-{{ image.id }}" href="{{ MEDIA_URL }}{{ image.file }}">
             <img alt="{{ image.description }}" src="{{ MEDIA_URL }}{% thumbnail image.file 75 75 %}">
         </a>
     </li>
@@ -85,12 +85,14 @@
 	</li>
 	{% endfor %}
 </ul>
-<form method="post" id="add-cart">
+<form method="post" id="add-cart" class="form-horizontal form-shop">
     {% csrf_token %}
     {% fields_for add_product_form %}
-    <div class="actions">
-        <input type="submit" class="btn primary large" name="add_cart" value="{% trans "Buy" %}">
-        <input type="submit" class="btn large" name="add_wishlist" value="{% trans "Save for later" %}">
+    <div class="form-actions clearfix">
+        <div class="form-actions-wrap">
+        <input type="submit" class="btn btn-primary btn-large" name="add_cart" value="{% trans "Buy" %}">
+        <input type="submit" class="btn btn-large" name="add_wishlist" value="{% trans "Save for later" %}">
+        </div>
     </div>
 </form>
 {% else %}

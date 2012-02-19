@@ -1,29 +1,29 @@
 {% extends "base.html" %}
 {% load mezzanine_tags shop_tags i18n %}
 
-{% block meta_title %}{% trans "Your cart" %}{% endblock %}
-{% block title %}{% trans "Your cart" %}{% endblock %}
+{% block meta_title %}{% trans "Your Cart" %}{% endblock %}
+{% block title %}{% trans "Your Cart" %}{% endblock %}
 
 {% block breadcrumb_menu %}
 {{ block.super }}
-<li>{% trans "Your cart" %}</li>
+<li>{% trans "Your Cart" %}</li>
 {% endblock %}
 
 {% block main %}
 {% if request.cart.has_items %}
-<form method="post">
+<form method="post" class="form-cart form-shop">
 {% csrf_token %}
 {% for error in cart_formset.errors %}
 {% if error.values.0 %}{{ error.values.0 }}{% endif %}
 {% endfor %}
 {{ cart_formset.management_form }}
-<table class="zebra-striped cart">
+<table class="table table-striped">
 	<tr>
 		<th colspan="2" class="left">{% trans "Item" %}</th>
 		<th>{% trans "Unit Price" %}</th>
 		<th class="center">{% trans "Qty" %}</th>
 		<th>{% trans "Price" %}</th>
-		<th>{% trans "Remove?" %}</th>
+		<th class="center">{% trans "Remove?" %}</th>
 	</tr>
     {% for form in cart_formset.forms %}
     {% with form.instance as item %}
@@ -50,16 +50,13 @@
 		<td colspan="5">{% order_totals %}</td>
 		<td>&nbsp;</td>
 	</tr>
-	<tr>
-		<td colspan="6" class="actions">
-            <a href="{% url shop_checkout %}" class="btn primary large">
-                {% trans "Go to Checkout" %}
-            </a>
-            <input type="submit" name="update_cart"
-                class="btn large" value="{% trans "Update cart" %}">
-		</td>
-	</tr>
 </table>
+<div class="form-actions clearfix">
+    <div class="form-actions-wrap">
+    <a href="{% url shop_checkout %}" class="btn btn-primary btn-large">{% trans "Go to Checkout" %}</a>
+    <input type="submit" name="update_cart" class="btn btn-large" value="{% trans "Update Cart" %}">
+    </div>
+</div>
 </form>
 
 {% if discount_form %}
@@ -104,6 +101,6 @@
 {% endwith %}
 
 {% else %}
-<p>{% trans "Your cart is empty." %}</p>
+<p>{% trans "Your Cart is empty." %}</p>
 {% endif %}
 {% endblock %}
