@@ -111,6 +111,14 @@ register_setting(
 )
 
 register_setting(
+    name="SHOP_PAYMENT_STEP_ENABLED",
+    label=_("Payment Enabled"),
+    description="If False, there is no payment step on the checkout process.",
+    editable=True,
+    default=True,
+)
+
+register_setting(
     name="SHOP_CURRENCY_LOCALE",
     label=_("Currency Locale"),
     description="Controls the formatting of monetary values accord to "
