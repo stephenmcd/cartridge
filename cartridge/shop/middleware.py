@@ -4,7 +4,7 @@ from mezzanine.conf import settings
 from cartridge.shop.models import Cart
 
 
-class ShopMiddleware(object):
+class SSLRedirect(object):
 
     def __init__(self):
         old = ("SHOP_SSL_ENABLED", "SHOP_FORCE_HOST", "SHOP_FORCE_SSL_VIEWS")
@@ -22,10 +22,12 @@ class ShopMiddleware(object):
                     "MIDDLEWARE_CLASSES." % ", ".join(old))
                 break
 
+
+class ShopMiddleware(SSLRedirect):
+    """
+    Adds cart and wishlist attributes to the current request.
+    """
     def process_request(self, request):
-        """
-        Adds cart and wishlist attributes to the current request.
-        """
         request.cart = Cart.objects.from_request(request)
         wishlist = request.COOKIES.get("wishlist", "").split(",")
         if not wishlist[0]:
