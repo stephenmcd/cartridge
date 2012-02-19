@@ -7,7 +7,7 @@
 #category .thumbnails h6 {color:#777; height:50px; margin:10px 0 5px 0; border-bottom:1px dashed #ddd;}
 #category .thumbnails a {width:100px; height:200px; color:#666; padding:20px;}
 #category .thumbnails a:hover {text-decoration:none;}
-#category .thumbnails .placeholder {width:100px; height:100px; background:#eee;}
+#category .thumbnails .placeholder {width:100px; height:100px; background:rgba(220,220,220, 0.1);}
 .old-price {text-decoration:line-through; display:block; color:#ccc; margin-bottom:3px;}
 #product-images-thumb li {display:inline; margin-right:-10px;}
 .product-image-full {background:#fff; padding:20px;}
@@ -39,7 +39,7 @@
 .checkout-panel {float:right; margin:0px 30px 0 0;}
 .checkout-panel li {border-bottom:1px dashed #eee; padding:10px 0; color:#999; line-height:15px;}
 .checkout-panel img {float:left; margin-right:10px;}
-.checkout-panel .price {float:right; line-height:20px; color:#000;}
+.checkout-panel .price {float:right; line-height:20px;}
 .checkout-panel .btn {float:right; margin-top:15px;}
 .checkout-panel .order-totals {text-align:right;}
 .order-totals label {margin-right:10px; display:inline;}
@@ -56,7 +56,7 @@
 #checkout-form .form-actions input {float:right;}
 #checkout-form legend {text-indent:170px;}
 #checkout-form label {padding:4px 15px;}
-#checkout-form fieldset {background:#fcfcfc; padding-bottom:10px; margin-bottom:20px;}
+#checkout-form fieldset {background:rgba(220,220,220, 0.1); padding-bottom:10px; margin-bottom:20px;}
 #checkout-form .control-group input, #checkout-form textarea {width:60%;}
 #id_card_ccv {width:50px !important;}
 
