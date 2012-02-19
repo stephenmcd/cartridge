@@ -114,7 +114,7 @@ if settings.SHOP_CHECKOUT_STEPS_SPLIT:
     if settings.SHOP_PAYMENT_STEP_ENABLED:
         CHECKOUT_STEPS.append({"template": "payment", "url": "payment",
                                 "title": _("Payment")})
-    CHECKOUT_STEP_PAYMENT = CHECKOUT_STEP_LAST = 2
+        CHECKOUT_STEP_PAYMENT = CHECKOUT_STEP_LAST = 2
 if settings.SHOP_CHECKOUT_STEPS_CONFIRMATION:
     CHECKOUT_STEPS.append({"template": "confirmation", "url": "confirmation",
                            "title": _("Confirmation")})
