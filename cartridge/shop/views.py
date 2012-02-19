@@ -192,7 +192,8 @@ def checkout_steps(request):
             sensitive_card_fields = ("card_number", "card_expiry_month",
                                      "card_expiry_year", "card_ccv")
             for field in sensitive_card_fields:
-                del request.session["order"][field]
+                if field in request.session["order"]:
+                    del request.session["order"][field]
 
             # FIRST CHECKOUT STEP - handle shipping and discount code.
             if step == checkout.CHECKOUT_STEP_FIRST:
