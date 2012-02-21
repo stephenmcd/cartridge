@@ -160,7 +160,7 @@ register_setting(
         "is called on submit of the billing/shipping checkout step. This "
         "is where shipping calculation can be performed and set using the "
         "function ``cartridge.shop.utils.set_shipping``.",
-    editable=True,
+    editable=False,
     default="cartridge.shop.checkout.default_billship_handler",
 )
 
@@ -171,7 +171,7 @@ register_setting(
         "is called once an order is successful and all of the order "
         "object's data has been created. This is where any custom order "
         "processing should be implemented.",
-    editable=True,
+    editable=False,
     default="cartridge.shop.checkout.default_order_handler",
 )
 
@@ -181,7 +181,7 @@ register_setting(
     description="Dotted package path and class name of the function that "
         "is called on submit of the payment checkout step. This is where "
         "integration with a payment gateway should be implemented.",
-    editable=True,
+    editable=False,
     default="cartridge.shop.checkout.default_payment_handler",
 )
 
