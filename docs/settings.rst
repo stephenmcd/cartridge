@@ -14,13 +14,6 @@ Number of minutes of inactivity until carts are abandoned.
 
 Default: ``30``
 
-``SHOP_CHECKOUT_ACCOUNT_ENABLED``
----------------------------------
-
-If True, users can create a login for the checkout process.
-
-Default: ``True``
-
 ``SHOP_CHECKOUT_ACCOUNT_REQUIRED``
 ----------------------------------
 
@@ -77,20 +70,6 @@ Can discount codes be entered on the first checkpout step.
 
 Default: ``True``
 
-``SHOP_FORCE_HOST``
--------------------
-
-Host name that the site should always be accessed via that matches the SSL certificate.
-
-Default: ``''``
-
-``SHOP_FORCE_SSL_VIEWS``
-------------------------
-
-Sequence of view names that will be forced to run over SSL when SSL_ENABLED is True.
-
-Default: ``('shop_checkout', 'shop_complete', 'shop_account')``
-
 ``SHOP_HANDLER_BILLING_SHIPPING``
 ---------------------------------
 
@@ -140,6 +119,13 @@ Sequence of value/name pairs for order statuses.
 
 Default: ``((1, u'Unprocessed'), (2, u'Processed'))``
 
+``SHOP_PAYMENT_STEP_ENABLED``
+-----------------------------
+
+If False, there is no payment step on the checkout process.
+
+Default: ``False``
+
 ``SHOP_PER_PAGE_CATEGORY``
 --------------------------
 
@@ -153,10 +139,3 @@ Default: ``12``
 Sequence of description/field+direction pairs defining the options available for sorting a list of products.
 
 Default: ``((u'Recently added', '-date_added'), (u'Highest rated', '-rating_average'), (u'Least expensive', 'unit_price'), (u'Most expensive', '-unit_price'))``
-
-``SHOP_SSL_ENABLED``
---------------------
-
-If True, users will be automatically redirect to HTTPS for the checkout process.
-
-Default: ``False``
