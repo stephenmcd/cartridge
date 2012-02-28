@@ -1,3 +1,5 @@
+.. image:: https://secure.travis-ci.org/stephenmcd/cartridge.png?branch=master
+
 ========
 Overview
 ========
