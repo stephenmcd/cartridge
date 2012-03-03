@@ -124,7 +124,7 @@ Default: ``((1, u'Unprocessed'), (2, u'Processed'))``
 
 If False, there is no payment step on the checkout process.
 
-Default: ``False``
+Default: ``True``
 
 ``SHOP_PER_PAGE_CATEGORY``
 --------------------------
