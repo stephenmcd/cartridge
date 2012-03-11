@@ -1,5 +1,6 @@
 import urllib2
 
+from django.core.exceptions import ImproperlyConfigured
 from django.utils.http import urlencode
 from mezzanine.conf import settings
 
@@ -8,11 +9,13 @@ from cartridge.shop.checkout import CheckoutError
 
 AUTH_NET_LIVE = 'https://secure.authorize.net/gateway/transact.dll'
 AUTH_NET_TEST = 'https://test.authorize.net/gateway/transact.dll'
-# replace this with your authroize.net login
-AUTH_NET_LOGIN = settings.AUTH_NET_LIVE
-# replace with your transaction key
-AUTH_NET_TRANS_KEY = settings.AUTH_NET_TRANS_KEY
-
+try:
+    AUTH_NET_LOGIN = settings.AUTH_NET_LOGIN
+    AUTH_NET_TRANS_KEY = settings.AUTH_NET_TRANS_KEY
+except AttributeError:
+    raise ImproperlyConfigured("You need to define AUTH_NET_LOGIN and "
+                               "AUTH_NET_TRANS_KEY in your settings module "
+                               "to use the authorizenet payment processor.")
 
 def process(request, order_form, order):
     """
