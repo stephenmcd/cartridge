@@ -17,6 +17,7 @@ except AttributeError:
                                "AUTH_NET_TRANS_KEY in your settings module "
                                "to use the authorizenet payment processor.")
 
+
 def process(request, order_form, order):
     """
     Raise cartridge.shop.checkout.CheckoutError("error message") if
