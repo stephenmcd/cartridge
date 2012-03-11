@@ -1,3 +1,14 @@
+Version 0.4.3 (Mar 12, 2012)
+----------------------------
+
+  * Fixed settings names in cartridge.shop.payment.authorizenet and added a clearer error when they're not defined - Stephen McDonald
+  * Fixed card year validation - year wasn't being returned - Stephen McDonald
+
+Version 0.4.2 (Mar 06, 2012)
+----------------------------
+
+  * Version bump to 0.4.2 - Stephen McDonald
+
 Version 0.4.1 (Mar 06, 2012)
 ----------------------------
 
