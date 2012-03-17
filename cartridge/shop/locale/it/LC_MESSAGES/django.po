@@ -1,22 +1,21 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # Nicola Larosa <transifex@teknico.net>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: Cartridge\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-11 20:35-0430\n"
-"PO-Revision-Date: 2012-02-20 22:26+0000\n"
+"Report-Msgid-Bugs-To: https://github.com/stephenmcd/cartridge/issues\n"
+"POT-Creation-Date: 2012-03-17 10:34-0430\n"
+"PO-Revision-Date: 2012-03-15 14:57+0000\n"
 "Last-Translator: Nicola Larosa <transifex@teknico.net>\n"
-"Language-Team: Italian (http://www.transifex.net/projects/p/cartridge/"
-"language/it/)\n"
-"Language: it\n"
+"Language-Team: Italian (http://www.transifex.net/projects/p/cartridge/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #: admin.py:28
@@ -85,7 +84,7 @@ msgstr "Conferma"
 
 #: defaults.py:27
 msgid "Controls the ordering and grouping of the admin menu."
-msgstr ""
+msgstr "Controlla ordine e raggruppamento del menu di amministrazione."
 
 #: defaults.py:30 management/commands/product_db.py:31
 msgid "Content"
@@ -93,29 +92,27 @@ msgstr "Contenuto"
 
 #: defaults.py:31
 msgid "Media Library"
-msgstr ""
+msgstr "Catalogo Media"
 
 #: defaults.py:32
 msgid "Shop"
-msgstr ""
+msgstr "Negozio"
 
 #: defaults.py:34
 msgid "Site"
-msgstr ""
+msgstr "Sito"
 
 #: defaults.py:35
 msgid "Users"
-msgstr ""
+msgstr "Utenti"
 
 #: defaults.py:56
 msgid "Sequence of setting names available within templates."
-msgstr ""
-"Sequence dei nomi di configurazione disponibili all'interno dei template."
+msgstr "Sequence dei nomi di configurazione disponibili all'interno dei template."
 
 #: defaults.py:115
-#, fuzzy
 msgid "Payment Enabled"
-msgstr "Gestore dei pagamenti"
+msgstr "Pagamento abilitato"
 
 #: defaults.py:123
 msgid "Currency Locale"
@@ -154,9 +151,8 @@ msgid "Colour"
 msgstr "Colore"
 
 #: defaults.py:201
-#, fuzzy
 msgid "Order Email Subject"
-msgstr "Ordine completo"
+msgstr "Oggetto delle email degli ordini"
 
 #: defaults.py:204
 msgid "Order Receipt"
@@ -233,11 +229,11 @@ msgstr "Nome dell'intestatario della carta"
 #: forms.py:266
 msgid ""
 "A security code, usually the last 3 digits found on the back of your card."
-msgstr ""
+msgstr "Un codice di sicurezza, tipicamente le ultime 3 cifre sul retro della tua carta."
 
 #: forms.py:350
 msgid "A valid expiry date is required."
-msgstr ""
+msgstr "Una data di scadenza valida è obbligatoria."
 
 #: forms.py:458
 msgid "Only one variation can be checked as the default."
@@ -482,11 +478,7 @@ msgid ""
 "Invalid currency locale specified for SHOP_CURRENCY_LOCALE: '%s'. You'll "
 "need to set the locale for your system, or configure the "
 "SHOP_CURRENCY_LOCALE setting in your settings module."
-msgstr ""
-"Specificato un formato locale di valuta non valido per SHOP_CURRENCY_LOCALE: "
-"'%s'. Occorre impostare il formato locale per il proprio sistema, oppure "
-"configurare l'impostazione SHOP_CURRENCY_LOCALE nel proprio modulo delle "
-"impostazioni."
+msgstr "Specificato un formato locale di valuta non valido per SHOP_CURRENCY_LOCALE: '%s'. Occorre impostare il formato locale per il proprio sistema, oppure configurare l'impostazione SHOP_CURRENCY_LOCALE nel proprio modulo delle impostazioni."
 
 #: views.py:47 views.py:92
 msgid "Item added to cart"
@@ -601,20 +593,19 @@ msgid ""
 msgid_plural ""
 "%(cart_quantity)s items\n"
 "    "
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "\n    1 elemento"
+msgstr[1] "%(cart_quantity)s elementi\n    "
 
 #: templates/includes/user_panel.html:8
-#, fuzzy
 msgid "in cart"
-msgstr "Il tuo carrello"
+msgstr "nel carrello"
 
 #: templates/includes/user_panel.html:12 templates/shop/cart.html:56
 msgid "Go to Checkout"
 msgstr "Completa l'acquisto"
 
 #: templates/includes/user_panel.html:16
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "    Wishlist contains 1 item\n"
@@ -622,18 +613,12 @@ msgid ""
 msgid_plural ""
 "\n"
 "    Wishlist contains %(wishlist_count)s items"
-msgstr[0] ""
-"\n"
-"\t\t        La lista dei desideri contiene 1 oggetto\n"
-"\t\t        "
-msgstr[1] ""
-"\n"
-"\t\t        La lista dei desideri contiene %(wishlist_count)s oggetti\n"
-"\t\t        "
+msgstr[0] "\n    La lista dei desideri contiene 1 elemento\n    "
+msgstr[1] "\n    La lista dei desideri contiene %(wishlist_count)s elementi"
 
 #: templates/pages/category.html:25
 msgid "Sort by"
-msgstr ""
+msgstr "Ordina per"
 
 #: templates/pages/category.html:51 templates/shop/cart.html:91
 #: templates/shop/product.html:77 templates/shop/product.html.py:118
@@ -642,7 +627,7 @@ msgstr "In svendita:"
 
 #: templates/pages/category.html:55
 msgid "Coming soon"
-msgstr ""
+msgstr "In arrivo"
 
 #: templates/shop/billing_shipping.html:19 templates/shop/confirmation.html:8
 #: templates/shop/includes/order_details.html:13
@@ -655,7 +640,6 @@ msgstr "Dettagli di consegna"
 
 #: templates/shop/cart.html:4 templates/shop/cart.html.py:5
 #: templates/shop/cart.html:9
-#, fuzzy
 msgid "Your Cart"
 msgstr "Il tuo carrello"
 
@@ -676,7 +660,6 @@ msgid "Remove?"
 msgstr "Rimuovere?"
 
 #: templates/shop/cart.html:57
-#, fuzzy
 msgid "Update Cart"
 msgstr "Aggiorna il carrello"
 
@@ -685,7 +668,6 @@ msgid "You may also like:"
 msgstr "Potresti gradire anche:"
 
 #: templates/shop/cart.html:104
-#, fuzzy
 msgid "Your Cart is empty."
 msgstr "Il tuo carrello è vuoto."
 
@@ -707,7 +689,7 @@ msgstr "Completo"
 
 #: templates/shop/checkout.html:60
 msgid "Please correct the errors below."
-msgstr ""
+msgstr "Correggi gli errori seguenti."
 
 #: templates/shop/checkout.html:71
 msgid "Next"
@@ -724,15 +706,15 @@ msgstr "Il tuo carrello è vuoto."
 #: templates/shop/checkout.html:79
 msgid ""
 "This may be due to your session timing out after a period of inactivity."
-msgstr ""
+msgstr "Ciò potrebbe esser causato dalla tua sessione scaduta dopo un periodo di inattività."
 
 #: templates/shop/checkout.html:80
 msgid "We apologize for the inconvenience."
-msgstr ""
+msgstr "Ci scusiamo per il disturbo."
 
 #: templates/shop/checkout.html:82 templates/shop/wishlist.html:40
 msgid "Continue Shopping"
-msgstr ""
+msgstr "Continua gli acquisti"
 
 #: templates/shop/complete.html:4 templates/shop/complete.html.py:61
 msgid "Order Complete"
@@ -740,18 +722,15 @@ msgstr "Ordine completo"
 
 #: templates/shop/complete.html:75
 msgid "Thank you for shopping with us, your order is complete."
-msgstr ""
+msgstr "Grazie per aver comprato da noi, il tuo ordine è completo."
 
 #: templates/shop/complete.html:76
 msgid "We've sent you a receipt via email."
-msgstr ""
+msgstr "Ti abbiamo inviato la ricevuta per email."
 
 #: templates/shop/complete.html:77
-#, fuzzy
 msgid "You can also view your invoice using one of the links below."
-msgstr ""
-"Il tuo ordine è completo. Ti abbiamo inviato una ricevuta per email e puoi "
-"anche vedere la tua fattura tramite uno dei collegamenti in basso."
+msgstr "Puoi anche vedere la tua fattura tramite uno dei collegamenti in basso."
 
 #: templates/shop/complete.html:81
 msgid "View invoice in your browser"
@@ -780,7 +759,6 @@ msgstr "Prodotti rilevanti"
 
 #: templates/shop/wishlist.html:4 templates/shop/wishlist.html.py:5
 #: templates/shop/wishlist.html:9
-#, fuzzy
 msgid "Your Wishlist"
 msgstr "La tua lista dei desideri"
 
@@ -833,104 +811,5 @@ msgid "Payment Details"
 msgstr "Dettagli di pagamento"
 
 #: templates/shop/includes/payment_fields.html:8
-#, fuzzy
 msgid "Card Expiry"
-msgstr "Scadenza"
-
-#~ msgid "Force Host"
-#~ msgstr "Forza l'host"
-
-#~ msgid "Search Products Per Page"
-#~ msgstr "Cerca prodotti per pagina"
-
-#~ msgid "Number of Paging Links"
-#~ msgstr "Numero di collegamenti di paginazione"
-
-#~ msgid "Relevance"
-#~ msgstr "Rilevanza"
-
-#~ msgid "Enable SSL"
-#~ msgstr "Abilita SSL"
-
-#~ msgid "Card number"
-#~ msgstr "Numero di carta"
-
-#~ msgid "Email Address"
-#~ msgstr "Indirizzo email"
-
-#~ msgid "Password"
-#~ msgstr "Password"
-
-#~ msgid "This email is already registered"
-#~ msgstr "Questa email è già registrata"
-
-#~ msgid "Invalid email/password"
-#~ msgstr "Email o password non valida"
-
-#~ msgid "Your account is inactive"
-#~ msgstr "Il tuo account non è attivo"
-
-#~ msgid "Successfully logged in"
-#~ msgstr "Accesso effettuato correttamente"
-
-#~ msgid "Successfully signed up"
-#~ msgstr "Iscrizione effettuata correttamente"
-
-#~ msgid "Successfully logged out"
-#~ msgstr "Uscita effettuata correttamente"
-
-#~ msgid ""
-#~ "\n"
-#~ "\t\t        Cart contains 1 item:\n"
-#~ "\t\t        "
-#~ msgid_plural ""
-#~ "\n"
-#~ "\t\t        Cart contains %(cart_quantity)s items:\n"
-#~ "\t\t        "
-#~ msgstr[0] ""
-#~ "\n"
-#~ "\t\t        Il carrello contiene 1 oggetto:\n"
-#~ "\t\t        "
-#~ msgstr[1] ""
-#~ "\n"
-#~ "\t\t        Il carrello contiene %(cart_quantity)s oggetti:\n"
-#~ "\t\t        "
-
-#~ msgid "Logged in as: "
-#~ msgstr "Accesso effettuato come:  "
-
-#~ msgid "Log out"
-#~ msgstr "Esci"
-
-#~ msgid "Log in or sign up"
-#~ msgstr "Accedi o iscriviti"
-
-#~ msgid "Powered by"
-#~ msgstr "Realizzato con"
-
-#~ msgid "and"
-#~ msgstr "e"
-
-#~ msgid "View Mobile Site"
-#~ msgstr "Vai al sito mobile"
-
-#~ msgid "Login / Signup"
-#~ msgstr "Accesso / Iscrizione"
-
-#~ msgid "Home"
-#~ msgstr "Pagina principale"
-
-#~ msgid "Account"
-#~ msgstr "Account"
-
-#~ msgid "Login"
-#~ msgstr "Accesso"
-
-#~ msgid "Signup"
-#~ msgstr "Iscrizione"
-
-#~ msgid "Page"
-#~ msgstr "Pagina"
-
-#~ msgid "Buy now"
-#~ msgstr "Compra ora"
+msgstr "Scadenza della carta"
