@@ -1,5 +1,7 @@
+{% extends "email/base.txt" %}
 {% load shop_tags i18n %}
 
+{% block main %}
 {% trans "Dear" %} {{ order.billing_detail_first_name }},
 
 {% trans "Your order has been successful, details are below." %}
@@ -22,5 +24,4 @@
 {% endfor %}
 
 {% order_totals_text %}
-
-http://{{ request.get_host }}
+{% endblock %}

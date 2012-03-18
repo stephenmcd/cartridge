@@ -11,13 +11,13 @@ from django.utils.translation import ugettext as _
 
 from mezzanine.conf import settings
 from mezzanine.utils.importing import import_dotted_path
-from mezzanine.utils.views import render
+from mezzanine.utils.views import render, set_cookie
 
 from cartridge.shop import checkout
 from cartridge.shop.forms import AddProductForm, DiscountForm, CartItemFormSet
 from cartridge.shop.models import Product, ProductVariation, Order
 from cartridge.shop.models import DiscountCode
-from cartridge.shop.utils import recalculate_discount, set_cookie, sign
+from cartridge.shop.utils import recalculate_discount, sign
 
 
 # Set up checkout handlers.

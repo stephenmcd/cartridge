@@ -3,11 +3,13 @@ Checkout process utilities.
 """
 
 from django.utils.translation import ugettext as _
+from django.template.loader import get_template, TemplateDoesNotExist
 
 from mezzanine.conf import settings
+from mezzanine.utils.email import send_mail_template
 
 from cartridge.shop.models import Order
-from cartridge.shop.utils import set_shipping, send_mail_template, sign
+from cartridge.shop.utils import set_shipping, sign
 
 
 class CheckoutError(Exception):
@@ -98,8 +100,17 @@ def send_order_email(request, order):
     order_context = {"order": order, "request": request,
                      "order_items": order.items.all()}
     order_context.update(order.details_as_dict())
+    try:
+        get_template("shop/email/order_receipt.html")
+    except TemplateDoesNotExist:
+        receipt_template = "email/order_receipt"
+    else:
+        receipt_template = "shop/email/order_receipt"
+        from warnings import warn
+        warn("Shop email receipt templates have moved from "
+             "templates/shop/email/ to templates/email/")
     send_mail_template(settings.SHOP_ORDER_EMAIL_SUBJECT,
-        "shop/email/order_receipt", settings.SHOP_ORDER_FROM_EMAIL,
+        receipt_template, settings.SHOP_ORDER_FROM_EMAIL,
         order.billing_detail_email, context=order_context,
         fail_silently=settings.DEBUG)
 
