@@ -1,3 +1,14 @@
+Version 0.4.4 (Mar 19, 2012)
+----------------------------
+
+  * pep8 fix - Stephen McDonald
+  * Update translations from transifex. Forgot to merge changes from Stephen's branch the last time - Sebastián Ramírez Magrí
+  * project_template cleanup - Stephen McDonald
+  * Updated project_template's urls.py in line with Mezzanine's - Stephen McDonald
+  * Exclude static dir from package - Stephen McDonald
+  * Use Mezzanine's set_cookie and send_mail_template - Stephen McDonald
+  * Bump dependencies - Stephen McDonald
+
 Version 0.4.3 (Mar 12, 2012)
 ----------------------------
 
