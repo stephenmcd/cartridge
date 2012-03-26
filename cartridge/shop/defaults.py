@@ -12,7 +12,7 @@ from mezzanine.conf import register_setting
 #  or appended to here, with Cartridge values.   #
 ##################################################
 
-# Default to False in Mezzanine, change to True so checkout can have
+# Default to False in Mezzanine, changed to True so checkout can have
 # an account option.
 register_setting(
     name="ACCOUNTS_ENABLED",
@@ -83,7 +83,7 @@ register_setting(
 register_setting(
     name="SHOP_CHECKOUT_ACCOUNT_REQUIRED",
     description="If True, users must create a login for the checkout process.",
-    editable=False,
+    editable=True,
     default=False,
 )
 
