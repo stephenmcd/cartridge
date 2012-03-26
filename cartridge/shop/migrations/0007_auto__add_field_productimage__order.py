@@ -10,10 +10,11 @@ class Migration(SchemaMigration):
 
         # Adding field 'ProductImage._order'
         db.add_column('shop_productimage', '_order', self.gf('django.db.models.fields.IntegerField')(null=True), keep_default=False)
-        for product in orm.Product.objects.all():
-            for i, image in enumerate(product.images.all().order_by("id")):
-                image._order = i
-                image.save()
+        if not db.dry_run:
+              for product in orm.Product.objects.all():
+                  for i, image in enumerate(product.images.all().order_by("id")):
+                      image._order = i
+                      image.save()
 
     def backwards(self, orm):
 
