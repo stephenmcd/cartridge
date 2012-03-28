@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Cartridge\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-11 20:35-0430\n"
+"POT-Creation-Date: 2012-03-26 22:49-0430\n"
 "PO-Revision-Date: 2011-11-16 10:33+0000\n"
 "Last-Translator: vrialland <vincent.rialland@gmail.com>\n"
 "Language-Team: French (http://www.transifex.net/projects/p/cartridge/team/"
@@ -63,23 +63,23 @@ msgstr "Période de vente"
 msgid "Valid for"
 msgstr "Valide pour"
 
-#: checkout.py:35
+#: checkout.py:37
 msgid "Flat rate shipping"
 msgstr "Forfait de livraison"
 
-#: checkout.py:109
+#: checkout.py:120
 msgid "Details"
 msgstr "Coordonnées"
 
-#: checkout.py:113
+#: checkout.py:124
 msgid "Address"
 msgstr "Adresse"
 
-#: checkout.py:116
+#: checkout.py:127
 msgid "Payment"
 msgstr "Paiement"
 
-#: checkout.py:120
+#: checkout.py:131
 msgid "Confirmation"
 msgstr "Confirmation"
 
@@ -475,7 +475,7 @@ msgstr "Code"
 msgid "Minimum total purchase"
 msgstr "Montant minimal d'achat"
 
-#: utils.py:103
+#: utils.py:67
 #, python-format
 msgid ""
 "Invalid currency locale specified for SHOP_CURRENCY_LOCALE: '%s'. You'll "
@@ -590,6 +590,15 @@ msgstr "Transaction refusée : "
 #: templates/admin/shop/order/change_form.html:9
 msgid "History"
 msgstr "Historique"
+
+#: templates/email/order_receipt.html:5
+msgid "Dear"
+msgstr "Cher"
+
+#: templates/email/order_receipt.html:6
+msgid "Your order has been successful, details are below."
+msgstr ""
+"Votre commande s'est déroulée avec succès, voyez les détails ci-dessous."
 
 #: templates/includes/user_panel.html:5
 #, python-format
@@ -786,15 +795,6 @@ msgstr "Supprimer"
 #: templates/shop/wishlist.html:38
 msgid "Your wishlist is empty."
 msgstr "Votre liste de voeux est vide."
-
-#: templates/shop/email/order_receipt.html:3
-msgid "Dear"
-msgstr "Cher"
-
-#: templates/shop/email/order_receipt.html:5
-msgid "Your order has been successful, details are below."
-msgstr ""
-"Votre commande s'est déroulée avec succès, voyez les détails ci-dessous."
 
 #: templates/shop/includes/order_details.html:5
 msgid "Order ID:"
