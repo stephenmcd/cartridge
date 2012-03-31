@@ -2,7 +2,7 @@
 from __future__ import with_statement
 import os
 
-exclude = ["cartridge/project_template/cartridge.db",
+exclude = ["cartridge/project_template/dev.db",
            "cartridge/project_template/local_settings.py"]
 exclude = dict([(e, None) for e in exclude])
 for e in exclude:
@@ -38,7 +38,7 @@ try:
         packages=find_packages(),
 
         install_requires=[
-#            "mezzanine >= 1.0.0",
+            "mezzanine >= 1.0.8",
             "pisa >= 3.0.33",
         ],
 

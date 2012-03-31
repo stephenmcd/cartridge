@@ -348,6 +348,7 @@ class OrderForm(FormsetForm, DiscountForm):
         now = datetime.now()
         if year == now.year and month < now.month:
             raise forms.ValidationError(_("A valid expiry date is required."))
+        return str(year)
 
     def clean(self):
         """
