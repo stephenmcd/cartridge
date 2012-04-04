@@ -1,21 +1,22 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # Hilton Medeiros <medeiros.hilton@gmail.com>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: Cartridge\n"
-"Report-Msgid-Bugs-To: https://github.com/stephenmcd/cartridge/issues\n"
-"POT-Creation-Date: 2012-03-26 22:49-0430\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-04-03 20:25-0430\n"
 "PO-Revision-Date: 2012-03-15 14:57+0000\n"
 "Last-Translator: Hilton Medeiros <medeiros.hilton@gmail.com>\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.net/projects/p/cartridge/language/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.net/projects/p/"
+"cartridge/language/pt_BR/)\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
 #: admin.py:28
@@ -229,7 +230,9 @@ msgstr "Nome do titular do cartão"
 #: forms.py:266
 msgid ""
 "A security code, usually the last 3 digits found on the back of your card."
-msgstr "Um código de segurança, geralmente os últimos 3 dígitos localizados na parte de trás do seu cartão."
+msgstr ""
+"Um código de segurança, geralmente os últimos 3 dígitos localizados na parte "
+"de trás do seu cartão."
 
 #: forms.py:350
 msgid "A valid expiry date is required."
@@ -478,7 +481,10 @@ msgid ""
 "Invalid currency locale specified for SHOP_CURRENCY_LOCALE: '%s'. You'll "
 "need to set the locale for your system, or configure the "
 "SHOP_CURRENCY_LOCALE setting in your settings module."
-msgstr "Locale da moeda inválido para SHOP_CURRENCY_LOCALE: '%s'. Você precisará definir o locale para seu sistema, ou definir a variável SHOP_CURRENCY_LOCALE no seu módulo settings."
+msgstr ""
+"Locale da moeda inválido para SHOP_CURRENCY_LOCALE: '%s'. Você precisará "
+"definir o locale para seu sistema, ou definir a variável "
+"SHOP_CURRENCY_LOCALE no seu módulo settings."
 
 #: views.py:47 views.py:92
 msgid "Item added to cart"
@@ -585,13 +591,37 @@ msgstr "Transação recusada: "
 msgid "History"
 msgstr "Histórico"
 
-#: templates/email/order_receipt.html:5
+#: templates/email/order_receipt.html:5 templates/email/order_receipt.txt:5
 msgid "Dear"
 msgstr "Querido(a)"
 
-#: templates/email/order_receipt.html:6
+#: templates/email/order_receipt.html:6 templates/email/order_receipt.txt:7
 msgid "Your order has been successful, details are below."
 msgstr "Seu pedido foi registrado com sucesso; veja detalhes abaixo."
+
+#: templates/email/order_receipt.txt:9
+#: templates/shop/includes/order_details.html:5
+msgid "Order ID:"
+msgstr "ID do Pedido:"
+
+#: templates/email/order_receipt.txt:11
+#, fuzzy
+msgid "Billing Details:"
+msgstr "Detalhes de Cobrança"
+
+#: templates/email/order_receipt.txt:16
+#, fuzzy
+msgid "Shipping Details:"
+msgstr "Detalhes de Envio"
+
+#: templates/email/order_receipt.txt:21
+#, fuzzy
+msgid "Items Ordered:"
+msgstr "Itens Pedidos"
+
+#: templates/email/order_receipt.txt:23
+msgid "each"
+msgstr ""
 
 #: templates/includes/user_panel.html:5
 #, python-format
@@ -601,8 +631,13 @@ msgid ""
 msgid_plural ""
 "%(cart_quantity)s items\n"
 "    "
-msgstr[0] "\n1 item\n    "
-msgstr[1] "%(cart_quantity)s itens\n    "
+msgstr[0] ""
+"\n"
+"1 item\n"
+"    "
+msgstr[1] ""
+"%(cart_quantity)s itens\n"
+"    "
 
 #: templates/includes/user_panel.html:8
 msgid "in cart"
@@ -621,8 +656,12 @@ msgid ""
 msgid_plural ""
 "\n"
 "    Wishlist contains %(wishlist_count)s items"
-msgstr[0] "\n    Lista de desejos contém 1 item"
-msgstr[1] "\n    Lista de desejos contém %(wishlist_count)s itens"
+msgstr[0] ""
+"\n"
+"    Lista de desejos contém 1 item"
+msgstr[1] ""
+"\n"
+"    Lista de desejos contém %(wishlist_count)s itens"
 
 #: templates/pages/category.html:25
 msgid "Sort by"
@@ -714,7 +753,9 @@ msgstr "Seu carrinho está vazio."
 #: templates/shop/checkout.html:79
 msgid ""
 "This may be due to your session timing out after a period of inactivity."
-msgstr "Isto pode ter ocorrido devido a sua sessão ter vencido após um período de inatividade."
+msgstr ""
+"Isto pode ter ocorrido devido a sua sessão ter vencido após um período de "
+"inatividade."
 
 #: templates/shop/checkout.html:80
 msgid "We apologize for the inconvenience."
@@ -778,10 +819,6 @@ msgstr "Remover"
 msgid "Your wishlist is empty."
 msgstr "Sua lista de desejos está vazia."
 
-#: templates/shop/includes/order_details.html:5
-msgid "Order ID:"
-msgstr "ID do Pedido:"
-
 #: templates/shop/includes/order_details.html:10
 msgid "Your Details"
 msgstr "Seus Detalhes:"
@@ -791,18 +828,22 @@ msgid "Items Ordered"
 msgstr "Itens Pedidos"
 
 #: templates/shop/includes/order_totals.html:4
+#: templates/shop/includes/order_totals.txt:2
 msgid "Sub total"
 msgstr "Sub-total"
 
 #: templates/shop/includes/order_totals.html:12
+#: templates/shop/includes/order_totals.txt:4
 msgid "Discount"
 msgstr "Desconto"
 
 #: templates/shop/includes/order_totals.html:23
+#: templates/shop/includes/order_totals.txt:6
 msgid "Shipping"
 msgstr "Frete"
 
 #: templates/shop/includes/order_totals.html:28
+#: templates/shop/includes/order_totals.txt:7
 msgid "Total"
 msgstr "Total"
 

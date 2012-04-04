@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Cartridge\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-11 20:12-0430\n"
+"POT-Creation-Date: 2012-04-03 20:25-0430\n"
 "PO-Revision-Date: 2012-02-20 22:26+0000\n"
 "Last-Translator: Nicola Larosa <transifex@teknico.net>\n"
 "Language-Team: Italian (http://www.transifex.net/projects/p/cartridge/"
@@ -63,23 +63,23 @@ msgstr "Periodo di offerta"
 msgid "Valid for"
 msgstr "Valido per"
 
-#: checkout.py:35
+#: checkout.py:37
 msgid "Flat rate shipping"
 msgstr "Spedizione a prezzo fisso"
 
-#: checkout.py:109
+#: checkout.py:120
 msgid "Details"
 msgstr "Dettagli"
 
-#: checkout.py:113
+#: checkout.py:124
 msgid "Address"
 msgstr "Indirizzo"
 
-#: checkout.py:116
+#: checkout.py:127
 msgid "Payment"
 msgstr "Pagamento"
 
-#: checkout.py:120
+#: checkout.py:131
 msgid "Confirmation"
 msgstr "Conferma"
 
@@ -239,11 +239,11 @@ msgstr ""
 msgid "A valid expiry date is required."
 msgstr ""
 
-#: forms.py:457
+#: forms.py:458
 msgid "Only one variation can be checked as the default."
 msgstr "Una sola variazione può essere selezionata come default."
 
-#: forms.py:470
+#: forms.py:471
 msgid "Please enter a value for only one type of reduction."
 msgstr "Inserire un valore per un solo tipo di riduzione."
 
@@ -476,7 +476,7 @@ msgstr "Codice"
 msgid "Minimum total purchase"
 msgstr "Acquisto minimo totale"
 
-#: utils.py:103
+#: utils.py:67
 #, python-format
 msgid ""
 "Invalid currency locale specified for SHOP_CURRENCY_LOCALE: '%s'. You'll "
@@ -592,6 +592,38 @@ msgstr "Transazione rifiutata: "
 #: templates/admin/shop/order/change_form.html:9
 msgid "History"
 msgstr "Storico"
+
+#: templates/email/order_receipt.html:5 templates/email/order_receipt.txt:5
+msgid "Dear"
+msgstr "Spettabile"
+
+#: templates/email/order_receipt.html:6 templates/email/order_receipt.txt:7
+msgid "Your order has been successful, details are below."
+msgstr "Il tuo ordine ha avuto successo, i dettagli di seguito."
+
+#: templates/email/order_receipt.txt:9
+#: templates/shop/includes/order_details.html:5
+msgid "Order ID:"
+msgstr "ID dell'ordine:"
+
+#: templates/email/order_receipt.txt:11
+#, fuzzy
+msgid "Billing Details:"
+msgstr "Dettagli di addebito"
+
+#: templates/email/order_receipt.txt:16
+#, fuzzy
+msgid "Shipping Details:"
+msgstr "Dettagli di spedizione"
+
+#: templates/email/order_receipt.txt:21
+#, fuzzy
+msgid "Items Ordered:"
+msgstr "Oggetti ordinati"
+
+#: templates/email/order_receipt.txt:23
+msgid "each"
+msgstr ""
 
 #: templates/includes/user_panel.html:5
 #, python-format
@@ -792,18 +824,6 @@ msgstr "Rimuovi"
 msgid "Your wishlist is empty."
 msgstr "La tua lista dei desideri è vuota."
 
-#: templates/shop/email/order_receipt.html:3
-msgid "Dear"
-msgstr "Spettabile"
-
-#: templates/shop/email/order_receipt.html:5
-msgid "Your order has been successful, details are below."
-msgstr "Il tuo ordine ha avuto successo, i dettagli di seguito."
-
-#: templates/shop/includes/order_details.html:5
-msgid "Order ID:"
-msgstr "ID dell'ordine:"
-
 #: templates/shop/includes/order_details.html:10
 msgid "Your Details"
 msgstr "I tuoi dettagli"
@@ -813,18 +833,22 @@ msgid "Items Ordered"
 msgstr "Oggetti ordinati"
 
 #: templates/shop/includes/order_totals.html:4
+#: templates/shop/includes/order_totals.txt:2
 msgid "Sub total"
 msgstr "Subtotale"
 
 #: templates/shop/includes/order_totals.html:12
+#: templates/shop/includes/order_totals.txt:4
 msgid "Discount"
 msgstr "Sconto"
 
 #: templates/shop/includes/order_totals.html:23
+#: templates/shop/includes/order_totals.txt:6
 msgid "Shipping"
 msgstr "Spedizione"
 
 #: templates/shop/includes/order_totals.html:28
+#: templates/shop/includes/order_totals.txt:7
 msgid "Total"
 msgstr "Totale"
 

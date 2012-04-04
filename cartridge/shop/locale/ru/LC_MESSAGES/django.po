@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Cartridge\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-11 20:12-0430\n"
+"POT-Creation-Date: 2012-04-03 20:25-0430\n"
 "PO-Revision-Date: 2011-11-12 02:06+0000\n"
 "Last-Translator: sebasmagri <sebasmagri@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.net/projects/p/cartridge/team/"
@@ -64,23 +64,23 @@ msgstr "Период распродажи"
 msgid "Valid for"
 msgstr "Действительно для"
 
-#: checkout.py:35
+#: checkout.py:37
 msgid "Flat rate shipping"
 msgstr ""
 
-#: checkout.py:109
+#: checkout.py:120
 msgid "Details"
 msgstr "Подробности"
 
-#: checkout.py:113
+#: checkout.py:124
 msgid "Address"
 msgstr "Адрес"
 
-#: checkout.py:116
+#: checkout.py:127
 msgid "Payment"
 msgstr "Оплата"
 
-#: checkout.py:120
+#: checkout.py:131
 msgid "Confirmation"
 msgstr "Подтверждение"
 
@@ -238,11 +238,11 @@ msgstr ""
 msgid "A valid expiry date is required."
 msgstr ""
 
-#: forms.py:457
+#: forms.py:458
 msgid "Only one variation can be checked as the default."
 msgstr "Только одна вариация может быть установлена по-умолчанию."
 
-#: forms.py:470
+#: forms.py:471
 msgid "Please enter a value for only one type of reduction."
 msgstr ""
 
@@ -475,7 +475,7 @@ msgstr "Код"
 msgid "Minimum total purchase"
 msgstr "Минимальная сумма заказа"
 
-#: utils.py:103
+#: utils.py:67
 #, python-format
 msgid ""
 "Invalid currency locale specified for SHOP_CURRENCY_LOCALE: '%s'. You'll "
@@ -586,6 +586,37 @@ msgstr ""
 
 #: templates/admin/shop/order/change_form.html:9
 msgid "History"
+msgstr ""
+
+#: templates/email/order_receipt.html:5 templates/email/order_receipt.txt:5
+msgid "Dear"
+msgstr "Уважаемый"
+
+#: templates/email/order_receipt.html:6 templates/email/order_receipt.txt:7
+msgid "Your order has been successful, details are below."
+msgstr ""
+
+#: templates/email/order_receipt.txt:9
+#: templates/shop/includes/order_details.html:5
+msgid "Order ID:"
+msgstr "Номер заказа:"
+
+#: templates/email/order_receipt.txt:11
+#, fuzzy
+msgid "Billing Details:"
+msgstr "Платежная информация"
+
+#: templates/email/order_receipt.txt:16
+#, fuzzy
+msgid "Shipping Details:"
+msgstr "Информация о доставке"
+
+#: templates/email/order_receipt.txt:21
+msgid "Items Ordered:"
+msgstr ""
+
+#: templates/email/order_receipt.txt:23
+msgid "each"
 msgstr ""
 
 #: templates/includes/user_panel.html:5
@@ -779,18 +810,6 @@ msgstr "Убрать"
 msgid "Your wishlist is empty."
 msgstr "Ваш список желаний пуст."
 
-#: templates/shop/email/order_receipt.html:3
-msgid "Dear"
-msgstr "Уважаемый"
-
-#: templates/shop/email/order_receipt.html:5
-msgid "Your order has been successful, details are below."
-msgstr ""
-
-#: templates/shop/includes/order_details.html:5
-msgid "Order ID:"
-msgstr "Номер заказа:"
-
 #: templates/shop/includes/order_details.html:10
 msgid "Your Details"
 msgstr ""
@@ -800,18 +819,22 @@ msgid "Items Ordered"
 msgstr ""
 
 #: templates/shop/includes/order_totals.html:4
+#: templates/shop/includes/order_totals.txt:2
 msgid "Sub total"
 msgstr ""
 
 #: templates/shop/includes/order_totals.html:12
+#: templates/shop/includes/order_totals.txt:4
 msgid "Discount"
 msgstr "Скидка"
 
 #: templates/shop/includes/order_totals.html:23
+#: templates/shop/includes/order_totals.txt:6
 msgid "Shipping"
 msgstr "Доставка"
 
 #: templates/shop/includes/order_totals.html:28
+#: templates/shop/includes/order_totals.txt:7
 msgid "Total"
 msgstr ""
 
