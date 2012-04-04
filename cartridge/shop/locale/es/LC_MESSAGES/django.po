@@ -632,11 +632,7 @@ msgid_plural ""
 "%(cart_quantity)s items\n"
 "    "
 msgstr[0] ""
-"\n"
-"    1 ítem"
 msgstr[1] ""
-"%(cart_quantity)s ítems\n"
-"    "
 
 #: templates/includes/user_panel.html:8
 msgid "in cart"
