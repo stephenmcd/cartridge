@@ -26,7 +26,7 @@
     <select onchange="location.href = this[this.selectedIndex].value;">
     {% for name, option in settings.SHOP_PRODUCT_SORT_OPTIONS %}
     {% with name|slugify as option_slug %}
-    <option{% if option_slug == products.sort %} selected{% endif %}
+    <option{% if option_slug == products.sort_by %} selected{% endif %}
         value="{{ category.get_absolute_url }}?sort={{ option_slug }}{{ querystring }}">
         {{ name }}
     </option>
