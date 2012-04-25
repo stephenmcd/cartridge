@@ -2,9 +2,7 @@
 <div class="panel">
     {% spaceless %}
     <a href="{% url shop_cart %}">
-    {% blocktrans count request.cart.total_quantity as cart_quantity %}
-    1 item{% plural %}{{ cart_quantity }} items
-    {% endblocktrans %}
+    {% blocktrans count request.cart.total_quantity as cart_quantity %}1 item{% plural %}{{ cart_quantity }} items{% endblocktrans %}
     {% trans "in cart" %}:
     {{ request.cart.total_price|currency }}</a><br>
     {% if request.cart.total_quantity != 0 %}
@@ -13,10 +11,7 @@
     </a><br>
     {% endif %}
     <a href="{% url shop_wishlist %}" class="btn-wishlist">
-    {% blocktrans count request.wishlist|length as wishlist_count %}
-    Wishlist contains 1 item
-    {% plural %}
-    Wishlist contains {{ wishlist_count }} items{% endblocktrans %}</a>
+    {% blocktrans count request.wishlist|length as wishlist_count %}Wishlist contains 1 item{% plural %} Wishlist contains {{ wishlist_count }} items{% endblocktrans %}</a>
     {% if settings.ACCOUNTS_ENABLED %}
     <br>
     {% include "includes/account_panel.html" %}
