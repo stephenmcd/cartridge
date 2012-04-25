@@ -16,7 +16,7 @@ from mezzanine.conf import register_setting
 # an account option.
 register_setting(
     name="ACCOUNTS_ENABLED",
-    description="If True, users can create an account.",
+    description=_("If True, users can create an account."),
     editable=False,
     default=True,
 )
@@ -82,7 +82,8 @@ register_setting(
 
 register_setting(
     name="SHOP_CHECKOUT_ACCOUNT_REQUIRED",
-    description="If True, users must create a login for the checkout process.",
+    label=_("Checkout account required"),
+    description=_("If True, users must create a login for the checkout process."),
     editable=True,
     default=False,
 )
@@ -113,7 +114,7 @@ register_setting(
 register_setting(
     name="SHOP_PAYMENT_STEP_ENABLED",
     label=_("Payment Enabled"),
-    description="If False, there is no payment step on the checkout process.",
+    description=_("If False, there is no payment step on the checkout process."),
     editable=True,
     default=True,
 )
@@ -131,8 +132,7 @@ register_setting(
 register_setting(
     name="SHOP_DEFAULT_SHIPPING_VALUE",
     label=_("Default Shipping Cost"),
-    description="Default cost of shipping when no custom shipping is "
-        "implemented.",
+    description=_("Default cost of shipping when no custom shipping is implemented."),
     editable=True,
     default=10.0,
 )
@@ -140,7 +140,7 @@ register_setting(
 register_setting(
     name="SHOP_DISCOUNT_FIELD_IN_CART",
     label=_("Discount in Cart"),
-    description="Can discount codes be entered on the cart page.",
+    description=_("Can discount codes be entered on the cart page."),
     editable=True,
     default=True,
 )
@@ -148,7 +148,7 @@ register_setting(
 register_setting(
     name="SHOP_DISCOUNT_FIELD_IN_CHECKOUT",
     label=_("Discount in Checkout"),
-    description="Can discount codes be entered on the first checkpout step.",
+    description=_("Can discount codes be entered on the first checkout step."),
     editable=True,
     default=True,
 )
@@ -199,7 +199,7 @@ register_setting(
 register_setting(
     name="SHOP_ORDER_EMAIL_SUBJECT",
     label=_("Order Email Subject"),
-    description="Subject to be used when sending the order receipt email.",
+    description=_("Subject to be used when sending the order receipt email."),
     editable=True,
     default=_("Order Receipt"),
 )
@@ -207,7 +207,7 @@ register_setting(
 register_setting(
     name="SHOP_ORDER_FROM_EMAIL",
     label=_("From Email"),
-    description="Email address that order receipts should be emailed from.",
+    description=_("Email address that order receipts should be emailed from."),
     editable=True,
     default="do_not_reply@%s" % gethostname(),
 )
@@ -225,7 +225,7 @@ register_setting(
 register_setting(
     name="SHOP_PER_PAGE_CATEGORY",
     label=_("Products Per Category Page"),
-    description="Number of products to display per category page.",
+    description=_("Number of products to display per category page."),
     editable=True,
     default=12,
 )
