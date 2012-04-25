@@ -755,3 +755,7 @@ class DiscountCode(Discount):
         elif self.discount_percent is not None:
             return amount / Decimal("100") * self.discount_percent
         return 0
+
+    class Meta:
+        verbose_name = _("Discount code")
+        verbose_name_plural = _("Discount codes")
