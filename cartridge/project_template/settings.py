@@ -203,6 +203,8 @@ TEMPLATE_LOADERS = (
     "django.template.loaders.app_directories.Loader",
 )
 
+AUTHENTICATION_BACKENDS = ("mezzanine.core.auth_backends.MezzanineBackend",)
+
 
 #############
 # DATABASES #
