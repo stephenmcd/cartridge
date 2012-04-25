@@ -10,9 +10,6 @@
 # Sequence of available credit card types for payment.
 # SHOP_CARD_TYPES = ("Mastercard", "Visa", "Diners", "Amex")
 
-# If True, users can create a login for the checkout process.
-# SHOP_CHECKOUT_ACCOUNT_ENABLED = True
-
 # If True, users must create a login for the checkout process.
 # SHOP_CHECKOUT_ACCOUNT_REQUIRED = False
 
@@ -130,12 +127,6 @@
 #
 # BLOG_USE_FEATURED_IMAGE = True
 
-# Turns on accounts for website visitors. Will add the
-# LOGIN_URL/LOGOUT_URL values to urlpatterns, and show login/logout
-# links in templates/includes/user_panel.html. Defaults to False.
-#
-# ACCOUNTS_ENABLED = True
-
 # If ``True``, users will be automatically redirected to HTTPS
 # for the URLs specified by the ``SSL_FORCE_URL_PREFIXES`` setting.
 #
@@ -211,10 +202,6 @@ TEMPLATE_LOADERS = (
     "django.template.loaders.filesystem.Loader",
     "django.template.loaders.app_directories.Loader",
 )
-
-# URLs used for login/logout when ACCOUNTS_ENABLED is set to True.
-LOGIN_URL = "/account/"
-LOGOUT_URL = "/account/logout/"
 
 
 #############
@@ -313,6 +300,7 @@ INSTALLED_APPS = (
     "mezzanine.pages",
     "mezzanine.galleries",
     "mezzanine.twitter",
+    "mezzanine.accounts",
     #"mezzanine.mobile",
 )
 

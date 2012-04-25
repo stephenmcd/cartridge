@@ -8,11 +8,20 @@
 
 {% block fields %}
 {% if request.cart.has_items %}
-{% if not request.user.is_authenticated and settings.ACCOUNTS_ENABLED %}
+{% if not request.user.is_authenticated %}
+{% ifinstalled mezzanine.accounts %}
 <p>
+{% url login as login_url %}
+{% url signup as signup_url %}
+{% with request.path as next %}
+{% blocktrans %}
 If you have an existing account or would like to create one, please
-<a href="{{ settings.LOGIN_URL }}?next={{ request.path }}">log in or sign up</a>.
+<a href="{{ login_url }}?next={{ next }}">log in</a> or
+<a href="{{ signup_url }}?next={{ next }}">sign up</a>.
+{% endblocktrans %}
+{% endwith %}
 </p>
+{% endifinstalled %}
 {% endif %}
 
 <fieldset>

@@ -1,4 +1,4 @@
-{% load i18n shop_tags %}
+{% load i18n shop_tags mezzanine_tags %}
 <div class="panel">
     {% spaceless %}
     <a href="{% url shop_cart %}">
@@ -12,9 +12,9 @@
     {% endif %}
     <a href="{% url shop_wishlist %}" class="btn-wishlist">
     {% blocktrans count request.wishlist|length as wishlist_count %}Wishlist contains 1 item{% plural %} Wishlist contains {{ wishlist_count }} items{% endblocktrans %}</a>
-    {% if settings.ACCOUNTS_ENABLED %}
+    {% ifinstalled mezzanine.accounts %}
     <br>
-    {% include "includes/account_panel.html" %}
-    {% endif %}
+    {% include "accounts/includes/user_panel.html" %}
+    {% endifinstalled %}
     {% endspaceless %}
 </div>
