@@ -69,7 +69,6 @@
         "model": "shop.product",
         "fields": {
             "status": 2,
-            "sale_to": "2015-09-19 17:03:32",
             "available": true,
             "description": "<p>Magic that can't be removed!</p>",
             "title": "Django Pony",
@@ -82,7 +81,6 @@
             "categories": [
                 7
             ],
-            "sale_from": "2009-09-19 17:03:32",
             "site": 1
         }
     },
@@ -130,10 +128,8 @@
         "pk": 1,
         "model": "shop.productvariation",
         "fields": {
-            "sale_to": "2015-09-19 17:03:32",
             "sku": "1",
             "product": 1,
-            "sale_from": "2009-09-19 17:03:32",
             "default": true,
             "image": 1,
             "sale_id": 1,
@@ -147,10 +143,8 @@
         "pk": 2,
         "model": "shop.productvariation",
         "fields": {
-            "sale_to": "2015-09-19 17:03:32",
             "sku": "2",
             "product": 1,
-            "sale_from": "2009-09-19 17:03:32",
             "default": false,
             "image": 1,
             "sale_id": 1,
@@ -164,10 +158,8 @@
         "pk": 3,
         "model": "shop.productvariation",
         "fields": {
-            "sale_to": "2015-09-19 17:03:32",
             "sku": "3",
             "product": 1,
-            "sale_from": "2009-09-19 17:03:32",
             "default": false,
             "image": 1,
             "sale_id": 1,
@@ -181,10 +173,8 @@
         "pk": 4,
         "model": "shop.productvariation",
         "fields": {
-            "sale_to": "2015-09-19 17:03:32",
             "sku": "4",
             "product": 1,
-            "sale_from": "2009-09-19 17:03:32",
             "default": false,
             "image": 2,
             "sale_id": 1,
@@ -198,10 +188,8 @@
         "pk": 5,
         "model": "shop.productvariation",
         "fields": {
-            "sale_to": "2015-09-19 17:03:32",
             "sku": "5",
             "product": 1,
-            "sale_from": "2009-09-19 17:03:32",
             "default": false,
             "image": 2,
             "sale_id": 1,
@@ -215,10 +203,8 @@
         "pk": 6,
         "model": "shop.productvariation",
         "fields": {
-            "sale_to": "2015-09-19 17:03:32",
             "sku": "6",
             "product": 1,
-            "sale_from": "2009-09-19 17:03:32",
             "default": false,
             "image": 2,
             "sale_id": 1,
@@ -232,10 +218,8 @@
         "pk": 7,
         "model": "shop.productvariation",
         "fields": {
-            "sale_to": "2015-09-19 17:03:32",
             "sku": "7",
             "product": 1,
-            "sale_from": "2009-09-19 17:03:32",
             "default": false,
             "image": 3,
             "sale_id": 1,
@@ -249,10 +233,8 @@
         "pk": 8,
         "model": "shop.productvariation",
         "fields": {
-            "sale_to": "2015-09-19 17:03:32",
             "sku": "8",
             "product": 1,
-            "sale_from": "2009-09-19 17:03:32",
             "default": false,
             "image": 3,
             "sale_id": 1,
@@ -266,10 +248,8 @@
         "pk": 9,
         "model": "shop.productvariation",
         "fields": {
-            "sale_to": "2015-09-19 17:03:32",
             "sku": "9",
             "product": 1,
-            "sale_from": "2009-09-19 17:03:32",
             "default": false,
             "image": 3,
             "sale_id": 1,
@@ -283,10 +263,8 @@
         "pk": 10,
         "model": "shop.productvariation",
         "fields": {
-            "sale_to": "2015-09-19 17:03:32",
             "sku": "10",
             "product": 1,
-            "sale_from": "2009-09-19 17:03:32",
             "default": false,
             "image": 4,
             "sale_id": 1,
@@ -300,10 +278,8 @@
         "pk": 11,
         "model": "shop.productvariation",
         "fields": {
-            "sale_to": "2015-09-19 17:03:32",
             "sku": "11",
             "product": 1,
-            "sale_from": "2009-09-19 17:03:32",
             "default": false,
             "image": 4,
             "sale_id": 1,
@@ -317,10 +293,8 @@
         "pk": 12,
         "model": "shop.productvariation",
         "fields": {
-            "sale_to": "2015-09-19 17:03:32",
             "sku": "12",
             "product": 1,
-            "sale_from": "2009-09-19 17:03:32",
             "default": false,
             "image": 4,
             "sale_id": 1,
@@ -334,9 +308,7 @@
         "pk": 1,
         "model": "shop.sale",
         "fields": {
-            "valid_from": "2009-09-19 17:03:32",
             "title": "50% off ponies.",
-            "valid_to": "2015-09-19 17:03:32",
             "products": [
                 1
             ],

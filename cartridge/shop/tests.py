@@ -1,5 +1,5 @@
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 from decimal import Decimal
 from operator import mul
 
@@ -9,6 +9,7 @@ from mezzanine.conf import settings
 from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
 from mezzanine.utils.tests import run_pyflakes_for_package
 from mezzanine.utils.tests import run_pep8_for_package
+from mezzanine.utils.timezone import now
 
 from cartridge.shop.models import Product, ProductOption, ProductVariation
 from cartridge.shop.models import Category, Cart, Order, DiscountCode
@@ -134,8 +135,8 @@ class ShopTests(TestCase):
         self.assertCategoryFilteredProducts(0)
         self._product.variations.all().update(unit_price=TEST_PRICE)
         self.assertCategoryFilteredProducts(1)
-        now, day = datetime.now(), timedelta(days=1)
-        tomorrow, yesterday = now + day, now - day
+        n, d = now(), timedelta(days=1)
+        tomorrow, yesterday = n + d, n - d
         self._product.variations.all().update(unit_price=0,
                                               sale_price=TEST_PRICE,
                                               sale_from=tomorrow)

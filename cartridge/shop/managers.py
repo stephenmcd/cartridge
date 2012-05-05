@@ -6,6 +6,7 @@ from django.db.models import Manager, Q
 from django.utils.datastructures import SortedDict
 
 from mezzanine.conf import settings
+from mezzanine.utils.timezone import now
 
 
 class CartManager(Manager):
@@ -16,14 +17,15 @@ class CartManager(Manager):
         found as well as removing old carts prior to creating a new
         cart.
         """
+        n = now()
         expiry_minutes = timedelta(minutes=settings.SHOP_CART_EXPIRY_MINUTES)
-        expiry_time = datetime.now() - expiry_minutes
+        expiry_time = n - expiry_minutes
         try:
             cart_id = request.session.get("cart", None)
             cart = self.get(last_updated__gte=expiry_time, id=cart_id)
         except self.model.DoesNotExist:
             self.filter(last_updated__lt=expiry_time).delete()
-            cart = self.create()
+            cart = self.create(last_updated=n)
             request.session["cart"] = cart.id
         else:
             cart.save()  # Update timestamp.
@@ -169,9 +171,9 @@ class DiscountCodeManager(Manager):
         Items flagged as active and in valid date range if date(s) are
         specified.
         """
-        now = datetime.now()
-        valid_from = Q(valid_from__isnull=True) | Q(valid_from__lte=now)
-        valid_to = Q(valid_to__isnull=True) | Q(valid_to__gte=now)
+        n = now()
+        valid_from = Q(valid_from__isnull=True) | Q(valid_from__lte=n)
+        valid_to = Q(valid_to__isnull=True) | Q(valid_to__gte=n)
         return self.filter(valid_from, valid_to, active=True)
 
     def get_valid(self, code, cart):
