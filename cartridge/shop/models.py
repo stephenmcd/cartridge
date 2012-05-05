@@ -703,13 +703,13 @@ class Sale(Discount):
                     #
                     # http://dev.mysql.com/
                     # doc/refman/5.0/en/subquery-errors.html
-                    try:
-                        for priced in priced_objects.filter(**extra_filter):
-                            for field, value in update.items():
-                                setattr(priced, field, value)
+                    for priced in priced_objects.filter(**extra_filter):
+                        for field, value in update.items():
+                            setattr(priced, field, value)
+                        try:
                             priced.save()
-                    except Warning:
-                        pass
+                        except Warning:
+                            pass
                 except Warning:
                     pass
 
