@@ -34,7 +34,7 @@ class AddProductForm(forms.Form):
     wishlist.
     """
 
-    quantity = forms.IntegerField(min_value=1)
+    quantity = forms.IntegerField(label=_("Quantity"), min_value=1)
     sku = forms.CharField(required=False, widget=forms.HiddenInput())
 
     def __init__(self, *xargs, **kwargs):
