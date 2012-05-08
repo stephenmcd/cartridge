@@ -1,5 +1,5 @@
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 from decimal import Decimal
 from operator import mul
 
@@ -9,9 +9,11 @@ from mezzanine.conf import settings
 from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
 from mezzanine.utils.tests import run_pyflakes_for_package
 from mezzanine.utils.tests import run_pep8_for_package
+from mezzanine.utils.timezone import now
 
 from cartridge.shop.models import Product, ProductOption, ProductVariation
 from cartridge.shop.models import Category, Cart, Order, DiscountCode
+from cartridge.shop.models import Sale
 from cartridge.shop.checkout import CHECKOUT_STEPS
 
 
@@ -133,8 +135,8 @@ class ShopTests(TestCase):
         self.assertCategoryFilteredProducts(0)
         self._product.variations.all().update(unit_price=TEST_PRICE)
         self.assertCategoryFilteredProducts(1)
-        now, day = datetime.now(), timedelta(days=1)
-        tomorrow, yesterday = now + day, now - day
+        n, d = now(), timedelta(days=1)
+        tomorrow, yesterday = n + d, n - d
         self._product.variations.all().update(unit_price=0,
                                               sale_price=TEST_PRICE,
                                               sale_from=tomorrow)
@@ -346,3 +348,55 @@ class ShopTests(TestCase):
         warnings.extend(run_pep8_for_package("cartridge"))
         if warnings:
             self.fail("Syntax warnings!\n\n%s" % "\n".join(warnings))
+
+
+class SaleTests(TestCase):
+
+    def setUp(self):
+        product1 = Product(unit_price="1.27")
+        product1.save()
+
+        ProductVariation(unit_price="1.27", product_id=product1.id).save()
+        ProductVariation(unit_price="1.27", product_id=product1.id).save()
+
+        product2 = Product(unit_price="1.27")
+        product2.save()
+
+        ProductVariation(unit_price="1.27", product_id=product2.id).save()
+        ProductVariation(unit_price="1.27", product_id=product2.id).save()
+
+        sale = Sale(
+            title="30% OFF - Ken Bruce has gone mad!",
+            discount_percent="30"
+            )
+        sale.save()
+
+        sale.products.add(product1)
+        sale.products.add(product2)
+        sale.save()
+
+    def test_sale_save(self):
+        """
+        Regression test for GitHub issue #24. Incorrect exception handle meant
+        that in some cases (usually percentage discount) sale_prices were not
+        being applied to all products and their varitations.
+
+        Note: This issues was only relevant using MySQL and with exceptions
+        turned on (which is the default when DEBUG=True).
+        """
+        # Initially no sale prices will be set.
+        for product in Product.objects.all():
+            self.assertFalse(product.sale_price)
+        for variation in ProductVariation.objects.all():
+            self.assertFalse(variation.sale_price)
+
+        # Activate the sale and verify the prices.
+        sale = Sale.objects.all()[0]
+        sale.active = True
+        sale.save()
+
+        # Afterward ensure that all the sale prices have been updated.
+        for product in Product.objects.all():
+            self.assertTrue(product.sale_price)
+        for variation in ProductVariation.objects.all():
+            self.assertTrue(variation.sale_price)

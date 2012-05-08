@@ -120,6 +120,7 @@ Sites Using Cartridge
   * `Cotton On`_
   * `Coopers Store`_
   * `Sheer Ethic`_
+  * `tindie.com` <http://tindie.com/>`_
 
 .. _`Django`: http://djangoproject.com/
 .. _`BSD licensed`: http://www.linfo.org/bsdlicense.html
