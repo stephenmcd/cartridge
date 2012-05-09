@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load mezzanine_tags shop_tags i18n %}
+
+{% block meta_title %}{% trans "Order History" %}{% endblock %}
+{% block title %}{% trans "Order History" %}{% endblock %}
+
+{% block breadcrumb_menu %}
+{{ block.super }}
+<li>{% trans "Order History" %}</li>
+{% endblock %}
+
+{% block main %}
+
+{% if orders %}
+    <table class="table table-striped">
+        <tr>
+            <th>{% trans "Date" %}</th>
+            <th>{% trans "Number of items" %}</th>
+            <th>{% trans "Total paid" %}</th>
+            <th colspan="2">{% trans "Status" %}</th>
+        </tr>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.time }}</td>
+            <td>{{ order.items.count }}</td>
+            <td>{{ order.total|currency }}</td>
+            <td>{{ order.get_status_display }}</td>
+            <td><a href="../invoice/{{ order.id }}/">{% trans "View invoice" %}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+<p>You have not ordered anything from us yet.</p>
+{% endif %}
+
+{% endblock %}

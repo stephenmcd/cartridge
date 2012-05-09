@@ -8,6 +8,7 @@ from django.template.defaultfilters import slugify
 from django.template.loader import get_template
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
+from django.views.generic import ListView
 
 from mezzanine.conf import settings
 from mezzanine.utils.importing import import_dotted_path
@@ -308,3 +309,15 @@ def invoice(request, order_id, template="shop/order_invoice.html"):
         ho.pisa.CreatePDF(html, response)
         return response
     return render(request, template, context)
+
+
+class OrderHistory(ListView):
+    """
+    Display a list of the currently logged-in user's past orders.
+    """
+    context_object_name = "orders"
+    template_name = "shop/order_history.html"
+    paginate_by = 10
+
+    def get_queryset(self):
+        return Order.objects.filter(user_id=self.request.user.id)

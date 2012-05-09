@@ -1,0 +1,10 @@
+{% extends "accounts/account_form.html" %}
+{% block main %}
+{{ block.super }}
+<fieldset>
+    <legend>Order History</legend>
+    <div class="form-actions">
+        <a class="btn" href="../../shop/orders/">View past orders</a>
+    </div>
+</fieldset>
+{% endblock %}
