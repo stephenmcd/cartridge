@@ -1,7 +1,5 @@
 
 from django.conf.urls.defaults import patterns, url
-from views import OrderHistory
-
 
 urlpatterns = patterns("cartridge.shop.views",
     url("^product/(?P<slug>.*)/$", "product", name="shop_product"),
@@ -10,5 +8,5 @@ urlpatterns = patterns("cartridge.shop.views",
     url("^checkout/$", "checkout_steps", name="shop_checkout"),
     url("^checkout/complete/$", "complete", name="shop_complete"),
     url("^invoice/(?P<order_id>\d+)/$", "invoice", name="shop_invoice"),
-    url("^orders/$", OrderHistory.as_view(), name="shop_order_history"),
+    url("^orders/$", "order_history", name="shop_order_history"),
 )

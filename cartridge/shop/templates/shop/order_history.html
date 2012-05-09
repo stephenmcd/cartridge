@@ -25,10 +25,12 @@
             <td>{{ order.items.count }}</td>
             <td>{{ order.total|currency }}</td>
             <td>{{ order.get_status_display }}</td>
-            <td><a href="../invoice/{{ order.id }}/">{% trans "View invoice" %}</a></td>
+            <td><a href="{% url shop_invoice order.id %}">{% trans "View invoice" %}</a></td>
         </tr>
         {% endfor %}
     </table>
+
+    {% pagination_for orders %}
 {% else %}
 <p>You have not ordered anything from us yet.</p>
 {% endif %}

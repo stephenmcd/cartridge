@@ -12,7 +12,7 @@ from django.views.generic import ListView
 
 from mezzanine.conf import settings
 from mezzanine.utils.importing import import_dotted_path
-from mezzanine.utils.views import render, set_cookie
+from mezzanine.utils.views import render, set_cookie, paginate
 
 from cartridge.shop import checkout
 from cartridge.shop.forms import AddProductForm, DiscountForm, CartItemFormSet
@@ -311,13 +311,14 @@ def invoice(request, order_id, template="shop/order_invoice.html"):
     return render(request, template, context)
 
 
-class OrderHistory(ListView):
+def order_history(request, template="shop/order_history.html"):
     """
     Display a list of the currently logged-in user's past orders.
     """
-    context_object_name = "orders"
-    template_name = "shop/order_history.html"
-    paginate_by = 10
-
-    def get_queryset(self):
-        return Order.objects.filter(user_id=self.request.user.id)
+    all_orders = Order.objects.filter(user_id=request.user.id)
+    orders = paginate(all_orders.order_by('-time'),
+                      request.GET.get("page", 1),
+                      settings.SHOP_PER_PAGE_CATEGORY,
+                      settings.MAX_PAGING_LINKS)
+    context = {'orders': orders}
+    return render(request, template, context)
