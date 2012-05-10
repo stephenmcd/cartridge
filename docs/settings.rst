@@ -59,14 +59,14 @@ Default: ``10.0``
 ``SHOP_DISCOUNT_FIELD_IN_CART``
 -------------------------------
 
-Can discount codes be entered on the cart page.
+Discount codes can be entered on the cart page.
 
 Default: ``True``
 
 ``SHOP_DISCOUNT_FIELD_IN_CHECKOUT``
 -----------------------------------
 
-Can discount codes be entered on the first checkpout step.
+Discount codes be entered during the first checkout step.
 
 Default: ``True``
 
@@ -94,7 +94,7 @@ Default: ``'cartridge.shop.checkout.default_payment_handler'``
 ``SHOP_OPTION_TYPE_CHOICES``
 ----------------------------
 
-Sequence of value/name pairs for types of product options, eg Size, Colour.
+Sequence of value/name pairs for types of product options (eg Size, Colour).
 
 Default: ``((1, u'Size'), (2, u'Colour'))``
 
@@ -108,7 +108,7 @@ Default: ``u'Order Receipt'``
 ``SHOP_ORDER_FROM_EMAIL``
 -------------------------
 
-Email address that order receipts should be emailed from.
+Email address from which order receipts should be emailed.
 
 Default: ``[dynamic]``
 
