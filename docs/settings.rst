@@ -87,7 +87,8 @@ Default: ``'cartridge.shop.checkout.default_order_handler'``
 ``SHOP_HANDLER_PAYMENT``
 ------------------------
 
-Dotted package path and class name of the function that is called on submit of the payment checkout step. This is where integration with a payment gateway should be implemented.
+Dotted package path and class name of the function that is called upon
+submission of the payment checkout step. This is where integration with a payment gateway should be implemented.
 
 Default: ``'cartridge.shop.checkout.default_payment_handler'``
 
