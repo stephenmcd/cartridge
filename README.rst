@@ -75,12 +75,10 @@ You can then run your project with the usual Django steps::
     $ python manage.py createdb --noinput
     $ python manage.py runserver
 
-.. note::
-
-    The ``createdb`` command performs the same task as Django's ``syncdb``
-    command and also sets the initial migration state for `South`_. If
-    you'd like to specify a username and password during set up, simply
-    exclude the ``--noinput`` option included above when running ``createdb``.
+The ``createdb`` command performs the same task as Django's ``syncdb`` command
+and also sets the initial migration state for `South`_. If you'd like to
+specify a username and password during set up, simply exclude the
+``--noinput`` option included above when running ``createdb``.
 
 You should then be able to browse to http://127.0.0.1:8000/admin/ and log
 in using the default account (``username: admin, password: default``) or the
