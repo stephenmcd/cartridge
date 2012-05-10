@@ -348,6 +348,7 @@ MIDDLEWARE_CLASSES = (
     "mezzanine.core.middleware.AdminLoginInterfaceSelectorMiddleware",
     "mezzanine.core.middleware.SSLRedirectMiddleware",
     "cartridge.shop.middleware.ShopMiddleware",
+    "mezzanine.pages.middleware.PageMiddleware",
 )
 
 # Store these package names here as they may change in the future since
