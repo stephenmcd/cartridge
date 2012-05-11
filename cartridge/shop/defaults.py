@@ -173,8 +173,8 @@ register_setting(
     name="SHOP_HANDLER_PAYMENT",
     label=_("Payment Handler"),
     description="Dotted package path and class name of the function that "
-        "is called upon submission of the payment checkout step. This is where "
-        "integration with a payment gateway should be implemented.",
+        "is called upon submission of the payment checkout step. This is "
+        "where integration with a payment gateway should be implemented.",
     editable=False,
     default="cartridge.shop.checkout.default_payment_handler",
 )
@@ -201,7 +201,8 @@ register_setting(
 register_setting(
     name="SHOP_ORDER_FROM_EMAIL",
     label=_("From Email"),
-    description=_("Email address from which order receipts should be emailed."),
+    description=_("Email address from which order receipts should be "
+        "emailed."),
     editable=True,
     default="do_not_reply@%s" % gethostname(),
 )
