@@ -4,13 +4,13 @@ Cartridge
 
 Welcome to the Cartridge project. Cartridge is a shopping cart application
 built using the `Django`_ framework. It is `BSD licensed`_ and designed to
-provide you with a clean and simple base for developing e-commerce websites.
+provide a clean and simple base for developing e-commerce websites.
 
-Cartridge also extends the `Mezzanine`_ content management platform and a live
+Cartridge also extends the `Mezzanine`_ content management platform. A live
 demo of Cartridge can be found by visiting the `Mezzanine live demo`_.
 
-To learn more about Cartridge please read the :doc:`overview` which contains
-a feature list, installation guide and other general information.
+To learn more about Cartridge, please read the :doc:`overview`, which contains
+a features list, an installation guide, and other general information.
 
 .. toctree::
     :maxdepth: 2
