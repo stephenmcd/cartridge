@@ -32,12 +32,16 @@ class Category(Page, RichText):
     A category of products on the website.
     """
 
-    options = models.ManyToManyField("ProductOption", verbose_name=_("Product options"), blank=True,
+    options = models.ManyToManyField("ProductOption",
+                                     verbose_name=_("Product options"),
+                                     blank=True,
                                      related_name="product_options")
-    sale = models.ForeignKey("Sale", verbose_name=_("Sale"), blank=True, null=True)
+    sale = models.ForeignKey("Sale", verbose_name=_("Sale"),
+                             blank=True, null=True)
     price_min = fields.MoneyField(_("Minimum price"), blank=True, null=True)
     price_max = fields.MoneyField(_("Maximum price"), blank=True, null=True)
-    combined = models.BooleanField(_("Combined"), default=True, help_text=_("If checked, "
+    combined = models.BooleanField(_("Combined"), default=True,
+        help_text=_("If checked, "
         "products must match all specified filters, otherwise products "
         "can match any specified filter."))
 
@@ -145,12 +149,15 @@ class Product(Displayable, Priced, RichText):
     available = models.BooleanField(_("Available for purchase"),
                                     default=False)
     image = CharField(_("Image"), max_length=100, blank=True, null=True)
-    categories = models.ManyToManyField("Category", verbose_name=_("Product categories"), blank=True,
-                                        related_name="products")
+    categories = models.ManyToManyField("Category",
+                                        verbose_name=_("Product categories"),
+                                        blank=True, related_name="products")
     date_added = models.DateTimeField(_("Date added"), auto_now_add=True,
                                       null=True)
-    related_products = models.ManyToManyField("self", verbose_name=_("Related products"), blank=True)
-    upsell_products = models.ManyToManyField("self", verbose_name=_("Upsell products"), blank=True)
+    related_products = models.ManyToManyField("self",
+                             verbose_name=_("Related products"), blank=True)
+    upsell_products = models.ManyToManyField("self",
+                             verbose_name=_("Upsell products"), blank=True)
     rating = RatingField(verbose_name=_("Rating"))
 
     objects = DisplayableManager()
@@ -254,7 +261,8 @@ class ProductVariation(Priced):
     num_in_stock = models.IntegerField(_("Number in stock"), blank=True,
                                        null=True)
     default = models.BooleanField(_("Default"))
-    image = models.ForeignKey("ProductImage", verbose_name=_("Image"), null=True, blank=True)
+    image = models.ForeignKey("ProductImage", verbose_name=_("Image"),
+                              null=True, blank=True)
 
     objects = managers.ProductVariationManager()
 
