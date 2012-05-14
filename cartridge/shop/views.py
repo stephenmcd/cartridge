@@ -1,4 +1,7 @@
 
+from collections import defaultdict
+
+from django.contrib.auth.decorators import login_required
 from django.contrib.messages import info
 from django.core.urlresolvers import get_callable, reverse
 from django.http import Http404, HttpResponse
@@ -8,7 +11,6 @@ from django.template.defaultfilters import slugify
 from django.template.loader import get_template
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
-from django.views.generic import ListView
 
 from mezzanine.conf import settings
 from mezzanine.utils.importing import import_dotted_path
@@ -16,7 +18,7 @@ from mezzanine.utils.views import render, set_cookie, paginate
 
 from cartridge.shop import checkout
 from cartridge.shop.forms import AddProductForm, DiscountForm, CartItemFormSet
-from cartridge.shop.models import Product, ProductVariation, Order
+from cartridge.shop.models import Product, ProductVariation, Order, OrderItem
 from cartridge.shop.models import DiscountCode
 from cartridge.shop.utils import recalculate_discount, sign
 
@@ -311,6 +313,7 @@ def invoice(request, order_id, template="shop/order_invoice.html"):
     return render(request, template, context)
 
 
+@login_required
 def order_history(request, template="shop/order_history.html"):
     """
     Display a list of the currently logged-in user's past orders.
@@ -320,5 +323,12 @@ def order_history(request, template="shop/order_history.html"):
                       request.GET.get("page", 1),
                       settings.SHOP_PER_PAGE_CATEGORY,
                       settings.MAX_PAGING_LINKS)
-    context = {'orders': orders}
+    # Add the total quantity to each order - this can probably be
+    # replaced with fetch_related and Sum when we drop Django 1.3
+    order_quantities = defaultdict(int)
+    for item in OrderItem.objects.filter(order__user_id=request.user.id):
+        order_quantities[item.order_id] += item.quantity
+    for order in orders:
+        setattr(order, "quantity_total", order_quantities[order.id])
+    context = {"orders": orders}
     return render(request, template, context)

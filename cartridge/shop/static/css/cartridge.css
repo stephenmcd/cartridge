@@ -19,15 +19,17 @@
 .form-shop .form-actions-wrap {float:left; margin-left:160px;}
 .form-shop .form-actions-wrap * {float:right; margin-right:15px;}
 
-/* Cart */
-.form-cart th {white-space:nowrap; text-align:right;}
-.form-cart td {text-align:right; vertical-align:middle;}
-.form-cart .left {text-align:left;}
-.form-cart .center, .form-cart .quantity {text-align:center;}
+/* Cart and order history */
+.order-history th, .form-cart th {white-space:nowrap; text-align:right;}
+.order-history th, .form-cart td {text-align:right; vertical-align:middle;}
+.order-history .left, .form-cart .left {text-align:left;}
+.order-history .center, .form-cart .center, .form-cart .quantity {text-align:center;}
 .form-cart .quantity input {width:25px; text-align:center; margin:0;}
 .form-cart label {margin-right:10px; font-weight:bold;}
-.form-cart .form-actions {text-align:right;}
+.order-history .right, .form-cart .form-actions {text-align:right;}
 .form-cart .form-actions-wrap {float:right; margin-right:5px;}
+.order-history .btn {float:right; margin:0 0 0 5px;}
+.btn-order-history {float:right; margin:-75px 20px 0 0;}
 
 /* Wishlist */
 .wishlist img {vertical-align:middle; margin-right:5px;}

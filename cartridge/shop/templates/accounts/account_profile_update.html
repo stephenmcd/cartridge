@@ -1,10 +1,6 @@
 {% extends "accounts/account_form.html" %}
+{% load i18n %}
 {% block main %}
 {{ block.super }}
-<fieldset>
-    <legend>Order History</legend>
-    <div class="form-actions">
-        <a class="btn" href="{% url shop_order_history %}">View past orders</a>
-    </div>
-</fieldset>
+<a class="btn btn-large btn-order-history" href="{% url shop_order_history %}">{% trans "View past orders" %}</a>
 {% endblock %}
