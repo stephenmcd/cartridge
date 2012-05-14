@@ -4,21 +4,22 @@
 #
 # Translators:
 # Andrew Grigorev <andrew@ei-grad.ru>, 2011.
+# Dmitry Falk <tfalc@mail.ru>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: Cartridge\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-25 18:08+0400\n"
+"POT-Creation-Date: 2012-05-13 19:02+0400\n"
 "PO-Revision-Date: 2012-04-04 01:01+0000\n"
 "Last-Translator: Sebastián Ramírez Magrí <sebasmagri@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.net/projects/p/cartridge/"
 "language/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ru\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
-"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
 
 #: admin.py:28
 msgid "Product filters"
@@ -84,151 +85,147 @@ msgstr "Оплата"
 msgid "Confirmation"
 msgstr "Подтверждение"
 
-#: defaults.py:19
-msgid "If True, users can create an account."
-msgstr "Если Да, пользователи должны иметь аккаунт для работы на сайте."
-
-#: defaults.py:27
+#: defaults.py:18
 msgid "Controls the ordering and grouping of the admin menu."
 msgstr "Порядок и группировка отображения элементов административного меню"
 
-#: defaults.py:30 management/commands/product_db.py:31
+#: defaults.py:21 management/commands/product_db.py:31
 msgid "Content"
 msgstr "Содержимое"
 
-#: defaults.py:31
+#: defaults.py:22
 msgid "Media Library"
 msgstr "Медиа-библиотека"
 
-#: defaults.py:32
+#: defaults.py:23
 msgid "Shop"
 msgstr "Магазин"
 
-#: defaults.py:34
+#: defaults.py:25
 msgid "Site"
 msgstr "Сайт"
 
-#: defaults.py:35
+#: defaults.py:26
 msgid "Users"
 msgstr "Пользователи"
 
-#: defaults.py:56
+#: defaults.py:47
 msgid "Sequence of setting names available within templates."
 msgstr "Последовательность имен параметров, доступных для внутри шаблонов."
 
-#: defaults.py:85
+#: defaults.py:76
 msgid "Checkout account required"
 msgstr "Заказ только через аккаунт"
 
-#: defaults.py:86
+#: defaults.py:77
 msgid "If True, users must create a login for the checkout process."
 msgstr "Если Да, пользователи должны иметь аккаунт для работы на сайте."
 
-#: defaults.py:116
+#: defaults.py:108
 msgid "Payment Enabled"
 msgstr "Оплата включена"
 
-#: defaults.py:117
+#: defaults.py:109
 msgid "If False, there is no payment step on the checkout process."
 msgstr "Если Нет, шаг оплаты не отображается в процессе заказа."
 
-#: defaults.py:124
+#: defaults.py:117
 msgid "Currency Locale"
 msgstr "Локализация валюты"
 
-#: defaults.py:134
+#: defaults.py:127
 msgid "Default Shipping Cost"
 msgstr "Стоимость доставки по-умолчанию"
 
-#: defaults.py:135
+#: defaults.py:128
 msgid "Default cost of shipping when no custom shipping is implemented."
 msgstr "Стоимость доставки по-умолчанию"
 
-#: defaults.py:142
+#: defaults.py:136
 msgid "Discount in Cart"
 msgstr "Скидка в корзине"
 
-#: defaults.py:143
-msgid "Can discount codes be entered on the cart page."
+#: defaults.py:137
+msgid "Discount codes can be entered on the cart page."
 msgstr "Коды скидок можно вводить на странице корзины."
 
-#: defaults.py:150
+#: defaults.py:144
 msgid "Discount in Checkout"
 msgstr "Скидка при заказе"
 
-#: defaults.py:151
-msgid "Can discount codes be entered on the first checkout step."
+#: defaults.py:145
+msgid "Discount codes can be entered on the first checkout step."
 msgstr "Коды скидок можно вводить на первом шаге заказа"
 
-#: defaults.py:158
+#: defaults.py:152
 msgid "Billing & Shipping Handler"
 msgstr "Обработчик платежной системы"
 
-#: defaults.py:169
+#: defaults.py:163
 msgid "Order Handler"
 msgstr "Обработчик заказа"
 
-#: defaults.py:180
+#: defaults.py:174
 msgid "Payment Handler"
 msgstr "Обработчик оплаты"
 
-#: defaults.py:194
+#: defaults.py:188
 msgid "Size"
 msgstr "Размер"
 
-#: defaults.py:195
+#: defaults.py:189
 msgid "Colour"
 msgstr "Цвет"
 
-#: defaults.py:201
+#: defaults.py:195
 msgid "Order Email Subject"
 msgstr "Тема письма о заказе"
 
-#: defaults.py:202
+#: defaults.py:196
 msgid "Subject to be used when sending the order receipt email."
 msgstr "Тема письма о принятии заказа."
 
-#: defaults.py:204
+#: defaults.py:198
 msgid "Order Receipt"
 msgstr "Заказ получен"
 
-#: defaults.py:209
+#: defaults.py:203
 msgid "From Email"
 msgstr "От кого"
 
-#: defaults.py:210
-msgid "Email address that order receipts should be emailed from."
+#: defaults.py:204
+msgid "Email address from which order receipts should be emailed."
 msgstr "Адрес эл.почты от которого посылаются ответы."
 
-#: defaults.py:220
+#: defaults.py:215
 msgid "Unprocessed"
 msgstr "Не обработан"
 
-#: defaults.py:221
+#: defaults.py:216
 msgid "Processed"
 msgstr "Обработан"
 
-#: defaults.py:227
+#: defaults.py:222
 msgid "Products Per Category Page"
 msgstr "Товаров на странице"
 
-#: defaults.py:228
+#: defaults.py:223
 msgid "Number of products to display per category page."
 msgstr "Количество подуктов отображаемых на странице."
 
-#: defaults.py:239
+#: defaults.py:234
 msgid "Recently added"
 msgstr "Недавно добавленные"
 
-#: defaults.py:240
+#: defaults.py:235
 msgid "Highest rated"
 msgstr "Высокий рейтинг"
 
-#: defaults.py:241
+#: defaults.py:236
 msgid "Least expensive"
 msgstr "Наименее дорогие"
 
-#: defaults.py:242
+#: defaults.py:237
 msgid "Most expensive"
 msgstr "Наиболее дорогие"
 
@@ -248,11 +245,15 @@ msgstr "Выбранных опций в настоящее время нет в
 msgid "The selected quantity is currently unavailable."
 msgstr "Запрашиваемое количество недоступно."
 
+#: forms.py:37 models.py:561
+msgid "Quantity"
+msgstr "Количество"
+
 #: forms.py:229
 msgid "The discount code entered is invalid."
 msgstr "Введеный код скидки неверен."
 
-#: forms.py:241 models.py:742
+#: forms.py:241 models.py:741
 msgid "Free shipping"
 msgstr "Бесплатная доставка"
 
@@ -285,6 +286,14 @@ msgstr "Только одна вариация может быть устано�
 msgid "Please enter a value for only one type of reduction."
 msgstr "Введите значение только для одно из понижений."
 
+#: models.py:35 models.py:230
+msgid "Product options"
+msgstr "Параметры товара"
+
+#: models.py:37 models.py:657
+msgid "Sale"
+msgstr "Распродажа"
+
 #: models.py:38
 msgid "Minimum price"
 msgstr "Минимальная цена"
@@ -293,15 +302,25 @@ msgstr "Минимальная цена"
 msgid "Maximum price"
 msgstr "Максимальная цена"
 
+#: models.py:40
+msgid "Combined"
+msgstr "Объединенные"
+
+#: models.py:40
+msgid ""
+"If checked, products must match all specified filters, otherwise products "
+"can match any specified filter."
+msgstr "Если отмечено, то продукты фильтруются по всем заданным параметрам."
+
 #: models.py:45
 msgid "Product category"
 msgstr "Категория товаров"
 
-#: models.py:46
+#: models.py:46 models.py:148
 msgid "Product categories"
 msgstr "Категории товаров"
 
-#: models.py:103 models.py:563
+#: models.py:103 models.py:562
 msgid "Unit price"
 msgstr "Цена за штуку"
 
@@ -321,9 +340,22 @@ msgstr "Конец распродажи"
 msgid "Available for purchase"
 msgstr "Доступен для заказа"
 
+#: models.py:147 models.py:197 models.py:202 models.py:257
+#: management/commands/product_db.py:34
+msgid "Image"
+msgstr "Изображение"
+
 #: models.py:150
 msgid "Date added"
 msgstr "Дата добавления"
+
+#: models.py:152
+msgid "Related products"
+msgstr "Связанные товары"
+
+#: models.py:153
+msgid "Upsell products"
+msgstr "Upsell товары"
 
 #: models.py:154
 msgid "Rating"
@@ -337,11 +369,7 @@ msgstr "Товар"
 msgid "Products"
 msgstr "Товары"
 
-#: models.py:197 models.py:202 management/commands/product_db.py:34
-msgid "Image"
-msgstr "Изображение"
-
-#: models.py:198 models.py:561 management/commands/product_db.py:32
+#: models.py:198 models.py:560 management/commands/product_db.py:32
 msgid "Description"
 msgstr "Описание"
 
@@ -360,10 +388,6 @@ msgstr "Имя"
 #: models.py:229
 msgid "Product option"
 msgstr "Параметр товара"
-
-#: models.py:230
-msgid "Product options"
-msgstr "Параметры товара"
 
 #: models.py:254
 msgid "Number in stock"
@@ -429,7 +453,7 @@ msgstr "Стоимость доставки"
 msgid "Item total"
 msgstr "Стоимость товара"
 
-#: models.py:364 models.py:760
+#: models.py:364 models.py:759
 msgid "Discount code"
 msgstr "Код скидки"
 
@@ -466,55 +490,47 @@ msgstr "Скачать распечатку заказа в формате PDF"
 msgid "Last updated"
 msgstr "Последнее изменение"
 
-#: models.py:562
-msgid "Quantity"
-msgstr "Количество"
-
-#: models.py:564
+#: models.py:563
 msgid "Total price"
 msgstr "Общий итог"
 
-#: models.py:622
+#: models.py:621
 msgid "Active"
 msgstr "Активный"
 
-#: models.py:626
+#: models.py:625
 msgid "Reduce by amount"
 msgstr "Снижение на определенную величину"
 
-#: models.py:627
+#: models.py:626
 msgid "Reduce by percent"
 msgstr "Снижение на процент"
 
-#: models.py:630
+#: models.py:629
 msgid "Reduce to amount"
 msgstr "Снижение до определенной величины"
 
-#: models.py:631
+#: models.py:630
 msgid "Valid from"
 msgstr "Действует с"
 
-#: models.py:632
+#: models.py:631
 msgid "Valid to"
 msgstr "Действует до"
 
 #: models.py:658
-msgid "Sale"
-msgstr "Распродажа"
-
-#: models.py:659
 msgid "Sales"
 msgstr "Распродажи"
 
-#: models.py:740
+#: models.py:739
 msgid "Code"
 msgstr "Код"
 
-#: models.py:741
+#: models.py:740
 msgid "Minimum total purchase"
 msgstr "Минимальная сумма заказа"
 
-#: models.py:761
+#: models.py:760
 msgid "Discount codes"
 msgstr "Коды скидок"
 
@@ -667,21 +683,30 @@ msgstr[2] "Список желаний содержит %(wishlist_count)s то�
 msgid "Sort by"
 msgstr "Сортировка"
 
-#: templates/pages/category.html:51 templates/shop/cart.html:91
+#: templates/pages/category.html:49 templates/shop/cart.html:91
 #: templates/shop/product.html:77 templates/shop/product.html.py:118
 msgid "On sale:"
 msgstr "На распродаже:"
 
-#: templates/pages/category.html:55
+#: templates/pages/category.html:53
 msgid "Coming soon"
 msgstr "Ожидается"
 
-#: templates/shop/billing_shipping.html:19 templates/shop/confirmation.html:8
+#: templates/shop/billing_shipping.html:17
+#, python-format
+msgid ""
+"\n"
+"If you have an existing account or would like to create one, please\n"
+"<a href=\"%(login_url)s?next=%(next)s\">log in</a> or\n"
+"<a href=\"%(signup_url)s?next=%(next)s\">sign up</a>.\n"
+msgstr ""
+
+#: templates/shop/billing_shipping.html:28 templates/shop/confirmation.html:8
 #: templates/shop/includes/order_details.html:13
 msgid "Billing Details"
 msgstr "Платежная информация"
 
-#: templates/shop/billing_shipping.html:24
+#: templates/shop/billing_shipping.html:33
 msgid "Delivery Details"
 msgstr "Информация о доставке"
 
@@ -753,11 +778,11 @@ msgstr "Ваша корзина пуста."
 #: templates/shop/checkout.html:79
 msgid ""
 "This may be due to your session timing out after a period of inactivity."
-msgstr ""
+msgstr "Это могло произойти из-за того что рабочая сессия закрылась из-за бездействия пользователя."
 
 #: templates/shop/checkout.html:80
 msgid "We apologize for the inconvenience."
-msgstr ""
+msgstr "Мы извиняемся за причиненное неудобство."
 
 #: templates/shop/checkout.html:82 templates/shop/wishlist.html:40
 msgid "Continue Shopping"
@@ -852,3 +877,6 @@ msgstr "Платежная информация"
 #: templates/shop/includes/payment_fields.html:8
 msgid "Card Expiry"
 msgstr "Срок действия корзины истек"
+
+#~ msgid "If True, users can create an account."
+#~ msgstr "Если Да, пользователи должны иметь аккаунт для работы на сайте."
