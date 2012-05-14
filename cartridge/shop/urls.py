@@ -1,7 +1,6 @@
 
 from django.conf.urls.defaults import patterns, url
 
-
 urlpatterns = patterns("cartridge.shop.views",
     url("^product/(?P<slug>.*)/$", "product", name="shop_product"),
     url("^wishlist/$", "wishlist", name="shop_wishlist"),

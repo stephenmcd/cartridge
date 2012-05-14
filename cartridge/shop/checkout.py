@@ -89,6 +89,11 @@ def initial_order_data(request):
                 shipping(f) in initial and
                 initial[f] != initial[shipping(f)]]):
                 initial["same_billing_shipping"] = False
+    if not initial and request.user.is_authenticated():
+        # No previous order data - use authenticated user fields.
+        for field in ("first_name", "last_name", "email"):
+            value = getattr(request.user, field, "")
+            initial["billing_detail_%s" % field] = value
     return initial
 
 

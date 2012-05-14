@@ -1,4 +1,7 @@
 
+from collections import defaultdict
+
+from django.contrib.auth.decorators import login_required
 from django.contrib.messages import info
 from django.core.urlresolvers import get_callable, reverse
 from django.http import Http404, HttpResponse
@@ -11,11 +14,11 @@ from django.utils.translation import ugettext as _
 
 from mezzanine.conf import settings
 from mezzanine.utils.importing import import_dotted_path
-from mezzanine.utils.views import render, set_cookie
+from mezzanine.utils.views import render, set_cookie, paginate
 
 from cartridge.shop import checkout
 from cartridge.shop.forms import AddProductForm, DiscountForm, CartItemFormSet
-from cartridge.shop.models import Product, ProductVariation, Order
+from cartridge.shop.models import Product, ProductVariation, Order, OrderItem
 from cartridge.shop.models import DiscountCode
 from cartridge.shop.utils import recalculate_discount, sign
 
@@ -307,4 +310,25 @@ def invoice(request, order_id, template="shop/order_invoice.html"):
         import ho.pisa
         ho.pisa.CreatePDF(html, response)
         return response
+    return render(request, template, context)
+
+
+@login_required
+def order_history(request, template="shop/order_history.html"):
+    """
+    Display a list of the currently logged-in user's past orders.
+    """
+    all_orders = Order.objects.filter(user_id=request.user.id)
+    orders = paginate(all_orders.order_by('-time'),
+                      request.GET.get("page", 1),
+                      settings.SHOP_PER_PAGE_CATEGORY,
+                      settings.MAX_PAGING_LINKS)
+    # Add the total quantity to each order - this can probably be
+    # replaced with fetch_related and Sum when we drop Django 1.3
+    order_quantities = defaultdict(int)
+    for item in OrderItem.objects.filter(order__user_id=request.user.id):
+        order_quantities[item.order_id] += item.quantity
+    for order in orders:
+        setattr(order, "quantity_total", order_quantities[order.id])
+    context = {"orders": orders}
     return render(request, template, context)

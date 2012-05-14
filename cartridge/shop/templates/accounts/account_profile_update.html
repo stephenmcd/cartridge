@@ -1,0 +1,6 @@
+{% extends "accounts/account_form.html" %}
+{% load i18n %}
+{% block main %}
+{{ block.super }}
+<a class="btn btn-large btn-order-history" href="{% url shop_order_history %}">{% trans "View past orders" %}</a>
+{% endblock %}
