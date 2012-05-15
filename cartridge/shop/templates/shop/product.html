@@ -104,11 +104,11 @@
 {% if related_products %}
 <h2>{% trans "Related Products" %}</h2>
 <ul class="products unstyled">
-    {% for product in related_products %}
+    {% for product in related %}
     <li>
         <a href="{{ product.get_absolute_url }}">
             {% if product.image %}
-            <img src="{{ STATIC_URL }}{% thumbnail product.image 90 90 %}"><br>
+            <img src="{{ MEDIA_URL }}{% thumbnail product.image 90 90 %}"><br>
             {% endif %}
             {{ product }}
         </a>
