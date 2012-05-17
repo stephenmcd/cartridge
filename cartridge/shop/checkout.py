@@ -9,6 +9,7 @@ from django.template.loader import get_template, TemplateDoesNotExist
 from mezzanine.conf import settings
 from mezzanine.utils.email import send_mail_template
 
+from cartridge.shop.forms import OrderForm
 from cartridge.shop.models import Order
 from cartridge.shop.utils import set_shipping, sign
 
