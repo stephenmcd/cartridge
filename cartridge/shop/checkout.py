@@ -9,7 +9,6 @@ from django.template.loader import get_template, TemplateDoesNotExist
 from mezzanine.conf import settings
 from mezzanine.utils.email import send_mail_template
 
-from cartridge.shop.forms import OrderForm
 from cartridge.shop.models import Order
 from cartridge.shop.utils import set_shipping, sign
 
@@ -74,6 +73,7 @@ def initial_order_data(request):
     - last order made by the user, via user ID or cookie
     - matching fields on an authenticated user and profile object
     """
+    from cartridge.shop.forms import OrderForm
     if request.method == "POST":
         return dict(request.POST.items())
     if "order" in request.session:
@@ -90,7 +90,6 @@ def initial_order_data(request):
         if len(previous_orders) > 0:
             initial.update(previous_orders[0])
     if not initial and request.user.is_authenticated():
-        from cartridge.shop.forms import OrderForm
         # No previous order data - try and get field values from the
         # logged in user. Check the profile model before the user model
         # if it's configured. If the order field name uses one of the
