@@ -21,7 +21,7 @@
         <th>{% trans "Paid" %}</th>
         <th colspan="2" class="left">{% trans "Status" %}</th>
     </tr>
-    {% for order in orders %}
+    {% for order in orders.object_list %}
     <tr>
         <td class="left">{{ order.id }}</td>
         <td class="left">{{ order.time }}</td>
