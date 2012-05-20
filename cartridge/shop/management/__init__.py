@@ -28,4 +28,5 @@ def create_initial_product(app, created_models, verbosity, **kwargs):
         copy_test_to_media("cartridge.shop", "product")
 
 
-post_syncdb.connect(create_initial_product, sender=shop_app)
+if not settings.TESTING:
+    post_syncdb.connect(create_initial_product, sender=shop_app)
