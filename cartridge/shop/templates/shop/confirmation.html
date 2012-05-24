@@ -26,7 +26,7 @@
 </fieldset>
 {% if settings.SHOP_PAYMENT_STEP_ENABLED %}
 {% comment %}
-<br clear="all">
+<br style="clear:both;">
 <fieldset class="confirmation">
 	<legend>{% trans "Payment Details" %}</legend>
 	<ul class="unstyled">
@@ -50,7 +50,7 @@
 </fieldset>
 {% endcomment %}
 {% endif %}
-<br clear="all">
+<br style="clear:both;">
 
 {% for field in form %}{{ field }}{% endfor %}
 

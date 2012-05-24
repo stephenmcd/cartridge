@@ -2,6 +2,7 @@
 Checkout process utilities.
 """
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext as _
 from django.template.loader import get_template, TemplateDoesNotExist
 
@@ -35,7 +36,7 @@ def default_billship_handler(request, order_form):
     if not request.session.get('free_shipping'):
         settings.use_editable()
         set_shipping(request, _("Flat rate shipping"),
-                    settings.SHOP_DEFAULT_SHIPPING_VALUE)
+                     settings.SHOP_DEFAULT_SHIPPING_VALUE)
 
 
 def default_payment_handler(request, order_form, order):
@@ -62,11 +63,17 @@ def default_order_handler(request, order_form, order):
 
 def initial_order_data(request):
     """
-    Return the initial data for the order form - favours request.POST,
-    then session, then the last order deterined by either the current
-    authenticated user, or from previous the order cookie set with
-    "remember my details".
+    Return the initial data for the order form, trying the following in
+    order:
+    - request.POST which is available when moving backward through the
+      checkout steps
+    - current order details in the session which are populated via each
+      checkout step, to support user leaving the checkout entirely and
+      returning
+    - last order made by the user, via user ID or cookie
+    - matching fields on an authenticated user and profile object
     """
+    from cartridge.shop.forms import OrderForm
     if request.method == "POST":
         return dict(request.POST.items())
     if "order" in request.session:
@@ -82,18 +89,42 @@ def initial_order_data(request):
         previous_orders = Order.objects.filter(**previous_lookup).values()[:1]
         if len(previous_orders) > 0:
             initial.update(previous_orders[0])
-            # Set initial value for "same billing/shipping" based on
-            # whether both sets of address fields are all equal.
-            shipping = lambda f: "shipping_%s" % f[len("billing_"):]
-            if any([f for f in initial if f.startswith("billing_") and
-                shipping(f) in initial and
-                initial[f] != initial[shipping(f)]]):
-                initial["same_billing_shipping"] = False
     if not initial and request.user.is_authenticated():
-        # No previous order data - use authenticated user fields.
-        for field in ("first_name", "last_name", "email"):
-            value = getattr(request.user, field, "")
-            initial["billing_detail_%s" % field] = value
+        # No previous order data - try and get field values from the
+        # logged in user. Check the profile model before the user model
+        # if it's configured. If the order field name uses one of the
+        # billing/shipping prefixes, also check for it without the
+        # prefix. Finally if a matching attribute is callable, call it
+        # for the field value, to support custom matches on the profile
+        # model.
+        user_models = [request.user]
+        try:
+            user_models.insert(0, request.user.get_profile())
+        except ObjectDoesNotExist:
+            pass
+        for order_field in OrderForm._meta.fields:
+            check_fields = [order_field]
+            for prefix in ("billing_detail_", "shipping_detail_"):
+                if order_field.startswith(prefix):
+                    check_fields.append(order_field.replace(prefix, "", 1))
+            for user_model in user_models:
+                for check_field in check_fields:
+                    user_value = getattr(user_model, check_field, None)
+                    if user_value:
+                        if callable(user_value):
+                            try:
+                                user_value = user_value()
+                            except TypeError:
+                                continue
+                        if not initial.get(order_field):
+                            initial[order_field] = user_value
+    # Set initial value for "same billing/shipping" based on
+    # whether both sets of address fields are all equal.
+    shipping = lambda f: "shipping_%s" % f[len("billing_"):]
+    if any([f for f in OrderForm._meta.fields if f.startswith("billing_") and
+        shipping(f) in OrderForm._meta.fields and
+        initial.get(f, "") != initial.get(shipping(f), "")]):
+        initial["same_billing_shipping"] = False
     return initial
 
 

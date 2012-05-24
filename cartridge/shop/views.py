@@ -328,7 +328,7 @@ def order_history(request, template="shop/order_history.html"):
     order_quantities = defaultdict(int)
     for item in OrderItem.objects.filter(order__user_id=request.user.id):
         order_quantities[item.order_id] += item.quantity
-    for order in orders:
+    for order in orders.object_list:
         setattr(order, "quantity_total", order_quantities[order.id])
     context = {"orders": orders}
     return render(request, template, context)
