@@ -8,59 +8,14 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'ShippingZoneWeight'
-        db.create_table('coopers_shippingzoneweight', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('zone', self.gf('django.db.models.fields.related.ForeignKey')(related_name='weights', to=orm['shop.ShippingZone'])),
-            ('weight', self.gf('django.db.models.fields.PositiveIntegerField')()),
-            ('price', self.gf('cartridge.shop.fields.MoneyField')(null=True, max_digits=10, decimal_places=2, blank=True)),
-        ))
-        db.send_create_signal('shop', ['ShippingZoneWeight'])
 
-        # Adding unique constraint on 'ShippingZoneWeight', fields ['zone', 'weight']
-        db.create_unique('coopers_shippingzoneweight', ['zone_id', 'weight'])
-
-        # Adding model 'ShippingZone'
-        db.create_table('coopers_shippingzone', (
-            ('zone', self.gf('django.db.models.fields.CharField')(max_length=1, primary_key=True)),
-        ))
-        db.send_create_signal('shop', ['ShippingZone'])
-
-        # Deleting field 'Product.gen_description'
-        db.delete_column('shop_product', 'gen_description')
-
-
-        # Changing field 'Product.title'
-        db.alter_column('shop_product', 'title', self.gf('django.db.models.fields.CharField')(max_length=100))
-
-        # Changing field 'Product.slug'
-        db.alter_column('shop_product', 'slug', self.gf('django.db.models.fields.CharField')(max_length=100, null=True))
         # Adding field 'DiscountCode.uses_remaining'
         db.add_column('shop_discountcode', 'uses_remaining',
                       self.gf('django.db.models.fields.IntegerField')(null=True, blank=True),
                       keep_default=False)
 
     def backwards(self, orm):
-        # Removing unique constraint on 'ShippingZoneWeight', fields ['zone', 'weight']
-        db.delete_unique('coopers_shippingzoneweight', ['zone_id', 'weight'])
 
-        # Deleting model 'ShippingZoneWeight'
-        db.delete_table('coopers_shippingzoneweight')
-
-        # Deleting model 'ShippingZone'
-        db.delete_table('coopers_shippingzone')
-
-        # Adding field 'Product.gen_description'
-        db.add_column('shop_product', 'gen_description',
-                      self.gf('django.db.models.fields.BooleanField')(default=True),
-                      keep_default=False)
-
-
-        # Changing field 'Product.title'
-        db.alter_column('shop_product', 'title', self.gf('django.db.models.fields.CharField')(max_length=500))
-
-        # Changing field 'Product.slug'
-        db.alter_column('shop_product', 'slug', self.gf('django.db.models.fields.CharField')(max_length=2000, null=True))
         # Deleting field 'DiscountCode.uses_remaining'
         db.delete_column('shop_discountcode', 'uses_remaining')
 
@@ -84,8 +39,8 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Keyword'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'site': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['sites.Site']"}),
-            'slug': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '100'})
+            'slug': ('django.db.models.fields.CharField', [], {'max_length': '2000', 'null': 'True', 'blank': 'True'}),
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '500'})
         },
         'generic.rating': {
             'Meta': {'object_name': 'Rating'},
@@ -100,6 +55,7 @@ class Migration(SchemaMigration):
             'content_model': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True'}),
             'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'expiry_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+            'gen_description': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'in_footer': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'in_navigation': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
@@ -110,9 +66,9 @@ class Migration(SchemaMigration):
             'publish_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'short_url': ('django.db.models.fields.URLField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'site': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['sites.Site']"}),
-            'slug': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'slug': ('django.db.models.fields.CharField', [], {'max_length': '2000', 'null': 'True', 'blank': 'True'}),
             'status': ('django.db.models.fields.IntegerField', [], {'default': '2'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
             'titles': ('django.db.models.fields.CharField', [], {'max_length': '1000', 'null': 'True'})
         },
         'shop.cart': {
@@ -210,6 +166,7 @@ class Migration(SchemaMigration):
             'date_added': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
             'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'expiry_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+            'gen_description': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'image': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'keywords': ('mezzanine.generic.fields.KeywordsField', [], {'object_id_field': "'object_pk'", 'to': "orm['generic.AssignedKeyword']"}),
@@ -225,9 +182,9 @@ class Migration(SchemaMigration):
             'sale_to': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'short_url': ('django.db.models.fields.URLField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'site': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['sites.Site']"}),
-            'slug': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'slug': ('django.db.models.fields.CharField', [], {'max_length': '2000', 'null': 'True', 'blank': 'True'}),
             'status': ('django.db.models.fields.IntegerField', [], {'default': '2'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
             'unit_price': ('cartridge.shop.fields.MoneyField', [], {'null': 'True', 'max_digits': '10', 'decimal_places': '2', 'blank': 'True'}),
             'upsell_products': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'upsell_products_rel_+'", 'blank': 'True', 'to': "orm['shop.Product']"})
         },
@@ -281,17 +238,6 @@ class Migration(SchemaMigration):
             'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'valid_from': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'valid_to': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'})
-        },
-        'shop.shippingzone': {
-            'Meta': {'ordering': "('zone',)", 'object_name': 'ShippingZone', 'db_table': "'coopers_shippingzone'"},
-            'zone': ('django.db.models.fields.CharField', [], {'max_length': '1', 'primary_key': 'True'})
-        },
-        'shop.shippingzoneweight': {
-            'Meta': {'ordering': "['weight', 'zone']", 'unique_together': "(('zone', 'weight'),)", 'object_name': 'ShippingZoneWeight', 'db_table': "'coopers_shippingzoneweight'"},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'price': ('cartridge.shop.fields.MoneyField', [], {'null': 'True', 'max_digits': '10', 'decimal_places': '2', 'blank': 'True'}),
-            'weight': ('django.db.models.fields.PositiveIntegerField', [], {}),
-            'zone': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'weights'", 'to': "orm['shop.ShippingZone']"})
         },
         'sites.site': {
             'Meta': {'ordering': "('domain',)", 'object_name': 'Site', 'db_table': "'django_site'"},
