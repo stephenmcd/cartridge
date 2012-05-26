@@ -227,7 +227,8 @@ class DiscountCodeAdmin(admin.ModelAdmin):
         (_("Reduce unit price by"),
             {"fields": (("discount_deduct", "discount_percent"),)}),
         (None, {"fields": (("min_purchase", "free_shipping"),)}),
-        (_("Valid for"), {"fields": (("valid_from", "valid_to"),)}),
+        (_("Valid for"),
+            {"fields": (("valid_from", "valid_to", "uses_remaining"),)}),
     )
 
 
