@@ -38,13 +38,12 @@ $(function() {$('.middle :input:visible:enabled:first').focus();});
     {% endif %}
     {{ item.quantity }} x {{ item.description }}
     <span class="price">{{ item.total_price|currency }}</span>
-    <br clear="all">
 </li>
 {% endfor %}
 </ul>
 {% order_totals %}
-<br clear="all">
-<a class="btn" href="{% url shop_cart %}">Edit Cart</a>
+<br style="clear:both;">
+<a class="btn" href="{% url shop_cart %}">{% trans "Edit Cart" %}</a>
 </div>
 {% endif %}
 

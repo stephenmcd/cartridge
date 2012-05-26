@@ -79,7 +79,7 @@
 	        <a href="{{ product.get_absolute_url }}">
 	            <div class="img">
 		            {% if product.image %}
-		            <img src="{{ STATIC_URL }}{% thumbnail product.image 90 90 %}" />
+		            <img src="{{ MEDIA_URL }}{% thumbnail product.image 90 90 %}" />
 		            {% endif %}
 	            </div>
 	            {{ product }}

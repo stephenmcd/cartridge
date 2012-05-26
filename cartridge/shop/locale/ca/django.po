@@ -1,0 +1,896 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Translators:
+# Sergi Almacellas Abellana <pokoli@gmail.com>, 2011.
+msgid ""
+msgstr ""
+"Project-Id-Version: Cartridge\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-11-26 10:10-0430\n"
+"PO-Revision-Date: 2012-05-25 12:29+0100\n"
+"Last-Translator: Sergi Almacellas Abellana <pokoli@gmail.com>\n"
+"Language-Team: Català\n"
+"Language: ca\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+#: admin.py:29
+msgid "Product filters"
+msgstr "Filtres de Productes"
+
+#: admin.py:41
+msgid "Current variations"
+msgstr "Variacions actuals"
+
+#: admin.py:60
+msgid "Other products"
+msgstr "Altres productes"
+
+#: admin.py:63
+msgid "Create new variations"
+msgstr "Crear noves variants"
+
+#: admin.py:115
+msgid "Items"
+msgstr "Ítems"
+
+#: admin.py:135
+msgid "Billing details"
+msgstr "Detalls del pagament"
+
+#: admin.py:136
+msgid "Shipping details"
+msgstr "Detalls de l'enviament"
+
+#: admin.py:153
+#: admin.py:173
+msgid "Apply to product and/or products in categories"
+msgstr "Aplicar al producte i/o als productes a la categoria."
+
+#: admin.py:155
+#: admin.py:175
+msgid "Reduce unit price by"
+msgstr "Reduir el preu unitari en"
+
+#: admin.py:158
+msgid "Sale period"
+msgstr "Periode de ventes"
+
+#: admin.py:178
+msgid "Valid for"
+msgstr "Vàlid per"
+
+#: checkout.py:34
+msgid "Flat rate shipping"
+msgstr "Enviament amb tarifa plana"
+
+#: checkout.py:100
+msgid "Order Receipt"
+msgstr "Rebut de la ordre"
+
+#: checkout.py:107
+msgid "Details"
+msgstr "Detalls"
+
+#: checkout.py:111
+msgid "Address"
+msgstr "Direcció"
+
+#: checkout.py:113
+msgid "Payment"
+msgstr "Pagament"
+
+#: checkout.py:117
+msgid "Confirmation"
+msgstr "Confirmació"
+
+#: defaults.py:55
+msgid "Currency Locale"
+msgstr "Localizació de la moneda"
+
+#: defaults.py:65
+msgid "Default Shipping Cost"
+msgstr "Cost d'enviament per defecte"
+
+#: defaults.py:74
+msgid "Discount in Cart"
+msgstr "Descompte en carro"
+
+#: defaults.py:82
+msgid "Discount in Checkout"
+msgstr "Descompte en compra"
+
+#: defaults.py:90
+msgid "Force Host"
+msgstr "Forçar Host"
+
+#: defaults.py:107
+msgid "Billing & Shipping Handler"
+msgstr "Controlador de Pagament y enviament"
+
+#: defaults.py:118
+msgid "Order Handler"
+msgstr "Controlador de l'ordre"
+
+#: defaults.py:129
+msgid "Payment Handler"
+msgstr "Controlador del pagament"
+
+#: defaults.py:143
+msgid "Size"
+msgstr "Tamany"
+
+#: defaults.py:144
+msgid "Colour"
+msgstr "Color"
+
+#: defaults.py:150
+msgid "From Email"
+msgstr "Des de correu electrònic"
+
+#: defaults.py:161
+msgid "Unprocessed"
+msgstr "Sense procesar"
+
+#: defaults.py:162
+msgid "Processed"
+msgstr "Processat"
+
+#: defaults.py:168
+msgid "Products Per Category Page"
+msgstr "Productes per Categoria"
+
+#: defaults.py:176
+msgid "Search Products Per Page"
+msgstr "Cercar Productes per pàgina"
+
+#: defaults.py:184
+msgid "Number of Paging Links"
+msgstr "Nombre d'enllaços de paginació"
+
+#: defaults.py:196
+msgid "Relevance"
+msgstr "Rellevancia"
+
+#: defaults.py:197
+msgid "Least expensive"
+msgstr "Mes barat"
+
+#: defaults.py:198
+msgid "Most expensive"
+msgstr "Mes car"
+
+#: defaults.py:199
+msgid "Recently added"
+msgstr "Afegits recentment"
+
+#: defaults.py:200
+msgid "Highest rated"
+msgstr "Millor puntuació"
+
+#: defaults.py:206
+msgid "Enable SSL"
+msgstr "Activar SSL"
+
+#: defaults.py:215
+msgid "Sequence of setting names available within templates."
+msgstr "Sequència de nom disponibles a les plantilles."
+
+#: fields.py:45
+#: management/commands/product_db.py:33
+msgid "SKU"
+msgstr "Referència"
+
+#: forms.py:27
+#: templates/shop/product.html:112
+msgid "The selected options are currently unavailable."
+msgstr "Las opcions seleccionades no están disponibles."
+
+#: forms.py:28
+msgid "The selected options are currently not in stock."
+msgstr "No hi ha suficient stock per les opcions seleccionades."
+
+#: forms.py:29
+msgid "The selected quantity is currently unavailable."
+msgstr "La quantitat seleccionada no està disponible."
+
+#: forms.py:231
+msgid "The discount code entered is invalid."
+msgstr "El codi de descompte és incorrecte."
+
+#: forms.py:243
+#: models.py:728
+msgid "Free shipping"
+msgstr "Enviament gratuït"
+
+#: forms.py:258
+msgid "My delivery details are the same as my billing details"
+msgstr "Les meves dades d'enviament són les mateixes que les de pagament."
+
+#: forms.py:260
+msgid "Remember my address for next time"
+msgstr "Recordar la direcció en futures compres"
+
+#: forms.py:261
+msgid "Cardholder name"
+msgstr "Titular de la Tarjeta"
+
+#: forms.py:262
+#: models.py:210
+msgid "Type"
+msgstr "Tipus"
+
+#: forms.py:264
+msgid "Card number"
+msgstr "Número de targeta"
+
+#: forms.py:350
+msgid "Email Address"
+msgstr "Correu electrònic"
+
+#: forms.py:351
+msgid "Password"
+msgstr "Contrasenya"
+
+#: forms.py:379
+msgid "This email is already registered"
+msgstr "Aquest correu electrònic ja està registrat"
+
+#: forms.py:399
+msgid "Invalid email/password"
+msgstr "Correu electrònic o contrasenya incorrectes"
+
+#: forms.py:401
+msgid "Your account is inactive"
+msgstr "El seu compte està inactiu"
+
+#: forms.py:500
+msgid "Only one variation can be checked as the default."
+msgstr "Només es pot indicar una variació per defecte."
+
+#: forms.py:513
+msgid "Please enter a value for only one type of reduction."
+msgstr "Siusplau, introduïu un valor per un sol tipus de descompte."
+
+#: models.py:29
+msgid "Minimum price"
+msgstr "Preu mínim"
+
+#: models.py:30
+msgid "Maximum price"
+msgstr "Preu màxim"
+
+#: models.py:36
+msgid "Product category"
+msgstr "Categoria del producte"
+
+#: models.py:37
+msgid "Product categories"
+msgstr "Categores del producte"
+
+#: models.py:94
+#: models.py:563
+msgid "Unit price"
+msgstr "Preu unitari"
+
+#: models.py:96
+msgid "Sale price"
+msgstr "Preu de venda"
+
+#: models.py:97
+msgid "Sale start"
+msgstr "Inici del periode de venda"
+
+#: models.py:98
+msgid "Sale end"
+msgstr "Final del periode de venda"
+
+#: models.py:136
+msgid "Available for purchase"
+msgstr "Disponible per compres"
+
+#: models.py:141
+msgid "Date added"
+msgstr "Afegit el"
+
+#: models.py:145
+msgid "Rating"
+msgstr "Puntuació"
+
+#: models.py:150
+msgid "Product"
+msgstr "Producte"
+
+#: models.py:151
+msgid "Products"
+msgstr "Productes"
+
+#: models.py:188
+#: models.py:193
+#: management/commands/product_db.py:34
+msgid "Image"
+msgstr "Imatge"
+
+#: models.py:189
+#: models.py:561
+#: management/commands/product_db.py:32
+msgid "Description"
+msgstr "Descripció"
+
+#: models.py:194
+msgid "Images"
+msgstr "Imatges"
+
+#: models.py:212
+msgid "Name"
+msgstr "Nom"
+
+#: models.py:220
+msgid "Product option"
+msgstr "Opció del producte"
+
+#: models.py:221
+msgid "Product options"
+msgstr "Opcions del producte"
+
+#: models.py:245
+msgid "Number in stock"
+msgstr "Quantitat en inventari"
+
+#: models.py:247
+msgid "Default"
+msgstr "Per defecte"
+
+#: models.py:339
+#: models.py:348
+msgid "First name"
+msgstr "Nom"
+
+#: models.py:340
+#: models.py:349
+msgid "Last name"
+msgstr "Cognoms"
+
+#: models.py:341
+#: models.py:350
+msgid "Street"
+msgstr "Carrer"
+
+#: models.py:342
+#: models.py:351
+msgid "City/Suburb"
+msgstr "Ciutat/Barri"
+
+#: models.py:343
+#: models.py:352
+msgid "State/Region"
+msgstr "Estat/Regió"
+
+#: models.py:344
+#: models.py:353
+msgid "Zip/Postcode"
+msgstr "Códi Postal"
+
+#: models.py:345
+#: models.py:354
+msgid "Country"
+msgstr "Pais"
+
+#: models.py:346
+#: models.py:355
+msgid "Phone"
+msgstr "Telèfon"
+
+#: models.py:347
+msgid "Email"
+msgstr "Correu electrònic"
+
+#: models.py:356
+msgid "Additional instructions"
+msgstr "Instruccions adicionals"
+
+#: models.py:358
+msgid "Time"
+msgstr "Hora"
+
+#: models.py:361
+msgid "Shipping type"
+msgstr "Tipus de enviament"
+
+#: models.py:362
+msgid "Shipping total"
+msgstr "Total enviament"
+
+#: models.py:363
+msgid "Item total"
+msgstr "Total producte"
+
+#: models.py:364
+msgid "Discount code"
+msgstr "Codi de descompte"
+
+#: models.py:365
+msgid "Discount total"
+msgstr "Total del descompte"
+
+#: models.py:366
+msgid "Order total"
+msgstr "Total de l'ordre"
+
+#: models.py:367
+msgid "Transaction ID"
+msgstr "Identificador de la Transacció"
+
+#: models.py:370
+msgid "Status"
+msgstr "Estat"
+
+#: models.py:381
+msgid "Order"
+msgstr "Orde"
+
+#: models.py:382
+msgid "Orders"
+msgstr "Ordres"
+
+#: models.py:459
+#: templates/admin/shop/order/change_form.html:8
+#: templates/shop/complete.html:71
+msgid "Download PDF invoice"
+msgstr "Descarregar la factura en PDF"
+
+#: models.py:467
+msgid "Last updated"
+msgstr "Actualizat per última vegada"
+
+#: models.py:562
+msgid "Quantity"
+msgstr "Quantitat"
+
+#: models.py:564
+msgid "Total price"
+msgstr "Preu total"
+
+#: models.py:622
+msgid "Active"
+msgstr "Actiu"
+
+#: models.py:626
+msgid "Reduce by amount"
+msgstr "Reducció per quantitat"
+
+#: models.py:627
+msgid "Reduce by percent"
+msgstr "Reducció per percentatge"
+
+#: models.py:630
+msgid "Reduce to amount"
+msgstr "Reducció a quantitat"
+
+#: models.py:631
+msgid "Valid from"
+msgstr "Valid desde"
+
+#: models.py:632
+msgid "Valid to"
+msgstr "Valid fins"
+
+#: models.py:658
+msgid "Sale"
+msgstr "Venda"
+
+#: models.py:659
+msgid "Sales"
+msgstr "Vendes"
+
+#: models.py:726
+msgid "Code"
+msgstr "Codi"
+
+#: models.py:727
+msgid "Minimum total purchase"
+msgstr "Compra mínima total"
+
+#: utils.py:103
+#, python-format
+msgid "Invalid currency locale specified for SHOP_CURRENCY_LOCALE: '%s'. You'll need to set the locale for your system, or configure the SHOP_CURRENCY_LOCALE setting in your settings module."
+msgstr "La localizació especificada a SHOP_CURRENCY_LOCALE: '%s' és incorrecta. Sisplau, configureu la localització del seu sistema o configureu la opció SHOP_CURRENCY_LOCALE al seu modul de settings"
+
+#: views.py:75
+#: views.py:132
+msgid "Item added to cart"
+msgstr "Producte afegit al carro"
+
+#: views.py:82
+msgid "Item added to wishlist"
+msgstr "Producte afegit a la llista de desitjos"
+
+#: views.py:137
+msgid "Item removed from wishlist"
+msgstr "El producte s'ha borrat de la seva llista de desitjos"
+
+#: views.py:173
+msgid "Your cart has expired"
+msgstr "El seu carro ha caducat"
+
+#: views.py:181
+msgid "Cart updated"
+msgstr "S'ha actualitzat el carro"
+
+#: views.py:209
+msgid "Successfully logged in"
+msgstr "Us heu identificat amb exit"
+
+#: views.py:215
+msgid "Successfully signed up"
+msgstr "Us heu registrat correctament"
+
+#: views.py:229
+msgid "Successfully logged out"
+msgstr "Heu surtir amb exit"
+
+#: management/commands/product_db.py:30
+msgid "Title"
+msgstr "títul"
+
+#: management/commands/product_db.py:31
+msgid "Content"
+msgstr "Contingut"
+
+#: management/commands/product_db.py:35
+msgid "Category"
+msgstr "Categoria"
+
+#: management/commands/product_db.py:36
+msgid "Sub-Category"
+msgstr "Sub-categoria"
+
+#: management/commands/product_db.py:38
+msgid "Number in Stock"
+msgstr "Quantitat a l'inventari"
+
+#: management/commands/product_db.py:39
+#: templates/shop/cart.html:25
+#: templates/shop/order_details.html:38
+msgid "Unit Price"
+msgstr "Pre Unitari"
+
+#: management/commands/product_db.py:40
+msgid "Sale Price"
+msgstr "Preu de venda"
+
+#: management/commands/product_db.py:41
+msgid "Sale Start Date"
+msgstr "Data de finalització de la venda."
+
+#: management/commands/product_db.py:42
+msgid "Sale Start Time"
+msgstr "Hora d'inici de la Venda"
+
+#: management/commands/product_db.py:43
+msgid "Sale End Date"
+msgstr "Data de finalització de la Venda"
+
+#: management/commands/product_db.py:44
+msgid "Sale End Time"
+msgstr "Hora de Finalització de la Venda"
+
+#: management/commands/product_db.py:47
+msgid "product"
+msgstr "producte"
+
+#: management/commands/product_db.py:64
+msgid "Import/Export products from a csv file."
+msgstr "Importar o Exportar productes desde un fitxer CSV"
+
+#: management/commands/product_db.py:71
+msgid "Import products from csv file."
+msgstr "Importar productes a un fitxer CSV"
+
+#: management/commands/product_db.py:76
+msgid "Export products from csv file."
+msgstr "Exportar productes a un fitxer CSV"
+
+#: management/commands/product_db.py:83
+msgid "Please provide csv file to import"
+msgstr "Sisplau introduiu un fitxer CSV per importar"
+
+#: management/commands/product_db.py:87
+msgid "need to import or export"
+msgstr "es necesari importar o exportar"
+
+#: management/commands/product_db.py:138
+msgid "Importing .."
+msgstr "Important..."
+
+#: management/commands/product_db.py:185
+msgid "Exporting .."
+msgstr "Exportant.."
+
+#: payment/egate.py:44
+msgid "A general error occured: "
+msgstr "S'ha produït un error general:"
+
+#: payment/egate.py:47
+msgid "Transaction declined: "
+msgstr "Transacció invàlida:"
+
+#: templates/base.html:81
+#, python-format
+msgid ""
+"\n"
+"\t\t        Cart contains 1 item:\n"
+"\t\t        "
+msgid_plural ""
+"\n"
+"\t\t        Cart contains %(cart_quantity)s items:\n"
+"\t\t        "
+msgstr[0] ""
+"\n"
+"El carro conté 1 producte:"
+msgstr[1] ""
+"\n"
+"El carro conté %(cart_quantity)s productes:"
+
+#: templates/base.html:90
+#: templates/shop/cart.html:61
+msgid "Go to Checkout"
+msgstr "Procedir a la compra"
+
+#: templates/base.html:96
+#, python-format
+msgid ""
+"\n"
+"\t\t        Wishlist contains 1 item\n"
+"\t\t        "
+msgid_plural ""
+"\n"
+"\t\t        Wishlist contains %(wishlist_count)s items\n"
+"\t\t        "
+msgstr[0] ""
+"\n"
+"La lllista de desitjos conté 1 producte"
+msgstr[1] ""
+"\n"
+"La lllista de desitjos conté %(wishlist_count)s producte"
+
+#: templates/base.html:107
+msgid "Logged in as: "
+msgstr "Identificat com:"
+
+#: templates/base.html:109
+msgid "Log out"
+msgstr "Sortir"
+
+#: templates/base.html:112
+msgid "Log in or sign up"
+msgstr "Identificar-se o registrar-se"
+
+#: templates/base.html:123
+msgid "Powered by"
+msgstr "Amb el poder de "
+
+#: templates/base.html:125
+msgid "and"
+msgstr "i"
+
+#: templates/base.html:128
+msgid "View Mobile Site"
+msgstr "Veure lloc per dispositius mòbils"
+
+#: templates/admin/shop/order/change_form.html:9
+msgid "History"
+msgstr "Historial"
+
+#: templates/pages/category.html:40
+#: templates/shop/cart.html:97
+#: templates/shop/product.html:107
+#: templates/shop/product.html.py:148
+msgid "On sale:"
+msgstr "A la venda:"
+
+#: templates/shop/account.html:4
+msgid "Login / Signup"
+msgstr "Entrar/Registrar-se"
+
+#: templates/shop/account.html:8
+#: templates/shop/cart.html:9
+#: templates/shop/complete.html:62
+#: templates/shop/product.html:64
+#: templates/shop/wishlist.html:8
+msgid "Home"
+msgstr "Inici"
+
+#: templates/shop/account.html:9
+msgid "Account"
+msgstr "Compte"
+
+#: templates/shop/account.html:16
+#: templates/shop/account.html.py:21
+msgid "Login"
+msgstr "Entrar"
+
+#: templates/shop/account.html:26
+#: templates/shop/account.html.py:31
+msgid "Signup"
+msgstr "Registrar-se"
+
+#: templates/shop/billing_shipping.html:46
+#: templates/shop/confirmation.html:8
+#: templates/shop/order_details.html:13
+msgid "Billing Details"
+msgstr "Detalles de Pagament"
+
+#: templates/shop/billing_shipping.html:51
+msgid "Delivery Details"
+msgstr "Detalls d'entrega"
+
+#: templates/shop/cart.html:4
+#: templates/shop/cart.html.py:5
+#: templates/shop/cart.html:10
+msgid "Your cart"
+msgstr "El seu carro"
+
+#: templates/shop/cart.html:24
+#: templates/shop/order_details.html:37
+msgid "Item"
+msgstr "Ítem"
+
+#: templates/shop/cart.html:26
+#: templates/shop/order_details.html:39
+msgid "Qty"
+msgstr "Quant."
+
+#: templates/shop/cart.html:27
+#: templates/shop/order_details.html:40
+msgid "Price"
+msgstr "Preu"
+
+#: templates/shop/cart.html:28
+msgid "Remove?"
+msgstr "Esborrar?"
+
+#: templates/shop/cart.html:57
+msgid "Update cart"
+msgstr "Actualizar carro"
+
+#: templates/shop/cart.html:81
+msgid "You may also like:"
+msgstr "Tambie li podria agradar:"
+
+#: templates/shop/cart.html:110
+#: templates/shop/checkout.html:52
+msgid "Your cart is empty."
+msgstr "El seu carro està buit."
+
+#: templates/shop/checkout.html:6
+#: templates/shop/checkout.html.py:7
+#: templates/shop/complete.html:63
+msgid "Checkout"
+msgstr "Comprar"
+
+#: templates/shop/checkout.html:7
+msgid "Step"
+msgstr "Pas"
+
+#: templates/shop/checkout.html:7
+#: templates/shop/product_paging.html:5
+msgid "of"
+msgstr "de"
+
+#: templates/shop/checkout.html:21
+msgid "Complete"
+msgstr "Completat"
+
+#: templates/shop/checkout.html:47
+msgid "Next"
+msgstr "Següent"
+
+#: templates/shop/checkout.html:49
+msgid "Back"
+msgstr "Enrere"
+
+#: templates/shop/complete.html:4
+#: templates/shop/complete.html.py:58
+msgid "Order Complete"
+msgstr "Ordre finalitzada"
+
+#: templates/shop/complete.html:68
+msgid "Your order is complete. We've sent you a receipt via email and you can also view your invoice using one of the links below."
+msgstr "La seva ordre s'ha completat. Hem enviat una copa a la seva direcció de correu electrònic. De totes formes podeu veure la factura als següents enllaços:"
+
+#: templates/shop/complete.html:70
+msgid "View invoice in your browser"
+msgstr "Veure la factura al navegador"
+
+#: templates/shop/confirmation.html:17
+#: templates/shop/order_details.html:14
+msgid "Shipping Details"
+msgstr "Detalles d'Enviament"
+
+#: templates/shop/confirmation.html:29
+#: templates/shop/payment_fields.html:3
+msgid "Payment Details"
+msgstr "Detalls de Pagament"
+
+#: templates/shop/order_details.html:5
+msgid "Order ID:"
+msgstr "Códi de la Ordre"
+
+#: templates/shop/order_details.html:10
+msgid "Your Details"
+msgstr "Els teus detalls"
+
+#: templates/shop/order_details.html:34
+msgid "Items Ordered"
+msgstr "Ítems Ordenats"
+
+#: templates/shop/order_totals.html:4
+msgid "Sub total"
+msgstr "Sub Total"
+
+#: templates/shop/order_totals.html:12
+msgid "Discount"
+msgstr "Descompte"
+
+#: templates/shop/order_totals.html:23
+msgid "Shipping"
+msgstr "Enviament"
+
+#: templates/shop/order_totals.html:28
+msgid "Total"
+msgstr "Total"
+
+#: templates/shop/payment_fields.html:8
+msgid "Expiry"
+msgstr "Caducitat"
+
+#: templates/shop/product.html:121
+msgid "Buy"
+msgstr "Comprar"
+
+#: templates/shop/product.html:122
+msgid "Save for later"
+msgstr "Desa per desprès."
+
+#: templates/shop/product.html:125
+msgid "This product is currently unavailable."
+msgstr "Aquest producte no està disponible."
+
+#: templates/shop/product.html:132
+msgid "Related Products"
+msgstr "Productes Relacionats"
+
+#: templates/shop/product_paging.html:5
+msgid "Page"
+msgstr "Pàgina"
+
+#: templates/shop/wishlist.html:4
+#: templates/shop/wishlist.html.py:9
+msgid "Your wishlist"
+msgstr "Llista de desitjos"
+
+#: templates/shop/wishlist.html:31
+msgid "Buy now"
+msgstr "Comprar ara"
+
+#: templates/shop/wishlist.html:32
+msgid "Remove"
+msgstr "Eliminar"
+
+#: templates/shop/wishlist.html:39
+msgid "Your wishlist is empty."
+msgstr "La seva llista de desitjos esta buida"
+
+#: templates/shop/email/order_receipt.html:3
+msgid "Dear"
+msgstr "Estimat"
+
+#: templates/shop/email/order_receipt.html:5
+msgid "Your order has been successful, details are below."
+msgstr "S'ha creat la seva ordre correctament. En podeu trobar els detalls a continuació:"
+

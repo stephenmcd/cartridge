@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load mezzanine_tags shop_tags i18n %}
+
+{% block meta_title %}{% trans "Order History" %}{% endblock %}
+{% block title %}{% trans "Order History" %}{% endblock %}
+
+{% block breadcrumb_menu %}
+{{ block.super }}
+<li>{% trans "Order History" %}</li>
+{% endblock %}
+
+{% block main %}
+
+{% if orders %}
+
+<table class="table table-striped order-history">
+    <tr>
+        <th class="left">ID</th>
+        <th class="left">{% trans "Date / time" %}</th>
+        <th>{% trans "Quantity" %}</th>
+        <th>{% trans "Paid" %}</th>
+        <th colspan="2" class="left">{% trans "Status" %}</th>
+    </tr>
+    {% for order in orders.object_list %}
+    <tr>
+        <td class="left">{{ order.id }}</td>
+        <td class="left">{{ order.time }}</td>
+        <td class="right">{{ order.quantity_total }}</td>
+        <td class="right">{{ order.total|currency }}</td>
+        <td>{{ order.get_status_display }}</td>
+        <td>
+            <a class="btn btn-small btn-primary" href="{% url shop_invoice order.id %}?format=pdf">{% trans "Download PDF" %}</a>
+            <a class="btn btn-small" target="_blank" href="{% url shop_invoice order.id %}">{% trans "View invoice" %}</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% pagination_for orders %}
+
+{% else %}
+<p>{% trans "You have not ordered anything from us yet." %}</p>
+{% endif %}
+
+{% endblock %}

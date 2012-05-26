@@ -1,5 +1,4 @@
 
-from datetime import datetime
 from decimal import Decimal
 from operator import iand, ior
 
@@ -14,6 +13,7 @@ from mezzanine.core.managers import DisplayableManager
 from mezzanine.core.models import Displayable, RichText, Orderable
 from mezzanine.generic.fields import RatingField
 from mezzanine.pages.models import Page
+from mezzanine.utils.timezone import now
 
 from cartridge.shop import fields, managers
 
@@ -32,14 +32,18 @@ class Category(Page, RichText):
     A category of products on the website.
     """
 
-    options = models.ManyToManyField("ProductOption", blank=True,
+    options = models.ManyToManyField("ProductOption",
+                                     verbose_name=_("Product options"),
+                                     blank=True,
                                      related_name="product_options")
-    sale = models.ForeignKey("Sale", blank=True, null=True)
+    sale = models.ForeignKey("Sale", verbose_name=_("Sale"),
+                             blank=True, null=True)
     price_min = fields.MoneyField(_("Minimum price"), blank=True, null=True)
     price_max = fields.MoneyField(_("Maximum price"), blank=True, null=True)
-    combined = models.BooleanField(default=True, help_text="If checked, "
+    combined = models.BooleanField(_("Combined"), default=True,
+        help_text=_("If checked, "
         "products must match all specified filters, otherwise products "
-        "can match any specified filter.")
+        "can match any specified filter."))
 
     class Meta:
         verbose_name = _("Product category")
@@ -58,9 +62,9 @@ class Category(Page, RichText):
             filters.append(Q(**lookup))
         # Q objects used against variations to ensure sale date is
         # valid when filtering by sale, or sale price.
-        now = datetime.now()
-        valid_sale_from = Q(sale_from__isnull=True) | Q(sale_from__lte=now)
-        valid_sale_to = Q(sale_to__isnull=True) | Q(sale_to__gte=now)
+        n = now()
+        valid_sale_from = Q(sale_from__isnull=True) | Q(sale_from__lte=n)
+        valid_sale_to = Q(sale_to__isnull=True) | Q(sale_to__gte=n)
         valid_sale_date = valid_sale_from & valid_sale_to
         # Filter by variations with the selected sale if the sale date
         # is valid.
@@ -113,9 +117,9 @@ class Priced(models.Model):
         """
         Returns True if the sale price is applicable.
         """
-        now = datetime.now()
-        valid_from = self.sale_from is None or self.sale_from < now
-        valid_to = self.sale_to is None or self.sale_to > now
+        n = now()
+        valid_from = self.sale_from is None or self.sale_from < n
+        valid_to = self.sale_to is None or self.sale_to > n
         return self.sale_price is not None and valid_from and valid_to
 
     def has_price(self):
@@ -144,13 +148,16 @@ class Product(Displayable, Priced, RichText):
 
     available = models.BooleanField(_("Available for purchase"),
                                     default=False)
-    image = CharField(max_length=100, blank=True, null=True)
-    categories = models.ManyToManyField("Category", blank=True,
-                                        related_name="products")
+    image = CharField(_("Image"), max_length=100, blank=True, null=True)
+    categories = models.ManyToManyField("Category",
+                                        verbose_name=_("Product categories"),
+                                        blank=True, related_name="products")
     date_added = models.DateTimeField(_("Date added"), auto_now_add=True,
                                       null=True)
-    related_products = models.ManyToManyField("self", blank=True)
-    upsell_products = models.ManyToManyField("self", blank=True)
+    related_products = models.ManyToManyField("self",
+                             verbose_name=_("Related products"), blank=True)
+    upsell_products = models.ManyToManyField("self",
+                             verbose_name=_("Upsell products"), blank=True)
     rating = RatingField(verbose_name=_("Rating"))
 
     objects = DisplayableManager()
@@ -254,7 +261,8 @@ class ProductVariation(Priced):
     num_in_stock = models.IntegerField(_("Number in stock"), blank=True,
                                        null=True)
     default = models.BooleanField(_("Default"))
-    image = models.ForeignKey("ProductImage", null=True, blank=True)
+    image = models.ForeignKey("ProductImage", verbose_name=_("Image"),
+                              null=True, blank=True)
 
     objects = managers.ProductVariationManager()
 
@@ -469,8 +477,7 @@ class Order(models.Model):
 
 class Cart(models.Model):
 
-    last_updated = models.DateTimeField(_("Last updated"), auto_now=True,
-                                        null=True)
+    last_updated = models.DateTimeField(_("Last updated"), null=True)
 
     objects = managers.CartManager()
 
@@ -708,13 +715,13 @@ class Sale(Discount):
                     #
                     # http://dev.mysql.com/
                     # doc/refman/5.0/en/subquery-errors.html
-                    try:
-                        for priced in priced_objects.filter(**extra_filter):
-                            for field, value in update.items():
-                                setattr(priced, field, value)
+                    for priced in priced_objects.filter(**extra_filter):
+                        for field, value in update.items():
+                            setattr(priced, field, value)
+                        try:
                             priced.save()
-                    except Warning:
-                        pass
+                        except Warning:
+                            pass
                 except Warning:
                     pass
 

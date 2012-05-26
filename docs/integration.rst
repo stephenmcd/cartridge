@@ -5,11 +5,11 @@ Integration
 ===========
 
 Cartridge provides integration hooks for various steps in the
-checkout process such as when billing and shipping details are
-entered, when payment info is entered, and when an order is
+checkout process, such as when billing and shipping details are
+entered, when payment information is entered, and when an order is
 complete. Each of these steps has its own setting which stores
 the dotted Python package/module/function name of a handler
-function to be called at each step. These settings and their
+function to be called. These settings and their
 default values are:
 
   * ``SHOP_HANDLER_BILLING_SHIPPING = "cartridge.shop.checkout.default_billship_handler"``
@@ -39,7 +39,7 @@ with the following code::
 
 With the request object, the user's cart, the order form fields and
 order instance all available, you can then implement any custom
-integration required such as validating shipping rules, calculating
+integration required, such as validating shipping rules, calculating
 the shipping amount, integrating with your preferred payment gateway
 and implementing any custom order handling once the order is complete.
 
@@ -52,7 +52,7 @@ step of the checkout form is submitted. It defaults to the value
 ``cartridge.shop.checkout.default_billship_handler`` which simply sets
 a flat rate shipping value defined by the setting
 ``SHOP_DEFAULT_SHIPPING_VALUE``. The order instance is not passed
-to the billing / shipping handler since it is only available at the
+to the billing / shipping handler as it is only available at the
 last step of the checkout process.
 
 Specifying Shipping
@@ -69,9 +69,9 @@ is a string indicating the type of shipping, and ``shipping_value``
 is a float or integer for the monetary value of shipping that will
 be added to the order.
 
-Under the hood this simply assigns the given shipping values to
-the user's session and these values are then saved to the user's
-order on successful completion.
+Under the hood, this simply assigns the given shipping values to
+the user's session. Subsequently these values are saved to the user's
+order upon successful completion.
 
 Payment
 =======
@@ -79,7 +79,7 @@ Payment
 The setting ``SHOP_HANDLER_PAYMENT`` is used to specify the handler
 function that will be called when the payment step of the checkout
 form is submitted. It defaults to the value
-``cartridge.shop.checkout.default_payment_handler`` which does nothing.
+``cartridge.shop.checkout.default_payment_handler``, which does nothing.
 
 .. note::
 
@@ -96,7 +96,7 @@ shipping, discount and tax amounts. If there is a payment error
 
     When Cartridge is configured to display a final confirmation step
     after payment info is entered, the handler function defined by
-    ``SHOP_HANDLER_PAYMENT`` won't be called until after the
+    ``SHOP_HANDLER_PAYMENT`` will not be called until after the
     confirmation step. If there is no confirmation step, then the
     handler function will be called directly upon the customer
     submitting payment info.
@@ -106,7 +106,7 @@ Order Processing
 
 The setting ``SHOP_HANDLER_ORDER`` is used to specify the handler
 function that will be called when the order is complete. It defaults
-to the value ``cartridge.shop.checkout.default_order_handler`` which
+to the value ``cartridge.shop.checkout.default_order_handler``, which
 does nothing. With your order handler function, you can implement
 any custom order processing required once an order successfully
 completes.
@@ -118,9 +118,9 @@ Error Handling
 
 When the billing / shipping and payment handler functions are called,
 the exception ``cartridge.shop.checkout.CheckoutError`` is checked
-for and if caught will be presented to the customer as an error
+for and, if caught, presented to the customer as an error
 message. This can be used to indicate a payment error, or even to
-raise any potential errors around shipping requirements at the
+raise potential errors in shipping requirements at the
 billing / shipping checkout step.
 
 .. _ref-checkout-form:
