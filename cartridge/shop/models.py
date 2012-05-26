@@ -4,7 +4,7 @@ from operator import iand, ior
 
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.db.models import CharField, Q
+from django.db.models import CharField, F, Q
 from django.db.models.base import ModelBase
 from django.utils.translation import ugettext, ugettext_lazy as _
 
@@ -423,9 +423,10 @@ class Order(models.Model):
 
     def complete(self, request):
         """
-        Remove order fields that are stored in the session, reduce
-        the stock level for the items in the order, and then delete
-        the cart.
+        Remove order fields that are stored in the session, reduce the
+        stock level for the items in the order, decrement the uses
+        remaining count for discount code (if applicable) and then
+        delete the cart.
         """
         self.save()  # Save the transaction ID.
         for field in self.session_fields:
@@ -442,6 +443,10 @@ class Order(models.Model):
                     variation.num_in_stock -= item.quantity
                     variation.save()
                 variation.product.actions.purchased()
+        code = request.session.get('discount_code')
+        if code:
+            DiscountCode.objects.active().filter(code=code).update(
+                uses_remaining=F('uses_remaining') - 1)
         request.cart.delete()
 
     def details_as_dict(self):
@@ -747,6 +752,10 @@ class DiscountCode(Discount):
     code = fields.DiscountCodeField(_("Code"), unique=True)
     min_purchase = fields.MoneyField(_("Minimum total purchase"))
     free_shipping = models.BooleanField(_("Free shipping"))
+    uses_remaining = models.IntegerField(_("Uses remaining"), blank=True,
+        null=True, help_text=_("If you wish to limit the number of times a "
+            "code may be used, set this value. It will be decremented upon "
+            "each use."))
 
     objects = managers.DiscountCodeManager()
 
