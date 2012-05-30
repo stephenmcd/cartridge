@@ -43,7 +43,7 @@ $(function() {$('.middle :input:visible:enabled:first').focus();});
 </ul>
 {% order_totals %}
 <br style="clear:both;">
-<a class="btn" href="{% url shop_cart %}">Edit Cart</a>
+<a class="btn" href="{% url shop_cart %}">{% trans "Edit Cart" %}</a>
 </div>
 {% endif %}
 

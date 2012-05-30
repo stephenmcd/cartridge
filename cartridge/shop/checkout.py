@@ -2,7 +2,7 @@
 Checkout process utilities.
 """
 
-from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.models import SiteProfileNotAvailable
 from django.utils.translation import ugettext as _
 from django.template.loader import get_template, TemplateDoesNotExist
 
@@ -100,7 +100,7 @@ def initial_order_data(request):
         user_models = [request.user]
         try:
             user_models.insert(0, request.user.get_profile())
-        except ObjectDoesNotExist:
+        except SiteProfileNotAvailable:
             pass
         for order_field in OrderForm._meta.fields:
             check_fields = [order_field]
