@@ -80,7 +80,7 @@ class Product(Displayable, Priced, RichText):
     image = CharField(_("Image"), max_length=100, blank=True, null=True)
     categories = models.ManyToManyField("Category",
                                         verbose_name=_("Product categories"),
-                                        blank=True, related_name="products")
+                                        blank=True)
     date_added = models.DateTimeField(_("Date added"), auto_now_add=True,
                                       null=True)
     related_products = models.ManyToManyField("self",
@@ -126,6 +126,10 @@ class Category(Page, RichText):
     A category of products on the website.
     """
 
+    products = models.ManyToManyField("Product",
+                                     verbose_name=_("Products"),
+                                     blank=True,
+                                     through=Product.categories.through)
     options = models.ManyToManyField("ProductOption",
                                      verbose_name=_("Product options"),
                                      blank=True,
