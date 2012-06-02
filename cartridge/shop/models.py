@@ -13,6 +13,7 @@ from mezzanine.core.managers import DisplayableManager
 from mezzanine.core.models import Displayable, RichText, Orderable
 from mezzanine.generic.fields import RatingField
 from mezzanine.pages.models import Page
+from mezzanine.utils.models import AdminThumbMixin
 from mezzanine.utils.timezone import now
 
 from cartridge.shop import fields, managers
@@ -140,7 +141,7 @@ class Priced(models.Model):
         return Decimal("0")
 
 
-class Product(Displayable, Priced, RichText):
+class Product(Displayable, Priced, RichText, AdminThumbMixin):
     """
     Container model for a product that stores information common to
     all of its variations such as the product's title and description.
@@ -162,6 +163,8 @@ class Product(Displayable, Priced, RichText):
 
     objects = DisplayableManager()
 
+    admin_thumb_field = "image"
+
     class Meta:
         verbose_name = _("Product")
         verbose_name_plural = _("Products")
@@ -181,15 +184,6 @@ class Product(Displayable, Priced, RichText):
         if default.image:
             self.image = default.image.file.name
         self.save()
-
-    def admin_thumb(self):
-        if self.image is None:
-            return ""
-        from mezzanine.core.templatetags.mezzanine_tags import thumbnail
-        thumb_url = thumbnail(self.image, 24, 24)
-        return "<img src='%s%s' />" % (settings.MEDIA_URL, thumb_url)
-    admin_thumb.allow_tags = True
-    admin_thumb.short_description = ""
 
 
 class ProductImage(Orderable):
