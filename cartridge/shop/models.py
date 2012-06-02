@@ -576,8 +576,11 @@ class SelectedProduct(models.Model):
         return ""
 
     def save(self, *args, **kwargs):
-        self.total_price = self.unit_price * self.quantity
-        super(SelectedProduct, self).save(*args, **kwargs)
+        if not self.id or self.quantity > 0:
+            self.total_price = self.unit_price * self.quantity
+            super(SelectedProduct, self).save(*args, **kwargs)
+        else:
+            self.delete()
 
 
 class CartItem(SelectedProduct):
