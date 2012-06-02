@@ -576,6 +576,11 @@ class SelectedProduct(models.Model):
         return ""
 
     def save(self, *args, **kwargs):
+        """
+        Set the total price based on the given quantity. If the
+        quantity is zero, which may occur via the cart page, just
+        delete it.
+        """
         if not self.id or self.quantity > 0:
             self.total_price = self.unit_price * self.quantity
             super(SelectedProduct, self).save(*args, **kwargs)
