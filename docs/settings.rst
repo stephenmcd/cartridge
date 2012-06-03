@@ -45,7 +45,7 @@ Default: ``True``
 ``SHOP_CURRENCY_LOCALE``
 ------------------------
 
-Controls the formatting of monetary values accord to the locale module in the python standard library. If an empty string is used, will fall back to the system's locale.
+Controls the formatting of monetary values according to the locale module in the python standard library. If an empty string is used, will fall back to the system's locale.
 
 Default: ``''``
 
@@ -66,14 +66,14 @@ Default: ``True``
 ``SHOP_DISCOUNT_FIELD_IN_CHECKOUT``
 -----------------------------------
 
-Discount codes be entered during the first checkout step.
+Discount codes can be entered on the first checkout step.
 
 Default: ``True``
 
 ``SHOP_HANDLER_BILLING_SHIPPING``
 ---------------------------------
 
-Dotted package path and class name of the function that is called on submit of the billing/shipping checkout step. This is where shipping calculation can be performed and set using the function ``cartridge.shop.utils.set_shipping``.
+Dotted package path and class name of the function called upon submission of the billing/shipping checkout step. This is where shipping calculations can be performed and set using the function ``cartridge.shop.utils.set_shipping``.
 
 Default: ``'cartridge.shop.checkout.default_billship_handler'``
 
@@ -87,15 +87,14 @@ Default: ``'cartridge.shop.checkout.default_order_handler'``
 ``SHOP_HANDLER_PAYMENT``
 ------------------------
 
-Dotted package path and class name of the function that is called upon
-submission of the payment checkout step. This is where integration with a payment gateway should be implemented.
+Dotted package path and class name of the function that is called upon submission of the payment checkout step. This is where integration with a payment gateway should be implemented.
 
 Default: ``'cartridge.shop.checkout.default_payment_handler'``
 
 ``SHOP_OPTION_TYPE_CHOICES``
 ----------------------------
 
-Sequence of value/name pairs for types of product options (eg Size, Colour).
+Sequence of value/name pairs for types of product options (e.g. Size, Colour).
 
 Default: ``((1, u'Size'), (2, u'Colour'))``
 

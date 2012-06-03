@@ -1,3 +1,57 @@
+Version 0.5.0 (Jun 03, 2012)
+----------------------------
+
+  * Make ACCOUNTS_ENABLED editable - Stephen McDonald
+  * Wrap data access in migrations with checks against the dry_run arg - Stephen McDonald
+  * Added migration for mezzanine.core.models.MetaData.gen_description - Stephen McDonald
+  * Remove invalid examples of gettext in settings module - Stephen McDonald
+  * Update .po files - Sebastián Ramírez Magrí
+  * Dev started in 2009 - Stephen McDonald
+  * update title/slug for Displayable model - Dmitry Falk
+  * fix selected sorting option - Dmitry Falk
+  * Update to the new mezzanine.accounts app - Stephen McDonald
+  * User Mezzanine's new auth backend - Stephen McDonald
+  * Use dev version of Mezzanine for CI - Stephen McDonald
+  * Updated settings to match changes in mezzanine/project_template - Kent Hauser
+  * Accounts should be on by default in Cartridge - Stephen McDonald
+  * Fixed exception handling in Sale.save() which result in Product and Variation sale_prices potentially fall out of sync. As it turns out this bug seems only to be relevant when using MySQL with DEBUG=True - DamianHeard
+  * Upgraded date handling for timezone support - Stephen McDonald
+  * Add multiple Django versions and IRC notifications to travis builds - Stephen McDonald
+  * Fix trvis config - Stephen McDonald
+  * fix i18n quantity label - Dmitry Falk
+  * Added an order history page for logged-in users - Alex Hill
+  * Added pagination to order history - Alex Hill
+  * Grammatical corrections to descriptive snippets - Ross Laird
+  * Cleaned up install description - Ross Laird
+  * Added Mezzanine's new PageMiddleware to settings - Stephen McDonald
+  * Edited descriptions for clarity and concision - Ross Laird
+  * add some verbose names - Dmitry Falk
+  * Pre-populate checkout form with logged-in user fields if no previous orders available - Stephen McDonald
+  * fix order history list: 'Page' object not iterable - Dmitry Falk
+  * fix related products displaying in template - Dmitry Falk
+  * fix upsell products displaying - Dmitry Falk
+  * Allow profile fields to pre-populate checkout form - Stephen McDonald
+  * Fix missing import - Stephen McDonald
+  * Really fix import - Stephen McDonald
+  * Don't require debug for test data - Stephen McDonald
+  * Don't run signals on tests - Stephen McDonald
+  * Clean up clears on brs - Stephen McDonald
+  * fix get_profile exception - Dmitry Falk
+  * Clean up imports - Stephen McDonald
+  * Add a field to track the number of uses remaining for a given discount code. Include in the validity section of the admin - leaving the field blank will keep existing behaviour.Update the DiscountCodeManager to exclude any codes which have explicitly 0 uses remaining - Gary Reynolds
+  * Update the Order.complete method to decrement the discount code's uses_remaining field if necessary - Gary Reynolds
+  * Fix up the auto generated migration - Gary Reynolds
+  * Fix up the migration name - Gary Reynolds
+  * Added handling for Mezzanine's new cache setup - Stephen McDonald
+  * reorder Product/Category models code - Dmitry Falk
+  * set Product/Category bi-directional ManyToMany in admin - Dmitry Falk
+  * Use Mezzanine's AdminThumbMixin for the product admin thumbnail - Stephen McDonald
+  * Allow cart items to be removed by entering 0 as quantity. Closes #38 - Stephen McDonald
+  * Added missing docstring - Stephen McDonald
+  * Add empty migration for defining Category.products - Stephen McDonald
+  * Use a dummy cart object until items have actually been added to the cart, to avoid unnecessary db queries - Stephen McDonald
+  * Bump Mezzanine version to 1.1.0 - Stephen McDonald
+
 Version 0.4.9 (Mar 24, 2012)
 ----------------------------
 
@@ -26,9 +80,6 @@ Version 0.4.5 (Mar 19, 2012)
 Version 0.4.4 (Mar 19, 2012)
 ----------------------------
 
-  * pep8 fix - Stephen McDonald
-  * Update translations from transifex. Forgot to merge changes from Stephen's branch the last time - Sebastián Ramírez Magrí
-  * project_template cleanup - Stephen McDonald
   * Updated project_template's urls.py in line with Mezzanine's - Stephen McDonald
   * Exclude static dir from package - Stephen McDonald
   * Use Mezzanine's set_cookie and send_mail_template - Stephen McDonald
@@ -56,7 +107,6 @@ Version 0.4.0 (Mar 03, 2012)
   * Make the subject line of the order receipt email editable - Gary Reynolds
   * Documentation updated - Gary Reynolds
   * If a request is made to /shop/cart/complete/ fails, raise 404 Not Found error instead of leaving an uncaught DoesNotExist to bubble up - Gary Reynolds
-  * Adding "Coopers Store" to sites that use Cartridge - Gary Reynolds
   * Added pre-purchase card expiry validation - Stephen McDonald
   * Ported default templates from 960.gs to Twitter Bootstrap - Stephen McDonald
   * Maintain a consistent grid size for category products - Stephen McDonald
@@ -65,7 +115,6 @@ Version 0.4.0 (Mar 03, 2012)
   * Use bootstrap's media-grid for product images - Stephen McDonald
   * Added overlay for full product image - Stephen McDonald
   * Changed LICENSE from 3-clause to 2-clause BSD - Stephen McDonald
-  * Updated ignore file - Stephen McDonald
   * Updated Mezzanine css - Stephen McDonald
   * Bump the required Mezzanine version - Stephen McDonald
   * Added complete handling for Django's staticfiles app, in line with Mezzanine - Stephen McDonald
@@ -76,10 +125,8 @@ Version 0.4.0 (Mar 03, 2012)
   * Temp remove requirements - Stephen McDonald
   * Updated the project_template settings to reflect new mezzanine SSLMiddleware.  Updated cartridge.shop.middleware.SSLRedirect deprecation warning to instruct the user to use mezzanine.core.middleware.SSLMiddleware - Josh Cartmell
   * Set defaults for SITE_FORCE_SSL_URL_PREFIXES - Josh Cartmell
-  * Formatting tweak - Stephen McDonald
   * Refactored setting default images for variations, and formset saving in ProductAdmin, to handle when images get deleted and are no longer valid selections for variations, which would raise errors. Closes #14 - Stephen McDonald
   * Removed account functionality - now implemented in Mezzanine - Stephen McDonald
-  * Added sheerethic.com to sites - Stephen McDonald
   * Don't import * from mezzanine.project_template.settings, just define everything explicitly in the settings module - Stephen McDonald
   * Update arg for the new format for Mezzanine's ratings in the product template - Stephen McDonald
   * make default shipping handler respect free_shipping - lexual
@@ -88,16 +135,11 @@ Version 0.4.0 (Mar 03, 2012)
   * Use a generic sqlite db name in local_settings.py - Stephen McDonald
   * Add the possibility of disabling the Payment step - pokoli
   * Upgrade to Bootstrap 2.0 - Stephen McDonald
-  * Use transparent panel backgrounds for easier bootstrap theming - Stephen McDonald
   * Add deprecated fallback for SSLMiddleware - Stephen McDonald
   * check if field exists before deleting, refs https://github.com/stephenmcd/cartridge/issues/17 - Kamal Bin Mustafa
   * Fix step calculation when payments aren't enabled - Stephen McDonald
-  * Add Sergi Almacellas Abellana and Kamal Mustafa to AUTHORS - Stephen McDonald
   * Settings containing paths to code to run shouldn't be editable. Smells like a vulnerability - Stephen McDonald
   * Update settings docs, model graphs - Stephen McDonald
-  * Update translations from transifex. Include Italian - Sebastián Ramírez Magrí
-  * Hard link ignore - Stephen McDonald
-  * Added Nicola Larosa to AUTHORS - Stephen McDonald
   * Set up TravisCI - Stephen McDonald
   * Restore requirements - Stephen McDonald
 
@@ -110,28 +152,21 @@ Version 0.3.6 (Dec 09, 2011)
 ----------------------------
 
   * Fix for subquery update in MySQL.See http://dev.mysql.com/doc/refman/5.0/en/subquery-errors.html - Gary Reynolds
-  * Added Gary Reynolds to AUTHORS - stephenmcd
 
 Version 0.3.5 (Dec 03, 2011)
 ----------------------------
 
   * Add the ability for a developer to replace the OrderForm class with a setting.This would usually be a subclass of `cartridge.shops.forms.OrderForm` however we do not enfore this and leave it to the developer to ensure that the interface requirements are met in the form they define - Gary Reynolds
-  * Update PO files from transifex - Sebastián Ramírez Magrí
   * Synchronize PO files with latest tip - Sebastián Ramírez Magrí
   * PayPal doDirectPayment Website Payments Pro NVP API payment processor - Ken Bolton
   * Fix mistake in the urllib2 request.Add COUNTRIES - Ken Bolton
-  * pep8 fixes - stephenmcd
 
 Version 0.3.4 (Nov 13, 2011)
 ----------------------------
 
-  * Added Sebastián Magrí to AUTHORS - stephenmcd
-  * Update transifex configuration adding ru and fr and moving locale/ into cartridge/shop/ - Sebastián Ramírez Magrí
-  * Update spanish translations - Sebastián Ramírez Magrí
   * Refactored discount code calculation per product to not use DB queries per cart item - stephenmcd
   * Added handling for recalculating discount codes on cart changes - stephenmcd
   * Added discount code tests - stephenmcd
-  * Added Luke Miller to AUTHORS - stephenmcd
   * Added a note to docs about discounts per cart item versus entire cart - stephenmcd
   * Fixed incorrect calls for rerieving all products for a discount - stephenmcd
 
@@ -145,18 +180,9 @@ Version 0.3.2 (Nov 11, 2011)
 
   * DiscountCodes can be applied to specific products or categories - Luke Miller
   * tidy up code - Luke Miller
-  * Add english locale .po file for transifex - Sebastián Ramírez Magrí
-  * Add config file for transifex - Sebastián Ramírez Magrí
-  * Add Spanish translation and update transifex configuration to reflect that - Sebastián Ramírez Magrí
-  * Automated transifex changes to spanish .po file - Sebastián Ramírez Magrí
-  * Add Spanish translations from transifex and process mo files - Sebastián Ramírez Magrí
-  * Finish Spanish translations - Sebastián Ramírez Magrí
   * Fixed type error with decimal shipping values - stephenmcd
-  * Added the Order.transaction_id field that is populated by the return value of payment handlers - stephenmcd
   * Added a payment handler for ANZ eGate - stephenmcd
   * Fixed egate exception handling - stephenmcd
-  * Allow nulls in Order.transaction_id - stephenmcd
-  * PEP8 fixes - stephenmcd
 
 Version 0.3.1 (Nov 05, 2011)
 ----------------------------
@@ -176,25 +202,17 @@ Version 0.3 (Nov 05, 2011)
   * Fixed logic around displaying discount code field - stephenmcd
   * Made product images orderable - stephenmcd
   * Initial layout of editable cart formset - stephenmcd
-  * Refined styles for cart - stephenmcd
   * Added error display to cart form - stephenmcd
   * Refined discount form styling - stephenmcd
   * Refactored AddProductForm to not use a wrapper function and to also handle adding items to the cart from the wishlist - stephenmcd
-  * Cleaned up whitespace - stephenmcd
   * Refactored loading of cart and wishlist moving it from context processors into a single shop middleware shared with SSL redirection - stephenmcd
   * Cleaned up cart rendering logic - stephenmcd
   * Added next param to login/signup link on checkout - stephenmcd
   * Initial view for printable PDF invoices - stephenmcd
-  * Interface tweaks - stephenmcd
   * Added invoice links to order complete page and order admin list/change views - stephenmcd
-  * Added PDF generation to feature list in README - stephenmcd
   * Made the SHOP_CARD_TYPES setting available to templates - stephenmcd
-  * Updated install instructions in README tp use Mezzanine's new createdb command - stephenmcd
   * Add lables to editable settings - Ken Bolton
-  * Updated to latest Mezzanine settings and syntax checking tests, and many PEP8 fixes - stephenmcd
-  * Added Ken Bolton to AUTHORS - stephenmcd
   * Updated Mezzanine version requirement - stephenmcd
-  * Fixed typo - stephenmcd
 
 Version 0.2.2 (Jun 30, 2011)
 ----------------------------
@@ -202,20 +220,14 @@ Version 0.2.2 (Jun 30, 2011)
   * Edited cartridge/shop/templates/shop/billing_shipping.html via GitHub - jdeblank
   * Remove extra quotation mark - jdeblank
   * If product has stock, show price. Else show an error message - jdeblank
-  * Added Ripe and Cotton On to sites using Cartridge - stephenmcd
-  * Added Josh de Blank to AUTHORS - stephenmcd
   * Backout hiding price when no stock available - stephenmcd
   * Fixed an issue with Google Analytics where there was a type error and a variable misname. Ecom Analytics should work now - =
-  * Added Andrew Fisher to authors - =
 
 Version 0.2.1 (May 28, 2011)
 ----------------------------
 
-  * Added donation notes to README - stephenmcd
-  * Fixed typo in README - stephenmcd
   * Updated Mezzanine's old DynamicInlineAdmin with the new TabularDynamicInlineAdmin. Fixes #6 - stephenmcd
   * Updated base template to include is_installed check for apps where applicable - stephenmcd
-  * Added missing links to README - stephenmcd
   * Updated 960.gs to fluid version - stephenmcd
   * Fixed footer alignment in base template - stephenmcd
 
@@ -225,11 +237,9 @@ Version 0.2 (Apr 30, 2011)
   * Added fieldset grouping of fields in checkout confirmation step - stephenmcd
   * Restored messages in templates - stephenmcd
   * Fixed settings name and sys.path change in dummy product script - stephenmcd
-  * Fixed minor formatting and spelling in billing/shipping form - stephenmcd
   * Fixed ``CHECKOUT_STEP_FIRST`` template variable name in checkout - stephenmcd
   * Added a SHOP_DEFAULT_SHIPPING_VALUE editable setting which is used in the default billing/shipping handler. Changed the prefix of default handlers from ``dummy_`` to ``default_``. Also changed the display of shipping to use the value of the shipping type - stephenmcd
   * Added a "Powered by Cartridge" link - stephenmcd
-  * Cleaned up formatting in docstrings and made minor refactorings in view functions for readability - stephenmcd
   * Hide the category add button in the product change form since the parent context of the category is not available - stephenmcd
   * Added "Buy now" link to cart panel - stephenmcd
   * added order_complete signal - Josh Cartmell
@@ -237,21 +247,15 @@ Version 0.2 (Apr 30, 2011)
   * Changed ``shop.checkout.CHECKOUT_TEMPLATES`` to ``shop.checkout.CHECKOUT_STEPS`` which is a list of dicts. The template is now stored here along with a title and URL for each step. The steps are passed to the template and the title of each is used to replace the breadcrumb nav with a checkout progress indiciator. The URL for each step is assigned to a JavaScript variable which Mezzanine's Google Anayltics code will check for and use as a virtual pageview to track, allowing each checkout step to be tracked uniquely - stephenmcd
   * added authorize.net payment module.  It is functional but does not include the cost of shipping.  Need to find a way to access shipping total - Josh Cartmell
   * moved order creation and deletion out of payment processor - Josh Cartmell
-  * Added fixed-width formatting around the order totals HTML - stephenmcd
   * Changed the text against the discount amount to use the title of the discount - stephenmcd
   * Fixed free shipping discount by setting the shipping to free shipping when the discount is known - stephenmcd
   * Refactored the checkout view so that the order object is created with totals available prior to the payment handler being called - stephenmcd
-  * Refactored checkout process - methods on order objects are now ``prepare`` and ``process`` which occur before and after the payment handler. The ``prepare`` method is responsible for creating all available order data such as totals and cart items. The ``process`` method is responsible for all cleanup such as reducing stock and removing session vars. Also moved the ``order_complete`` signal to a handler style method like billing/shipping and payment, defined by the setting ``SHOP_HANDLER_ORDER`` - stephenmcd
   * Added Google Analytics order tracking - stephenmcd
-  * Formatting fixes - stephenmcd
   * Fixed shipping details and commented out unused vars in authorize.net payment handler - stephenmcd
   * Added tests for the order process - stephenmcd
-  * Removed debugging from tests - stephenmcd
   * Changed checkout handler loading to allow for no handlers to be explicitly specified - stephenmcd
   * Updated integration docs for latest version of checkout - stephenmcd
-  * Fixed formatting in managers module - stephenmcd
   * Added initial version of category filters - stephenmcd
-  * Added Josh Cartmell to AUTHORS - stephenmcd
   * Refactored category filters to ensure an empty explicit product list doesn't cancel out all filters, and that variation based filters when combined are applied in combination to individual variations. Also removed reverse related products field on category since this doesn't work in Django 1.2 and up - stephenmcd
   * Added default ``combined`` value to category fixture - stephenmcd
   * Refactored ``category.filters`` to not require extra products query if no filters are specified - stephenmcd
@@ -259,7 +263,6 @@ Version 0.2 (Apr 30, 2011)
   * Added tests for category filters - stephenmcd
   * Added migrations for category filters - stephenmcd
   * Added initial versions of upsell and related products - stephenmcd
-  * Added russian translation - Andrew Grigorev
   * Renamed Order.prepare() to Order.setup() to avoid collision with Django checking for prepare methods on models - stephenmcd
   * Fixed the template logic around showing the cart/wishlist add form so that it isn't shown unless valid variations exist - stephenmcd
   * Fixed CSS for related products - stephenmcd
@@ -268,20 +271,16 @@ Version 0.2 (Apr 30, 2011)
   * Updated settings docs with new default for SHOP_SSL_ENABLED - stephenmcd
   * Add first working version of import script from csv files - lexual
   * import/export management command from/to csv - lexual
-  * Added Lex Hider to AUTHORS - stephenmcd
   * make change for python < 2.7 as dictionary comprehensions not supported ;( - lexual
   * Upgraded the default templates and CSS for the SITE_TITLE and SITE_TAGLINE settings - stephenmcd
   * Removed the ``SHOP_LOGIN_URL`` setting and handling for consistency with Mezzanine's ``LOGIN_URL`` handling - stephenmcd
-  * Added Andrew Grigorev to AUTHORS - stephenmcd
   * French locales - Dominique Guardiola
-  * Added Dominique Guardiola to AUTHORS - stephenmcd
   * Fixed missing title in cart template - stephenmcd
   * Added migration for Mezzanine's keywords and site fields - stephenmcd
   * Update settings to the latest version of Mezzanine - stephenmcd
   * Removed trailing white-space - stephenmcd
   * Upgraded CSS files to latest Mezzanine versions - stephenmcd
   * Added Mezzanine's ratings to products - stephenmcd
-  * Changed the order of shop in INSTALLED_APPS to avoid foreign key errors with Django's sites when installing demo fixtures with PostgreSQL - stephenmcd
   * Fixed INSTALLED_APP ordering - stephenmcd
   * Upgraded to Mezzanine's ``RichText`` model - stephenmcd
   * Cleaned up white-space in docs - stephenmcd
@@ -297,11 +296,9 @@ Version 0.1.8 (Feb 04, 2011)
   * Add Mezzanine to sys.path when generating docs - stephenmcd
   * Update to new path setting names from Mezzanine - stephenmcd
   * Fix setting names - stephenmcd
-  * Remove docs debugging - stephenmcd
   * Added docs for shipping and payment integration - stephenmcd
   * Allow generation of order fields docs to fail as it will in most cases - stephenmcd
   * Removed section from components docs that's no longer applicable as the features are provided by Mezzanine - stephenmcd
-  * Fixed typo in URL name. Closes #3 - stephenmcd
 
 Version 0.1.7 (Jan 28, 2011)
 ----------------------------
@@ -315,17 +312,13 @@ Version 0.1.6 (Dec 22, 2010)
 
   * Updated required Mezzanine version - stephenmcd
   * Changed path import for developing against Mezzanine to be cross-platform - jdeblank
-  * Fixed minor bugs in checkout view - jdeblank
   * Updated setup script for Python 2.5 compatibility - stephenmcd
 
 Version 0.1.5 (Dec 22, 2010)
 ----------------------------
 
   * Fix with statement for Python 2.5 - stephenmcd
-  * Style fix - stephenmcd
   * Remove redundant JS in admin product change view - stephenmcd
-  * Tabs to spaces - stephenmcd
-  * Update ignore file - stephenmcd
   * Use ``mezzanine.utils.set_dynamic_settings`` - stephenmcd
   * Update to multiple DB settings - stephenmcd
   * Revert to old ordering of shop app in INSTALLED_APPS - stephenmcd
@@ -333,14 +326,12 @@ Version 0.1.5 (Dec 22, 2010)
   * Updated render_to_response to Mezzanine's context-aware version - stephenmcd
   * Removed unused import - stephenmcd
   * Defined template accessible settings - stephenmcd
-  * Tweaked defaults for SSL - stephenmcd
   * Upgraded local_settings module template to use multi DB format - stephenmcd
   * Removed a ton of unused imports - stephenmcd
   * Updated local_settings template - stephenmcd
   * Renamed fixtures from initial_data to avoid loading on each call to syncdb - stephenmcd
   * Updated references to mezzanine.utils to use new module names - stephenmcd
   * Added pyflakes test - stephenmcd
-  * Cleaned up AUTHORS - stephenmcd
   * Added south migrations - stephenmcd
   * Fixed south introspection rules to use cartridge package name - stephenmcd
   * Updated fixtures installation to support south - stephenmcd
@@ -358,16 +349,12 @@ Version 0.1.4 (Nov 10, 2010)
 
   * MySQL patches - stephenmcd
   * Remove ``TEST_DATABASE_COLLATION`` (will go into Mezzanine) - stephenmcd
-  * Add further DB specific tweaks to ``project_template.settings`` - stephenmcd
   * CSS update for default templates - stephenmcd
-  * Update install instructions in README to reflect Mezzanine's default user - stephenmcd
   * Fix incorrect import in tests resulting from Mezzanine's new settings app - stephenmcd
   * Remove ``thumbnail`` template tag and replace references with Mezzanine's - stephenmcd
   * Update ``ADMIN_MENU_ORDER`` to include Mezzanine's settings app and fix setting of ``ADMIN_MEDIA_PREFIX`` - stephenmcd
-  * Style fixes - stephenmcd
   * Convert settings to Mezzanine's settings app - stephenmcd
   * Update ``mezzanine.settings`` to ``mezzanine.conf`` - stephenmcd
-  * Split the Mezzanine and Cartridge stylesheets into separate files - stephenmcd
   * Update documentation to automatically generate available settings - stephenmcd
   * Require the about to be released Mezzanine version - stephenmcd
 
@@ -385,8 +372,6 @@ Version 0.1.1 (Sep 20, 2010)
   * Add ``csrf_token`` to forms - stephenmcd
   * Fix Django 1.2 incompatibilities with the admin product form - stephenmcd
   * Fix the fixes - stephenmcd
-  * Minor cleanups - stephenmcd
-  * Update docs formatting - stephenmcd
   * Remove old assets - stephenmcd
   * Add images for fixtures - stephenmcd
   * Use correct db name to exclude in setup.py - stephenmcd
@@ -397,17 +382,12 @@ Version 0.1 (Sep 19, 2010)
   * initial import - stephenmcd
   * thumbnail template tag - stephenmcd
   * cleaned up thumbnail filename convention - stephenmcd
-  * skus - stephenmcd
-  * cleanup widget code - stephenmcd
   * bugfix imports - stephenmcd
   * settings file - stephenmcd
   * added "view on site" in admin listing for product and category - stephenmcd
-  * cleanup payment form options - stephenmcd
   * front-end handling of skus - stephenmcd
   * documented cart object - stephenmcd
   * cleaned up price field names, made variation description from options and removed ability to edit options for variations - stephenmcd
-  * bugfix to pricing field name cleanup - stephenmcd
-  * cleanup model field list accessor names, cleanup checkout form fieldset creator, fix thumbnail tag to return existing thumbnail - stephenmcd
   * clbugfix to cart not updating total price for item, bugfix to checkout form fields and fieldsets - stephenmcd
   * dummy commit testing username in hgrc - stephenmcd
   * added cropping to thumbnail template tag - stephenmcd
@@ -419,7 +399,6 @@ Version 0.1 (Sep 19, 2010)
   * add sku to product model and method for building heirarchical slugs - stephenmcd
   * removed all functionality around hierarchical slugs including breadcrumbs tag - stephenmcd
   * added styling to templates - stephenmcd
-  * - implemented handling of default skus for products without variations and removed sku field from product- added custom fields: MoneyField, SKUField- added managers module- changed cart to use django models with cart cleanup thread- added stock levels - stephenmcd
   * new modules from last commit - stephenmcd
   * template enhancements - stephenmcd
   * added initial unit tests - stephenmcd
@@ -429,7 +408,6 @@ Version 0.1 (Sep 19, 2010)
   * changed ssl middleware to use shop.settings - stephenmcd
   * removed old cart module - stephenmcd
   * added items in carts to stock checking - stephenmcd
-  * removed cart cleanup thread and moved cleanup to cart manager - stephenmcd
   * added shipping and payment hooks as well as order creation - stephenmcd
   * added calculated total_price fields to SelectedProduct and Order - stephenmcd
   * removed unnecessary custom fields from admin, moved all admin form functionality to forms module and added money widget - stephenmcd
@@ -438,7 +416,6 @@ Version 0.1 (Sep 19, 2010)
   * - reverted address fields for order model and option fields for variation model back to being dynamically created- moved all model choices into shop.settings- implemented checkout_handler functionality for each checkout step- implemented set_shipping method on order form - stephenmcd
   * - re-added shop.utils with make_choices, send_mail_template and moved set_shipping from payment form into utils- added email receipt to order complete and ORDER_FROM_EMAIL to shop.settings- added FORCE_HOST to settings which when specified will ensure the host is forced for matching ssl cert - stephenmcd
   * added cartridge site homepage - stephenmcd
-  * misc cleanups - stephenmcd
   * remove test fixtures and add some more test placeholders - stephenmcd
   * move variations management from admin module to management module - stephenmcd
   * added unit tests for variation management - stephenmcd
@@ -447,32 +424,25 @@ Version 0.1 (Sep 19, 2010)
   * homepage updates - stephenmcd
   * bugfix incorrect method name for stock checking in add to basket form - stephenmcd
   * changed unit tests for cart to use test client for cart interaction rather than cart object, in order to cover the cart forms also providing a more realistic test case. removed the need for custom test handling in models so removed these also - stephenmcd
-  * added l10n for strings and currency formatting - stephenmcd
   * added cartridge site favicon - stephenmcd
   * added handling for text version of order_totals tag - stephenmcd
-  * - made pricing per product variation- cleaned up model cloning functionality- added more translation handling- added handling for "default" variation- cleanup option field names - stephenmcd
   * moved product images to separate model that's related to both a product and a product's variation - stephenmcd
   * added image toggling to product template - stephenmcd
   * added collapse classes to product admin fieldsets - stephenmcd
   * used jquery for usability enhancements to product change from in admin - stephenmcd
   * show first image field in product change form if no images have been added - stephenmcd
-  * cleanup category page layout - stephenmcd
   * modify "add another image" link in admin product change form to look more like existing admin interface elements - stephenmcd
   * added image thumbnails to admin - stephenmcd
   * bugfix on setting main product image - stephenmcd
   * moved logic for lookup of main product image to variation as this is used when assigning the image for a basket item - stephenmcd
   * made cart item image nullable for unit tests - stephenmcd
-  * cleanup imports - stephenmcd
   * bugfix to jquery enhancements for images in admin product change form - stephenmcd
   * misc homepage updates - stephenmcd
   * optimized category loading algorithm in menu templatetag and created tree interface for category listing in admin - stephenmcd
   * remove redundant options from category admin - stephenmcd
-  * cleanup redundant querysets - stephenmcd
   * add debug toolbar - stephenmcd
-  * cleanup category demo template - stephenmcd
   * added product search - stephenmcd
   * added messages integration - stephenmcd
-  * minor i18n fixes - stephenmcd
   * added "0 categories" message to admin tree when there are no categories - stephenmcd
   * added pagination to search results - stephenmcd
   * added initial product actions functionality - stephenmcd
@@ -482,7 +452,6 @@ Version 0.1 (Sep 19, 2010)
   * bugfix on swapping visible image when changing options on product template - stephenmcd
   * bugfix indexes on action model - stephenmcd
   * initial discount codes functionality - stephenmcd
-  * handful of cleanups for discount codes as well as refactoring around various field and class names - stephenmcd
   * admin for discount codes - stephenmcd
   * added ability to define ADMIN_REORDER setting for specifying ordering of admin app/models - stephenmcd
   * implemented handling of discount codes - stephenmcd
@@ -492,24 +461,18 @@ Version 0.1 (Sep 19, 2010)
   * add to wishlist handling - stephenmcd
   * moved handling of variation images and main product image into variation save method - stephenmcd
   * bugfix to priority of stock error messages - stephenmcd
-  * cleanup display of selected options for a variation - stephenmcd
   * change distinction between adding to cart or wishlist in product view so that add to cart is the default - stephenmcd
   * make product image description optional - stephenmcd
-  * typo in admin - stephenmcd
-  * cleanup search results template - stephenmcd
   * fixed bug in product admin where variation management routines were called for every formset - stephenmcd
   * added remaining wishlist elements - view and template - stephenmcd
   * fixed bug where when default variation was saved via admin it would override any changes made to the product - stephenmcd
   * added get_absolute_url to product variations and cart items - stephenmcd
-  * - refactoring of checkout wizard to provide persisting data in session and more template methods for iterating fields- added "remember my details" to billing/shipping step of checkout- template cleanups - stephenmcd
   * added pattern matching structure to dynamic calls in FieldsetForm - stephenmcd
   * removed need for passing app_list and path to admin_reorder template tag - stephenmcd
   * refactored search manager to be chainable and reusable - stephenmcd
   * allow fields for search manager to be set via constructor - stephenmcd
   * bugfix to creation of search fields when none are specified - stephenmcd
-  * cleanup set usage in search - stephenmcd
   * bugfix to wishlist add/remove - stephenmcd
-  * convert tabs to spaces - stephenmcd
   * initial layout for docs - stephenmcd
   * added admin url compatibility with django 1.0 - stephenmcd
   * bugfixes to search manager - moved fields lookup to inside search method to avoid missing self.model attribute when queryset is being copied, and renamed attributes to avoid collision wih existing _fields attribute - stephenmcd
@@ -531,7 +494,6 @@ Version 0.1 (Sep 19, 2010)
   * Split templates and tags for order_totals into separate versions for HTML and text - stephenmcd
   * update tests for new method of cart item removal - stephenmcd
   * Removed clone_model and all associated cleverness stemming from it around Address/Order and methods returning lists of fields - stephenmcd
-  * Re-ordered members in models (mostly Meta classes) as per Django style guide - stephenmcd
   * Moved creation of default ORDER_FROM_EMAIL using host name from shop.forms into shop.settings - stephenmcd
   * Updated docs layout with wider sidebar and removed numeric toc - stephenmcd
   * Added docs for configuration (settings) and re-ordered shop.settings members to match the alphabetical order in the docs - stephenmcd
@@ -540,14 +502,10 @@ Version 0.1 (Sep 19, 2010)
   * Fixed issue #1 - removed broken/redundant import - stephenmcd
   * Added support for South - stephenmcd
   * Added auth integration - stephenmcd
-  * - Implemented paging/sorting for products.- Added Product.date_added for sorting products by recency.- Added script for generating dummy product data from Flickr/Google Base.- Prevent south from being used when running tests.- Removed image field from Category model.- Moved lookup of wishlist skus to wishlist view to avoid querying variations on every request.- Moved setting of checkout errors into constructor of checkout form.- Many interface cleanups for the demo templates - stephenmcd
-  * Changed approach for dynamic fields on forms and models to use Metaclasses rather than calling type() as well as other small cleanups around dynamic field hacking - stephenmcd
   * Moved product options into a model and made slugs and titles for categories contain their parents - stephenmcd
   * Added drag and drop ordering for category tree in admin - stephenmcd
-  * Minor interface enhancements to the admin category tree - stephenmcd
   * Bugfix to managing list of IDs for open branches in admin category tree - stephenmcd
   * Convert from a project to an app with a project template piggy-backing Mezzanine - stephenmcd
-  * Add README - stephenmcd
   * Reorganize docs - stephenmcd
   * Add packaging tools: setup.py and MANIFEST - stephenmcd
   * Mark the required version of Mezzanine as the yet to be released 0.8 - stephenmcd
@@ -560,9 +518,7 @@ Version 0.1 (Sep 19, 2010)
   * Fix the layout of the category template - stephenmcd
   * Revert user check around jQuery loading - stephenmcd
   * Include further Django settings in the ``project_temlate.settings`` module - stephenmcd
-  * Update features and reference for mezzanine-project in README - stephenmcd
   * Set ``settings.MEZZANINE_ADMIN_MENU_ORDER`` to include the shop - stephenmcd
   * Add content field to Category model - stephenmcd
-  * Style old price for sales - stephenmcd
   * Add fixtures and images for dummy data - stephenmcd
 
