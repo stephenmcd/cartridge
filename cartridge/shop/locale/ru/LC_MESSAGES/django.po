@@ -445,7 +445,7 @@ msgstr "Время"
 
 #: models.py:421
 msgid "Shipping type"
-msgstr "Тип доставки"
+msgstr "Способ доставки"
 
 #: models.py:422
 msgid "Shipping total"
@@ -469,7 +469,7 @@ msgstr "Итог заказа"
 
 #: models.py:427
 msgid "Transaction ID"
-msgstr ""
+msgstr "Ид.транзакции"
 
 #: models.py:430 templates/shop/order_history.html:22
 msgid "Status"
