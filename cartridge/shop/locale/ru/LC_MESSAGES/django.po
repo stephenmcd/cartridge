@@ -534,7 +534,7 @@ msgstr "Минимальная сумма заказа"
 
 #: models.py:815
 msgid "Uses remaining"
-msgstr ""
+msgstr "Осталось использований"
 
 #: models.py:816
 msgid ""
