@@ -2,7 +2,6 @@
 Checkout process utilities.
 """
 
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import SiteProfileNotAvailable
 from django.utils.translation import ugettext as _
 from django.template.loader import get_template, TemplateDoesNotExist

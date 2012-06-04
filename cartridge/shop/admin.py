@@ -24,7 +24,7 @@ billing_fields = _flds("billing_detail")
 shipping_fields = _flds("shipping_detail")
 
 category_fieldsets = deepcopy(PageAdmin.fieldsets)
-category_fieldsets[0][1]["fields"][3:3] = ["content"]  # , "products"]
+category_fieldsets[0][1]["fields"][3:3] = ["content", "products"]
 category_fieldsets += ((_("Product filters"), {
     "fields": ("options", "sale", ("price_min", "price_max"), "combined"),
     "classes": ("collapse-closed",)},),)
@@ -33,7 +33,7 @@ category_fieldsets += ((_("Product filters"), {
 class CategoryAdmin(PageAdmin):
     fieldsets = category_fieldsets
     formfield_overrides = {ImageField: {"widget": ImageWidget}}
-    filter_horizontal = ("options",)  # "products", )
+    filter_horizontal = ("options", "products",)
 
 
 class ProductVariationAdmin(admin.TabularInline):
@@ -227,7 +227,8 @@ class DiscountCodeAdmin(admin.ModelAdmin):
         (_("Reduce unit price by"),
             {"fields": (("discount_deduct", "discount_percent"),)}),
         (None, {"fields": (("min_purchase", "free_shipping"),)}),
-        (_("Valid for"), {"fields": (("valid_from", "valid_to"),)}),
+        (_("Valid for"),
+            {"fields": (("valid_from", "valid_to", "uses_remaining"),)}),
     )
 
 

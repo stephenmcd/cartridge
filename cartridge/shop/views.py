@@ -11,6 +11,7 @@ from django.template.defaultfilters import slugify
 from django.template.loader import get_template
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
+from django.views.decorators.cache import never_cache
 
 from mezzanine.conf import settings
 from mezzanine.utils.importing import import_dotted_path
@@ -76,6 +77,7 @@ def product(request, slug, template="shop/product.html"):
     return render(request, template, context)
 
 
+@never_cache
 def wishlist(request, template="shop/wishlist.html"):
     """
     Display the wishlist and handle removing items from the wishlist and
@@ -121,6 +123,7 @@ def wishlist(request, template="shop/wishlist.html"):
     return response
 
 
+@never_cache
 def cart(request, template="shop/cart.html"):
     """
     Display cart and handle removing items from the cart.
@@ -156,6 +159,7 @@ def cart(request, template="shop/cart.html"):
     return render(request, template, context)
 
 
+@never_cache
 def checkout_steps(request):
     """
     Display the order form and handle processing of each step.
@@ -262,6 +266,7 @@ def checkout_steps(request):
     return render(request, template, context)
 
 
+@never_cache
 def complete(request, template="shop/complete.html"):
     """
     Redirected to once an order is complete - pass the order object
