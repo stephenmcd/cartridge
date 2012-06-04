@@ -294,8 +294,6 @@ class ProductVariationMetaclass(ModelBase):
     ``SHOP_PRODUCT_OPTIONS`` setting.
     """
     def __new__(cls, name, bases, attrs):
-        for option in settings.SHOP_OPTION_TYPE_CHOICES:
-            attrs["option%s" % option[0]] = fields.OptionField(option[1])
         #only assign new attrs if not proxy model
         if not ("Meta" in attrs and getattr(attrs["Meta"], "proxy", False)): 
             for option in settings.SHOP_OPTION_TYPE_CHOICES:
