@@ -690,11 +690,13 @@ class Discount(models.Model):
     applicable for.
     """
 
-    title = CharField(max_length=100)
+    title = CharField(_("Title"), max_length=100)
     active = models.BooleanField(_("Active"))
-    products = models.ManyToManyField("Product", blank=True)
+    products = models.ManyToManyField("Product", blank=True,
+                                      verbose_name=_("Products"))
     categories = models.ManyToManyField("Category", blank=True,
-                                        related_name="%(class)s_related")
+                                        related_name="%(class)s_related",
+                                        verbose_name=_("Categories"))
     discount_deduct = fields.MoneyField(_("Reduce by amount"))
     discount_percent = models.DecimalField(_("Reduce by percent"),
                                            max_digits=4, decimal_places=2,
