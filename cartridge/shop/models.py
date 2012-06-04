@@ -13,6 +13,7 @@ from mezzanine.core.managers import DisplayableManager
 from mezzanine.core.models import Displayable, RichText, Orderable
 from mezzanine.generic.fields import RatingField
 from mezzanine.pages.models import Page
+from mezzanine.utils.models import AdminThumbMixin
 from mezzanine.utils.timezone import now
 
 from cartridge.shop import fields, managers
@@ -27,11 +28,109 @@ except ImportError:
         """
 
 
+class Priced(models.Model):
+    """
+    Abstract model with unit and sale price fields. Inherited by
+    ``Product`` and ``ProductVariation`` models.
+    """
+
+    unit_price = fields.MoneyField(_("Unit price"))
+    sale_id = models.IntegerField(null=True)
+    sale_price = fields.MoneyField(_("Sale price"))
+    sale_from = models.DateTimeField(_("Sale start"), blank=True, null=True)
+    sale_to = models.DateTimeField(_("Sale end"), blank=True, null=True)
+
+    class Meta:
+        abstract = True
+
+    def on_sale(self):
+        """
+        Returns True if the sale price is applicable.
+        """
+        n = now()
+        valid_from = self.sale_from is None or self.sale_from < n
+        valid_to = self.sale_to is None or self.sale_to > n
+        return self.sale_price is not None and valid_from and valid_to
+
+    def has_price(self):
+        """
+        Returns True if there is a valid price.
+        """
+        return self.on_sale() or self.unit_price is not None
+
+    def price(self):
+        """
+        Returns the actual price - sale price if applicable otherwise
+        the unit price.
+        """
+        if self.on_sale():
+            return self.sale_price
+        elif self.has_price():
+            return self.unit_price
+        return Decimal("0")
+
+
+class Product(Displayable, Priced, RichText):
+    """
+    Container model for a product that stores information common to
+    all of its variations such as the product's title and description.
+    """
+
+    available = models.BooleanField(_("Available for purchase"),
+                                    default=False)
+    image = CharField(_("Image"), max_length=100, blank=True, null=True)
+    categories = models.ManyToManyField("Category",
+                                        verbose_name=_("Product categories"),
+                                        blank=True)
+    date_added = models.DateTimeField(_("Date added"), auto_now_add=True,
+                                      null=True)
+    related_products = models.ManyToManyField("self",
+                             verbose_name=_("Related products"), blank=True)
+    upsell_products = models.ManyToManyField("self",
+                             verbose_name=_("Upsell products"), blank=True)
+    rating = RatingField(verbose_name=_("Rating"))
+
+    objects = DisplayableManager()
+
+    class Meta:
+        verbose_name = _("Product")
+        verbose_name_plural = _("Products")
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ("shop_product", (), {"slug": self.slug})
+
+    def copy_default_variation(self):
+        """
+        Copies the price and image fields from the default variation.
+        """
+        default = self.variations.get(default=True)
+        for field in Priced._meta.fields:
+            if not isinstance(field, models.AutoField):
+                setattr(self, field.name, getattr(default, field.name))
+        if default.image:
+            self.image = default.image.file.name
+        self.save()
+
+    def admin_thumb(self):
+        if self.image is None:
+            return ""
+        from mezzanine.core.templatetags.mezzanine_tags import thumbnail
+        thumb_url = thumbnail(self.image, 24, 24)
+        return "<img src='%s%s' />" % (settings.MEDIA_URL, thumb_url)
+    admin_thumb.allow_tags = True
+    admin_thumb.short_description = ""
+
+
 class Category(Page, RichText):
     """
     A category of products on the website.
     """
 
+    products = models.ManyToManyField("Product",
+                                     verbose_name=_("Products"),
+                                     blank=True,
+                                     through=Product.categories.through)
     options = models.ManyToManyField("ProductOption",
                                      verbose_name=_("Product options"),
                                      blank=True,
@@ -98,49 +197,7 @@ class Category(Page, RichText):
         return products
 
 
-class Priced(models.Model):
-    """
-    Abstract model with unit and sale price fields. Inherited by
-    ``Product`` and ``ProductVariation`` models.
-    """
-
-    unit_price = fields.MoneyField(_("Unit price"))
-    sale_id = models.IntegerField(null=True)
-    sale_price = fields.MoneyField(_("Sale price"))
-    sale_from = models.DateTimeField(_("Sale start"), blank=True, null=True)
-    sale_to = models.DateTimeField(_("Sale end"), blank=True, null=True)
-
-    class Meta:
-        abstract = True
-
-    def on_sale(self):
-        """
-        Returns True if the sale price is applicable.
-        """
-        n = now()
-        valid_from = self.sale_from is None or self.sale_from < n
-        valid_to = self.sale_to is None or self.sale_to > n
-        return self.sale_price is not None and valid_from and valid_to
-
-    def has_price(self):
-        """
-        Returns True if there is a valid price.
-        """
-        return self.on_sale() or self.unit_price is not None
-
-    def price(self):
-        """
-        Returns the actual price - sale price if applicable otherwise
-        the unit price.
-        """
-        if self.on_sale():
-            return self.sale_price
-        elif self.has_price():
-            return self.unit_price
-        return Decimal("0")
-
-
-class Product(Displayable, Priced, RichText):
+class Product(Displayable, Priced, RichText, AdminThumbMixin):
     """
     Container model for a product that stores information common to
     all of its variations such as the product's title and description.
@@ -162,6 +219,8 @@ class Product(Displayable, Priced, RichText):
 
     objects = DisplayableManager()
 
+    admin_thumb_field = "image"
+
     class Meta:
         verbose_name = _("Product")
         verbose_name_plural = _("Products")
@@ -181,15 +240,6 @@ class Product(Displayable, Priced, RichText):
         if default.image:
             self.image = default.image.file.name
         self.save()
-
-    def admin_thumb(self):
-        if self.image is None:
-            return ""
-        from mezzanine.core.templatetags.mezzanine_tags import thumbnail
-        thumb_url = thumbnail(self.image, 24, 24)
-        return "<img src='%s%s' />" % (settings.MEDIA_URL, thumb_url)
-    admin_thumb.allow_tags = True
-    admin_thumb.short_description = ""
 
 
 class ProductImage(Orderable):
@@ -244,8 +294,10 @@ class ProductVariationMetaclass(ModelBase):
     ``SHOP_PRODUCT_OPTIONS`` setting.
     """
     def __new__(cls, name, bases, attrs):
-        for option in settings.SHOP_OPTION_TYPE_CHOICES:
-            attrs["option%s" % option[0]] = fields.OptionField(option[1])
+        # Only assign new attrs if not a proxy model.
+        if not ("Meta" in attrs and getattr(attrs["Meta"], "proxy", False)):
+            for option in settings.SHOP_OPTION_TYPE_CHOICES:
+                attrs["option%s" % option[0]] = fields.OptionField(option[1])
         args = (cls, name, bases, attrs)
         return super(ProductVariationMetaclass, cls).__new__(*args)
 
@@ -582,8 +634,16 @@ class SelectedProduct(models.Model):
         return ""
 
     def save(self, *args, **kwargs):
-        self.total_price = self.unit_price * self.quantity
-        super(SelectedProduct, self).save(*args, **kwargs)
+        """
+        Set the total price based on the given quantity. If the
+        quantity is zero, which may occur via the cart page, just
+        delete it.
+        """
+        if not self.id or self.quantity > 0:
+            self.total_price = self.unit_price * self.quantity
+            super(SelectedProduct, self).save(*args, **kwargs)
+        else:
+            self.delete()
 
 
 class CartItem(SelectedProduct):

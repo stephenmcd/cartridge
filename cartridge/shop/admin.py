@@ -24,7 +24,7 @@ billing_fields = _flds("billing_detail")
 shipping_fields = _flds("shipping_detail")
 
 category_fieldsets = deepcopy(PageAdmin.fieldsets)
-category_fieldsets[0][1]["fields"][3:3] = ["content"]  # , "products"]
+category_fieldsets[0][1]["fields"][3:3] = ["content", "products"]
 category_fieldsets += ((_("Product filters"), {
     "fields": ("options", "sale", ("price_min", "price_max"), "combined"),
     "classes": ("collapse-closed",)},),)
@@ -33,7 +33,7 @@ category_fieldsets += ((_("Product filters"), {
 class CategoryAdmin(PageAdmin):
     fieldsets = category_fieldsets
     formfield_overrides = {ImageField: {"widget": ImageWidget}}
-    filter_horizontal = ("options",)  # "products", )
+    filter_horizontal = ("options", "products",)
 
 
 class ProductVariationAdmin(admin.TabularInline):
@@ -54,7 +54,7 @@ class ProductImageAdmin(TabularDynamicInlineAdmin):
 
 product_fieldsets = deepcopy(DisplayableAdmin.fieldsets)
 product_fieldsets[0][1]["fields"][1] = ("status", "available")
-product_fieldsets[0][1]["fields"].extend(["categories", "content"])
+product_fieldsets[0][1]["fields"].extend(["content", "categories"])
 product_fieldsets = list(product_fieldsets)
 product_fieldsets.append((_("Other products"), {
     "classes": ("collapse-closed",),
