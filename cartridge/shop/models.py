@@ -13,6 +13,7 @@ from mezzanine.core.managers import DisplayableManager
 from mezzanine.core.models import Displayable, RichText, Orderable
 from mezzanine.generic.fields import RatingField
 from mezzanine.pages.models import Page
+from mezzanine.utils.models import AdminThumbMixin
 from mezzanine.utils.timezone import now
 
 from cartridge.shop import fields, managers
@@ -194,6 +195,51 @@ class Category(Page, RichText):
                 filters.append(products)
             return reduce(operator, filters)
         return products
+
+
+class Product(Displayable, Priced, RichText, AdminThumbMixin):
+    """
+    Container model for a product that stores information common to
+    all of its variations such as the product's title and description.
+    """
+
+    available = models.BooleanField(_("Available for purchase"),
+                                    default=False)
+    image = CharField(_("Image"), max_length=100, blank=True, null=True)
+    categories = models.ManyToManyField("Category",
+                                        verbose_name=_("Product categories"),
+                                        blank=True, related_name="products")
+    date_added = models.DateTimeField(_("Date added"), auto_now_add=True,
+                                      null=True)
+    related_products = models.ManyToManyField("self",
+                             verbose_name=_("Related products"), blank=True)
+    upsell_products = models.ManyToManyField("self",
+                             verbose_name=_("Upsell products"), blank=True)
+    rating = RatingField(verbose_name=_("Rating"))
+
+    objects = DisplayableManager()
+
+    admin_thumb_field = "image"
+
+    class Meta:
+        verbose_name = _("Product")
+        verbose_name_plural = _("Products")
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ("shop_product", (), {"slug": self.slug})
+
+    def copy_default_variation(self):
+        """
+        Copies the price and image fields from the default variation.
+        """
+        default = self.variations.get(default=True)
+        for field in Priced._meta.fields:
+            if not isinstance(field, models.AutoField):
+                setattr(self, field.name, getattr(default, field.name))
+        if default.image:
+            self.image = default.image.file.name
+        self.save()
 
 
 class ProductImage(Orderable):
@@ -586,8 +632,16 @@ class SelectedProduct(models.Model):
         return ""
 
     def save(self, *args, **kwargs):
-        self.total_price = self.unit_price * self.quantity
-        super(SelectedProduct, self).save(*args, **kwargs)
+        """
+        Set the total price based on the given quantity. If the
+        quantity is zero, which may occur via the cart page, just
+        delete it.
+        """
+        if not self.id or self.quantity > 0:
+            self.total_price = self.unit_price * self.quantity
+            super(SelectedProduct, self).save(*args, **kwargs)
+        else:
+            self.delete()
 
 
 class CartItem(SelectedProduct):
