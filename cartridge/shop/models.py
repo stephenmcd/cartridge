@@ -70,133 +70,6 @@ class Priced(models.Model):
         return Decimal("0")
 
 
-class Product(Displayable, Priced, RichText):
-    """
-    Container model for a product that stores information common to
-    all of its variations such as the product's title and description.
-    """
-
-    available = models.BooleanField(_("Available for purchase"),
-                                    default=False)
-    image = CharField(_("Image"), max_length=100, blank=True, null=True)
-    categories = models.ManyToManyField("Category",
-                                        verbose_name=_("Product categories"),
-                                        blank=True)
-    date_added = models.DateTimeField(_("Date added"), auto_now_add=True,
-                                      null=True)
-    related_products = models.ManyToManyField("self",
-                             verbose_name=_("Related products"), blank=True)
-    upsell_products = models.ManyToManyField("self",
-                             verbose_name=_("Upsell products"), blank=True)
-    rating = RatingField(verbose_name=_("Rating"))
-
-    objects = DisplayableManager()
-
-    class Meta:
-        verbose_name = _("Product")
-        verbose_name_plural = _("Products")
-
-    @models.permalink
-    def get_absolute_url(self):
-        return ("shop_product", (), {"slug": self.slug})
-
-    def copy_default_variation(self):
-        """
-        Copies the price and image fields from the default variation.
-        """
-        default = self.variations.get(default=True)
-        for field in Priced._meta.fields:
-            if not isinstance(field, models.AutoField):
-                setattr(self, field.name, getattr(default, field.name))
-        if default.image:
-            self.image = default.image.file.name
-        self.save()
-
-    def admin_thumb(self):
-        if self.image is None:
-            return ""
-        from mezzanine.core.templatetags.mezzanine_tags import thumbnail
-        thumb_url = thumbnail(self.image, 24, 24)
-        return "<img src='%s%s' />" % (settings.MEDIA_URL, thumb_url)
-    admin_thumb.allow_tags = True
-    admin_thumb.short_description = ""
-
-
-class Category(Page, RichText):
-    """
-    A category of products on the website.
-    """
-
-    products = models.ManyToManyField("Product",
-                                     verbose_name=_("Products"),
-                                     blank=True,
-                                     through=Product.categories.through)
-    options = models.ManyToManyField("ProductOption",
-                                     verbose_name=_("Product options"),
-                                     blank=True,
-                                     related_name="product_options")
-    sale = models.ForeignKey("Sale", verbose_name=_("Sale"),
-                             blank=True, null=True)
-    price_min = fields.MoneyField(_("Minimum price"), blank=True, null=True)
-    price_max = fields.MoneyField(_("Maximum price"), blank=True, null=True)
-    combined = models.BooleanField(_("Combined"), default=True,
-        help_text=_("If checked, "
-        "products must match all specified filters, otherwise products "
-        "can match any specified filter."))
-
-    class Meta:
-        verbose_name = _("Product category")
-        verbose_name_plural = _("Product categories")
-
-    def filters(self):
-        """
-        Returns product filters as a Q object for the category.
-        """
-        # Build a list of Q objects to filter variations by.
-        filters = []
-        # Build a lookup dict of selected options for variations.
-        options = self.options.as_fields()
-        if options:
-            lookup = dict([("%s__in" % k, v) for k, v in options.items()])
-            filters.append(Q(**lookup))
-        # Q objects used against variations to ensure sale date is
-        # valid when filtering by sale, or sale price.
-        n = now()
-        valid_sale_from = Q(sale_from__isnull=True) | Q(sale_from__lte=n)
-        valid_sale_to = Q(sale_to__isnull=True) | Q(sale_to__gte=n)
-        valid_sale_date = valid_sale_from & valid_sale_to
-        # Filter by variations with the selected sale if the sale date
-        # is valid.
-        if self.sale_id:
-            filters.append(Q(sale_id=self.sale_id) & valid_sale_date)
-        # If a price range is specified, use either the unit price or
-        # a sale price if the sale date is valid.
-        if self.price_min or self.price_max:
-            prices = []
-            if self.price_min:
-                sale = Q(sale_price__gte=self.price_min) & valid_sale_date
-                prices.append(Q(unit_price__gte=self.price_min) | sale)
-            if self.price_max:
-                sale = Q(sale_price__lte=self.price_max) & valid_sale_date
-                prices.append(Q(unit_price__lte=self.price_max) | sale)
-            filters.append(reduce(iand, prices))
-        # Turn the variation filters into a product filter.
-        operator = iand if self.combined else ior
-        products = Q(id__in=self.products.only("id"))
-        if filters:
-            filters = reduce(operator, filters)
-            variations = ProductVariation.objects.filter(filters)
-            filters = [Q(variations__in=variations)]
-            # If filters exist, checking that products have been
-            # selected is neccessary as combining the variations
-            # with an empty ID list lookup and ``AND`` will always
-            # result in an empty result.
-            if self.products.count() > 0:
-                filters.append(products)
-            return reduce(operator, filters)
-        return products
-
-
 class Product(Displayable, Priced, RichText, AdminThumbMixin):
     """
     Container model for a product that stores information common to
@@ -206,9 +79,8 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
     available = models.BooleanField(_("Available for purchase"),
                                     default=False)
     image = CharField(_("Image"), max_length=100, blank=True, null=True)
-    categories = models.ManyToManyField("Category",
-                                        verbose_name=_("Product categories"),
-                                        blank=True, related_name="products")
+    categories = models.ManyToManyField("Category", blank=True,
+                                        verbose_name=_("Product categories"))
     date_added = models.DateTimeField(_("Date added"), auto_now_add=True,
                                       null=True)
     related_products = models.ManyToManyField("self",
@@ -392,6 +264,81 @@ class ProductVariation(Priced):
         """
         live = self.live_num_in_stock()
         return live is None or quantity == 0 or live >= quantity
+
+
+class Category(Page, RichText):
+    """
+    A category of products on the website.
+    """
+
+    products = models.ManyToManyField("Product",
+                                     verbose_name=_("Products"),
+                                     blank=True,
+                                     through=Product.categories.through)
+    options = models.ManyToManyField("ProductOption",
+                                     verbose_name=_("Product options"),
+                                     blank=True,
+                                     related_name="product_options")
+    sale = models.ForeignKey("Sale", verbose_name=_("Sale"),
+                             blank=True, null=True)
+    price_min = fields.MoneyField(_("Minimum price"), blank=True, null=True)
+    price_max = fields.MoneyField(_("Maximum price"), blank=True, null=True)
+    combined = models.BooleanField(_("Combined"), default=True,
+        help_text=_("If checked, "
+        "products must match all specified filters, otherwise products "
+        "can match any specified filter."))
+
+    class Meta:
+        verbose_name = _("Product category")
+        verbose_name_plural = _("Product categories")
+
+    def filters(self):
+        """
+        Returns product filters as a Q object for the category.
+        """
+        # Build a list of Q objects to filter variations by.
+        filters = []
+        # Build a lookup dict of selected options for variations.
+        options = self.options.as_fields()
+        if options:
+            lookup = dict([("%s__in" % k, v) for k, v in options.items()])
+            filters.append(Q(**lookup))
+        # Q objects used against variations to ensure sale date is
+        # valid when filtering by sale, or sale price.
+        n = now()
+        valid_sale_from = Q(sale_from__isnull=True) | Q(sale_from__lte=n)
+        valid_sale_to = Q(sale_to__isnull=True) | Q(sale_to__gte=n)
+        valid_sale_date = valid_sale_from & valid_sale_to
+        # Filter by variations with the selected sale if the sale date
+        # is valid.
+        if self.sale_id:
+            filters.append(Q(sale_id=self.sale_id) & valid_sale_date)
+        # If a price range is specified, use either the unit price or
+        # a sale price if the sale date is valid.
+        if self.price_min or self.price_max:
+            prices = []
+            if self.price_min:
+                sale = Q(sale_price__gte=self.price_min) & valid_sale_date
+                prices.append(Q(unit_price__gte=self.price_min) | sale)
+            if self.price_max:
+                sale = Q(sale_price__lte=self.price_max) & valid_sale_date
+                prices.append(Q(unit_price__lte=self.price_max) | sale)
+            filters.append(reduce(iand, prices))
+        # Turn the variation filters into a product filter.
+        operator = iand if self.combined else ior
+        products = Q(id__in=self.products.only("id"))
+        if filters:
+            filters = reduce(operator, filters)
+            variations = ProductVariation.objects.filter(filters)
+            filters = [Q(variations__in=variations)]
+            # If filters exist, checking that products have been
+            # selected is neccessary as combining the variations
+            # with an empty ID list lookup and ``AND`` will always
+            # result in an empty result.
+            if self.products.count() > 0:
+                filters.append(products)
+            return reduce(operator, filters)
+        return products
 
 
 class Order(models.Model):
