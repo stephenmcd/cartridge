@@ -112,6 +112,14 @@ class Product(Displayable, Priced, RichText):
             self.image = default.image.file.name
         self.save()
 
+    def set_image(self):
+        """
+        Set product image.
+        """
+        if self.images.all():
+            self.image = self.images.all()[0].file.name
+            self.save()
+
     def admin_thumb(self):
         if self.image is None:
             return ""
