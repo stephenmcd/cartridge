@@ -91,28 +91,38 @@ class AddProductForm(forms.Form):
         # Ensure the product has a price if adding to cart.
         if self._to_cart:
             data["unit_price__isnull"] = False
+
         error = None
-        if self._product is not None:
-            # Chosen options will be passed to the product's
-            # variations.
-            qs = self._product.variations
+        if settings.SHOP_USE_VARIATIONS:
+            if self._product is not None:
+                # Chosen options will be passed to the product's
+                # variations.
+                qs = self._product.variations
+            else:
+                # A product hasn't been given since we have a direct sku.
+                qs = ProductVariation.objects
+            variation = None
+            try:
+                variation = qs.get(**data)
+            except ProductVariation.DoesNotExist:
+                error = "invalid_options"
+            else:
+                # Validate stock if adding to cart.
+                if self._to_cart:
+                    if not variation.has_stock():
+                        error = "no_stock"
+                    elif not variation.has_stock(quantity):
+                        error = "no_stock_quantity"
+            self.variation = variation
         else:
-            # A product hasn't been given since we have a direct sku.
-            qs = ProductVariation.objects
-        try:
-            variation = qs.get(**data)
-        except ProductVariation.DoesNotExist:
-            error = "invalid_options"
-        else:
-            # Validate stock if adding to cart.
             if self._to_cart:
-                if not variation.has_stock():
+                if not self._product.has_stock():
                     error = "no_stock"
-                elif not variation.has_stock(quantity):
+                elif not self._product.has_stock(quantity):
                     error = "no_stock_quantity"
+            self.variation = self._product
         if error is not None:
             raise forms.ValidationError(ADD_PRODUCT_ERRORS[error])
-        self.variation = variation
         return self.cleaned_data
 
 
