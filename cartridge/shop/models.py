@@ -70,7 +70,55 @@ class Priced(models.Model):
         return Decimal("0")
 
 
-class Product(Displayable, Priced, RichText):
+class Stocked(models.Model):
+
+    sku = fields.SKUField(unique=True, blank=True, null=True)
+    num_in_stock = models.IntegerField(_("Number in stock"), blank=True,
+                                       null=True)
+
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        """
+        Use the model's ID as the SKU when the model is first
+        created.
+        """
+        super(Stocked, self).save(*args, **kwargs)
+        if not self.sku:
+            self.sku = self.id
+            self.save()
+
+    def live_num_in_stock(self):
+        """
+        Returns the live number in stock, which is
+        ``self.num_in_stock - num in carts``. Also caches the value
+        for subsequent lookups.
+        """
+        if self.num_in_stock is None:
+            return None
+        if not hasattr(self, "_cached_num_in_stock"):
+            num_in_stock = self.num_in_stock
+            items = CartItem.objects.filter(sku=self.sku)
+            aggregate = items.aggregate(quantity_sum=models.Sum("quantity"))
+            num_in_carts = aggregate["quantity_sum"]
+            if num_in_carts is not None:
+                num_in_stock = num_in_stock - num_in_carts
+            self._cached_num_in_stock = num_in_stock
+        return self._cached_num_in_stock
+
+    def has_stock(self, quantity=1):
+        """
+        Returns ``True`` if the given quantity is in stock, by checking
+        against ``live_num_in_stock``. ``True`` is returned when
+        ``num_in_stock`` is ``None`` which is how stock control is
+        disabled.
+        """
+        live = self.live_num_in_stock()
+        return live is None or quantity == 0 or live >= quantity
+
+
+class Product(Displayable, Priced, Stocked, RichText):
     """
     Container model for a product that stores information common to
     all of its variations such as the product's title and description.
@@ -205,7 +253,7 @@ class Category(Page, RichText):
         return products
 
 
-class Product(Displayable, Priced, RichText, AdminThumbMixin):
+class Product(Displayable, Priced, Stocked, RichText, AdminThumbMixin):
     """
     Container model for a product that stores information common to
     all of its variations such as the product's title and description.
@@ -310,16 +358,13 @@ class ProductVariationMetaclass(ModelBase):
         return super(ProductVariationMetaclass, cls).__new__(*args)
 
 
-class ProductVariation(Priced):
+class ProductVariation(Priced, Stocked):
     """
     A combination of selected options from
     ``SHOP_OPTION_TYPE_CHOICES`` for a ``Product`` instance.
     """
 
     product = models.ForeignKey("Product", related_name="variations")
-    sku = fields.SKUField(unique=True)
-    num_in_stock = models.IntegerField(_("Number in stock"), blank=True,
-                                       null=True)
     default = models.BooleanField(_("Default"))
     image = models.ForeignKey("ProductImage", verbose_name=_("Image"),
                               null=True, blank=True)
@@ -342,16 +387,6 @@ class ProductVariation(Priced):
                                            getattr(self, field.name)))
         return ("%s %s" % (unicode(self.product), ", ".join(options))).strip()
 
-    def save(self, *args, **kwargs):
-        """
-        Use the variation's ID as the SKU when the variation is first
-        created.
-        """
-        super(ProductVariation, self).save(*args, **kwargs)
-        if not self.sku:
-            self.sku = self.id
-            self.save()
-
     def get_absolute_url(self):
         return self.product.get_absolute_url()
 
@@ -372,34 +407,6 @@ class ProductVariation(Priced):
         ``ProductVariationMetaclass``.
         """
         return [getattr(self, field.name) for field in self.option_fields()]
-
-    def live_num_in_stock(self):
-        """
-        Returns the live number in stock, which is
-        ``self.num_in_stock - num in carts``. Also caches the value
-        for subsequent lookups.
-        """
-        if self.num_in_stock is None:
-            return None
-        if not hasattr(self, "_cached_num_in_stock"):
-            num_in_stock = self.num_in_stock
-            items = CartItem.objects.filter(sku=self.sku)
-            aggregate = items.aggregate(quantity_sum=models.Sum("quantity"))
-            num_in_carts = aggregate["quantity_sum"]
-            if num_in_carts is not None:
-                num_in_stock = num_in_stock - num_in_carts
-            self._cached_num_in_stock = num_in_stock
-        return self._cached_num_in_stock
-
-    def has_stock(self, quantity=1):
-        """
-        Returns ``True`` if the given quantity is in stock, by checking
-        against ``live_num_in_stock``. ``True`` is returned when
-        ``num_in_stock`` is ``None`` which is how stock control is
-        disabled.
-        """
-        live = self.live_num_in_stock()
-        return live is None or quantity == 0 or live >= quantity
 
 
 class Order(models.Model):

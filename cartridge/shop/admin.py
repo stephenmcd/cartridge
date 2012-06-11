@@ -57,7 +57,8 @@ product_fieldsets = deepcopy(DisplayableAdmin.fieldsets)
 product_fieldsets[0][1]["fields"][1] = ("status", "available")
 if not settings.SHOP_USE_VARIATIONS:
     product_fieldsets[0][1]["fields"].extend(
-        [("unit_price", "sale_price"), ("sale_from", "sale_to")]
+        [("sku", "num_in_stock"),
+         ("unit_price", "sale_price"), ("sale_from", "sale_to")]
     )
 product_fieldsets[0][1]["fields"].extend(["content", "categories"])
 product_fieldsets = list(product_fieldsets)
@@ -75,11 +76,14 @@ class ProductAdmin(DisplayableAdmin):
         js = ("cartridge/js/admin/product_variations.js",)
         css = {"all": ("cartridge/css/admin/product.css",)}
 
-    list_display = ("admin_thumb", "title", "status",
-                    "unit_price", "sale_price",
-                    "available", "admin_link")
+    list_display = ("admin_thumb", "title", "status",)
+    if not settings.SHOP_USE_VARIATIONS:
+        list_display += ("unit_price", "sale_price", "num_in_stock",)
+    list_display += ("available", "admin_link",)
     list_display_links = ("admin_thumb", "title")
-    list_editable = ("unit_price", "sale_price", "status", "available")
+    list_editable = ("status", "available",)
+    if not settings.SHOP_USE_VARIATIONS:
+        list_editable += ("num_in_stock", "unit_price", "sale_price",)
     list_filter = ("status", "available", "categories")
     filter_horizontal = ("categories", "related_products", "upsell_products")
     search_fields = ("title", "content", "categories__title",
