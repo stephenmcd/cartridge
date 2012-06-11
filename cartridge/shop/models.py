@@ -567,11 +567,13 @@ class Cart(models.Model):
         if created:
             item.description = unicode(variation)
             item.unit_price = variation.price()
-            item.url = variation.product.get_absolute_url()
+            if settings.SHOP_USE_VARIATIONS:
+                variation = variation.product
+            item.url = variation.get_absolute_url()
             image = variation.image
             if image is not None:
-                item.image = unicode(image.file)
-            variation.product.actions.added_to_cart()
+                item.image = unicode(image)
+            variation.actions.added_to_cart()
         item.quantity += quantity
         item.save()
 

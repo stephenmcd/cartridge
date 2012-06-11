@@ -70,6 +70,7 @@ def product(request, slug, template="shop/product.html"):
         "images": product.images.all(),
         "variations": variations,
         "variations_json": variations_json,
+        "use_variations": settings.SHOP_USE_VARIATIONS,
         "has_available_variations": any([v.has_price() for v in variations]),
         "related": product.related_products.published(for_user=request.user),
         "add_product_form": add_product_form
