@@ -450,14 +450,19 @@ class Order(models.Model):
         del request.session["order"]
         for item in request.cart:
             try:
-                variation = ProductVariation.objects.get(sku=item.sku)
-            except ProductVariation.DoesNotExist:
+                if settings.SHOP_USE_VARIATIONS:
+                    variation = ProductVariation.objects.get(sku=item.sku)
+                    product = variation.product
+                else:
+                    variation = Product.objects.get(sku=item.sku)
+                    product = variation
+            except ProductVariation.DoesNotExist or Product.DoesNotExist:
                 pass
             else:
                 if variation.num_in_stock is not None:
                     variation.num_in_stock -= item.quantity
                     variation.save()
-                variation.product.actions.purchased()
+                product.actions.purchased()
         code = request.session.get('discount_code')
         if code:
             DiscountCode.objects.active().filter(code=code).update(
