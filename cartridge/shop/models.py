@@ -343,9 +343,10 @@ class Category(Page, RichText):
         operator = iand if self.combined else ior
         products = Q(id__in=self.products.only("id"))
         if filters:
-            filters = reduce(operator, filters)
-            variations = ProductVariation.objects.filter(filters)
-            filters = [Q(variations__in=variations)]
+            if settings.SHOP_USE_VARIATIONS:
+                filters = reduce(operator, filters)
+                variations = ProductVariation.objects.filter(filters)
+                filters = [Q(variations__in=variations)]
             # If filters exist, checking that products have been
             # selected is neccessary as combining the variations
             # with an empty ID list lookup and ``AND`` will always
@@ -571,8 +572,12 @@ class Cart(models.Model):
         total = Decimal("0")
         # Create a list of skus in the cart that are applicable to
         # the discount, and total the discount for appllicable items.
-        lookup = {"product__in": products, "sku__in": self.skus()}
-        discount_variations = ProductVariation.objects.filter(**lookup)
+        if settings.SHOP_USE_VARIATIONS:
+            lookup = {"product__in": products, "sku__in": self.skus()}
+            discount_variations = ProductVariation.objects.filter(**lookup)
+        else:
+            lookup = {"sku__in": self.skus()}
+            discount_variations = Product.objects.filter(**lookup)
         discount_skus = discount_variations.values_list("sku", flat=True)
         for item in self:
             if item.sku in discount_skus:
@@ -721,8 +726,13 @@ class Sale(Discount):
             else:
                 return
             products = self.all_products()
-            variations = ProductVariation.objects.filter(product__in=products)
-            for priced_objects in (products, variations):
+            if settings.SHOP_USE_VARIATIONS:
+                variations = ProductVariation.objects.filter(
+                                                        product__in=products)
+                apply_list = (products, variations)
+            else:
+                apply_list = (products,)
+            for priced_objects in apply_list:
                 # MySQL will raise a 'Data truncated' warning here in
                 # some scenarios, presumably when doing a calculation
                 # that exceeds the precision of the price column. In
@@ -765,7 +775,11 @@ class Sale(Discount):
         """
         update = {"sale_id": None, "sale_price": None,
                   "sale_from": None, "sale_to": None}
-        for priced_model in (Product, ProductVariation):
+        if settings.SHOP_USE_VARIATIONS:
+            apply_list = (Product, ProductVariation)
+        else:
+            apply_list = (Product, )
+        for priced_model in apply_list:
             priced_model.objects.filter(sale_id=self.id).update(**update)
 
 
