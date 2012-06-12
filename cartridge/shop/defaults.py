@@ -245,4 +245,3 @@ register_setting(
     editable=False,
     default=True,
 )
-
