@@ -26,9 +26,14 @@ shipping_fields = _flds("shipping_detail")
 
 category_fieldsets = deepcopy(PageAdmin.fieldsets)
 category_fieldsets[0][1]["fields"][3:3] = ["content", "products"]
-category_fieldsets += ((_("Product filters"), {
-    "fields": ("options", "sale", ("price_min", "price_max"), "combined"),
-    "classes": ("collapse-closed",)},),)
+if settings.SHOP_USE_VARIATIONS:
+    category_fieldsets += ((_("Product filters"), {
+        "fields": ("options", "sale", ("price_min", "price_max"), "combined"),
+        "classes": ("collapse-closed",)},),)
+else:
+    category_fieldsets += ((_("Product filters"), {
+        "fields": ("sale", ("price_min", "price_max"), "combined"),
+        "classes": ("collapse-closed",)},),)
 
 
 class CategoryAdmin(PageAdmin):
