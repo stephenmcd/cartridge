@@ -581,8 +581,7 @@ class Cart(models.Model):
             lookup = {"product__in": products, "sku__in": self.skus()}
             discount_variations = ProductVariation.objects.filter(**lookup)
         else:
-            lookup = {"sku__in": self.skus()}
-            discount_variations = Product.objects.filter(**lookup)
+            discount_variations = products
         discount_skus = discount_variations.values_list("sku", flat=True)
         for item in self:
             if item.sku in discount_skus:
