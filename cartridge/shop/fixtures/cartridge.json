@@ -73,6 +73,7 @@
             "description": "<p>Magic that can't be removed!</p>",
             "title": "Django Pony",
             "image": "product/red.png",
+            "sku": 1,
             "sale_id": 1,
             "unit_price": "10",
             "content": "<p>Magic that can't be removed!</p>",
