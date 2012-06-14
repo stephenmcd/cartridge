@@ -104,12 +104,15 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
         Copies the price fields to the default variation.
         """
         super(Product, self).save(*args, **kwargs)
-        default = self.variations.get(default=True)
-        for field in Priced._meta.fields:
-            if not isinstance(field, models.AutoField):
-               setattr(default, field.name, getattr(self, field.name))
-        setattr(default, "num_in_stock", getattr(self, "num_in_stock"))
-        default.save()
+        try:
+            default = self.variations.get(default=True)
+            for field in Priced._meta.fields:
+                if not isinstance(field, models.AutoField):
+                   setattr(default, field.name, getattr(self, field.name))
+            setattr(default, "num_in_stock", getattr(self, "num_in_stock"))
+            default.save()
+        except ProductVariation.DoesNotExist:
+            pass
 
     @models.permalink
     def get_absolute_url(self):
