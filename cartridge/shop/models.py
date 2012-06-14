@@ -204,7 +204,7 @@ class ProductVariation(Priced):
     """
 
     product = models.ForeignKey("Product", related_name="variations")
-    sku = fields.SKUField(unique=True)
+    sku = fields.SKUField(unique=True, blank=True, null=True)
     num_in_stock = models.IntegerField(_("Number in stock"), blank=True,
                                        null=True)
     default = models.BooleanField(_("Default"))
