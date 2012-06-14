@@ -237,3 +237,11 @@ register_setting(
         (_("Most expensive"), "-unit_price"),
     ),
 )
+
+register_setting(
+    name="SHOP_USE_VARIATIONS",
+    label=_("Use product variations"),
+    description="Use product variations.",
+    editable=False,
+    default=True,
+)
