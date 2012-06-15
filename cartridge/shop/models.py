@@ -6,7 +6,6 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import CharField, F, Q
 from django.db.models.base import ModelBase
-from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 from mezzanine.conf import settings
