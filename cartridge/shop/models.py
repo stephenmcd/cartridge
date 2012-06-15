@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import CharField, F, Q
 from django.db.models.base import ModelBase
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 from mezzanine.conf import settings
@@ -122,14 +123,17 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
         """
         Copies the price and image fields from the default variation.
         """
-        default = self.variations.get(default=True)
-        for field in Priced._meta.fields:
-            if not isinstance(field, models.AutoField):
-                setattr(self, field.name, getattr(default, field.name))
-        setattr(self, "num_in_stock", getattr(default, "num_in_stock"))
-        if default.image:
-            self.image = default.image.file.name
-        self.save()
+        try:
+            default = self.variations.get(default=True)
+            for field in Priced._meta.fields:
+                if not isinstance(field, models.AutoField):
+                    setattr(self, field.name, getattr(default, field.name))
+            setattr(self, "num_in_stock", getattr(default, "num_in_stock"))
+            if default.image:
+                self.image = default.image.file.name
+            self.save()
+        except ProductVariation.DoesNotExist:
+            pass
 
     def set_image(self):
         """
