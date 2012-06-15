@@ -1,29 +1,24 @@
 # -*- coding: utf-8 -*-
 import datetime
 from south.db import db
-from south.v2 import SchemaMigration
+from south.v2 import DataMigration
 from django.db import models
 
-
-class Migration(SchemaMigration):
+class Migration(DataMigration):
 
     def forwards(self, orm):
-
-        # Changing field 'ProductVariation.sku'
-        db.alter_column('shop_productvariation', 'sku', self.gf('cartridge.shop.fields.SKUField')(max_length=20, unique=True, null=True))
-        # Adding field 'Product.num_in_stock'
-        db.add_column('shop_product', 'num_in_stock',
-                      self.gf('django.db.models.fields.IntegerField')(null=True, blank=True),
-                      keep_default=False)
-
+        "Write your forwards methods here."
+        # Note: Remember to use orm['appname.ModelName'] rather than "from appname.models..."
+        for item in orm['shop.Product'].objects.all():
+            try:
+                default = item.variations.get(default=True)
+                item.num_in_stock = default.num_in_stock
+                item.save()
+            except models.ObjectDoesNotExist:
+                pass
 
     def backwards(self, orm):
-
-        # User chose to not deal with backwards NULL issues for 'ProductVariation.sku'
-        raise RuntimeError("Cannot reverse this migration. 'ProductVariation.sku' and its values cannot be restored.")
-        # Deleting field 'Product.num_in_stock'
-        db.delete_column('shop_product', 'num_in_stock')
-
+        "Write your backwards methods here."
 
     models = {
         'contenttypes.contenttype': {
@@ -256,3 +251,4 @@ class Migration(SchemaMigration):
     }
 
     complete_apps = ['shop']
+    symmetrical = True
