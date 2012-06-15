@@ -4,6 +4,7 @@ from operator import iand, ior
 
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.db.models import signals
 from django.db.models import CharField, F, Q
 from django.db.models.base import ModelBase
 from django.utils.translation import ugettext, ugettext_lazy as _
@@ -687,52 +688,55 @@ class Sale(Discount):
         super(Sale, self).save(*args, **kwargs)
         self._clear()
         if self.active:
-            extra_filter = {}
-            if self.discount_deduct is not None:
-                # Don't apply to prices that would be negative
-                # after deduction.
-                extra_filter["unit_price__gt"] = self.discount_deduct
-                sale_price = models.F("unit_price") - self.discount_deduct
-            elif self.discount_percent is not None:
-                sale_price = models.F("unit_price") - (
-                    models.F("unit_price") / "100.0" * self.discount_percent)
-            elif self.discount_exact is not None:
-                # Don't apply to prices that are cheaper than the sale
-                # amount.
-                extra_filter["unit_price__gt"] = self.discount_exact
-                sale_price = self.discount_exact
-            else:
-                return
-            products = self.all_products()
-            variations = ProductVariation.objects.filter(product__in=products)
-            for priced_objects in (products, variations):
-                # MySQL will raise a 'Data truncated' warning here in
-                # some scenarios, presumably when doing a calculation
-                # that exceeds the precision of the price column. In
-                # this case it's safe to ignore it and the calculation
-                # will still be applied.
-                try:
-                    update = {"sale_id": self.id,
-                              "sale_price": sale_price,
-                              "sale_to": self.valid_to,
-                              "sale_from": self.valid_from}
-                    priced_objects.filter(**extra_filter).update(**update)
-                except OperationalError:
-                    # Work around for MySQL which does not allow update
-                    # to operate on subquery where the FROM clause would
-                    # have it operate on the same table.
-                    #
-                    # http://dev.mysql.com/
-                    # doc/refman/5.0/en/subquery-errors.html
-                    for priced in priced_objects.filter(**extra_filter):
-                        for field, value in update.items():
-                            setattr(priced, field, value)
-                        try:
-                            priced.save()
-                        except Warning:
-                            pass
-                except Warning:
-                    pass
+            self.update_products()
+
+    def update_products(self):
+        extra_filter = {}
+        if self.discount_deduct is not None:
+            # Don't apply to prices that would be negative
+            # after deduction.
+            extra_filter["unit_price__gt"] = self.discount_deduct
+            sale_price = models.F("unit_price") - self.discount_deduct
+        elif self.discount_percent is not None:
+            sale_price = models.F("unit_price") - (
+                models.F("unit_price") / "100.0" * self.discount_percent)
+        elif self.discount_exact is not None:
+            # Don't apply to prices that are cheaper than the sale
+            # amount.
+            extra_filter["unit_price__gt"] = self.discount_exact
+            sale_price = self.discount_exact
+        else:
+            return
+        products = self.all_products()
+        variations = ProductVariation.objects.filter(product__in=products)
+        for priced_objects in (products, variations):
+            # MySQL will raise a 'Data truncated' warning here in
+            # some scenarios, presumably when doing a calculation
+            # that exceeds the precision of the price column. In
+            # this case it's safe to ignore it and the calculation
+            # will still be applied.
+            try:
+                update = {"sale_id": self.id,
+                          "sale_price": sale_price,
+                          "sale_to": self.valid_to,
+                          "sale_from": self.valid_from}
+                priced_objects.filter(**extra_filter).update(**update)
+            except OperationalError:
+                # Work around for MySQL which does not allow update
+                # to operate on subquery where the FROM clause would
+                # have it operate on the same table.
+                #
+                # http://dev.mysql.com/
+                # doc/refman/5.0/en/subquery-errors.html
+                for priced in priced_objects.filter(**extra_filter):
+                    for field, value in update.items():
+                        setattr(priced, field, value)
+                    try:
+                        priced.save()
+                    except Warning:
+                        pass
+            except Warning:
+                pass
 
     def delete(self, *args, **kwargs):
         """
@@ -750,6 +754,14 @@ class Sale(Discount):
                   "sale_from": None, "sale_to": None}
         for priced_model in (Product, ProductVariation):
             priced_model.objects.filter(sale_id=self.id).update(**update)
+
+
+def update_from_sale(sender, instance, action, reverse,
+                     model, pk_set, **kwargs):
+    if action == 'post_add':
+        instance.update_products()
+
+signals.m2m_changed.connect(update_from_sale, sender=Sale.products.through)
 
 
 class DiscountCode(Discount):
