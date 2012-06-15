@@ -108,7 +108,7 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
             default = self.variations.get(default=True)
             for field in Priced._meta.fields:
                 if not isinstance(field, models.AutoField):
-                   setattr(default, field.name, getattr(self, field.name))
+                    setattr(default, field.name, getattr(self, field.name))
             setattr(default, "num_in_stock", getattr(self, "num_in_stock"))
             default.save()
         except ProductVariation.DoesNotExist:
