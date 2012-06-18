@@ -1,5 +1,7 @@
 .. image:: https://secure.travis-ci.org/stephenmcd/cartridge.png?branch=master
 
+Created by `Stephen McDonald <http://twitter.com/stephen_mcd>`_
+
 ========
 Overview
 ========
