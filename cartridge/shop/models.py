@@ -645,8 +645,8 @@ class Discount(models.Model):
                                         related_name="%(class)s_related",
                                         verbose_name=_("Categories"))
     discount_deduct = fields.MoneyField(_("Reduce by amount"))
-    discount_percent = models.DecimalField(_("Reduce by percent"),
-                                           max_digits=4, decimal_places=2,
+    discount_percent = fields.PercentageField(_("Reduce by percent"),
+                                           max_digits=5, decimal_places=2,
                                            blank=True, null=True)
     discount_exact = fields.MoneyField(_("Reduce to amount"))
     valid_from = models.DateTimeField(_("Valid from"), blank=True, null=True)
