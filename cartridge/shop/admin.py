@@ -5,6 +5,7 @@ from django.contrib import admin
 from django.db.models import ImageField
 from django.utils.translation import ugettext_lazy as _
 
+from mezzanine.conf import settings
 from mezzanine.core.admin import DisplayableAdmin, TabularDynamicInlineAdmin
 from mezzanine.pages.admin import PageAdmin
 
@@ -25,9 +26,14 @@ shipping_fields = _flds("shipping_detail")
 
 category_fieldsets = deepcopy(PageAdmin.fieldsets)
 category_fieldsets[0][1]["fields"][3:3] = ["content", "products"]
-category_fieldsets += ((_("Product filters"), {
-    "fields": ("options", "sale", ("price_min", "price_max"), "combined"),
-    "classes": ("collapse-closed",)},),)
+if settings.SHOP_USE_VARIATIONS:
+    category_fieldsets += ((_("Product filters"), {
+        "fields": ("options", "sale", ("price_min", "price_max"), "combined"),
+        "classes": ("collapse-closed",)},),)
+else:
+    category_fieldsets += ((_("Product filters"), {
+        "fields": ("sale", ("price_min", "price_max"), "combined"),
+        "classes": ("collapse-closed",)},),)
 
 
 class CategoryAdmin(PageAdmin):
@@ -54,13 +60,19 @@ class ProductImageAdmin(TabularDynamicInlineAdmin):
 
 product_fieldsets = deepcopy(DisplayableAdmin.fieldsets)
 product_fieldsets[0][1]["fields"][1] = ("status", "available")
+if not settings.SHOP_USE_VARIATIONS:
+    product_fieldsets[0][1]["fields"].extend(
+        [("sku", "num_in_stock"),
+         ("unit_price", "sale_price"), ("sale_from", "sale_to")]
+    )
 product_fieldsets[0][1]["fields"].extend(["content", "categories"])
 product_fieldsets = list(product_fieldsets)
 product_fieldsets.append((_("Other products"), {
     "classes": ("collapse-closed",),
     "fields": ("related_products", "upsell_products")}))
-product_fieldsets.insert(1, (_("Create new variations"),
-    {"classes": ("create-variations",), "fields": option_fields}))
+if settings.SHOP_USE_VARIATIONS:
+    product_fieldsets.insert(1, (_("Create new variations"),
+        {"classes": ("create-variations",), "fields": option_fields}))
 
 
 class ProductAdmin(DisplayableAdmin):
@@ -69,15 +81,21 @@ class ProductAdmin(DisplayableAdmin):
         js = ("cartridge/js/admin/product_variations.js",)
         css = {"all": ("cartridge/css/admin/product.css",)}
 
-    list_display = ("admin_thumb", "title", "status", "available",
-                    "admin_link")
+    list_display = ("admin_thumb", "title", "status",)
+    if not settings.SHOP_USE_VARIATIONS:
+        list_display += ("unit_price", "sale_price", "num_in_stock",)
+    list_display += ("available", "admin_link",)
     list_display_links = ("admin_thumb", "title")
-    list_editable = ("status", "available")
+    list_editable = ("status", "available",)
+    if not settings.SHOP_USE_VARIATIONS:
+        list_editable += ("num_in_stock", "unit_price", "sale_price",)
     list_filter = ("status", "available", "categories")
     filter_horizontal = ("categories", "related_products", "upsell_products")
     search_fields = ("title", "content", "categories__title",
                      "variations__sku")
-    inlines = (ProductImageAdmin, ProductVariationAdmin)
+    inlines = (ProductImageAdmin,)
+    if settings.SHOP_USE_VARIATIONS:
+        inlines += (ProductVariationAdmin,)
     form = ProductAdminForm
     fieldsets = product_fieldsets
 
@@ -123,7 +141,7 @@ class ProductAdmin(DisplayableAdmin):
 
         # Run each of the variation manager methods if we're saving
         # the variations formset.
-        if formset.model == ProductVariation:
+        if settings.SHOP_USE_VARIATIONS and formset.model == ProductVariation:
 
             # Build up selected options for new variations.
             options = dict([(f, request.POST.getlist(f)) for f in option_fields
@@ -151,6 +169,12 @@ class ProductAdmin(DisplayableAdmin):
             # Run again to allow for no images existing previously, with
             # new images added which can be used as defaults for variations.
             self._product.variations.set_default_images(deleted_images)
+
+        else:
+            # Save the images formset stored previously.
+            super(ProductAdmin, self).save_formset(request, form,
+                                                 self._images_formset, change)
+            self._product.set_image()
 
 
 class ProductOptionAdmin(admin.ModelAdmin):
@@ -234,7 +258,8 @@ class DiscountCodeAdmin(admin.ModelAdmin):
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
-admin.site.register(ProductOption, ProductOptionAdmin)
+if settings.SHOP_USE_VARIATIONS:
+    admin.site.register(ProductOption, ProductOptionAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Sale, SaleAdmin)
 admin.site.register(DiscountCode, DiscountCodeAdmin)

@@ -66,7 +66,9 @@
 {{ product.content|safe }}
 {% endeditable %}
 
-{% if product.available and has_available_variations %}
+{% if product.available %}
+{% if use_variations %}
+{% if has_available_variations %}
 <ul id="variations" class="unstyled">
 	{% for variation in variations %}
 	<li id="variation-{{ variation.sku }}"
@@ -97,6 +99,28 @@
 </form>
 {% else %}
 <div>{% trans "This product is currently unavailable." %}</div>
+{% endif %}
+{% else %}
+{% if product.has_price %}
+			{% if product.on_sale %}
+				<span class="old-price">{{ product.unit_price|currency }}</span>
+				{% trans "On sale:" %}
+			{% endif %}
+			{{ product.price|currency }}
+<form method="post" id="add-cart" class="form-horizontal form-shop">
+    {% csrf_token %}
+    {% fields_for add_product_form %}
+    <div class="form-actions clearfix">
+        <div class="form-actions-wrap">
+        <input type="submit" class="btn btn-primary btn-large" name="add_cart" value="{% trans "Buy" %}">
+        <input type="submit" class="btn btn-large" name="add_wishlist" value="{% trans "Save for later" %}">
+        </div>
+    </div>
+</form>
+{% else %}
+<div>{% trans "This product is currently unavailable." %}</div>
+{% endif %}
+{% endif %}
 {% endif %}
 
 {% rating_for product %}

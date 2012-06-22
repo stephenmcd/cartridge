@@ -82,7 +82,10 @@ class ShopTests(TestCase):
         """
         self._product.variations.all().delete()
         self._product.variations.manage_empty()
-        variation = self._product.variations.all()[0]
+        if settings.SHOP_USE_VARIATIONS:
+            variation = self._product.variations.all()[0]
+        else:
+            variation = self._product
         variation.num_in_stock = TEST_STOCK
         # Check stock field not in use.
         self.assertTrue(variation.has_stock())
@@ -90,9 +93,14 @@ class ShopTests(TestCase):
         self.assertTrue(variation.has_stock(TEST_STOCK))
         self.assertFalse(variation.has_stock(TEST_STOCK + 1))
         # Check sold out.
-        variation = self._product.variations.all()[0]
-        variation.num_in_stock = 0
-        self.assertFalse(variation.has_stock())
+        if settings.SHOP_USE_VARIATIONS:
+            variation = self._product.variations.all()[0]
+            variation.num_in_stock = 0
+            self.assertFalse(variation.has_stock())
+        else:
+            self._product.num_in_stock = 0
+            delattr(self._product, "_cached_num_in_stock")
+            self.assertFalse(self._product.has_stock())
 
     def assertCategoryFilteredProducts(self, num_products):
         """
@@ -113,17 +121,21 @@ class ShopTests(TestCase):
         # assign another option as a category filter. Check that no
         # products match the filters, then add the first option as a
         # category filter and check that the product is matched.
-        option_field, options = self._options.items()[0]
-        option1, option2 = options[:2]
-        # Variation with the first option.
-        self._product.variations.create_from_options({option_field: [option1]})
-        # Filter with the second option
-        option = ProductOption.objects.get(type=option_field[-1], name=option2)
-        self.assertCategoryFilteredProducts(0)
-        # First option as a filter.
-        option = ProductOption.objects.get(type=option_field[-1], name=option1)
-        self._category.options.add(option)
-        self.assertCategoryFilteredProducts(1)
+        if settings.SHOP_USE_VARIATIONS:
+            option_field, options = self._options.items()[0]
+            option1, option2 = options[:2]
+            # Variation with the first option.
+            self._product.variations.create_from_options(
+                                                  {option_field: [option1]})
+            # Filter with the second option
+            option = ProductOption.objects.get(
+                                        type=option_field[-1], name=option2)
+            self.assertCategoryFilteredProducts(0)
+            # First option as a filter.
+            option = ProductOption.objects.get(
+                                        type=option_field[-1], name=option1)
+            self._category.options.add(option)
+            self.assertCategoryFilteredProducts(1)
 
         # Test price filters - add a price filter that when combined
         # with previously created filters, should match no products.
@@ -133,15 +145,29 @@ class ShopTests(TestCase):
         self._category.combined = True
         self._category.price_min = TEST_PRICE
         self.assertCategoryFilteredProducts(0)
-        self._product.variations.all().update(unit_price=TEST_PRICE)
+        if settings.SHOP_USE_VARIATIONS:
+            self._product.variations.all().update(unit_price=TEST_PRICE)
+        else:
+            self._product.unit_price = TEST_PRICE
+            self._product.save()
         self.assertCategoryFilteredProducts(1)
         n, d = now(), timedelta(days=1)
         tomorrow, yesterday = n + d, n - d
-        self._product.variations.all().update(unit_price=0,
+        if settings.SHOP_USE_VARIATIONS:
+            self._product.variations.all().update(unit_price=0,
                                               sale_price=TEST_PRICE,
                                               sale_from=tomorrow)
+        else:
+            self._product.unit_price = 0
+            self._product.sale_price = TEST_PRICE
+            self._product.sale_from = tomorrow
+            self._product.save()
         self.assertCategoryFilteredProducts(0)
-        self._product.variations.all().update(sale_from=yesterday)
+        if settings.SHOP_USE_VARIATIONS:
+            self._product.variations.all().update(sale_from=yesterday)
+        else:
+            self._product.sale_from = yesterday
+            self._product.save()
         self.assertCategoryFilteredProducts(1)
 
         # Clean up previously added filters and check that explicitly
@@ -158,32 +184,40 @@ class ShopTests(TestCase):
         # matches an option filter, and check that the filters
         # have no results when ``combined`` is set, and that the
         # product matches when ``combined`` is disabled.
-        self._product.variations.all().delete()
-        self._product.variations.create_from_options({option_field:
-                                                     [option1, option2]})
-        # Price variation and filter.
-        variation = self._product.variations.get(**{option_field: option1})
-        variation.unit_price = TEST_PRICE
-        variation.save()
-        self._category.price_min = TEST_PRICE
-        # Option variation and filter.
-        option = ProductOption.objects.get(type=option_field[-1], name=option2)
-        self._category.options.add(option)
-        # Check ``combined``.
-        self._category.combined = True
-        self.assertCategoryFilteredProducts(0)
-        self._category.combined = False
-        self.assertCategoryFilteredProducts(1)
+        if settings.SHOP_USE_VARIATIONS:
+            self._product.variations.all().delete()
+            self._product.variations.create_from_options({option_field:
+                                                         [option1, option2]})
+            # Price variation and filter.
+            variation = self._product.variations.get(**{option_field: option1})
+            variation.unit_price = TEST_PRICE
+            variation.save()
+            self._category.price_min = TEST_PRICE
+            # Option variation and filter.
+            option = ProductOption.objects.get(
+                                           type=option_field[-1], name=option2)
+            self._category.options.add(option)
+            # Check ``combined``.
+            self._category.combined = True
+            self.assertCategoryFilteredProducts(0)
+            self._category.combined = False
+            self.assertCategoryFilteredProducts(1)
 
     def _add_to_cart(self, variation, quantity):
         """
         Given a variation, creates the dict for posting to the cart
         form to add the variation, and posts it.
         """
-        field_names = [f.name for f in ProductVariation.option_fields()]
-        data = dict(zip(field_names, variation.options()))
-        data["quantity"] = quantity
-        self.client.post(variation.product.get_absolute_url(), data)
+        if settings.SHOP_USE_VARIATIONS:
+            field_names = [f.name for f in ProductVariation.option_fields()]
+            data = dict(zip(field_names, variation.options()))
+            data["quantity"] = quantity
+            self.client.post(variation.product.get_absolute_url(), data)
+        else:
+            #data = dict(zip(field_names, variation.options()))
+            data = dict()
+            data["quantity"] = quantity
+            self.client.post(variation.get_absolute_url(), data)
 
     def _empty_cart(self, cart):
         """
@@ -205,7 +239,10 @@ class ShopTests(TestCase):
         """
         self._product.variations.all().delete()
         self._product.variations.create_from_options(self._options)
-        variation = self._product.variations.all()[0]
+        if settings.SHOP_USE_VARIATIONS:
+            variation = self._product.variations.all()[0]
+        else:
+            variation = self._product
         variation.unit_price = TEST_PRICE
         variation.num_in_stock = TEST_STOCK * 2
         variation.save()
@@ -223,10 +260,16 @@ class ShopTests(TestCase):
 
         # Add quantity and check stock levels / cart totals.
         self._reset_variations()
-        variation = self._product.variations.all()[0]
+        if settings.SHOP_USE_VARIATIONS:
+            variation = self._product.variations.all()[0]
+        else:
+            variation = self._product
         self._add_to_cart(variation, TEST_STOCK)
         cart = Cart.objects.from_request(self.client)
-        variation = self._product.variations.all()[0]
+        if settings.SHOP_USE_VARIATIONS:
+            variation = self._product.variations.all()[0]
+        else:
+            variation = self._product
         self.assertTrue(variation.has_stock(TEST_STOCK))
         self.assertFalse(variation.has_stock(TEST_STOCK * 2))
         self.assertTrue(cart.has_items())
@@ -236,7 +279,11 @@ class ShopTests(TestCase):
         # Add remaining quantity and check again.
         self._add_to_cart(variation, TEST_STOCK)
         cart = Cart.objects.from_request(self.client)
-        variation = self._product.variations.all()[0]
+        if settings.SHOP_USE_VARIATIONS:
+            variation = self._product.variations.all()[0]
+        else:
+            variation = self._product
+            delattr(variation, "_cached_num_in_stock")
         self.assertFalse(variation.has_stock())
         self.assertTrue(cart.has_items())
         self.assertEqual(cart.total_quantity(), TEST_STOCK * 2)
@@ -245,7 +292,11 @@ class ShopTests(TestCase):
         # Remove from cart.
         self._empty_cart(cart)
         cart = Cart.objects.from_request(self.client)
-        variation = self._product.variations.all()[0]
+        if settings.SHOP_USE_VARIATIONS:
+            variation = self._product.variations.all()[0]
+        else:
+            variation = self._product
+            delattr(self._product, "_cached_num_in_stock")
         self.assertTrue(variation.has_stock(TEST_STOCK * 2))
         self.assertFalse(cart.has_items())
         self.assertEqual(cart.total_quantity(), 0)
@@ -257,13 +308,22 @@ class ShopTests(TestCase):
         """
 
         self._reset_variations()
-        variation = self._product.variations.all()[0]
         invalid_product = Product.objects.create(**self._published)
-        invalid_product.variations.create_from_options(self._options)
-        invalid_variation = invalid_product.variations.all()[0]
-        invalid_variation.unit_price = TEST_PRICE
-        invalid_variation.num_in_stock = TEST_STOCK * 2
-        invalid_variation.save()
+        if settings.SHOP_USE_VARIATIONS:
+            variation = self._product.variations.all()[0]
+            variation_product = variation.product
+            invalid_product.variations.create_from_options(self._options)
+            invalid_variation = invalid_product.variations.all()[0]
+            invalid_variation.unit_price = TEST_PRICE
+            invalid_variation.num_in_stock = TEST_STOCK * 2
+            invalid_variation.save()
+        else:
+            variation = self._product
+            variation_product = variation
+            invalid_product.unit_price = TEST_PRICE
+            invalid_product.num_in_stock = TEST_STOCK * 2
+            invalid_product.save()
+            invalid_variation = invalid_product
         discount_value = TEST_PRICE / 2
 
         # Set up discounts with and without a specific product, for
@@ -282,7 +342,7 @@ class ShopTests(TestCase):
                 self._add_to_cart(invalid_variation, 1)
                 discount = DiscountCode.objects.create(**kwargs)
                 if discount_target == "item":
-                    discount.products.add(variation.product)
+                    discount.products.add(variation_product)
                 post_data = {"discount_code": code}
                 self.client.post(reverse("shop_cart"), post_data)
                 discount_total = self.client.session["discount_total"]
@@ -312,7 +372,10 @@ class ShopTests(TestCase):
 
         # Add to cart.
         self._reset_variations()
-        variation = self._product.variations.all()[0]
+        if settings.SHOP_USE_VARIATIONS:
+            variation = self._product.variations.all()[0]
+        else:
+            variation = self._product
         self._add_to_cart(variation, TEST_STOCK)
         cart = Cart.objects.from_request(self.client)
 
@@ -324,11 +387,14 @@ class ShopTests(TestCase):
         except Order.DoesNotExist:
             self.fail("Couldn't create an order")
         items = order.items.all()
-        variation = self._product.variations.all()[0]
+        if settings.SHOP_USE_VARIATIONS:
+            variation = self._product.variations.all()[0]
+        else:
+            variation = Product.objects.get(id=self._product.id)
 
         self.assertEqual(cart.total_quantity(), 0)
         self.assertEqual(len(items), 1)
-        self.assertEqual(items[0].sku, variation.sku)
+        self.assertEqual(items[0].sku, unicode(variation.sku))
         self.assertEqual(items[0].quantity, TEST_STOCK)
         self.assertEqual(variation.num_in_stock, TEST_STOCK)
         self.assertEqual(order.item_total, TEST_PRICE * TEST_STOCK)
@@ -398,5 +464,6 @@ class SaleTests(TestCase):
         # Afterward ensure that all the sale prices have been updated.
         for product in Product.objects.all():
             self.assertTrue(product.sale_price)
-        for variation in ProductVariation.objects.all():
-            self.assertTrue(variation.sale_price)
+        if settings.SHOP_USE_VARIATIONS:
+            for variation in ProductVariation.objects.all():
+                self.assertTrue(variation.sale_price)

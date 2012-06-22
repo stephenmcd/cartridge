@@ -70,7 +70,55 @@ class Priced(models.Model):
         return Decimal("0")
 
 
-class Product(Displayable, Priced, RichText, AdminThumbMixin):
+class Stocked(models.Model):
+
+    sku = fields.SKUField(unique=True, blank=True, null=True)
+    num_in_stock = models.IntegerField(_("Number in stock"), blank=True,
+                                       null=True)
+
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        """
+        Use the model's ID as the SKU when the model is first
+        created.
+        """
+        super(Stocked, self).save(*args, **kwargs)
+        if not self.sku:
+            self.sku = self.id
+            self.save()
+
+    def live_num_in_stock(self):
+        """
+        Returns the live number in stock, which is
+        ``self.num_in_stock - num in carts``. Also caches the value
+        for subsequent lookups.
+        """
+        if self.num_in_stock is None:
+            return None
+        if not hasattr(self, "_cached_num_in_stock"):
+            num_in_stock = self.num_in_stock
+            items = CartItem.objects.filter(sku=self.sku)
+            aggregate = items.aggregate(quantity_sum=models.Sum("quantity"))
+            num_in_carts = aggregate["quantity_sum"]
+            if num_in_carts is not None:
+                num_in_stock = num_in_stock - num_in_carts
+            self._cached_num_in_stock = num_in_stock
+        return self._cached_num_in_stock
+
+    def has_stock(self, quantity=1):
+        """
+        Returns ``True`` if the given quantity is in stock, by checking
+        against ``live_num_in_stock``. ``True`` is returned when
+        ``num_in_stock`` is ``None`` which is how stock control is
+        disabled.
+        """
+        live = self.live_num_in_stock()
+        return live is None or quantity == 0 or live >= quantity
+
+
+class Product(Displayable, Priced, Stocked, RichText, AdminThumbMixin):
     """
     Container model for a product that stores information common to
     all of its variations such as the product's title and description.
@@ -100,6 +148,14 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
     @models.permalink
     def get_absolute_url(self):
         return ("shop_product", (), {"slug": self.slug})
+
+    def set_image(self):
+        """
+        Set product image.
+        """
+        if self.images.all():
+            self.image = self.images.all()[0].file.name
+            self.save()
 
     def copy_default_variation(self):
         """
@@ -174,16 +230,13 @@ class ProductVariationMetaclass(ModelBase):
         return super(ProductVariationMetaclass, cls).__new__(*args)
 
 
-class ProductVariation(Priced):
+class ProductVariation(Priced, Stocked):
     """
     A combination of selected options from
     ``SHOP_OPTION_TYPE_CHOICES`` for a ``Product`` instance.
     """
 
     product = models.ForeignKey("Product", related_name="variations")
-    sku = fields.SKUField(unique=True)
-    num_in_stock = models.IntegerField(_("Number in stock"), blank=True,
-                                       null=True)
     default = models.BooleanField(_("Default"))
     image = models.ForeignKey("ProductImage", verbose_name=_("Image"),
                               null=True, blank=True)
@@ -206,16 +259,6 @@ class ProductVariation(Priced):
                                            getattr(self, field.name)))
         return ("%s %s" % (unicode(self.product), ", ".join(options))).strip()
 
-    def save(self, *args, **kwargs):
-        """
-        Use the variation's ID as the SKU when the variation is first
-        created.
-        """
-        super(ProductVariation, self).save(*args, **kwargs)
-        if not self.sku:
-            self.sku = self.id
-            self.save()
-
     def get_absolute_url(self):
         return self.product.get_absolute_url()
 
@@ -236,34 +279,6 @@ class ProductVariation(Priced):
         ``ProductVariationMetaclass``.
         """
         return [getattr(self, field.name) for field in self.option_fields()]
-
-    def live_num_in_stock(self):
-        """
-        Returns the live number in stock, which is
-        ``self.num_in_stock - num in carts``. Also caches the value
-        for subsequent lookups.
-        """
-        if self.num_in_stock is None:
-            return None
-        if not hasattr(self, "_cached_num_in_stock"):
-            num_in_stock = self.num_in_stock
-            items = CartItem.objects.filter(sku=self.sku)
-            aggregate = items.aggregate(quantity_sum=models.Sum("quantity"))
-            num_in_carts = aggregate["quantity_sum"]
-            if num_in_carts is not None:
-                num_in_stock = num_in_stock - num_in_carts
-            self._cached_num_in_stock = num_in_stock
-        return self._cached_num_in_stock
-
-    def has_stock(self, quantity=1):
-        """
-        Returns ``True`` if the given quantity is in stock, by checking
-        against ``live_num_in_stock``. ``True`` is returned when
-        ``num_in_stock`` is ``None`` which is how stock control is
-        disabled.
-        """
-        live = self.live_num_in_stock()
-        return live is None or quantity == 0 or live >= quantity
 
 
 class Category(Page, RichText):
@@ -328,9 +343,10 @@ class Category(Page, RichText):
         operator = iand if self.combined else ior
         products = Q(id__in=self.products.only("id"))
         if filters:
-            filters = reduce(operator, filters)
-            variations = ProductVariation.objects.filter(filters)
-            filters = [Q(variations__in=variations)]
+            if settings.SHOP_USE_VARIATIONS:
+                filters = reduce(operator, filters)
+                variations = ProductVariation.objects.filter(filters)
+                filters = [Q(variations__in=variations)]
             # If filters exist, checking that products have been
             # selected is neccessary as combining the variations
             # with an empty ID list lookup and ``AND`` will always
@@ -434,14 +450,19 @@ class Order(models.Model):
         del request.session["order"]
         for item in request.cart:
             try:
-                variation = ProductVariation.objects.get(sku=item.sku)
-            except ProductVariation.DoesNotExist:
+                if settings.SHOP_USE_VARIATIONS:
+                    variation = ProductVariation.objects.get(sku=item.sku)
+                    product = variation.product
+                else:
+                    variation = Product.objects.get(sku=item.sku)
+                    product = variation
+            except ProductVariation.DoesNotExist or Product.DoesNotExist:
                 pass
             else:
                 if variation.num_in_stock is not None:
                     variation.num_in_stock -= item.quantity
                     variation.save()
-                variation.product.actions.purchased()
+                product.actions.purchased()
         code = request.session.get('discount_code')
         if code:
             DiscountCode.objects.active().filter(code=code).update(
@@ -499,11 +520,13 @@ class Cart(models.Model):
         if created:
             item.description = unicode(variation)
             item.unit_price = variation.price()
-            item.url = variation.product.get_absolute_url()
+            if settings.SHOP_USE_VARIATIONS:
+                variation = variation.product
+            item.url = variation.get_absolute_url()
             image = variation.image
             if image is not None:
-                item.image = unicode(image.file)
-            variation.product.actions.added_to_cart()
+                item.image = unicode(image)
+            variation.actions.added_to_cart()
         item.quantity += quantity
         item.save()
 
@@ -554,8 +577,11 @@ class Cart(models.Model):
         total = Decimal("0")
         # Create a list of skus in the cart that are applicable to
         # the discount, and total the discount for appllicable items.
-        lookup = {"product__in": products, "sku__in": self.skus()}
-        discount_variations = ProductVariation.objects.filter(**lookup)
+        if settings.SHOP_USE_VARIATIONS:
+            lookup = {"product__in": products, "sku__in": self.skus()}
+            discount_variations = ProductVariation.objects.filter(**lookup)
+        else:
+            discount_variations = products
         discount_skus = discount_variations.values_list("sku", flat=True)
         for item in self:
             if item.sku in discount_skus:
@@ -704,8 +730,13 @@ class Sale(Discount):
             else:
                 return
             products = self.all_products()
-            variations = ProductVariation.objects.filter(product__in=products)
-            for priced_objects in (products, variations):
+            if settings.SHOP_USE_VARIATIONS:
+                variations = ProductVariation.objects.filter(
+                                                        product__in=products)
+                apply_list = (products, variations)
+            else:
+                apply_list = (products,)
+            for priced_objects in apply_list:
                 # MySQL will raise a 'Data truncated' warning here in
                 # some scenarios, presumably when doing a calculation
                 # that exceeds the precision of the price column. In
@@ -748,7 +779,11 @@ class Sale(Discount):
         """
         update = {"sale_id": None, "sale_price": None,
                   "sale_from": None, "sale_to": None}
-        for priced_model in (Product, ProductVariation):
+        if settings.SHOP_USE_VARIATIONS:
+            apply_list = (Product, ProductVariation)
+        else:
+            apply_list = (Product, )
+        for priced_model in apply_list:
             priced_model.objects.filter(sale_id=self.id).update(**update)
 
 
