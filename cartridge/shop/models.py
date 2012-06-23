@@ -77,7 +77,7 @@ class Priced(models.Model):
     def copy_price_fields_to(self, obj_to):
         """
         Copies each of the fields for the ``Priced`` model from one
-        instance to another.  Use for synchronising the denormalised
+        instance to another. Used for synchronising the denormalised
         fields on ``Product`` instances with their default variation.
         """
         for field in Priced._meta.fields:
