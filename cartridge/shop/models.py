@@ -4,6 +4,7 @@ from operator import iand, ior
 
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.db.models import signals
 from django.db.models import CharField, F, Q
 from django.db.models.base import ModelBase
 from django.utils.translation import ugettext, ugettext_lazy as _
@@ -685,6 +686,9 @@ class Sale(Discount):
         to the selected categories and products for the sale.
         """
         super(Sale, self).save(*args, **kwargs)
+        self.update_products()
+
+    def update_products(self):
         self._clear()
         if self.active:
             extra_filter = {}
@@ -750,6 +754,14 @@ class Sale(Discount):
                   "sale_from": None, "sale_to": None}
         for priced_model in (Product, ProductVariation):
             priced_model.objects.filter(sale_id=self.id).update(**update)
+
+
+def update_from_sale(sender, instance, action, reverse,
+                     model, pk_set, **kwargs):
+    if action == 'post_add':
+        instance.update_products()
+
+signals.m2m_changed.connect(update_from_sale, sender=Sale.products.through)
 
 
 class DiscountCode(Discount):
