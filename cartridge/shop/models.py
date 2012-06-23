@@ -39,6 +39,9 @@ class Priced(models.Model):
     sale_price = fields.MoneyField(_("Sale price"))
     sale_from = models.DateTimeField(_("Sale start"), blank=True, null=True)
     sale_to = models.DateTimeField(_("Sale end"), blank=True, null=True)
+    sku = fields.SKUField(unique=True, blank=True, null=True)
+    num_in_stock = models.IntegerField(_("Number in stock"), blank=True,
+                                       null=True)
 
     class Meta:
         abstract = True
@@ -69,6 +72,17 @@ class Priced(models.Model):
             return self.unit_price
         return Decimal("0")
 
+    def copy_price_fields_to(self, obj_to):
+        """
+        Copies each of the fields for the ``Priced`` model from one
+        instance to another.  Use for synchronising the denormalised
+        fields on ``Product`` instances with their default variation.
+        """
+        for field in Priced._meta.fields:
+            if not isinstance(field, models.AutoField):
+                setattr(obj_to, field.name, getattr(self, field.name))
+        obj_to.save()
+
 
 class Product(Displayable, Priced, RichText, AdminThumbMixin):
     """
@@ -79,8 +93,6 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
     available = models.BooleanField(_("Available for purchase"),
                                     default=False)
     image = CharField(_("Image"), max_length=100, blank=True, null=True)
-    num_in_stock = models.IntegerField(_("Number in stock"), blank=True,
-                                       null=True)
     categories = models.ManyToManyField("Category", blank=True,
                                         verbose_name=_("Product categories"))
     date_added = models.DateTimeField(_("Date added"), auto_now_add=True,
@@ -101,18 +113,15 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
 
     def save(self, *args, **kwargs):
         """
-        Copies the price fields to the default variation.
+        Copies the price fields to the default variation when
+        ``SHOP_USE_VARIATIONS`` is False, and the product is
+        updated via the admin change list.
         """
+        updating = self.id is not None
         super(Product, self).save(*args, **kwargs)
-        try:
+        if updating and not settings.SHOP_USE_VARIATIONS:
             default = self.variations.get(default=True)
-            for field in Priced._meta.fields:
-                if not isinstance(field, models.AutoField):
-                    setattr(default, field.name, getattr(self, field.name))
-            setattr(default, "num_in_stock", getattr(self, "num_in_stock"))
-            default.save()
-        except ProductVariation.DoesNotExist:
-            pass
+            self.copy_price_fields_to(default)
 
     @models.permalink
     def get_absolute_url(self):
@@ -120,27 +129,14 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
 
     def copy_default_variation(self):
         """
-        Copies the price and image fields from the default variation.
+        Copies the price and image fields from the default variation
+        when the product is updated via the change view.
         """
-        try:
-            default = self.variations.get(default=True)
-            for field in Priced._meta.fields:
-                if not isinstance(field, models.AutoField):
-                    setattr(self, field.name, getattr(default, field.name))
-            setattr(self, "num_in_stock", getattr(default, "num_in_stock"))
-            if default.image:
-                self.image = default.image.file.name
-            self.save()
-        except ProductVariation.DoesNotExist:
-            pass
-
-    def set_image(self):
-        """
-        Set product image.
-        """
-        if self.images.all():
-            self.image = self.images.all()[0].file.name
-            self.save()
+        default = self.variations.get(default=True)
+        default.copy_price_fields_to(self)
+        if default.image:
+            self.image = default.image.file.name
+        self.save()
 
 
 class ProductImage(Orderable):
@@ -210,9 +206,6 @@ class ProductVariation(Priced):
     """
 
     product = models.ForeignKey("Product", related_name="variations")
-    sku = fields.SKUField(unique=True, blank=True, null=True)
-    num_in_stock = models.IntegerField(_("Number in stock"), blank=True,
-                                       null=True)
     default = models.BooleanField(_("Default"))
     image = models.ForeignKey("ProductImage", verbose_name=_("Image"),
                               null=True, blank=True)
@@ -293,6 +286,19 @@ class ProductVariation(Priced):
         """
         live = self.live_num_in_stock()
         return live is None or quantity == 0 or live >= quantity
+
+    def update_stock(self, quantity):
+        """
+        Update the stock amount - called when an order is complete.
+        Also update the denormalised stock amount of the product if
+        this is the default variation.
+        """
+        if self.num_in_stock is not None:
+            self.num_in_stock += quantity
+            self.save()
+            if self.default:
+                self.product.num_in_stock = self.num_in_stock
+                self.product.save()
 
 
 class Category(Page, RichText):
@@ -467,10 +473,7 @@ class Order(models.Model):
             except ProductVariation.DoesNotExist:
                 pass
             else:
-                if variation.num_in_stock is not None:
-                    variation.num_in_stock -= item.quantity
-                    variation.save()
-                    variation.product.copy_default_variation()
+                variation.update_stock(item.quantity * -1)
                 variation.product.actions.purchased()
         code = request.session.get('discount_code')
         if code:
