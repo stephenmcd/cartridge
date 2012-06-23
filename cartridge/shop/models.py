@@ -81,6 +81,8 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
     available = models.BooleanField(_("Available for purchase"),
                                     default=False)
     image = CharField(_("Image"), max_length=100, blank=True, null=True)
+    num_in_stock = models.IntegerField(_("Number in stock"), blank=True,
+                                       null=True)
     categories = models.ManyToManyField("Category", blank=True,
                                         verbose_name=_("Product categories"))
     date_added = models.DateTimeField(_("Date added"), auto_now_add=True,
@@ -99,6 +101,21 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
         verbose_name = _("Product")
         verbose_name_plural = _("Products")
 
+    def save(self, *args, **kwargs):
+        """
+        Copies the price fields to the default variation.
+        """
+        super(Product, self).save(*args, **kwargs)
+        try:
+            default = self.variations.get(default=True)
+            for field in Priced._meta.fields:
+                if not isinstance(field, models.AutoField):
+                    setattr(default, field.name, getattr(self, field.name))
+            setattr(default, "num_in_stock", getattr(self, "num_in_stock"))
+            default.save()
+        except ProductVariation.DoesNotExist:
+            pass
+
     @models.permalink
     def get_absolute_url(self):
         return ("shop_product", (), {"slug": self.slug})
@@ -107,13 +124,25 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
         """
         Copies the price and image fields from the default variation.
         """
-        default = self.variations.get(default=True)
-        for field in Priced._meta.fields:
-            if not isinstance(field, models.AutoField):
-                setattr(self, field.name, getattr(default, field.name))
-        if default.image:
-            self.image = default.image.file.name
-        self.save()
+        try:
+            default = self.variations.get(default=True)
+            for field in Priced._meta.fields:
+                if not isinstance(field, models.AutoField):
+                    setattr(self, field.name, getattr(default, field.name))
+            setattr(self, "num_in_stock", getattr(default, "num_in_stock"))
+            if default.image:
+                self.image = default.image.file.name
+            self.save()
+        except ProductVariation.DoesNotExist:
+            pass
+
+    def set_image(self):
+        """
+        Set product image.
+        """
+        if self.images.all():
+            self.image = self.images.all()[0].file.name
+            self.save()
 
 
 class ProductImage(Orderable):
@@ -183,7 +212,7 @@ class ProductVariation(Priced):
     """
 
     product = models.ForeignKey("Product", related_name="variations")
-    sku = fields.SKUField(unique=True)
+    sku = fields.SKUField(unique=True, blank=True, null=True)
     num_in_stock = models.IntegerField(_("Number in stock"), blank=True,
                                        null=True)
     default = models.BooleanField(_("Default"))
@@ -443,6 +472,7 @@ class Order(models.Model):
                 if variation.num_in_stock is not None:
                     variation.num_in_stock -= item.quantity
                     variation.save()
+                    variation.product.copy_default_variation()
                 variation.product.actions.purchased()
         code = request.session.get('discount_code')
         if code:
