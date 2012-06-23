@@ -4,9 +4,10 @@ from operator import iand, ior
 
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.db.models import signals
+from django.db.models.signals import m2m_changed
 from django.db.models import CharField, F, Q
 from django.db.models.base import ModelBase
+from django.dispatch import receiver
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 from mezzanine.conf import settings
@@ -681,14 +682,14 @@ class Sale(Discount):
         verbose_name_plural = _("Sales")
 
     def save(self, *args, **kwargs):
-        """
-        Apply sales field value to products and variations according
-        to the selected categories and products for the sale.
-        """
         super(Sale, self).save(*args, **kwargs)
         self.update_products()
 
     def update_products(self):
+        """
+        Apply sales field value to products and variations according
+        to the selected categories and products for the sale.
+        """
         self._clear()
         if self.active:
             extra_filter = {}
@@ -756,12 +757,14 @@ class Sale(Discount):
             priced_model.objects.filter(sale_id=self.id).update(**update)
 
 
-def update_from_sale(sender, instance, action, reverse,
-                     model, pk_set, **kwargs):
-    if action == 'post_add':
+@receiver(m2m_changed, sender=Sale.products.through)
+def sale_update_products(sender, instance, action, *args, **kwargs):
+    """
+    Signal for updating products for the sale - needed since the
+    products won't be assigned to the sale when it is first saved.
+    """
+    if action == "post_add":
         instance.update_products()
-
-signals.m2m_changed.connect(update_from_sale, sender=Sale.products.through)
 
 
 class DiscountCode(Discount):
