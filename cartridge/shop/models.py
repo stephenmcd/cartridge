@@ -4,8 +4,10 @@ from operator import iand, ior
 
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.db.models.signals import m2m_changed
 from django.db.models import CharField, F, Q
 from django.db.models.base import ModelBase
+from django.dispatch import receiver
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 from mezzanine.conf import settings
@@ -678,8 +680,8 @@ class Discount(models.Model):
                                         related_name="%(class)s_related",
                                         verbose_name=_("Categories"))
     discount_deduct = fields.MoneyField(_("Reduce by amount"))
-    discount_percent = models.DecimalField(_("Reduce by percent"),
-                                           max_digits=4, decimal_places=2,
+    discount_percent = fields.PercentageField(_("Reduce by percent"),
+                                           max_digits=5, decimal_places=2,
                                            blank=True, null=True)
     discount_exact = fields.MoneyField(_("Reduce to amount"))
     valid_from = models.DateTimeField(_("Valid from"), blank=True, null=True)
@@ -713,11 +715,14 @@ class Sale(Discount):
         verbose_name_plural = _("Sales")
 
     def save(self, *args, **kwargs):
+        super(Sale, self).save(*args, **kwargs)
+        self.update_products()
+
+    def update_products(self):
         """
         Apply sales field value to products and variations according
         to the selected categories and products for the sale.
         """
-        super(Sale, self).save(*args, **kwargs)
         self._clear()
         if self.active:
             extra_filter = {}
@@ -783,6 +788,16 @@ class Sale(Discount):
                   "sale_from": None, "sale_to": None}
         for priced_model in (Product, ProductVariation):
             priced_model.objects.filter(sale_id=self.id).update(**update)
+
+
+@receiver(m2m_changed, sender=Sale.products.through)
+def sale_update_products(sender, instance, action, *args, **kwargs):
+    """
+    Signal for updating products for the sale - needed since the
+    products won't be assigned to the sale when it is first saved.
+    """
+    if action == "post_add":
+        instance.update_products()
 
 
 class DiscountCode(Discount):
