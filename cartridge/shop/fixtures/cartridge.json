@@ -75,6 +75,7 @@
             "image": "product/red.png",
             "sale_id": 1,
             "unit_price": "10",
+            "sku": "1",
             "content": "<p>Magic that can't be removed!</p>",
             "sale_price": "5",
             "slug": "django-pony",
