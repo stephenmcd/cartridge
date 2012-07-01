@@ -330,7 +330,7 @@
             "title": "Shop",
             "titles": "Shop",
             "content_model": "category",
-            "in_navigation": true,
+            "in_menus": [1, 2, 3],
             "slug": "shop",
             "site": 1
         }
