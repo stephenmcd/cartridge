@@ -124,6 +124,7 @@ Sites Using Cartridge
   * `tindie.com <http://tindie.com>`_
   * `Ross A. Laird <http://rosslaird.com/shop>`_
   * `Pink Twig <http://www.pinktwig.ca/shop>`_
+  * `Parfume Planet <http://parfumeplanet.com>`_
 
 .. _`Django`: http://djangoproject.com/
 .. _`BSD licensed`: http://www.linfo.org/bsdlicense.html
