@@ -3,7 +3,7 @@
 # CARTRIDGE SETTINGS #
 ######################
 
-# The following settings are already defined in cartridge.conf.defaults
+# The following settings are already defined in cartridge.shop.defaults
 # with default values, but are common enough to be put here, commented
 # out, for convenient overriding.
 
@@ -70,9 +70,12 @@
 # MEZZANINE SETTINGS #
 ######################
 
-# The following settings are already defined in mezzanine.conf.defaults
-# with default values, but are common enough to be put here, commented
-# out, for convenient overriding.
+# The following settings are already defined with default values in
+# the ``defaults.py`` module within each of Mezzanine's apps, but are
+# common enough to be put here, commented out, for convenient
+# overriding. Please consult the settings documentation for a full list
+# of settings Mezzanine implements:
+# http://mezzanine.jupo.org/docs/configuration.html#default-settings
 
 # Controls the ordering and grouping of the admin menu.
 #
@@ -145,8 +148,7 @@
 # SSL_FORCE_URL_PREFIXES = ("/admin", "/account", "/shop/checkout",)
 
 # If True, the south application will be automatically added to the
-# INSTALLED_APPS setting. This setting is not defined in
-# mezzanine.conf.defaults as is the case with the above settings.
+# INSTALLED_APPS setting.
 USE_SOUTH = True
 
 
