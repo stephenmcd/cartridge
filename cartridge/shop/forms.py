@@ -454,7 +454,7 @@ class ProductVariationAdminFormset(BaseInlineFormSet):
     """
     def clean(self):
         if len([f for f in self.forms if hasattr(f, "cleaned_data") and
-            f.cleaned_data["default"]]) > 1:
+            f.cleaned_data.get("default", False)]) > 1:
             error = _("Only one variation can be checked as the default.")
             raise forms.ValidationError(error)
 

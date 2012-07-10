@@ -23,6 +23,17 @@ class OptionField(CharField):
         super(OptionField, self).__init__(*args, **defaults)
 
 
+class PercentageField(DecimalField):
+    """
+    A field for representing a percentage. Sets restrictions on admin
+    form fields to ensure it is between 0-100.
+    """
+    def formfield(self, *args, **kwargs):
+        defaults = {'min_value': 0, 'max_value': 100}
+        kwargs.update(**defaults)
+        return super(PercentageField, self).formfield(*args, **kwargs)
+
+
 class MoneyField(DecimalField):
     """
     A field for a monetary amount. Provide the default size and

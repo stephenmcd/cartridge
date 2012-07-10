@@ -3,7 +3,7 @@
 .create-variations li label {width:auto;}
 .create-variations input {margin:-1px 3px 0px 5px;}
 .create-variations {margin-top:20px;}
-.sku input {width:100px !important;}
+.result-list .vTextField, .sku input {width:100px !important;}
 .tiny {font-size:70%;}
 .unit_price input, .sale_price input, .num_in_stock input {
     width:50px !important;}

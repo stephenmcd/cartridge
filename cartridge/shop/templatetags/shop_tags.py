@@ -1,4 +1,3 @@
-
 from decimal import Decimal
 import locale
 
@@ -19,7 +18,7 @@ def currency(value):
     if not value:
         value = 0
     if hasattr(locale, "currency"):
-        value = locale.currency(value)
+        value = locale.currency(value, grouping=True)
     else:
         # based on locale.currency() in python >= 2.5
         conv = locale.localeconv()
