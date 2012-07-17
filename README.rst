@@ -125,6 +125,8 @@ Sites Using Cartridge
   * `Ross A. Laird <http://rosslaird.com/shop>`_
   * `Pink Twig <http://www.pinktwig.ca/shop>`_
   * `Parfume Planet <http://parfumeplanet.com>`_
+  * `Life is Good <http://lifeisgoodforall.co.uk/>`_
+  * `Brooklyn Navy Yard <http://bldg92.org/>`_
 
 .. _`Django`: http://djangoproject.com/
 .. _`BSD licensed`: http://www.linfo.org/bsdlicense.html
