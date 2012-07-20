@@ -48,7 +48,7 @@
             <span class="old-price">{{ product.unit_price|currency }}</span>
             {% trans "On sale:" %}
             {% endif %}
-            {{ product.price|currency }}
+            <span class="price">{{ product.price|currency }}</span>
         {% else %}
         {% trans "Coming soon" %}
         {% endif %}
