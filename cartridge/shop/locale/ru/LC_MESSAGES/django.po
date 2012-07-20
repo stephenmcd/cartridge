@@ -375,7 +375,7 @@ msgstr "Параметры товара"
 
 #: models.py:211
 msgid "Default"
-msgstr "По-умолчанию"
+msgstr "По умолчанию"
 
 #: models.py:319 models.py:714
 msgid "Sale"
@@ -935,7 +935,7 @@ msgstr "Заказываемые товары"
 #: templates/shop/includes/order_totals.html:4
 #: templates/shop/includes/order_totals.txt:2
 msgid "Sub total"
-msgstr "Под-итог"
+msgstr "Подитог"
 
 #: templates/shop/includes/order_totals.html:12
 #: templates/shop/includes/order_totals.txt:4
