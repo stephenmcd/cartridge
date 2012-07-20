@@ -76,7 +76,7 @@
 				<span class="old-price">{{ variation.unit_price|currency }}</span>
 				{% trans "On sale:" %}
 			{% endif %}
-			{{ variation.price|currency }}
+			<span class="price">{{ variation.price|currency }}</span>
 		{% else %}
 		    {% if has_available_variations %}
 		    {% trans "The selected options are currently unavailable." %}
@@ -117,7 +117,7 @@
             <span class="old-price">{{ product.unit_price|currency }}</span>
             {% trans "On sale:" %}
             {% endif %}
-            {{ product.price|currency }}
+            <span class="price">{{ product.price|currency }}</span>
         {% endif %}
     </li>
     {% endfor %}
