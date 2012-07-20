@@ -4,8 +4,10 @@ from operator import iand, ior
 
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.db.models.signals import m2m_changed
 from django.db.models import CharField, F, Q
 from django.db.models.base import ModelBase
+from django.dispatch import receiver
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 from mezzanine.conf import settings
@@ -39,6 +41,9 @@ class Priced(models.Model):
     sale_price = fields.MoneyField(_("Sale price"))
     sale_from = models.DateTimeField(_("Sale start"), blank=True, null=True)
     sale_to = models.DateTimeField(_("Sale end"), blank=True, null=True)
+    sku = fields.SKUField(unique=True, blank=True, null=True)
+    num_in_stock = models.IntegerField(_("Number in stock"), blank=True,
+                                       null=True)
 
     class Meta:
         abstract = True
@@ -69,132 +74,16 @@ class Priced(models.Model):
             return self.unit_price
         return Decimal("0")
 
-
-class Product(Displayable, Priced, RichText):
-    """
-    Container model for a product that stores information common to
-    all of its variations such as the product's title and description.
-    """
-
-    available = models.BooleanField(_("Available for purchase"),
-                                    default=False)
-    image = CharField(_("Image"), max_length=100, blank=True, null=True)
-    categories = models.ManyToManyField("Category",
-                                        verbose_name=_("Product categories"),
-                                        blank=True)
-    date_added = models.DateTimeField(_("Date added"), auto_now_add=True,
-                                      null=True)
-    related_products = models.ManyToManyField("self",
-                             verbose_name=_("Related products"), blank=True)
-    upsell_products = models.ManyToManyField("self",
-                             verbose_name=_("Upsell products"), blank=True)
-    rating = RatingField(verbose_name=_("Rating"))
-
-    objects = DisplayableManager()
-
-    class Meta:
-        verbose_name = _("Product")
-        verbose_name_plural = _("Products")
-
-    @models.permalink
-    def get_absolute_url(self):
-        return ("shop_product", (), {"slug": self.slug})
-
-    def copy_default_variation(self):
+    def copy_price_fields_to(self, obj_to):
         """
-        Copies the price and image fields from the default variation.
+        Copies each of the fields for the ``Priced`` model from one
+        instance to another. Used for synchronising the denormalised
+        fields on ``Product`` instances with their default variation.
         """
-        default = self.variations.get(default=True)
         for field in Priced._meta.fields:
             if not isinstance(field, models.AutoField):
-                setattr(self, field.name, getattr(default, field.name))
-        if default.image:
-            self.image = default.image.file.name
-        self.save()
-
-    def admin_thumb(self):
-        if self.image is None:
-            return ""
-        from mezzanine.core.templatetags.mezzanine_tags import thumbnail
-        thumb_url = thumbnail(self.image, 24, 24)
-        return "<img src='%s%s' />" % (settings.MEDIA_URL, thumb_url)
-    admin_thumb.allow_tags = True
-    admin_thumb.short_description = ""
-
-
-class Category(Page, RichText):
-    """
-    A category of products on the website.
-    """
-
-    products = models.ManyToManyField("Product",
-                                     verbose_name=_("Products"),
-                                     blank=True,
-                                     through=Product.categories.through)
-    options = models.ManyToManyField("ProductOption",
-                                     verbose_name=_("Product options"),
-                                     blank=True,
-                                     related_name="product_options")
-    sale = models.ForeignKey("Sale", verbose_name=_("Sale"),
-                             blank=True, null=True)
-    price_min = fields.MoneyField(_("Minimum price"), blank=True, null=True)
-    price_max = fields.MoneyField(_("Maximum price"), blank=True, null=True)
-    combined = models.BooleanField(_("Combined"), default=True,
-        help_text=_("If checked, "
-        "products must match all specified filters, otherwise products "
-        "can match any specified filter."))
-
-    class Meta:
-        verbose_name = _("Product category")
-        verbose_name_plural = _("Product categories")
-
-    def filters(self):
-        """
-        Returns product filters as a Q object for the category.
-        """
-        # Build a list of Q objects to filter variations by.
-        filters = []
-        # Build a lookup dict of selected options for variations.
-        options = self.options.as_fields()
-        if options:
-            lookup = dict([("%s__in" % k, v) for k, v in options.items()])
-            filters.append(Q(**lookup))
-        # Q objects used against variations to ensure sale date is
-        # valid when filtering by sale, or sale price.
-        n = now()
-        valid_sale_from = Q(sale_from__isnull=True) | Q(sale_from__lte=n)
-        valid_sale_to = Q(sale_to__isnull=True) | Q(sale_to__gte=n)
-        valid_sale_date = valid_sale_from & valid_sale_to
-        # Filter by variations with the selected sale if the sale date
-        # is valid.
-        if self.sale_id:
-            filters.append(Q(sale_id=self.sale_id) & valid_sale_date)
-        # If a price range is specified, use either the unit price or
-        # a sale price if the sale date is valid.
-        if self.price_min or self.price_max:
-            prices = []
-            if self.price_min:
-                sale = Q(sale_price__gte=self.price_min) & valid_sale_date
-                prices.append(Q(unit_price__gte=self.price_min) | sale)
-            if self.price_max:
-                sale = Q(sale_price__lte=self.price_max) & valid_sale_date
-                prices.append(Q(unit_price__lte=self.price_max) | sale)
-            filters.append(reduce(iand, prices))
-        # Turn the variation filters into a product filter.
-        operator = iand if self.combined else ior
-        products = Q(id__in=self.products.only("id"))
-        if filters:
-            filters = reduce(operator, filters)
-            variations = ProductVariation.objects.filter(filters)
-            filters = [Q(variations__in=variations)]
-            # If filters exist, checking that products have been
-            # selected is neccessary as combining the variations
-            # with an empty ID list lookup and ``AND`` will always
-            # result in an empty result.
-            if self.products.count() > 0:
-                filters.append(products)
-            return reduce(operator, filters)
-        return products
+                setattr(obj_to, field.name, getattr(self, field.name))
+        obj_to.save()
 
 
 class Product(Displayable, Priced, RichText, AdminThumbMixin):
@@ -206,9 +95,8 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
     available = models.BooleanField(_("Available for purchase"),
                                     default=False)
     image = CharField(_("Image"), max_length=100, blank=True, null=True)
-    categories = models.ManyToManyField("Category",
-                                        verbose_name=_("Product categories"),
-                                        blank=True, related_name="products")
+    categories = models.ManyToManyField("Category", blank=True,
+                                        verbose_name=_("Product categories"))
     date_added = models.DateTimeField(_("Date added"), auto_now_add=True,
                                       null=True)
     related_products = models.ManyToManyField("self",
@@ -225,18 +113,29 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
         verbose_name = _("Product")
         verbose_name_plural = _("Products")
 
+    def save(self, *args, **kwargs):
+        """
+        Copies the price fields to the default variation when
+        ``SHOP_USE_VARIATIONS`` is False, and the product is
+        updated via the admin change list.
+        """
+        updating = self.id is not None
+        super(Product, self).save(*args, **kwargs)
+        if updating and not settings.SHOP_USE_VARIATIONS:
+            default = self.variations.get(default=True)
+            self.copy_price_fields_to(default)
+
     @models.permalink
     def get_absolute_url(self):
         return ("shop_product", (), {"slug": self.slug})
 
     def copy_default_variation(self):
         """
-        Copies the price and image fields from the default variation.
+        Copies the price and image fields from the default variation
+        when the product is updated via the change view.
         """
         default = self.variations.get(default=True)
-        for field in Priced._meta.fields:
-            if not isinstance(field, models.AutoField):
-                setattr(self, field.name, getattr(default, field.name))
+        default.copy_price_fields_to(self)
         if default.image:
             self.image = default.image.file.name
         self.save()
@@ -309,9 +208,6 @@ class ProductVariation(Priced):
     """
 
     product = models.ForeignKey("Product", related_name="variations")
-    sku = fields.SKUField(unique=True)
-    num_in_stock = models.IntegerField(_("Number in stock"), blank=True,
-                                       null=True)
     default = models.BooleanField(_("Default"))
     image = models.ForeignKey("ProductImage", verbose_name=_("Image"),
                               null=True, blank=True)
@@ -392,6 +288,94 @@ class ProductVariation(Priced):
         """
         live = self.live_num_in_stock()
         return live is None or quantity == 0 or live >= quantity
+
+    def update_stock(self, quantity):
+        """
+        Update the stock amount - called when an order is complete.
+        Also update the denormalised stock amount of the product if
+        this is the default variation.
+        """
+        if self.num_in_stock is not None:
+            self.num_in_stock += quantity
+            self.save()
+            if self.default:
+                self.product.num_in_stock = self.num_in_stock
+                self.product.save()
+
+
+class Category(Page, RichText):
+    """
+    A category of products on the website.
+    """
+
+    products = models.ManyToManyField("Product",
+                                     verbose_name=_("Products"),
+                                     blank=True,
+                                     through=Product.categories.through)
+    options = models.ManyToManyField("ProductOption",
+                                     verbose_name=_("Product options"),
+                                     blank=True,
+                                     related_name="product_options")
+    sale = models.ForeignKey("Sale", verbose_name=_("Sale"),
+                             blank=True, null=True)
+    price_min = fields.MoneyField(_("Minimum price"), blank=True, null=True)
+    price_max = fields.MoneyField(_("Maximum price"), blank=True, null=True)
+    combined = models.BooleanField(_("Combined"), default=True,
+        help_text=_("If checked, "
+        "products must match all specified filters, otherwise products "
+        "can match any specified filter."))
+
+    class Meta:
+        verbose_name = _("Product category")
+        verbose_name_plural = _("Product categories")
+
+    def filters(self):
+        """
+        Returns product filters as a Q object for the category.
+        """
+        # Build a list of Q objects to filter variations by.
+        filters = []
+        # Build a lookup dict of selected options for variations.
+        options = self.options.as_fields()
+        if options:
+            lookup = dict([("%s__in" % k, v) for k, v in options.items()])
+            filters.append(Q(**lookup))
+        # Q objects used against variations to ensure sale date is
+        # valid when filtering by sale, or sale price.
+        n = now()
+        valid_sale_from = Q(sale_from__isnull=True) | Q(sale_from__lte=n)
+        valid_sale_to = Q(sale_to__isnull=True) | Q(sale_to__gte=n)
+        valid_sale_date = valid_sale_from & valid_sale_to
+        # Filter by variations with the selected sale if the sale date
+        # is valid.
+        if self.sale_id:
+            filters.append(Q(sale_id=self.sale_id) & valid_sale_date)
+        # If a price range is specified, use either the unit price or
+        # a sale price if the sale date is valid.
+        if self.price_min or self.price_max:
+            prices = []
+            if self.price_min:
+                sale = Q(sale_price__gte=self.price_min) & valid_sale_date
+                prices.append(Q(unit_price__gte=self.price_min) | sale)
+            if self.price_max:
+                sale = Q(sale_price__lte=self.price_max) & valid_sale_date
+                prices.append(Q(unit_price__lte=self.price_max) | sale)
+            filters.append(reduce(iand, prices))
+        # Turn the variation filters into a product filter.
+        operator = iand if self.combined else ior
+        products = Q(id__in=self.products.only("id"))
+        if filters:
+            filters = reduce(operator, filters)
+            variations = ProductVariation.objects.filter(filters)
+            filters = [Q(variations__in=variations)]
+            # If filters exist, checking that products have been
+            # selected is neccessary as combining the variations
+            # with an empty ID list lookup and ``AND`` will always
+            # result in an empty result.
+            if self.products.count() > 0:
+                filters.append(products)
+            return reduce(operator, filters)
+        return products
 
 
 class Order(models.Model):
@@ -491,9 +475,7 @@ class Order(models.Model):
             except ProductVariation.DoesNotExist:
                 pass
             else:
-                if variation.num_in_stock is not None:
-                    variation.num_in_stock -= item.quantity
-                    variation.save()
+                variation.update_stock(item.quantity * -1)
                 variation.product.actions.purchased()
         code = request.session.get('discount_code')
         if code:
@@ -698,8 +680,8 @@ class Discount(models.Model):
                                         related_name="%(class)s_related",
                                         verbose_name=_("Categories"))
     discount_deduct = fields.MoneyField(_("Reduce by amount"))
-    discount_percent = models.DecimalField(_("Reduce by percent"),
-                                           max_digits=4, decimal_places=2,
+    discount_percent = fields.PercentageField(_("Reduce by percent"),
+                                           max_digits=5, decimal_places=2,
                                            blank=True, null=True)
     discount_exact = fields.MoneyField(_("Reduce to amount"))
     valid_from = models.DateTimeField(_("Valid from"), blank=True, null=True)
@@ -733,11 +715,14 @@ class Sale(Discount):
         verbose_name_plural = _("Sales")
 
     def save(self, *args, **kwargs):
+        super(Sale, self).save(*args, **kwargs)
+        self.update_products()
+
+    def update_products(self):
         """
         Apply sales field value to products and variations according
         to the selected categories and products for the sale.
         """
-        super(Sale, self).save(*args, **kwargs)
         self._clear()
         if self.active:
             extra_filter = {}
@@ -803,6 +788,16 @@ class Sale(Discount):
                   "sale_from": None, "sale_to": None}
         for priced_model in (Product, ProductVariation):
             priced_model.objects.filter(sale_id=self.id).update(**update)
+
+
+@receiver(m2m_changed, sender=Sale.products.through)
+def sale_update_products(sender, instance, action, *args, **kwargs):
+    """
+    Signal for updating products for the sale - needed since the
+    products won't be assigned to the sale when it is first saved.
+    """
+    if action == "post_add":
+        instance.update_products()
 
 
 class DiscountCode(Discount):

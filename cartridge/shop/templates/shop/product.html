@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load mezzanine_tags shop_tags rating_tags i18n %}
 
-{% block meta_title %}{{ product.title }}{% endblock %}
+{% block meta_title %}{{ product.meta_title }}{% endblock %}
 
 {% block meta_keywords %}{% metablock %}
 {% for keyword in product.keywords.all %}
