@@ -141,3 +141,4 @@ Sites Using Cartridge
 .. _`Github issue tracker`: http://github.com/stephenmcd/cartridge/issues
 .. _`Django coding style`: http://docs.djangoproject.com/en/dev/internals/contributing/#coding-style
 .. _`PEP 8`: http://www.python.org/dev/peps/pep-0008/
+
