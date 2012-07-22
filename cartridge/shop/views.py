@@ -40,8 +40,13 @@ def product(request, slug, template="shop/product.html"):
     product = get_object_or_404(published_products, slug=slug)
     to_cart = (request.method == "POST" and
                request.POST.get("add_wishlist") is None)
+    default_variation = product.variations.get(default=True)
+    initial_data = {}
+    for field in default_variation.option_fields():
+        initial_data[field.name] = getattr(default_variation, field.name)
+    initial_data['quantity'] = 1
     add_product_form = AddProductForm(request.POST or None, product=product,
-                                      initial={"quantity": 1}, to_cart=to_cart)
+                                      initial=initial_data, to_cart=to_cart)
     if request.method == "POST":
         if add_product_form.is_valid():
             if to_cart:
