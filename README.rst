@@ -127,6 +127,7 @@ Sites Using Cartridge
   * `Parfume Planet <http://parfumeplanet.com>`_
   * `Life is Good <http://lifeisgoodforall.co.uk/>`_
   * `Brooklyn Navy Yard <http://bldg92.org/>`_
+  * `Cotton On Asia <http://asia.cottonon.com/>`_
 
 .. _`Django`: http://djangoproject.com/
 .. _`BSD licensed`: http://www.linfo.org/bsdlicense.html
