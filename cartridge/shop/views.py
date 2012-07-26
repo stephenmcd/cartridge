@@ -76,7 +76,8 @@ def product(request, slug, template="shop/product.html"):
         "variations": variations,
         "variations_json": variations_json,
         "has_available_variations": any([v.has_price() for v in variations]),
-        "related": product.related_products.published(for_user=request.user),
+        "related_products": product.related_products.published(
+                                                      for_user=request.user),
         "add_product_form": add_product_form
     }
     return render(request, template, context)
