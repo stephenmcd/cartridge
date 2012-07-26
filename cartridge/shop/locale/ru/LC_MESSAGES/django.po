@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Cartridge\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-20 14:17+0400\n"
+"POT-Creation-Date: 2012-07-27 03:20+0400\n"
 "PO-Revision-Date: 2012-04-04 01:01+0000\n"
 "Last-Translator: Sebastián Ramírez Magrí <sebasmagri@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.net/projects/p/cartridge/"
@@ -568,23 +568,23 @@ msgid ""
 "SHOP_CURRENCY_LOCALE setting in your settings module."
 msgstr ""
 
-#: views.py:51 views.py:97
+#: views.py:56 views.py:103
 msgid "Item added to cart"
 msgstr "Товар добавлен в корзину"
 
-#: views.py:58
+#: views.py:63
 msgid "Item added to wishlist"
 msgstr "Товар добавлен в список желаний"
 
-#: views.py:102
+#: views.py:108
 msgid "Item removed from wishlist"
 msgstr "Товар удален из списка желаний"
 
-#: views.py:139
+#: views.py:145
 msgid "Your cart has expired"
 msgstr "Срок действия корзины истек"
 
-#: views.py:147
+#: views.py:153
 msgid "Cart updated"
 msgstr "Корзина обновлена"
 
@@ -722,16 +722,15 @@ msgstr "Оформить заказ"
 #, python-format
 msgid "Wishlist contains 1 item"
 msgid_plural " Wishlist contains %(wishlist_count)s items"
-msgstr[0] "Список желаний содержит 1 товар"
-msgstr[1] "Список желаний содержит %(wishlist_count)s товара"
-msgstr[2] "Список желаний содержит %(wishlist_count)s товаров"
+msgstr[0] "1 товар в списке желаний"
+msgstr[1] "%(wishlist_count)s товара в списке желаний"
+msgstr[2] "%(wishlist_count)s товаров в списке желаний"
 
 #: templates/pages/category.html:25
 msgid "Sort by"
 msgstr "Сортировка"
 
-#: templates/pages/category.html:49 templates/shop/cart.html:91
-#: templates/shop/product.html:77 templates/shop/product.html.py:118
+#: templates/pages/category.html:49 templates/shop/product.html:77
 msgid "On sale:"
 msgstr "На распродаже:"
 
@@ -786,11 +785,15 @@ msgstr "Удалить?"
 msgid "Update Cart"
 msgstr "Обновить корзину"
 
-#: templates/shop/cart.html:75
+#: templates/shop/cart.html:67
+msgid "Apply"
+msgstr "Применить"
+
+#: templates/shop/cart.html:74
 msgid "You may also like:"
 msgstr "Вам так же может понравиться:"
 
-#: templates/shop/cart.html:104
+#: templates/shop/cart.html:99
 msgid "Your Cart is empty."
 msgstr "Ваша корзина пуста."
 
