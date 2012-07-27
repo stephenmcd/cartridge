@@ -60,12 +60,9 @@
 </form>
 
 {% if discount_form %}
-<form method="post" class="discount-form">
-    {% csrf_token %}
-    <ul class="unstyled">
-        {{ discount_form.as_ul }}
-        <li><input type="submit" class="button" value="{% trans 'Apply' %}"></li>
-    </ul>
+<form method="post" class="discount-form form-horizontal">
+    {% fields_for discount_form %}
+    <input type="submit" class="btn" style="float:right" value="{% trans 'Apply' %}">
 </form>
 {% endif %}
 
