@@ -38,13 +38,17 @@ def product(request, slug, template="shop/product.html"):
     """
     published_products = Product.objects.published(for_user=request.user)
     product = get_object_or_404(published_products, slug=slug)
+    fields = [f.name for f in ProductVariation.option_fields()]
+    variations = product.variations.all()
+    variations_json = simplejson.dumps([dict([(f, getattr(v, f))
+                                        for f in fields + ["sku", "image_id"]])
+                                        for v in variations])
     to_cart = (request.method == "POST" and
                request.POST.get("add_wishlist") is None)
-    default_variation = product.variations.get(default=True)
     initial_data = {}
-    for field in default_variation.option_fields():
-        initial_data[field.name] = getattr(default_variation, field.name)
-    initial_data['quantity'] = 1
+    if variations:
+        initial_data = dict([(f, getattr(variations[0], f)) for f in fields])
+    initial_data["quantity"] = 1
     add_product_form = AddProductForm(request.POST or None, product=product,
                                       initial=initial_data, to_cart=to_cart)
     if request.method == "POST":
@@ -64,12 +68,6 @@ def product(request, slug, template="shop/product.html"):
                 response = redirect("shop_wishlist")
                 set_cookie(response, "wishlist", ",".join(skus))
                 return response
-    fields = [f.name for f in ProductVariation.option_fields()]
-    fields += ["sku", "image_id"]
-    variations = product.variations.all()
-    variations_json = simplejson.dumps([dict([(f, getattr(v, f))
-                                        for f in fields])
-                                        for v in variations])
     context = {
         "product": product,
         "images": product.images.all(),

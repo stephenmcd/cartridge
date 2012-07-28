@@ -208,7 +208,7 @@ class ProductAdmin(DisplayableAdmin):
 
             # Create new variations for selected options.
             self._product.variations.create_from_options(options)
-            # Create a default variation if there are nonw.
+            # Create a default variation if there are none.
             self._product.variations.manage_empty()
 
             # Remove any images deleted just now from variations they're
