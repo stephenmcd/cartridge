@@ -8,6 +8,10 @@
 #category .thumbnails a {width:100px; height:200px; color:#666; padding:20px;}
 #category .thumbnails a:hover {text-decoration:none;}
 #category .thumbnails .placeholder {width:100px; height:100px; background:rgba(220,220,220, 0.1);}
+#related-products.thumbnails h6 {color:#777; height:40px; margin:10px 0 5px 0; border-bottom:1px dashed #ddd;}
+#related-products.thumbnails a {width:90px; height:170px; color:#666; padding:12px;}
+#related-products.thumbnails a:hover {text-decoration:none;}
+#related-products.thumbnails li {margin-right:-14px;}
 .old-price {text-decoration:line-through; display:block; color:#ccc; margin-bottom:3px;}
 #product-images-thumb li {display:inline; margin-right:-10px;}
 .product-image-full {background:#fff; padding:20px;}
@@ -30,6 +34,8 @@
 .form-cart .form-actions-wrap {float:right; margin-right:5px;}
 .order-history .btn {float:right; margin:0 0 0 5px;}
 .btn-order-history {float:right; margin:-75px 20px 0 0;}
+.discount-form {float:right;}
+.discount-form .btn {float:right; margin:-5px 7px 0 0;}
 
 /* Wishlist */
 .wishlist img {vertical-align:middle; margin-right:5px;}

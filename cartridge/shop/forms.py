@@ -371,11 +371,11 @@ class ImageWidget(forms.FileInput):
     def render(self, name, value, attrs):
         rendered = super(ImageWidget, self).render(name, value, attrs)
         if value:
-            orig_url = u"%s%s" % (settings.MEDIA_URL, value)
-            thumb_url = u"%s%s" % (settings.MEDIA_URL, thumbnail(value, 48, 48))
+            orig = u"%s%s" % (settings.MEDIA_URL, value)
+            thumb = u"%s%s" % (settings.MEDIA_URL, thumbnail(value, 48, 48))
             rendered = (u"<a target='_blank' href='%s'>"
                         u"<img style='margin-right:6px;' src='%s'>"
-                        u"</a>%s" % (orig_url, thumb_url, rendered))
+                        u"</a>%s" % (orig, thumb, rendered))
         return mark_safe(rendered)
 
 

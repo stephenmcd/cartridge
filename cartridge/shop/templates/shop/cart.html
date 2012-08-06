@@ -60,43 +60,35 @@
 </form>
 
 {% if discount_form %}
-<form method="post" class="discount-form">
-    {% csrf_token %}
-    <ul>
-        {{ discount_form.as_ul }}
-        <li><input type="submit" class="button" value="Apply"></li>
-    </ul>
+<form method="post" class="discount-form form-horizontal">
+    {% fields_for discount_form %}
+    <input type="submit" class="btn" style="float:right" value="{% trans 'Apply' %}">
 </form>
 {% endif %}
 
 {% with request.cart.upsell_products as upsell_products %}
 {% if upsell_products %}
-<div class="related">
-    <h2>{% trans "You may also like:" %}</h2>
-    <ul class="products">
-        {% for product in upsell_products %}
-        <li>
-	        <a href="{{ product.get_absolute_url }}">
-	            <div class="img">
-		            {% if product.image %}
-		            <img src="{{ MEDIA_URL }}{% thumbnail product.image 90 90 %}" />
-		            {% endif %}
-	            </div>
-	            {{ product }}
-            </a>
+<h2>{% trans "You may also like:" %}</h2>
+<ul id="related-products" class="thumbnails">
+    {% for product in upsell_products %}
+    <li>
+        <a class="thumbnail" href="{{ product.get_absolute_url }}">
+            <div class="img">
+	            {% if product.image %}
+	            <img src="{{ MEDIA_URL }}{% thumbnail product.image 90 90 %}" />
+	            {% endif %}
+            </div>
+            <h6>{{ product }}</h6>
             {% if product.has_price %}
-            <p class="price">
                 {% if product.on_sale %}
-	                <span class="old-price">{{ product.unit_price|currency }}</span>
-	                {% trans "On sale:" %}
+                <span class="old-price">{{ product.unit_price|currency }}</span>
                 {% endif %}
-                {{ product.price|currency }}
-            </p>
+                <span class="price">{{ product.price|currency }}</span>
             {% endif %}
-        </li>
-        {% endfor %}
-    </ul>
-</div>
+        </a>
+    </li>
+    {% endfor %}
+</ul>
 {% endif %}
 {% endwith %}
 

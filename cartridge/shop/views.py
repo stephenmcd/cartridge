@@ -38,10 +38,19 @@ def product(request, slug, template="shop/product.html"):
     """
     published_products = Product.objects.published(for_user=request.user)
     product = get_object_or_404(published_products, slug=slug)
+    fields = [f.name for f in ProductVariation.option_fields()]
+    variations = product.variations.all()
+    variations_json = simplejson.dumps([dict([(f, getattr(v, f))
+                                        for f in fields + ["sku", "image_id"]])
+                                        for v in variations])
     to_cart = (request.method == "POST" and
                request.POST.get("add_wishlist") is None)
+    initial_data = {}
+    if variations:
+        initial_data = dict([(f, getattr(variations[0], f)) for f in fields])
+    initial_data["quantity"] = 1
     add_product_form = AddProductForm(request.POST or None, product=product,
-                                      initial={"quantity": 1}, to_cart=to_cart)
+                                      initial=initial_data, to_cart=to_cart)
     if request.method == "POST":
         if add_product_form.is_valid():
             if to_cart:
@@ -59,19 +68,14 @@ def product(request, slug, template="shop/product.html"):
                 response = redirect("shop_wishlist")
                 set_cookie(response, "wishlist", ",".join(skus))
                 return response
-    fields = [f.name for f in ProductVariation.option_fields()]
-    fields += ["sku", "image_id"]
-    variations = product.variations.all()
-    variations_json = simplejson.dumps([dict([(f, getattr(v, f))
-                                        for f in fields])
-                                        for v in variations])
     context = {
         "product": product,
         "images": product.images.all(),
         "variations": variations,
         "variations_json": variations_json,
         "has_available_variations": any([v.has_price() for v in variations]),
-        "related": product.related_products.published(for_user=request.user),
+        "related_products": product.related_products.published(
+                                                      for_user=request.user),
         "add_product_form": add_product_form
     }
     return render(request, template, context)
