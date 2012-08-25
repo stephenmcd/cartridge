@@ -41,6 +41,7 @@ Features
   * Registered or anonymous checkout
   * Configurable number of checkout steps
   * Denormalised data for accessiblilty and performance
+  * Authenticated customer accounts with transaction history
 
 Dependencies
 ============
