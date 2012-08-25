@@ -73,6 +73,14 @@ fashion to ``django-admin.py``::
     $ python manage.py createdb --noinput
     $ python manage.py runserver
 
+Here we specify the ``-a`` switch for the ``mezzanine-project`` command,
+which tells it to use an alternative package (cartridge) for the project
+template to use. Both Mezzanine and Cartridge contain a project template
+package containing the ``settings.py`` and ``urls.py`` modules for an
+initial project. If you'd like to add Cartridge to an existing Mezzanine
+or Django project, you'll need to manually configure these yourself. See
+the `FAQ section of the Mezzanine documentation`_ for more information.
+
 .. note::
 
     The ``createdb`` is a shortcut for using Django's ``syncdb``
@@ -157,6 +165,7 @@ Sites Using Cartridge
 .. _`BSD licensed`: http://www.linfo.org/bsdlicense.html
 .. _`Mezzanine live demo`: http://mezzanine.jupo.org/
 .. _`pip`: http://www.pip-installer.org/
+.. _`FAQ section of the Mezzanine documentation`: http://mezzanine.jupo.org/docs/frequently-asked-questions.html#how-can-i-add-mezzanine-to-an-existing-django-project
 .. _`setuptools`: http://pypi.python.org/pypi/setuptools
 .. _`Mezzanine`: http://mezzanine.jupo.org/
 .. _`South`: http://south.aeracode.org/
@@ -167,4 +176,8 @@ Sites Using Cartridge
 .. _`Django coding style`: http://docs.djangoproject.com/en/dev/internals/contributing/#coding-style
 .. _`PEP 8`: http://www.python.org/dev/peps/pep-0008/
 .. _`Transiflex`: https://www.transifex.net/projects/p/mezzanine/
+.. _`security@jupo.org`: mailto:security@jupo.org?subject=Mezzanine+Security+Issue
+.. _`#mezzanine IRC channel`: irc://freenode.net/mezzanine
+.. _`Freenode`: http://freenode.net
+.. _`Django's internationalization`: https://docs.djangoproject.com/en/dev/topics/i18n/translation/
 
