@@ -93,7 +93,12 @@ def product(request, slug, template="shop/product.html",
         "add_product_form": add_product_form
     }
     context.update(extra_context or {})
+
     templates = [u"shop/%s.html" % str(product.slug), template]
+    # Check for a template matching the page's content model.
+    if product.content_model is not None:
+        templates.append(u"shop/products/%s.html" % product.content_model)
+
     return TemplateResponse(request, templates, context)
 
 
