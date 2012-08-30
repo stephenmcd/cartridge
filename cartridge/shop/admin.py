@@ -34,6 +34,8 @@ from copy import deepcopy
 from django.contrib import admin
 from django.contrib.admin.templatetags.admin_static import static
 from django.db.models import ImageField
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
 from mezzanine.conf import settings
@@ -41,6 +43,7 @@ from mezzanine.core.admin import (DisplayableAdmin,
                                   TabularDynamicInlineAdmin,
                                   BaseTranslationModelAdmin)
 from mezzanine.pages.admin import PageAdmin
+from mezzanine.utils.urls import admin_url
 
 from cartridge.shop.fields import MoneyField
 from cartridge.shop.forms import ProductAdminForm, ProductVariationAdminForm
@@ -178,6 +181,12 @@ class ProductAdmin(DisplayableAdmin):
         super(ProductAdmin, self).save_model(request, obj, form, change)
         self._product = obj
 
+    def in_menu(self):
+        """
+        Hide subclasses from the admin menu.
+        """
+        return self.model is Product
+
     def save_formset(self, request, form, formset, change):
         """
 
@@ -260,6 +269,21 @@ class ProductAdmin(DisplayableAdmin):
                                 setattr(var, _loc(opt_name, code),
                                         getattr(opt_obj, _loc('name', code)))
                             var.save()
+
+    def change_view(self, request, object_id, extra_context=None):
+        """
+        As in Mezzanine's ``Page`` model, check ``product.get_content_model()``
+        for a subclass and redirect to its admin change view.
+        """
+        if self.model is Product:
+            product = get_object_or_404(Product, pk=object_id)
+            content_model = product.get_content_model()
+            if content_model is not None:
+                change_url = admin_url(content_model.__class__, "change",
+                                       content_model.id)
+                return HttpResponseRedirect(change_url)
+        return super(ProductAdmin, self).change_view(request, object_id,
+            extra_context=extra_context)
 
 
 class ProductOptionAdmin(BaseTranslationModelAdmin):

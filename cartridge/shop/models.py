@@ -94,6 +94,8 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
     all of its variations such as the product's title and description.
     """
 
+    content_model = models.CharField(editable=False, max_length=50, null=True)
+
     available = models.BooleanField(_("Available for purchase"),
                                     default=False)
     image = CharField(_("Image"), max_length=100, blank=True, null=True)
@@ -118,6 +120,13 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
         verbose_name_plural = _("Products")
         unique_together = ("sku", "site")
 
+    def get_content_model(self):
+        """
+        Provides a generic method of retrieving the instance of the custom
+        product's model, if there is one.
+        """
+        return getattr(self, self.content_model, None)
+
     def save(self, *args, **kwargs):
         """
         Copies the price fields to the default variation when
@@ -129,6 +138,8 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
         if updating and not settings.SHOP_USE_VARIATIONS:
             default = self.variations.get(default=True)
             self.copy_price_fields_to(default)
+        else:
+            self.content_model = self._meta.object_name.lower()
 
     @models.permalink
     def get_absolute_url(self):
