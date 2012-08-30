@@ -251,6 +251,7 @@ class ProductAdmin(DisplayableAdmin):
         return super(ProductAdmin, self).change_view(request, object_id,
             extra_context=extra_context)
 
+
 class ProductOptionAdmin(admin.ModelAdmin):
     ordering = ("type", "name")
     list_display = ("type", "name")
