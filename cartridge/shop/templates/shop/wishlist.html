@@ -11,7 +11,7 @@
 
 {% block main %}
 {% if error %}{{ error }}{% endif %}
-{% if request.wishlist %}
+{% if wishlist_items %}
 <table class="table table-striped wishlist">
 	{% for item in wishlist_items %}
 	<tr>

@@ -1,0 +1,11 @@
+{% extends "email/base.txt" %}
+{% load shop_tags i18n %}
+
+{% block main %}
+{% trans "Dear" %} {{ user }},
+
+{% trans "This product is available for order" %}:
+
+{{ productvariation }}
+
+{% endblock %}

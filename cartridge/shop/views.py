@@ -4,6 +4,7 @@ from collections import defaultdict
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages import info
 from django.core.urlresolvers import get_callable, reverse
+from django.db import IntegrityError
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.template import RequestContext
@@ -20,7 +21,7 @@ from mezzanine.utils.views import render, set_cookie, paginate
 from cartridge.shop import checkout
 from cartridge.shop.forms import AddProductForm, DiscountForm, CartItemFormSet
 from cartridge.shop.models import Product, ProductVariation, Order, OrderItem
-from cartridge.shop.models import DiscountCode
+from cartridge.shop.models import DiscountCode, Wishlist
 from cartridge.shop.utils import recalculate_discount, sign
 
 
@@ -60,13 +61,22 @@ def product(request, slug, template="shop/product.html"):
                 info(request, _("Item added to cart"))
                 return redirect("shop_cart")
             else:
-                skus = request.wishlist
-                sku = add_product_form.variation.sku
-                if sku not in skus:
-                    skus.append(sku)
-                info(request, _("Item added to wishlist"))
                 response = redirect("shop_wishlist")
-                set_cookie(response, "wishlist", ",".join(skus))
+                if not request.user.is_authenticated():
+                    skus = request.wishlist
+                    sku = add_product_form.variation.sku
+                    if sku not in skus:
+                        skus.append(sku)
+                    set_cookie(response, "wishlist", ",".join(skus))
+                else:
+                    wishlist = Wishlist()
+                    wishlist.user = request.user
+                    wishlist.sku = add_product_form.variation.sku
+                    try:
+                        wishlist.save()
+                    except IntegrityError:
+                        pass
+                info(request, _("Item added to wishlist"))
                 return response
     context = {
         "product": product,
@@ -108,11 +118,16 @@ def wishlist(request, template="shop/wishlist.html"):
             url = "shop_wishlist"
         sku = request.POST.get("sku")
         if sku in skus:
-            skus.remove(sku)
+            if not request.user.is_authenticated():
+                skus.remove(sku)
+            else:
+                wishlist_item = Wishlist.objects.get(user=request.user, sku=sku)
+                wishlist_item.delete()
         if not error:
             info(request, message)
             response = redirect(url)
-            set_cookie(response, "wishlist", ",".join(skus))
+            if not request.user.is_authenticated():
+                set_cookie(response, "wishlist", ",".join(skus))
             return response
 
     # Remove skus from the cookie that no longer exist.
