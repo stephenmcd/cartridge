@@ -245,7 +245,7 @@ class ProductVariationAdmin(admin.ModelAdmin):
                     "num_in_stock", "unit_price", "sale_price", "product_url",)
     list_editable = ("sku", "num_in_stock", "unit_price", "sale_price")
     formfield_overrides = {
-        CharField: {'widget': TextInput(attrs={'class':''})},
+        CharField: {'widget': TextInput(attrs={'class': ''})},
     }
 
     def product_url(self, obj):
@@ -269,7 +269,8 @@ class ProductVariationAdmin(admin.ModelAdmin):
         """
         Copy data from the default variation to the original product fields.
         """
-        super(ProductVariationAdmin, self).save_model(request, obj, form, change)
+        super(ProductVariationAdmin, self).save_model(request, obj,
+                                                      form, change)
         self._productvariation = obj
         if self._productvariation.default:
             self._productvariation.product.copy_default_variation()
