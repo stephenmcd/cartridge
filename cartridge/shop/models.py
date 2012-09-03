@@ -315,7 +315,7 @@ def wishlist_notifications_on_save(sender, instance, **kwargs):
         if (old_stock == 0) and (instance.num_in_stock > old_stock):
             # Send email
             email_from = settings.DEFAULT_FROM_EMAIL
-            wishlist = Wishlist.objects.filter(sku = productvariation.sku)
+            wishlist = Wishlist.objects.filter(sku=productvariation.sku)
             for item in wishlist:
                 email_to = item.user.email
                 subject = _("Notification from wishlist")
@@ -874,6 +874,6 @@ class Wishlist(models.Model):
     sku = fields.SKUField()
 
     class Meta:
-        unique_together = ('user','sku',)
+        unique_together = ('user', 'sku')
         verbose_name = _("Wishlist item")
         verbose_name_plural = _("Wishlist items")
