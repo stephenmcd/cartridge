@@ -121,7 +121,8 @@ def wishlist(request, template="shop/wishlist.html"):
             if not request.user.is_authenticated():
                 skus.remove(sku)
             else:
-                wishlist_item = Wishlist.objects.get(user=request.user, sku=sku)
+                wishlist_item = Wishlist.objects.get(user=request.user,
+                                                                sku=sku)
                 wishlist_item.delete()
         if not error:
             info(request, message)
