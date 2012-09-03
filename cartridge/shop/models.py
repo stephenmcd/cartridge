@@ -11,6 +11,7 @@ from django.dispatch import receiver
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 from mezzanine.conf import settings
+from mezzanine.core.fields import FileField
 from mezzanine.core.managers import DisplayableManager
 from mezzanine.core.models import Displayable, RichText, Orderable
 from mezzanine.generic.fields import RatingField
@@ -308,6 +309,9 @@ class Category(Page, RichText):
     A category of products on the website.
     """
 
+    featured_image = FileField(verbose_name=_("Featured Image"),
+                               upload_to="shop", format="Image",
+                               max_length=255, null=True, blank=True)
     products = models.ManyToManyField("Product",
                                      verbose_name=_("Products"),
                                      blank=True,
