@@ -262,6 +262,9 @@ class ProductVariationAdmin(admin.ModelAdmin):
             return HttpResponseRedirect(reverse('admin:shop_product_change',
                                                 args=(product_id,)))
 
+    def has_add_permission(self, request):
+        return False
+
     def save_model(self, request, obj, form, change):
         """
         Copy data from the default variation to the original product fields.
