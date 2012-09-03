@@ -201,7 +201,7 @@ class ProductVariationMetaclass(ModelBase):
         return super(ProductVariationMetaclass, cls).__new__(*args)
 
 
-class ProductVariation(Priced):
+class ProductVariation(Priced, AdminThumbMixin):
     """
     A combination of selected options from
     ``SHOP_OPTION_TYPE_CHOICES`` for a ``Product`` instance.
@@ -212,12 +212,16 @@ class ProductVariation(Priced):
     image = models.ForeignKey("ProductImage", verbose_name=_("Image"),
                               null=True, blank=True)
 
+    admin_thumb_field = "image"
+
     objects = managers.ProductVariationManager()
 
     __metaclass__ = ProductVariationMetaclass
 
     class Meta:
         ordering = ("-default",)
+        verbose_name = _("Product variation")
+        verbose_name_plural = _("Product variations")
 
     def __unicode__(self):
         """

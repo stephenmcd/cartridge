@@ -19,7 +19,8 @@ register_setting(
     default=(
         (_("Content"), ("pages.Page", "blog.BlogPost",
             "generic.ThreadedComment", (_("Media Library"), "fb_browse"),)),
-        (_("Shop"), ("shop.Product", "shop.ProductOption", "shop.DiscountCode",
+        (_("Shop"), ("shop.Product", "shop.ProductOption",
+            "shop.ProductVariation", "shop.DiscountCode",
             "shop.Sale", "shop.Order")),
         (_("Site"), ("sites.Site", "redirects.Redirect", "conf.Setting")),
         (_("Users"), ("auth.User", "auth.Group",)),

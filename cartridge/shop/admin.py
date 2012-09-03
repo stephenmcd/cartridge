@@ -29,7 +29,9 @@ are then pushed back onto the one variation for the product.
 from copy import deepcopy
 
 from django.contrib import admin
-from django.db.models import ImageField
+from django.core.urlresolvers import reverse
+from django.db.models import ImageField, CharField
+from django.forms import TextInput
 from django.utils.translation import ugettext_lazy as _
 
 from mezzanine.conf import settings
@@ -94,7 +96,7 @@ else:
     variations_extra = 1
 
 
-class ProductVariationAdmin(admin.TabularInline):
+class ProductVariationInlineAdmin(admin.TabularInline):
     verbose_name_plural = _("Current variations")
     model = ProductVariation
     fields = variation_fields
@@ -105,7 +107,7 @@ class ProductVariationAdmin(admin.TabularInline):
     formset = ProductVariationAdminFormset
 
 
-class ProductImageAdmin(TabularDynamicInlineAdmin):
+class ProductImageInlineAdmin(TabularDynamicInlineAdmin):
     model = ProductImage
     formfield_overrides = {ImageField: {"widget": ImageWidget}}
 
@@ -150,7 +152,7 @@ class ProductAdmin(DisplayableAdmin):
     filter_horizontal = ("categories", "related_products", "upsell_products")
     search_fields = ("title", "content", "categories__title",
                      "variations__sku")
-    inlines = (ProductImageAdmin, ProductVariationAdmin)
+    inlines = (ProductImageInlineAdmin, ProductVariationInlineAdmin)
     form = ProductAdminForm
     fieldsets = product_fieldsets
 
@@ -238,6 +240,38 @@ class ProductOptionAdmin(admin.ModelAdmin):
     radio_fields = {"type": admin.HORIZONTAL}
 
 
+class ProductVariationAdmin(admin.ModelAdmin):
+    list_display = ("admin_thumb", "__unicode__", "sku",
+                    "num_in_stock", "unit_price", "sale_price", "product_url",)
+    list_editable = ("sku", "num_in_stock", "unit_price", "sale_price")
+    formfield_overrides = {
+        CharField: {'widget': TextInput(attrs={'class':''})},
+    }
+
+    def product_url(self, obj):
+        url = reverse("admin:shop_product_change", args=(obj.product.id,))
+        return '<a href="%s">%s</a>' % (url, obj.product)
+    product_url.allow_tags = True
+    product_url.short_description = _("Change")
+
+    def change_view(self, request, object_id=None):
+        if object_id:
+            variation = ProductVariation.objects.get(id=object_id)
+            product_id = variation.product.id
+            from django.http import HttpResponseRedirect
+            return HttpResponseRedirect(reverse('admin:shop_product_change',
+                                                args=(product_id,)))
+
+    def save_model(self, request, obj, form, change):
+        """
+        Copy data from the default variation to the original product fields.
+        """
+        super(ProductVariationAdmin, self).save_model(request, obj, form, change)
+        self._productvariation = obj
+        if self._productvariation.default:
+            self._productvariation.product.copy_default_variation()
+
+
 class OrderItemInline(admin.TabularInline):
     verbose_name_plural = _("Items")
     model = OrderItem
@@ -311,6 +345,7 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
 if settings.SHOP_USE_VARIATIONS:
     admin.site.register(ProductOption, ProductOptionAdmin)
+    admin.site.register(ProductVariation, ProductVariationAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Sale, SaleAdmin)
 admin.site.register(DiscountCode, DiscountCodeAdmin)
