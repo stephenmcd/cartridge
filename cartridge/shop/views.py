@@ -70,6 +70,7 @@ def product(request, slug, template="shop/product.html"):
                 return response
     context = {
         "product": product,
+        "editable_obj": product,
         "images": product.images.all(),
         "variations": variations,
         "variations_json": variations_json,

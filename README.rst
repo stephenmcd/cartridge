@@ -6,17 +6,19 @@ Created by `Stephen McDonald <http://twitter.com/stephen_mcd>`_
 Overview
 ========
 
-Cartridge is a shopping cart application built using the `Django`_ framework.
-It is `BSD licensed`_ and designed to provide a clean and simple
-base for developing e-commerce websites. It purposely does not include every
-conceivable feature of an e-commerce website; instead, Cartridge focuses on providing core features common to most
-e-commerce website.
+Cartridge is a shopping cart application built using the `Django`_
+framework. It is `BSD licensed`_ and designed to provide a clean and
+simple base for developing e-commerce websites. It purposely does not
+include every conceivable feature of an e-commerce website; instead,
+Cartridge focuses on providing core features common to most e-commerce
+websites.
 
-This specific focus stems from the idea that every e-commerce website is
-different, is tailored to the particular business and products at hand, and
-should therefore be as easy to customize as possible. Cartridge achieves
-this goal with a code-base that is as simple as possible and implements only the core features of an
-e-commerce site.
+This specific focus stems from the idea that every e-commerce website
+is different, is tailored to the particular business and products at
+hand, and should therefore be as easy to customize as possible.
+Cartridge achieves this goal with a code-base that is as simple as
+possible and implements only the core features of an e-commerce
+website.
 
 Cartridge extends the `Mezzanine`_ content management platform. A live
 demo of Cartridge can be found by visiting the `Mezzanine live demo`_.
@@ -39,80 +41,110 @@ Features
   * Registered or anonymous checkout
   * Configurable number of checkout steps
   * Denormalised data for accessiblilty and performance
+  * Authenticated customer accounts with transaction history
 
 Dependencies
 ============
 
-Cartridge is designed as a plugin for the `Mezzanine`_ content management
-platform and, as such, requires `Mezzanine`_ to be installed. The integration
-of the two applications should occur automatically by following the
-installation instructions below.
+Cartridge is designed as a plugin for the `Mezzanine`_ content
+management platform and, as such, requires `Mezzanine`_ to be
+installed. The integration of the two applications should occur
+automatically by following the installation instructions below.
 
 Installation
 ============
 
-The easiest method is to install directly from pypi using `pip`_ or
-`setuptools`_ by running the respective command below, which will also
-attempt to install the dependencies mentioned above::
+The easiest method is to install directly from pypi using `pip`_ by
+running the command below, which will also install the required
+dependencies mentioned above::
 
     $ pip install -U cartridge
-
-or::
-
-    $ easy_install -U cartridge
 
 Otherwise, you can download Cartridge and install it directly from source::
 
     $ python setup.py install
 
-Once installed, the command ``mezzanine-project`` should be available via
-Mezzanine, which can be used for creating a new Cartridge project in a
-similar fashion to ``django-admin.py``::
+Once installed, the command ``mezzanine-project`` can be used to
+create a new Mezzanine project, with Cartridge installed, in similar
+fashion to ``django-admin.py``::
 
     $ mezzanine-project -a cartridge project_name
-
-You can then run your project with the usual Django steps::
-
     $ cd project_name
     $ python manage.py createdb --noinput
     $ python manage.py runserver
 
-The ``createdb`` command performs the same task as Django's ``syncdb`` command
-and also sets the initial migration state for `South`_. If you'd like to
-specify a username and password during set up, simply exclude the
-``--noinput`` option included above when running ``createdb``.
+Here we specify the ``-a`` switch for the ``mezzanine-project`` command,
+which tells it to use an alternative package (cartridge) for the project
+template to use. Both Mezzanine and Cartridge contain a project template
+package containing the ``settings.py`` and ``urls.py`` modules for an
+initial project. If you'd like to add Cartridge to an existing Mezzanine
+or Django project, you'll need to manually configure these yourself. See
+the `FAQ section of the Mezzanine documentation`_ for more information.
 
-You should then be able to browse to http://127.0.0.1:8000/admin/ and log
-in using the default account (``username: admin, password: default``) or the
-credentials specified during ``createdb``.
+.. note::
+
+    The ``createdb`` is a shortcut for using Django's ``syncdb``
+    command and setting the initial migration state for `South`_. You
+    can alternatively use ``syncdb`` and ``migrate`` if preferred.
+    South is automatically added to INSTALLED_APPS if the
+    ``USE_SOUTH`` setting is set to ``True``.
+
+You should then be able to browse to http://127.0.0.1:8000/admin/ and
+log in using the default account (``username: admin, password:
+default``). If you'd like to specify a different username and password
+during set up, simply exclude the ``--noinput`` option included above
+when running ``createdb``.
 
 Contributing
 ============
 
-Cartridge is an open source project managed using both Git and
-Mercurial version control systems. These repositories are hosted on both
-`Github`_ and `Bitbucket`_, so contributing is as easy as
-forking the project on either of these sites and committing back your
-enhancements.
+Cartridge is an open source project managed using both the Git and
+Mercurial version control systems. These repositories are hosted on
+both `GitHub`_ and `Bitbucket`_ respectively, so contributing is as
+easy as forking the project on either of these sites and committing
+back your enhancements.
 
-Please note the following points around contributing:
+Please note the following guidelines for contributing:
 
-  * Contributed code must be written in the existing style. This is as simple as following the `Django coding style`_ and, most importantly, `PEP 8`_.
-  * Run the tests before committing your changes. If your changes cause the tests to break, they won't be accepted.
-  * If you add new functionality, you must include basic tests and documentation.
+  * Contributed code must be written in the existing style. This is
+    as simple as following the `Django coding style`_ and (most
+    importantly) `PEP 8`_.
+  * Contributions must be available on a separately named branch
+    based on the latest version of the main branch.
+  * Run the tests before committing your changes. If your changes
+    cause the tests to break, they won't be accepted.
+  * If you are adding new functionality, you must include basic tests
+    and documentation.
+
+Language Translations
+=====================
+
+Cartridge makes full use of translation strings, which allow Cartridge
+to be translated into multiple languages using `Django's
+internationalization`_ methodology. Translations are managed on the
+`Transiflex`_ website but can also be submitted via `GitHub`_ or
+`Bitbucket`_. Consult the documentation for `Django's
+internationalization`_ methodology for more information on creating
+translations and using them.
 
 Donating
 ========
 
-If you would like to make a donation to continue development of the
-project, you can do so via the `Mezzanine`_ website.
+If you would like to make a donation to continue development of
+Cartridge, you can do so via the `Mezzanine Project`_ website.
 
 Support
 =======
 
-For general questions or comments, please join the
-`mezzanine-users`_ mailing list. To report a bug or other type of issue,
-please use the `Github issue tracker`_.
+To report a security issue, please send an email privately to
+`security@jupo.org`_. This gives us a chance to fix the issue and
+create an official release prior to the issue being made
+public.
+
+For general questions or comments, please join the `mezzanine-users`_
+mailing list. To report a bug or other type of issue, please use the
+`GitHub issue tracker`_. And feel free to drop by the `#mezzanine
+IRC channel`_ on `Freenode`_, for a chat.
 
 Sites Using Cartridge
 =====================
@@ -133,6 +165,7 @@ Sites Using Cartridge
 .. _`BSD licensed`: http://www.linfo.org/bsdlicense.html
 .. _`Mezzanine live demo`: http://mezzanine.jupo.org/
 .. _`pip`: http://www.pip-installer.org/
+.. _`FAQ section of the Mezzanine documentation`: http://mezzanine.jupo.org/docs/frequently-asked-questions.html#how-can-i-add-mezzanine-to-an-existing-django-project
 .. _`setuptools`: http://pypi.python.org/pypi/setuptools
 .. _`Mezzanine`: http://mezzanine.jupo.org/
 .. _`South`: http://south.aeracode.org/
@@ -142,4 +175,9 @@ Sites Using Cartridge
 .. _`Github issue tracker`: http://github.com/stephenmcd/cartridge/issues
 .. _`Django coding style`: http://docs.djangoproject.com/en/dev/internals/contributing/#coding-style
 .. _`PEP 8`: http://www.python.org/dev/peps/pep-0008/
+.. _`Transiflex`: https://www.transifex.net/projects/p/mezzanine/
+.. _`security@jupo.org`: mailto:security@jupo.org?subject=Mezzanine+Security+Issue
+.. _`#mezzanine IRC channel`: irc://freenode.net/mezzanine
+.. _`Freenode`: http://freenode.net
+.. _`Django's internationalization`: https://docs.djangoproject.com/en/dev/topics/i18n/translation/
 
