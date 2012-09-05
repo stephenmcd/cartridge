@@ -120,6 +120,16 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
         verbose_name_plural = _("Products")
         unique_together = ("sku", "site")
 
+    @classmethod
+    def get_content_models(cls):
+        """
+        Return all ``Product`` subclasses.
+        """
+        is_product_subclass = lambda cls: issubclass(cls, Product)
+        cmp = lambda a, b: (int(b is Product) - int(a is Product) or
+                            a._meta.verbose_name < b._meta.verbose_name)
+        return sorted(filter(is_product_subclass, models.get_models()), cmp)
+
     def get_content_model(self):
         """
         Provides a generic method of retrieving the instance of the custom
