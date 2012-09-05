@@ -118,7 +118,7 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
     @classmethod
     def get_content_models(cls):
         """
-        Return all Page subclasses.
+        Return all ``Product`` subclasses.
         """
         is_product_subclass = lambda cls: issubclass(cls, Product)
         cmp = lambda a,b: (int(b is Product) - int(a is Product) or

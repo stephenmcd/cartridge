@@ -81,7 +81,7 @@ def order_totals_text(context):
 def models_for_products(*args):
     """
     Create a select list containing each of the models that subclass the
-    ``Product`` model, plus the Product model itself.
+    ``Product`` model, plus the ``Product`` model itself.
     """
     product_models = []
     for model in Product.get_content_models():
