@@ -165,12 +165,17 @@ class ProductAdmin(DisplayableAdmin):
         adding all model fields when no fieldsets are defined on the
         Admin class.
         """
+
         super(ProductAdmin, self).__init__(*args, **kwargs)
+
         # Test that the fieldsets don't differ from ProductAdmin's.
-        if self.model is not Product and self.fieldsets == ProductAdmin.fieldsets:
+        if (self.model is not Product and
+                self.fieldsets == ProductAdmin.fieldsets):
+
             # Make a copy so that we aren't modifying other Admin
             # classes' fieldsets.
             self.fieldsets = deepcopy(self.fieldsets)
+
             # Insert each field between the publishing fields and nav
             # fields. Do so in reverse order to retain the order of
             # the model's fields.
