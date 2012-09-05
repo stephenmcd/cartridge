@@ -1,0 +1,26 @@
+{% extends "admin/change_list.html" %}
+{% load shop_tags pages_tags i18n adminmedia %}
+
+{% block extrahead %}
+{{ block.super }}
+
+<script src="{{ STATIC_URL }}mezzanine/js/jquery-ui-1.8.14.custom.min.js"></script>
+<script src="{{ STATIC_URL }}mezzanine/js/admin/page_tree.js"></script>
+{% endblock %}
+
+{% block object-tools-items %}
+    <li>
+        <div id="addlist-primary">
+            <select class="addlist">
+                <option value="">{% trans "Add" %} ...</option>
+                {% models_for_products as product_models %}
+                {% for model in product_models %}
+                    {% set_model_permissions model %}
+                    {% if model.perms.add %}
+                        <option value="{{ model.add_url }}">{{ model.name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+    </li>
+{% endblock %}
