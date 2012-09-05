@@ -174,6 +174,42 @@ class ProductAdmin(DisplayableAdmin):
     form = ProductAdminForm
     fieldsets = product_fieldsets
 
+    def __init__(self, *args, **kwargs):
+        """
+        For ``Product`` subclasses that are registered with an Admin class
+        that doesn't implement fieldsets, add any extra model fields
+        to this instance's fieldsets. This mimics Django's behaviour of
+        adding all model fields when no fieldsets are defined on the
+        Admin class.
+        """
+
+        super(ProductAdmin, self).__init__(*args, **kwargs)
+
+        # Test that the fieldsets don't differ from ProductAdmin's.
+        if (self.model is not Product and
+                self.fieldsets == ProductAdmin.fieldsets):
+
+            # Make a copy so that we aren't modifying other Admin
+            # classes' fieldsets.
+            self.fieldsets = deepcopy(self.fieldsets)
+
+            # Insert each field between the publishing fields and nav
+            # fields. Do so in reverse order to retain the order of
+            # the model's fields.
+            for field in reversed(self.model._meta.fields):
+                check_fields = [f.name for f in Product._meta.fields]
+                check_fields.append("product_ptr")
+                try:
+                    check_fields.extend(self.exclude)
+                except (AttributeError, TypeError):
+                    pass
+                try:
+                    check_fields.extend(self.form.Meta.exclude)
+                except (AttributeError, TypeError):
+                    pass
+                if field.name not in check_fields and field.editable:
+                    self.fieldsets[0][1]["fields"].insert(3, field.name)
+
     def save_model(self, request, obj, form, change):
         """
         Store the product object for creating variations in save_formset.
