@@ -2,9 +2,10 @@
 from decimal import Decimal
 from operator import iand, ior
 
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.db.models.signals import m2m_changed
+from django.db.models.signals import m2m_changed, pre_save
 from django.db.models import CharField, F, Q
 from django.db.models.base import ModelBase
 from django.dispatch import receiver
@@ -15,6 +16,7 @@ from mezzanine.core.managers import DisplayableManager
 from mezzanine.core.models import Displayable, RichText, Orderable
 from mezzanine.generic.fields import RatingField
 from mezzanine.pages.models import Page
+from mezzanine.utils.email import send_mail_template
 from mezzanine.utils.models import AdminThumbMixin
 from mezzanine.utils.timezone import now
 
@@ -301,6 +303,27 @@ class ProductVariation(Priced):
             if self.default:
                 self.product.num_in_stock = self.num_in_stock
                 self.product.save()
+
+
+@receiver(pre_save, sender=ProductVariation)
+def wishlist_notifications_on_save(sender, instance, **kwargs):
+    if instance.id:
+        productvariation = ProductVariation.objects.get(pk=instance.id)
+        old_stock = productvariation.num_in_stock
+        if (old_stock == 0) and (instance.num_in_stock > old_stock):
+            # Send email
+            email_from = settings.DEFAULT_FROM_EMAIL
+            wishlist = Wishlist.objects.filter(sku=productvariation.sku)
+            for item in wishlist:
+                email_to = item.user.email
+                subject = _("Notification from wishlist")
+                context = {
+                    "productvariation": productvariation,
+                    "user": item.user,
+                }
+                send_mail_template(subject, "email/wishlist_notification",
+                                   email_from, email_to, context,
+                                   fail_silently=settings.DEBUG)
 
 
 class Category(Page, RichText):
@@ -832,3 +855,14 @@ class DiscountCode(Discount):
     class Meta:
         verbose_name = _("Discount code")
         verbose_name_plural = _("Discount codes")
+
+
+class Wishlist(models.Model):
+
+    user = models.ForeignKey(User)
+    sku = fields.SKUField()
+
+    class Meta:
+        unique_together = ('user', 'sku')
+        verbose_name = _("Wishlist item")
+        verbose_name_plural = _("Wishlist items")
