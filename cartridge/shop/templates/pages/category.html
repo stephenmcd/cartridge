@@ -9,14 +9,13 @@
 {{ page.category.content|safe }}
 {% endeditable %}
 
-{% with page.category.children.published as child_categories %}
 {% if child_categories %}
 <ul class="thumbnails categories">
 {% if settings.SHOP_CATEGORY_USE_FEATURED_IMAGE %}
     {% for category in child_categories %}
     <li><a href="{{ category.get_absolute_url }}" class="thumbnail">
-        {% if category.category.featured_image %}
-        <img src="{{ MEDIA_URL }}{% thumbnail category.category.featured_image 100 100 %}" />
+        {% if category.featured_image %}
+        <img src="{{ MEDIA_URL }}{% thumbnail category.featured_image 100 100 %}" />
         {% else %}
         <div class="placeholder"></div>
         {% endif %}
@@ -32,7 +31,6 @@
 {% endif %}
 </ul>
 {% endif %}
-{% endwith %}
 
 {% if products.paginator.count != 0 %}
 
