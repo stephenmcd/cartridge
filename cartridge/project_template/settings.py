@@ -10,6 +10,9 @@
 # Sequence of available credit card types for payment.
 # SHOP_CARD_TYPES = ("Mastercard", "Visa", "Diners", "Amex")
 
+# Setting to turn on featured images for shop categories. Defaults to False.
+# SHOP_CATEGORY_USE_FEATURED_IMAGE = True
+
 # If True, users must create a login for the checkout process.
 # SHOP_CHECKOUT_ACCOUNT_REQUIRED = False
 
