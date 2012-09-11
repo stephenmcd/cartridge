@@ -6,6 +6,7 @@
 .product-sorting select {margin:0 0 0 5px;}
 #category .thumbnails h6 {color:#777; height:50px; margin:10px 0 5px 0; border-bottom:1px dashed #ddd;}
 #category .thumbnails a {width:100px; height:200px; color:#666; padding:20px;}
+#category .categories.thumbnails h6 {border-bottom:0px;}
 #category .categories.thumbnails a {width:100px; height:140px; color:#666; padding:20px;}
 #category .thumbnails a:hover {text-decoration:none;}
 #category .thumbnails .placeholder {width:100px; height:100px; background:rgba(220,220,220, 0.1);}
