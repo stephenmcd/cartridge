@@ -24,4 +24,6 @@ def category_processor(request, page):
                         settings.SHOP_PER_PAGE_CATEGORY,
                         settings.MAX_PAGING_LINKS)
     products.sort_by = sort_by
-    return {"products": products}
+    sub_categories = page.category.children.published()
+    child_categories = Category.objects.filter(id__in=sub_categories)
+    return {"products": products, "child_categories": child_categories}
