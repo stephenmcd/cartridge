@@ -164,6 +164,8 @@ Sites Using Cartridge
   * `Life is Good <http://lifeisgoodforall.co.uk/>`_
   * `Brooklyn Navy Yard <http://bldg92.org/>`_
   * `Cotton On Asia <http://asia.cottonon.com/>`_
+  * `Manai Glitter <https://manai.co.uk>`_
+  * `Tactical Bags <http://tacticalbags.ru>`_
 
 .. _`Django`: http://djangoproject.com/
 .. _`BSD licensed`: http://www.linfo.org/bsdlicense.html
