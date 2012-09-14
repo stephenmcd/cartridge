@@ -1,5 +1,6 @@
 
 from copy import copy
+from datetime import date
 from itertools import dropwhile, takewhile
 from locale import localeconv
 from re import match

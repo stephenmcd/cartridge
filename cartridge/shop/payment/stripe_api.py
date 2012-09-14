@@ -1,8 +1,5 @@
 
-from urllib import urlencode, urlopen
-
 from django.core.exceptions import ImproperlyConfigured
-from django.http import QueryDict
 from django.utils.translation import ugettext as _
 
 from mezzanine.conf import settings
