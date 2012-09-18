@@ -10,6 +10,8 @@ from cartridge.shop import models as shop_app
 
 
 def create_initial_product(app, created_models, verbosity, **kwargs):
+    if getattr(settings, "CARTRIDGE_DISABLE_DEMO_DATA", False):
+        return
     if Product in created_models:
         if kwargs.get("interactive"):
             confirm = raw_input("\nWould you like to install an initial "
