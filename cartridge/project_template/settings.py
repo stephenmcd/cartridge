@@ -3,7 +3,7 @@
 # CARTRIDGE SETTINGS #
 ######################
 
-# The following settings are already defined in cartridge.conf.defaults
+# The following settings are already defined in cartridge.shop.defaults
 # with default values, but are common enough to be put here, commented
 # out, for convenient overriding.
 
@@ -70,9 +70,12 @@
 # MEZZANINE SETTINGS #
 ######################
 
-# The following settings are already defined in mezzanine.conf.defaults
-# with default values, but are common enough to be put here, commented
-# out, for convenient overriding.
+# The following settings are already defined with default values in
+# the ``defaults.py`` module within each of Mezzanine's apps, but are
+# common enough to be put here, commented out, for convenient
+# overriding. Please consult the settings documentation for a full list
+# of settings Mezzanine implements:
+# http://mezzanine.jupo.org/docs/configuration.html#default-settings
 
 # Controls the ordering and grouping of the admin menu.
 #
@@ -83,6 +86,19 @@
 #         "shop.Sale", "shop.Order")),
 #     ("Site", ("sites.Site", "redirects.Redirect", "conf.Setting")),
 #     ("Users", ("auth.User", "auth.Group",)),
+# )
+
+# A sequence of templates used by the ``page_menu`` template tag. Each
+# item in the sequence is a three item sequence, containing a unique ID
+# for the template, a label for the template, and the template path.
+# These templates are then available for selection when editing which
+# menus a page should appear in. Note that if a menu template is used
+# that doesn't appear in this setting, all pages will appear in it.
+
+# PAGE_MENU_TEMPLATES = (
+#     (1, "Top navigation bar", "pages/menus/dropdown.html"),
+#     (2, "Left-hand tree", "pages/menus/tree.html"),
+#     (3, "Footer", "pages/menus/footer.html"),
 # )
 
 # A three item sequence, each containing a sequence of template tags
@@ -145,8 +161,7 @@
 # SSL_FORCE_URL_PREFIXES = ("/admin", "/account", "/shop/checkout",)
 
 # If True, the south application will be automatically added to the
-# INSTALLED_APPS setting. This setting is not defined in
-# mezzanine.conf.defaults as is the case with the above settings.
+# INSTALLED_APPS setting.
 USE_SOUTH = True
 
 
@@ -328,6 +343,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.static",
     "django.core.context_processors.media",
     "django.core.context_processors.request",
+    "django.core.context_processors.tz",
     "mezzanine.conf.context_processors.settings",
 )
 

@@ -9,6 +9,7 @@ python:
 install:
   - pip install django==$DJANGO_VERSION --use-mirrors
   - pip install -e git://github.com/stephenmcd/mezzanine.git#egg=mezzanine
+  - pip install . --use-mirrors
   - pip install pep8 pyflakes --use-mirrors
 before_script:
   - "cp cartridge/project_template/local_settings.py.template cartridge/project_template/local_settings.py"
@@ -16,3 +17,5 @@ script:
   - ./cartridge/project_template/manage.py test
 notifications:
   irc: "irc.freenode.org#mezzanine"
+  on_success: change
+  on_failure: change

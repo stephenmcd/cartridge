@@ -371,11 +371,11 @@ class ImageWidget(forms.FileInput):
     def render(self, name, value, attrs):
         rendered = super(ImageWidget, self).render(name, value, attrs)
         if value:
-            orig_url = "%s%s" % (settings.MEDIA_URL, value)
-            thumb_url = "%s%s" % (settings.MEDIA_URL, thumbnail(value, 48, 48))
-            rendered = ("<a target='_blank' href='%s'>"
-                        "<img style='margin-right:6px;' src='%s'>"
-                        "</a>%s" % (orig_url, thumb_url, rendered))
+            orig = u"%s%s" % (settings.MEDIA_URL, value)
+            thumb = u"%s%s" % (settings.MEDIA_URL, thumbnail(value, 48, 48))
+            rendered = (u"<a target='_blank' href='%s'>"
+                        u"<img style='margin-right:6px;' src='%s'>"
+                        u"</a>%s" % (orig, thumb, rendered))
         return mark_safe(rendered)
 
 
@@ -454,7 +454,7 @@ class ProductVariationAdminFormset(BaseInlineFormSet):
     """
     def clean(self):
         if len([f for f in self.forms if hasattr(f, "cleaned_data") and
-            f.cleaned_data["default"]]) > 1:
+            f.cleaned_data.get("default", False)]) > 1:
             error = _("Only one variation can be checked as the default.")
             raise forms.ValidationError(error)
 

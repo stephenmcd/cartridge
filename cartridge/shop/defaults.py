@@ -6,11 +6,10 @@ from django.utils.translation import ugettext as _
 from mezzanine.conf import register_setting
 
 
-###################################################
-#  This first set of settings already exists in   #
-#  mezzanine.conf.defaults but can be overridden  #
-#  or appended to here with Cartridge values.     #
-###################################################
+####################################################################
+#  This first set of settings already exists in Mezzanine but can  #
+#  be overridden or appended to here with Cartridge values.        #
+####################################################################
 
 # Add shop admin modules to the admin menu.
 register_setting(
@@ -52,10 +51,10 @@ register_setting(
 )
 
 
-##########################################
-#  Remaining settings are all defined by #
-#  Cartridge, prefixed with "SHOP_".     #
-##########################################
+###########################################
+#  Remaining settings are all defined by  #
+#  Cartridge, prefixed with "SHOP_".      #
+###########################################
 
 register_setting(
     name="SHOP_CARD_TYPES",
@@ -236,4 +235,12 @@ register_setting(
         (_("Least expensive"), "unit_price"),
         (_("Most expensive"), "-unit_price"),
     ),
+)
+
+register_setting(
+    name="SHOP_USE_VARIATIONS",
+    label=_("Use product variations"),
+    description="Use product variations.",
+    editable=False,
+    default=True,
 )
