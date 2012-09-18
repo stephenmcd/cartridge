@@ -148,7 +148,7 @@ def send_order_email(request, order):
     send_mail_template(settings.SHOP_ORDER_EMAIL_SUBJECT,
         receipt_template, settings.SHOP_ORDER_FROM_EMAIL,
         order.billing_detail_email, context=order_context,
-        fail_silently=settings.DEBUG)
+        fail_silently=False)
 
 
 # Set up some constants for identifying each checkout step.
