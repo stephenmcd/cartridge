@@ -423,7 +423,7 @@ class Order(models.Model):
 
     # These are fields that are stored in the session. They're copied to
     # the order in setup() and removed from the session in complete().
-    session_fields = ("shipping_type", "shipping_total", "discount_total")
+    session_fields = ("shipping_type", "shipping_total", "discount_total", "discount_code")
 
     class Meta:
         verbose_name = _("Order")
