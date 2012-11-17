@@ -45,8 +45,8 @@ register_setting(
     name="TEMPLATE_ACCESSIBLE_SETTINGS",
     description=_("Sequence of setting names available within templates."),
     editable=False,
-    default=("SHOP_CARD_TYPES", "SHOP_CHECKOUT_STEPS_SPLIT",
-             "SHOP_PRODUCT_SORT_OPTIONS",),
+    default=("SHOP_CARD_TYPES", "SHOP_CATEGORY_USE_FEATURED_IMAGE",
+             "SHOP_CHECKOUT_STEPS_SPLIT", "SHOP_PRODUCT_SORT_OPTIONS",),
     append=True,
 )
 
@@ -68,6 +68,13 @@ register_setting(
     description="Number of minutes of inactivity until carts are abandoned.",
     editable=False,
     default=30,
+)
+
+register_setting(
+    name="SHOP_CATEGORY_USE_FEATURED_IMAGE",
+    description=_("Enable featured images in shop categories"),
+    editable=False,
+    default=False,
 )
 
 register_setting(

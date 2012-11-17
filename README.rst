@@ -1,4 +1,5 @@
 .. image:: https://secure.travis-ci.org/stephenmcd/cartridge.png?branch=master
+   :target: http://travis-ci.org/#!/stephenmcd/cartridge
 
 Created by `Stephen McDonald <http://twitter.com/stephen_mcd>`_
 
@@ -160,6 +161,10 @@ Sites Using Cartridge
   * `Life is Good <http://lifeisgoodforall.co.uk/>`_
   * `Brooklyn Navy Yard <http://bldg92.org/>`_
   * `Cotton On Asia <http://asia.cottonon.com/>`_
+  * `Manai Glitter <https://manai.co.uk>`_
+  * `Tactical Bags <http://tacticalbags.ru>`_
+  * `Charles Koll Jewelry <http://charleskoll.com>`_
+  * `Puraforce Remedies <http://puraforceremedies.com/>`_
 
 .. _`Django`: http://djangoproject.com/
 .. _`BSD licensed`: http://www.linfo.org/bsdlicense.html

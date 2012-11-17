@@ -1,3 +1,5 @@
 *.pyc
 *.pyo
 *.db
+*.egg-info
+.idea/

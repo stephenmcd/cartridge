@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load mezzanine_tags shop_tags i18n %}
+{% load mezzanine_tags shop_tags i18n future %}
 
 {% block meta_title %}{% trans "Your Wishlist" %}{% endblock %}
 {% block title %}{% trans "Your Wishlist" %}{% endblock %}
@@ -37,6 +37,6 @@
 {% else %}
 <p>{% trans "Your wishlist is empty." %}</p>
 <br>
-<p><a class="btn btn-large btn-primary" href="{% url page "shop" %}">{% trans "Continue Shopping" %}</a></p>
+<p><a class="btn btn-large btn-primary" href="{% url "page" "shop" %}">{% trans "Continue Shopping" %}</a></p>
 {% endif %}
 {% endblock %}

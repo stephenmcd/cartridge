@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load mezzanine_tags shop_tags i18n %}
+{% load mezzanine_tags shop_tags i18n future %}
 
 {% block meta_title %}{% trans "Your Cart" %}{% endblock %}
 {% block title %}{% trans "Your Cart" %}{% endblock %}
@@ -53,7 +53,7 @@
 </table>
 <div class="form-actions clearfix">
     <div class="form-actions-wrap">
-    <a href="{% url shop_checkout %}" class="btn btn-primary btn-large">{% trans "Go to Checkout" %}</a>
+    <a href="{% url "shop_checkout" %}" class="btn btn-primary btn-large">{% trans "Go to Checkout" %}</a>
     <input type="submit" name="update_cart" class="btn btn-large" value="{% trans "Update Cart" %}">
     </div>
 </div>

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load mezzanine_tags shop_tags i18n %}
+{% load mezzanine_tags shop_tags i18n future %}
 
 {% block meta_title %}{% trans "Order History" %}{% endblock %}
 {% block title %}{% trans "Order History" %}{% endblock %}
@@ -29,8 +29,8 @@
         <td class="right">{{ order.total|currency }}</td>
         <td>{{ order.get_status_display }}</td>
         <td>
-            <a class="btn btn-small btn-primary" href="{% url shop_invoice order.id %}?format=pdf">{% trans "Download PDF" %}</a>
-            <a class="btn btn-small" target="_blank" href="{% url shop_invoice order.id %}">{% trans "View invoice" %}</a>
+            <a class="btn btn-small btn-primary" href="{% url "shop_invoice" order.id %}?format=pdf">{% trans "Download PDF" %}</a>
+            <a class="btn btn-small" target="_blank" href="{% url "shop_invoice" order.id %}">{% trans "View invoice" %}</a>
         </td>
     </tr>
     {% endfor %}
