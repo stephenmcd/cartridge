@@ -1,64 +1,65 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 #   <edi.menclova@centrum.cz>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: Cartridge\n"
-"Report-Msgid-Bugs-To: https://github.com/stephenmcd/cartridge/issues\n"
-"POT-Creation-Date: 2012-08-26 09:34-0430\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-11-17 17:59-0430\n"
 "PO-Revision-Date: 2012-08-26 14:19+0000\n"
 "Last-Translator: Sebastián Ramírez Magrí <sebasmagri@gmail.com>\n"
-"Language-Team: Czech (http://www.transifex.com/projects/p/cartridge/language/cs/)\n"
+"Language-Team: Czech (http://www.transifex.com/projects/p/cartridge/language/"
+"cs/)\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: cs\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #: admin.py:63
 msgid "Product filters"
 msgstr "Filtry produktů"
 
-#: admin.py:98
+#: admin.py:100
 msgid "Current variations"
 msgstr "Aktuální změny"
 
-#: admin.py:120
+#: admin.py:122
 msgid "Other products"
 msgstr "Ostatní produkty"
 
-#: admin.py:132
+#: admin.py:134
 msgid "Create new variations"
 msgstr "Vytvářet nové varianty"
 
-#: admin.py:242
+#: admin.py:244
 msgid "Items"
 msgstr "Položky"
 
-#: admin.py:262
+#: admin.py:264
 msgid "Billing details"
 msgstr "Fakturační údaje"
 
-#: admin.py:263
+#: admin.py:265
 msgid "Shipping details"
 msgstr "Údaje pro dopravu"
 
-#: admin.py:280 admin.py:300
+#: admin.py:282 admin.py:302
 msgid "Apply to product and/or products in categories"
 msgstr "Aplikujte na produkt a/nebo kategorii výrobků"
 
-#: admin.py:282 admin.py:302
+#: admin.py:284 admin.py:304
 msgid "Reduce unit price by"
 msgstr "Snížit jednotkovou cenu o"
 
-#: admin.py:285
+#: admin.py:287
 msgid "Sale period"
 msgstr "Prodejní lhůta"
 
-#: admin.py:305
+#: admin.py:307
 msgid "Valid for"
 msgstr "Platné pro"
 
@@ -111,122 +112,126 @@ msgid "Sequence of setting names available within templates."
 msgstr "Seznam konfiguračních direktiv dostupných v šabloně."
 
 #: defaults.py:75
+msgid "Enable featured images in shop categories"
+msgstr ""
+
+#: defaults.py:82
 msgid "Checkout account required"
 msgstr ""
 
-#: defaults.py:76
+#: defaults.py:83
 msgid "If True, users must create a login for the checkout process."
 msgstr ""
 
-#: defaults.py:107
+#: defaults.py:114
 msgid "Payment Enabled"
 msgstr "Platba Povolena"
 
-#: defaults.py:108
+#: defaults.py:115
 msgid "If False, there is no payment step on the checkout process."
 msgstr ""
 
-#: defaults.py:116
+#: defaults.py:123
 msgid "Currency Locale"
 msgstr "Místní měna"
 
-#: defaults.py:126
+#: defaults.py:133
 msgid "Default Shipping Cost"
 msgstr "Standardní poštovné"
 
-#: defaults.py:127
+#: defaults.py:134
 msgid "Default cost of shipping when no custom shipping is implemented."
 msgstr ""
 
-#: defaults.py:135
+#: defaults.py:142
 msgid "Discount in Cart"
 msgstr "Sleva na košík"
 
-#: defaults.py:136
+#: defaults.py:143
 msgid "Discount codes can be entered on the cart page."
 msgstr ""
 
-#: defaults.py:143
+#: defaults.py:150
 msgid "Discount in Checkout"
 msgstr "Sleva na košík k pokladně"
 
-#: defaults.py:144
+#: defaults.py:151
 msgid "Discount codes can be entered on the first checkout step."
 msgstr ""
 
-#: defaults.py:151
+#: defaults.py:158
 msgid "Billing & Shipping Handler"
 msgstr "Fakturace a přepravní obsluha"
 
-#: defaults.py:162
+#: defaults.py:169
 msgid "Order Handler"
 msgstr "Obsluha objednávek"
 
-#: defaults.py:173
+#: defaults.py:180
 msgid "Payment Handler"
 msgstr "Platební obsluha"
 
-#: defaults.py:187
+#: defaults.py:194
 msgid "Size"
 msgstr "Velikost"
 
-#: defaults.py:188
+#: defaults.py:195
 msgid "Colour"
 msgstr "Barva"
 
-#: defaults.py:194
+#: defaults.py:201
 msgid "Order Email Subject"
 msgstr "Objednání Prostřednictvím Emailu"
 
-#: defaults.py:195
+#: defaults.py:202
 msgid "Subject to be used when sending the order receipt email."
 msgstr ""
 
-#: defaults.py:197
+#: defaults.py:204
 msgid "Order Receipt"
 msgstr "Doručení objednávky"
 
-#: defaults.py:202
+#: defaults.py:209
 msgid "From Email"
 msgstr "Z Emailu"
 
-#: defaults.py:203
+#: defaults.py:210
 msgid "Email address from which order receipts should be emailed."
 msgstr ""
 
-#: defaults.py:214
+#: defaults.py:221
 msgid "Unprocessed"
 msgstr "Nezpracované"
 
-#: defaults.py:215
+#: defaults.py:222
 msgid "Processed"
 msgstr "Zpracované"
 
-#: defaults.py:221
+#: defaults.py:228
 msgid "Products Per Category Page"
 msgstr "Počet výrobku na stránce kategorie"
 
-#: defaults.py:222
+#: defaults.py:229
 msgid "Number of products to display per category page."
 msgstr ""
 
-#: defaults.py:233
+#: defaults.py:240
 msgid "Recently added"
 msgstr "Naposledy přidané"
 
-#: defaults.py:234
+#: defaults.py:241
 msgid "Highest rated"
 msgstr "Nejvyšší hodnocení"
 
-#: defaults.py:235
+#: defaults.py:242
 msgid "Least expensive"
 msgstr "Nejlevnější"
 
-#: defaults.py:236
+#: defaults.py:243
 msgid "Most expensive"
 msgstr "Nejdražší"
 
-#: defaults.py:242
+#: defaults.py:249
 msgid "Use product variations"
 msgstr ""
 
@@ -234,322 +239,326 @@ msgstr ""
 msgid "SKU"
 msgstr "SKU"
 
-#: forms.py:25 templates/shop/product.html:82
+#: forms.py:26 templates/shop/product.html:82
 msgid "The selected options are currently unavailable."
 msgstr "V současné době jsou k dispozici vybrané položky."
 
-#: forms.py:26
+#: forms.py:27
 msgid "The selected options are currently not in stock."
 msgstr "Vybrané položky v současné době nejsou na skladě."
 
-#: forms.py:27
+#: forms.py:28
 msgid "The selected quantity is currently unavailable."
 msgstr "Požadované množství v současné době není k dipozici."
 
-#: forms.py:37 models.py:608 templates/shop/order_history.html:20
+#: forms.py:38 models.py:613 templates/shop/order_history.html:20
 msgid "Quantity"
 msgstr "Množství"
 
-#: forms.py:229
+#: forms.py:230
 msgid "The discount code entered is invalid."
 msgstr "Zadaný kód slevy je neplatný."
 
-#: forms.py:241 models.py:811
+#: forms.py:242 models.py:816
 msgid "Free shipping"
 msgstr "Doprava zdarma"
 
-#: forms.py:256
+#: forms.py:257
 msgid "My delivery details are the same as my billing details"
 msgstr "Moje fakturační údaje jsou shodné s dodacími"
 
-#: forms.py:258
+#: forms.py:259
 msgid "Remember my address for next time"
 msgstr "Zapamatovat mou adresu pro příště"
 
-#: forms.py:259
+#: forms.py:260
 msgid "Cardholder name"
 msgstr "Jméno držitele"
 
-#: forms.py:266
+#: forms.py:268
 msgid ""
 "A security code, usually the last 3 digits found on the back of your card."
 msgstr "Poslední 3 číslice vašeho košíku jsou zpravidla bezpečnostním kódem."
 
-#: forms.py:350
+#: forms.py:352
 msgid "A valid expiry date is required."
 msgstr "Je vyžadováno datum ukončení platnosti."
 
-#: forms.py:458
+#: forms.py:460
 msgid "Only one variation can be checked as the default."
 msgstr "Pouze jedna varianta může být označena jako výchozí."
 
-#: forms.py:471
+#: forms.py:473
 msgid "Please enter a value for only one type of reduction."
 msgstr "Prosím vyberte hodnotu jen pro jeden typ slevy."
 
-#: models.py:39 models.py:609
+#: models.py:40 models.py:614
 msgid "Unit price"
 msgstr "Cena za jednotku"
 
-#: models.py:41
+#: models.py:42
 msgid "Sale price"
 msgstr "Prodejní cena"
 
-#: models.py:42
+#: models.py:43
 msgid "Sale start"
 msgstr "Začátek prodeje"
 
-#: models.py:43
+#: models.py:44
 msgid "Sale end"
 msgstr "Konec prodeje"
 
-#: models.py:45
+#: models.py:46
 msgid "Number in stock"
 msgstr "Skladem"
 
-#: models.py:95
+#: models.py:96
 msgid "Available for purchase"
 msgstr "Dostupné k zakoupení"
 
-#: models.py:97 models.py:153 models.py:158 models.py:212
+#: models.py:98 models.py:154 models.py:159 models.py:213
 #: management/commands/product_db.py:34
 msgid "Image"
 msgstr "Obrázek"
 
-#: models.py:99 models.py:330
+#: models.py:100 models.py:334
 msgid "Product categories"
 msgstr "Kategorií produktu"
 
-#: models.py:100
+#: models.py:101
 msgid "Date added"
 msgstr "Přidáno datum"
 
-#: models.py:103
+#: models.py:104
 msgid "Related products"
 msgstr ""
 
-#: models.py:105
+#: models.py:106
 msgid "Upsell products"
 msgstr ""
 
-#: models.py:106
+#: models.py:107
 msgid "Rating"
 msgstr "Hodnocení"
 
-#: models.py:113
+#: models.py:114
 msgid "Product"
 msgstr "Výrobek"
 
-#: models.py:114 models.py:312 models.py:678
+#: models.py:115 models.py:316 models.py:683
 msgid "Products"
 msgstr "Výrobky"
 
-#: models.py:154 models.py:607 management/commands/product_db.py:32
+#: models.py:155 models.py:612 management/commands/product_db.py:32
 msgid "Description"
 msgstr "Popis"
 
-#: models.py:159
+#: models.py:160
 msgid "Images"
 msgstr "Obrázky"
 
-#: models.py:175
+#: models.py:176
 msgid "Type"
 msgstr "Zadejte"
 
-#: models.py:177
+#: models.py:178
 msgid "Name"
 msgstr "Název"
 
-#: models.py:185
+#: models.py:186
 msgid "Product option"
 msgstr "Varianta produktu"
 
-#: models.py:186 models.py:316
+#: models.py:187 models.py:320
 msgid "Product options"
 msgstr "Varianty produktu"
 
-#: models.py:211
+#: models.py:212
 msgid "Default"
 msgstr "Standardní"
 
-#: models.py:319 models.py:714
+#: models.py:312
+msgid "Featured Image"
+msgstr ""
+
+#: models.py:323 models.py:719
 msgid "Sale"
 msgstr "Prodej"
 
-#: models.py:321
+#: models.py:325
 msgid "Minimum price"
 msgstr "Minimální cena"
 
-#: models.py:322
+#: models.py:326
 msgid "Maximum price"
 msgstr "Maximální cena"
 
-#: models.py:323
+#: models.py:327
 msgid "Combined"
 msgstr ""
 
-#: models.py:324
+#: models.py:328
 msgid ""
 "If checked, products must match all specified filters, otherwise products "
 "can match any specified filter."
 msgstr ""
 
-#: models.py:329
+#: models.py:333
 msgid "Product category"
 msgstr "Kategorie produktu"
 
-#: models.py:383 models.py:392
+#: models.py:387 models.py:396
 msgid "First name"
 msgstr "Jméno"
 
-#: models.py:384 models.py:393
+#: models.py:388 models.py:397
 msgid "Last name"
 msgstr "Příjmení"
 
-#: models.py:385 models.py:394
+#: models.py:389 models.py:398
 msgid "Street"
 msgstr "Ulice"
 
-#: models.py:386 models.py:395
+#: models.py:390 models.py:399
 msgid "City/Suburb"
 msgstr "Město/Čtvrť"
 
-#: models.py:387 models.py:396
+#: models.py:391 models.py:400
 msgid "State/Region"
 msgstr "Stát/Kraj"
 
-#: models.py:388 models.py:397
+#: models.py:392 models.py:401
 msgid "Zip/Postcode"
 msgstr "ZIP/PSČ"
 
-#: models.py:389 models.py:398
+#: models.py:393 models.py:402
 msgid "Country"
 msgstr "Země"
 
-#: models.py:390 models.py:399
+#: models.py:394 models.py:403
 msgid "Phone"
 msgstr "Telefon"
 
-#: models.py:391
+#: models.py:395
 msgid "Email"
 msgstr "Email"
 
-#: models.py:400
+#: models.py:404
 msgid "Additional instructions"
 msgstr "Další pokyny"
 
-#: models.py:402
+#: models.py:406
 msgid "Time"
 msgstr "Čas"
 
-#: models.py:405
+#: models.py:409
 msgid "Shipping type"
 msgstr "Způsob dopravy"
 
-#: models.py:406
+#: models.py:410
 msgid "Shipping total"
 msgstr "Poštovné celkem"
 
-#: models.py:407
+#: models.py:411
 msgid "Item total"
 msgstr "Položky celkem"
 
-#: models.py:408 models.py:833
+#: models.py:412 models.py:838
 msgid "Discount code"
 msgstr "Kód slevy"
 
-#: models.py:409
+#: models.py:413
 msgid "Discount total"
 msgstr "Sleva celkem"
 
-#: models.py:410
+#: models.py:414
 msgid "Order total"
 msgstr "Objednávka celkem"
 
-#: models.py:411
+#: models.py:415
 msgid "Transaction ID"
 msgstr "ID Transakce"
 
-#: models.py:414 templates/shop/order_history.html:22
+#: models.py:418 templates/shop/order_history.html:22
 msgid "Status"
 msgstr "Status"
 
-#: models.py:425
+#: models.py:430
 msgid "Order"
 msgstr "Pořadí"
 
-#: models.py:426
+#: models.py:431
 msgid "Orders"
 msgstr "Objednávky"
 
-#: models.py:506 templates/admin/shop/order/change_form.html:8
+#: models.py:511 templates/admin/shop/order/change_form.html:7
 #: templates/shop/complete.html:80
 msgid "Download PDF invoice"
 msgstr "Stáhnout fakturu v PDF"
 
-#: models.py:514
+#: models.py:519
 msgid "Last updated"
 msgstr "Poslední aktualizace"
 
-#: models.py:610
+#: models.py:615
 msgid "Total price"
 msgstr "Celková cena"
 
-#: models.py:675 management/commands/product_db.py:30
+#: models.py:680 management/commands/product_db.py:30
 msgid "Title"
 msgstr "Titulek"
 
-#: models.py:676
+#: models.py:681
 msgid "Active"
 msgstr "Aktivní"
 
-#: models.py:681
+#: models.py:686
 msgid "Categories"
 msgstr "Kategorie"
 
-#: models.py:682
+#: models.py:687
 msgid "Reduce by amount"
 msgstr "Snížení o částku "
 
-#: models.py:683
+#: models.py:688
 msgid "Reduce by percent"
 msgstr "Snížení v procentech"
 
-#: models.py:686
+#: models.py:691
 msgid "Reduce to amount"
 msgstr "Snížení na částku"
 
-#: models.py:687
+#: models.py:692
 msgid "Valid from"
 msgstr "Platnost od"
 
-#: models.py:688
+#: models.py:693
 msgid "Valid to"
 msgstr "Platnost do"
 
-#: models.py:715
+#: models.py:720
 msgid "Sales"
 msgstr "Prodeje"
 
-#: models.py:809
+#: models.py:814
 msgid "Code"
 msgstr "Kód"
 
-#: models.py:810
+#: models.py:815
 msgid "Minimum total purchase"
 msgstr "Minimální celkový nákup"
 
-#: models.py:812
+#: models.py:817
 msgid "Uses remaining"
 msgstr ""
 
-#: models.py:813
+#: models.py:818
 msgid ""
-"If you wish to limit the number of times a code may be used, set this value."
-" It will be decremented upon each use."
+"If you wish to limit the number of times a code may be used, set this value. "
+"It will be decremented upon each use."
 msgstr ""
 
-#: models.py:834
+#: models.py:839
 msgid "Discount codes"
 msgstr ""
 
@@ -559,9 +568,12 @@ msgid ""
 "Invalid currency locale specified for SHOP_CURRENCY_LOCALE: '%s'. You'll "
 "need to set the locale for your system, or configure the "
 "SHOP_CURRENCY_LOCALE setting in your settings module."
-msgstr "Neplatná místní měna pro  SHOP_CURRENCY_LOCALE: '%s'. Potřebujete nastavit lokalitu ve vašem systému, nebo nakonfigurovat SHOP_CURRENCY_LOCALE nastavení ve vašem modulu."
+msgstr ""
+"Neplatná místní měna pro  SHOP_CURRENCY_LOCALE: '%s'. Potřebujete nastavit "
+"lokalitu ve vašem systému, nebo nakonfigurovat SHOP_CURRENCY_LOCALE "
+"nastavení ve vašem modulu."
 
-#: views.py:60 views.py:101
+#: views.py:60 views.py:102
 msgid "Item added to cart"
 msgstr "Položka přidána do košíku"
 
@@ -569,15 +581,15 @@ msgstr "Položka přidána do košíku"
 msgid "Item added to wishlist"
 msgstr "Položka přidána k wishlistu"
 
-#: views.py:106
+#: views.py:107
 msgid "Item removed from wishlist"
 msgstr "Položka odstraněna z wishlistu"
 
-#: views.py:143
+#: views.py:144
 msgid "Your cart has expired"
 msgstr "Váš košík vypršel"
 
-#: views.py:151
+#: views.py:152
 msgid "Cart updated"
 msgstr "Košík aktualizován"
 
@@ -650,7 +662,7 @@ msgstr "Importování .."
 msgid "Exporting .."
 msgstr "Exportování .."
 
-#: payment/egate.py:44
+#: payment/egate.py:44 payment/stripe_api.py:42
 msgid "A general error occured: "
 msgstr "Nastala obecná chyba: "
 
@@ -658,11 +670,16 @@ msgstr "Nastala obecná chyba: "
 msgid "Transaction declined: "
 msgstr "Transakce zamítnuta: "
 
-#: templates/accounts/account_profile_update.html:5
+#: payment/stripe_api.py:40
+#, fuzzy
+msgid "Transaction declined"
+msgstr "Transakce zamítnuta: "
+
+#: templates/accounts/account_profile_update.html:6
 msgid "View past orders"
 msgstr ""
 
-#: templates/admin/shop/order/change_form.html:9
+#: templates/admin/shop/order/change_form.html:8
 msgid "History"
 msgstr "Historie"
 
@@ -719,15 +736,15 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: templates/pages/category.html:25
+#: templates/pages/category.html:38
 msgid "Sort by"
 msgstr "Řadit podle"
 
-#: templates/pages/category.html:49 templates/shop/product.html:77
+#: templates/pages/category.html:62 templates/shop/product.html:77
 msgid "On sale:"
 msgstr "Na prodej:"
 
-#: templates/pages/category.html:53
+#: templates/pages/category.html:66
 msgid "Coming soon"
 msgstr "Již brzy"
 
@@ -849,7 +866,8 @@ msgstr "Potvrzení jsme Vám poslali emailem."
 
 #: templates/shop/complete.html:77
 msgid "You can also view your invoice using one of the links below."
-msgstr "Fakturu si můžete zobrazit také pomocí některého z následujících odkazů."
+msgstr ""
+"Fakturu si můžete zobrazit také pomocí některého z následujících odkazů."
 
 #: templates/shop/complete.html:81
 msgid "View invoice in your browser"
