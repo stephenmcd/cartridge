@@ -164,6 +164,7 @@ Sites Using Cartridge
   * `Manai Glitter <https://manai.co.uk>`_
   * `Tactical Bags <http://tacticalbags.ru>`_
   * `Charles Koll Jewelry <http://charleskoll.com>`_
+  * `Puraforce Remedies <http://puraforceremedies.com/>`_
 
 .. _`Django`: http://djangoproject.com/
 .. _`BSD licensed`: http://www.linfo.org/bsdlicense.html
