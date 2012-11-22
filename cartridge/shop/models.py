@@ -1,4 +1,3 @@
-
 from decimal import Decimal
 from operator import iand, ior
 
@@ -7,6 +6,7 @@ from django.db import models
 from django.db.models.signals import m2m_changed
 from django.db.models import CharField, F, Q
 from django.db.models.base import ModelBase
+from django.db.utils import DatabaseError
 from django.dispatch import receiver
 from django.utils.translation import ugettext, ugettext_lazy as _
 
@@ -760,7 +760,7 @@ class Sale(Discount):
                               "sale_to": self.valid_to,
                               "sale_from": self.valid_from}
                     priced_objects.filter(**extra_filter).update(**update)
-                except OperationalError:
+                except (OperationalError, DatabaseError):
                     # Work around for MySQL which does not allow update
                     # to operate on subquery where the FROM clause would
                     # have it operate on the same table.
