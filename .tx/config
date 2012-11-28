@@ -1,5 +1,5 @@
 [main]
-host = https://www.transifex.net
+host = https://www.transifex.com
 
 [cartridge.default]
 file_filter = cartridge/shop/locale/<lang>/LC_MESSAGES/django.po
