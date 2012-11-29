@@ -16,7 +16,7 @@ from mezzanine.core.managers import DisplayableManager
 from mezzanine.core.models import Displayable, RichText, Orderable
 from mezzanine.generic.fields import RatingField
 from mezzanine.pages.models import Page
-from mezzanine.utils.models import AdminThumbMixin
+from mezzanine.utils.models import AdminThumbMixin, upload_to
 from mezzanine.utils.timezone import now
 
 from cartridge.shop import fields, managers
@@ -151,7 +151,8 @@ class ProductImage(Orderable):
     for the product.
     """
 
-    file = models.ImageField(_("Image"), upload_to="product")
+    file = models.ImageField(_("Image"),
+        upload_to=upload_to("shop.ProductImage.file", "product"))
     description = CharField(_("Description"), blank=True, max_length=100)
     product = models.ForeignKey("Product", related_name="images")
 
@@ -310,15 +311,13 @@ class Category(Page, RichText):
     """
 
     featured_image = FileField(verbose_name=_("Featured Image"),
-                               upload_to="shop", format="Image",
-                               max_length=255, null=True, blank=True)
-    products = models.ManyToManyField("Product",
+        upload_to=upload_to("shop.Category.featured_image", "shop"),
+        format="Image", max_length=255, null=True, blank=True)
+    products = models.ManyToManyField("Product", blank=True,
                                      verbose_name=_("Products"),
-                                     blank=True,
                                      through=Product.categories.through)
-    options = models.ManyToManyField("ProductOption",
+    options = models.ManyToManyField("ProductOption", blank=True,
                                      verbose_name=_("Product options"),
-                                     blank=True,
                                      related_name="product_options")
     sale = models.ForeignKey("Sale", verbose_name=_("Sale"),
                              blank=True, null=True)
