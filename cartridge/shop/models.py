@@ -472,7 +472,10 @@ class Order(models.Model):
         for field in self.session_fields:
             if field in request.session:
                 del request.session[field]
-        del request.session["order"]
+        try:
+            del request.session["order"]
+        except KeyError:
+            pass
         for item in request.cart:
             try:
                 variation = ProductVariation.objects.get(sku=item.sku)
