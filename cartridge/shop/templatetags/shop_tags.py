@@ -20,7 +20,8 @@ def currency(value):
         value = 0
     if hasattr(locale, "currency"):
         if platform.system() == 'Windows':
-            value = unicode(locale.currency(value, grouping=True), encoding='iso_8859_1')
+            value = unicode(locale.currency(value, grouping=True),
+                            encoding='iso_8859_1')
         else:
             value = locale.currency(value, grouping=True)
     else:
