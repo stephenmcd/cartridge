@@ -1,5 +1,6 @@
 from decimal import Decimal
 import locale
+import platform
 
 from django import template
 
@@ -18,7 +19,11 @@ def currency(value):
     if not value:
         value = 0
     if hasattr(locale, "currency"):
-        value = locale.currency(value, grouping=True)
+        if platform.system() == 'Windows':
+            value = unicode(locale.currency(value, grouping=True),
+                            encoding='iso_8859_1')
+        else:
+            value = locale.currency(value, grouping=True)
     else:
         # based on locale.currency() in python >= 2.5
         conv = locale.localeconv()
