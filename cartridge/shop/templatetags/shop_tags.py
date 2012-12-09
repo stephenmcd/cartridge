@@ -19,11 +19,9 @@ def currency(value):
     if not value:
         value = 0
     if hasattr(locale, "currency"):
+        value = locale.currency(value, grouping=True)
         if platform.system() == 'Windows':
-            value = unicode(locale.currency(value, grouping=True),
-                            encoding='iso_8859_1')
-        else:
-            value = locale.currency(value, grouping=True)
+            value = unicode(value, encoding='iso_8859_1')
     else:
         # based on locale.currency() in python >= 2.5
         conv = locale.localeconv()
