@@ -488,7 +488,10 @@ class Order(models.Model):
         if code:
             DiscountCode.objects.active().filter(code=code).update(
                 uses_remaining=F('uses_remaining') - 1)
-        request.cart.delete()
+        try:
+            request.cart.delete()
+        except:
+            pass
 
     def details_as_dict(self):
         """
