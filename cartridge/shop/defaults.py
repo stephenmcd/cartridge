@@ -26,6 +26,18 @@ register_setting(
     ),
 )
 
+# Add the product model to the list of search choices.
+register_setting(
+    name="SEARCH_MODEL_CHOICES",
+    description=_("Sequence of models that will be provided by default as "
+        "choices in the search form. Each model should be in the format "
+        "``app_label.model_name``. Only models that subclass "
+        "``mezzanine.core.models.Displayable`` should be used."),
+    editable=False,
+    default=("shop.Product",),
+    append=True,
+)
+
 # Add the checkout URLs prefix to those forced to run over SSL.
 # Only relevant if SSL_ENABLED (defined in Mezzanine) is True.
 register_setting(
