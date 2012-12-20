@@ -165,6 +165,7 @@ Sites Using Cartridge
   * `Tactical Bags <http://tacticalbags.ru>`_
   * `Charles Koll Jewelry <http://charleskoll.com>`_
   * `Puraforce Remedies <http://puraforceremedies.com/>`_
+  * `Adrenaline <http://www.adrln.com/>`_
 
 .. _`Django`: http://djangoproject.com/
 .. _`BSD licensed`: http://www.linfo.org/bsdlicense.html
