@@ -3,6 +3,7 @@ from datetime import timedelta
 from decimal import Decimal
 from operator import mul
 
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from mezzanine.conf import settings
@@ -353,13 +354,21 @@ class ShopTests(TestCase):
 class SaleTests(TestCase):
 
     def setUp(self):
-        product1 = Product(unit_price="1.27")
+        seller = User(
+            first_name='Peter',
+            last_name='Seller',
+            username='seller',
+            email='peter.seller@example.com'
+        )
+        seller.save()
+
+        product1 = Product(unit_price="1.27", user=seller)
         product1.save()
 
         ProductVariation(unit_price="1.27", product_id=product1.id).save()
         ProductVariation(unit_price="1.27", product_id=product1.id).save()
 
-        product2 = Product(unit_price="1.27")
+        product2 = Product(unit_price="1.27", user=seller)
         product2.save()
 
         ProductVariation(unit_price="1.27", product_id=product2.id).save()
