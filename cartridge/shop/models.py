@@ -13,7 +13,7 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 from mezzanine.conf import settings
 from mezzanine.core.fields import FileField
 from mezzanine.core.managers import DisplayableManager
-from mezzanine.core.models import Displayable, RichText, Orderable
+from mezzanine.core.models import Displayable, RichText, Orderable, Ownable
 from mezzanine.generic.fields import RatingField
 from mezzanine.pages.models import Page
 from mezzanine.utils.models import AdminThumbMixin, upload_to
@@ -87,7 +87,7 @@ class Priced(models.Model):
         obj_to.save()
 
 
-class Product(Displayable, Priced, RichText, AdminThumbMixin):
+class Product(Ownable, Displayable, Priced, RichText, AdminThumbMixin):
     """
     Container model for a product that stores information common to
     all of its variations such as the product's title and description.
