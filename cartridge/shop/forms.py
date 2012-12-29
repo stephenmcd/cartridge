@@ -437,6 +437,8 @@ class ProductAdminForm(forms.ModelForm):
             self.fields["related_products"].queryset = queryset
             self.fields["upsell_products"].queryset = queryset
 
+        self.fields['user'].label = _("User")
+
 
 class ProductVariationAdminForm(forms.ModelForm):
     """

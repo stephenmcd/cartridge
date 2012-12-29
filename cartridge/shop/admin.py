@@ -117,13 +117,13 @@ class ProductImageAdmin(TabularDynamicInlineAdmin):
 
 product_fieldsets = deepcopy(DisplayableAdmin.fieldsets)
 product_fieldsets[0][1]["fields"][1] = ("status", "available")
-product_fieldsets[0][1]["fields"].extend(["content", "categories"])
+product_fieldsets[0][1]["fields"].extend(["content", "categories", "user"])
 product_fieldsets = list(product_fieldsets)
 product_fieldsets.append((_("Other products"), {
     "classes": ("collapse-closed",),
     "fields": ("related_products", "upsell_products")}))
 
-product_list_display = ["admin_thumb", "title", "status", "available",
+product_list_display = ["admin_thumb", "user", "title", "status", "available",
                         "admin_link"]
 product_list_editable = ["status", "available"]
 
