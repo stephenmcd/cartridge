@@ -9,6 +9,7 @@ from cartridge.shop.checkout import CheckoutError
 
 AUTH_NET_LIVE = 'https://secure.authorize.net/gateway/transact.dll'
 AUTH_NET_TEST = 'https://test.authorize.net/gateway/transact.dll'
+
 try:
     AUTH_NET_LOGIN = settings.AUTH_NET_LOGIN
     AUTH_NET_TRANS_KEY = settings.AUTH_NET_TRANS_KEY

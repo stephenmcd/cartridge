@@ -1,21 +1,26 @@
 import urllib2
 import locale
 
+from django.core.exceptions import ImproperlyConfigured
 from django.http import QueryDict
 from django.utils.http import urlencode
-
 from mezzanine.conf import settings
 
 from cartridge.shop.checkout import CheckoutError
 
+
 PAYPAL_NVP_API_ENDPOINT_SANDBOX = 'https://api-3t.sandbox.paypal.com/nvp'
 PAYPAL_NVP_API_ENDPOINT = 'https://api-3t.paypal.com/nvp'
-# Replace this with your paypal username.
-PAYPAL_USER = settings.PAYPAL_USER
-# Replace this with your Paypal password.
-PAYPAL_PASSWORD = settings.PAYPAL_PASSWORD
-# Replace this with your paypal signature.
-PAYPAL_SIGNATURE = settings.PAYPAL_SIGNATURE
+
+try:
+    PAYPAL_USER = settings.PAYPAL_USER
+    PAYPAL_PASSWORD = settings.PAYPAL_PASSWORD
+    PAYPAL_SIGNATURE = settings.PAYPAL_SIGNATURE
+except AttributeError:
+    raise ImproperlyConfigured("You need to define PAYPAL_USER, "
+                               "PAYPAL_PASSWORD and PAYPAL_SIGNATURE "
+                               "in your settings module to use the "
+                               "paypal payment processor.")
 
 
 def process(request, order_form, order):
