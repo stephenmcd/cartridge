@@ -24,7 +24,7 @@ def process(request, order_form, order):
     Payment handler for the stripe API.
     """
     data = {
-        "amount": unicode(order.total.to_integral() * 100),
+        "amount": int((order.total * 100).to_integral()),
         "currency": "usd",
         "card": {
             'number': request.POST["card_number"].strip(),

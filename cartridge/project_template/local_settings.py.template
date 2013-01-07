@@ -17,3 +17,6 @@ DATABASES = {
         "PORT": "",
     }
 }
+
+# Replace this with a real Stripe API key if using Stripe payment backend
+STRIPE_API_KEY="pk_stripe_api_key_goes_here"

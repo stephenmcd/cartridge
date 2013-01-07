@@ -1,3 +1,4 @@
+import mock
 
 from datetime import timedelta
 from decimal import Decimal
@@ -5,6 +6,7 @@ from operator import mul
 
 from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.test.client import RequestFactory
 from mezzanine.conf import settings
 from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
 from mezzanine.utils.tests import run_pyflakes_for_package
@@ -15,6 +17,7 @@ from cartridge.shop.models import Product, ProductOption, ProductVariation
 from cartridge.shop.models import Category, Cart, Order, DiscountCode
 from cartridge.shop.models import Sale
 from cartridge.shop.checkout import CHECKOUT_STEPS
+from cartridge.shop.payment import stripe_api
 
 
 TEST_STOCK = 5
@@ -400,3 +403,47 @@ class SaleTests(TestCase):
             self.assertTrue(product.sale_price)
         for variation in ProductVariation.objects.all():
             self.assertTrue(variation.sale_price)
+
+
+class StripePaymentTests(TestCase):
+    """Test the Stripe payment backend"""
+
+    def setUp(self):
+        # Every test needs access to the request factory.
+        self.factory = RequestFactory()
+
+    @mock.patch('stripe.Charge')
+    def test_successful_charge(self, mock_charge):
+
+        # Create a fake request object with the test data
+        request = self.factory.post("/shop/checkout/")
+        request.POST["card_number"] = "4242424242424242"
+        request.POST["card_expiry_month"] = "06"
+        request.POST["card_expiry_year"] = "2014"
+        request.POST["billing_detail_street"] = "123 Evergreen Terrace"
+        request.POST["billing_detail_city"] = "Springfield"
+        request.POST["billing_detail_state"] = "WA"
+        request.POST["billing_detail_postcode"] = "01234"
+        request.POST["billing_detail_country"] = "USA"
+
+        # Order form isn't used by stripe backend
+        order_form = None
+
+        # Create an order
+        order = Order.objects.create(total=Decimal("22.37"))
+
+        # Code under test
+        stripe_api.process(request, order_form, order)
+
+        # Assertion
+        mock_charge.create.assert_called_with(
+            amount=2237,
+            currency="usd",
+            card={'number': "4242424242424242",
+                  'exp_month': "06",
+                  'exp_year': "14",
+                  'address_line1': "123 Evergreen Terrace",
+                  'address_city': "Springfield",
+                  'address_state': "WA",
+                  'address_zip': "01234",
+                  'country': "USA"})
