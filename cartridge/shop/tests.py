@@ -17,7 +17,6 @@ from cartridge.shop.models import Product, ProductOption, ProductVariation
 from cartridge.shop.models import Category, Cart, Order, DiscountCode
 from cartridge.shop.models import Sale
 from cartridge.shop.checkout import CHECKOUT_STEPS
-from cartridge.shop.payment import stripe_api
 
 
 TEST_STOCK = 5
@@ -414,6 +413,9 @@ class StripePaymentTests(TestCase):
 
     @mock.patch('stripe.Charge')
     def test_successful_charge(self, mock_charge):
+
+        settings.STRIPE_API_KEY = "dummy"
+        from cartridge.shop.payment import stripe_api
 
         # Create a fake request object with the test data
         request = self.factory.post("/shop/checkout/")
