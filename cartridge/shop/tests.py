@@ -437,7 +437,7 @@ class StripePaymentTests(TestCase):
 
         # Assertion
         mock_charge.create.assert_called_with(
-            amount="2237",
+            amount=2237,
             currency="usd",
             card={'number': "4242424242424242",
                   'exp_month': "06",
