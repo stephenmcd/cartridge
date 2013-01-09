@@ -1,4 +1,3 @@
-
 from collections import defaultdict
 
 from django.contrib.auth.decorators import login_required
@@ -12,6 +11,8 @@ from django.template.loader import get_template
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
 from django.views.decorators.cache import never_cache
+from django.views.generic import DetailView
+from django.views.generic.edit import BaseFormView
 
 from mezzanine.conf import settings
 from mezzanine.utils.importing import import_dotted_path
@@ -31,55 +32,120 @@ payment_handler = handler(settings.SHOP_HANDLER_PAYMENT)
 order_handler = handler(settings.SHOP_HANDLER_ORDER)
 
 
-def product(request, slug, template="shop/product.html"):
+class DetailViewWithForm(DetailView, BaseFormView):
     """
-    Display a product - convert the product variations to JSON as well as
-    handling adding the product to either the cart or the wishlist.
+    A detail view of an object, with form processing
     """
-    published_products = Product.objects.published(for_user=request.user)
-    product = get_object_or_404(published_products, slug=slug)
-    fields = [f.name for f in ProductVariation.option_fields()]
-    variations = product.variations.all()
-    variations_json = simplejson.dumps([dict([(f, getattr(v, f))
-                                        for f in fields + ["sku", "image_id"]])
-                                        for v in variations])
-    to_cart = (request.method == "POST" and
-               request.POST.get("add_wishlist") is None)
-    initial_data = {}
-    if variations:
-        initial_data = dict([(f, getattr(variations[0], f)) for f in fields])
-    initial_data["quantity"] = 1
-    add_product_form = AddProductForm(request.POST or None, product=product,
-                                      initial=initial_data, to_cart=to_cart)
-    if request.method == "POST":
-        if add_product_form.is_valid():
-            if to_cart:
-                quantity = add_product_form.cleaned_data["quantity"]
-                request.cart.add_item(add_product_form.variation, quantity)
-                recalculate_discount(request)
-                info(request, _("Item added to cart"))
-                return redirect("shop_cart")
-            else:
-                skus = request.wishlist
-                sku = add_product_form.variation.sku
-                if sku not in skus:
-                    skus.append(sku)
-                info(request, _("Item added to wishlist"))
-                response = redirect("shop_wishlist")
-                set_cookie(response, "wishlist", ",".join(skus))
-                return response
-    context = {
-        "product": product,
-        "editable_obj": product,
-        "images": product.images.all(),
-        "variations": variations,
-        "variations_json": variations_json,
-        "has_available_variations": any([v.has_price() for v in variations]),
-        "related_products": product.related_products.published(
-                                                      for_user=request.user),
-        "add_product_form": add_product_form
-    }
-    return render(request, template, context)
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return BaseFormView.get(self, request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return BaseFormView.post(self, request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        return DetailView.get_context_data(self, **kwargs)
+
+
+class ProductDetailView(DetailViewWithForm):
+    """
+    Display a product
+
+    Handle adding the product to either the cart or the wishlist.
+    """
+
+    context_object_name = "product"
+    model = Product
+    template_name = "shop/product.html"
+    form_class = AddProductForm
+
+    def get_initial(self):
+        """
+        Returns the dict that will be passed to the AddProductForm
+        constructor as the `initial` parameter
+        """
+        product = self.object
+        variations = product.variations.all()
+        fields = [f.name for f in ProductVariation.option_fields()]
+        initial_data = {}
+        if variations:
+            initial_data = dict([(f, getattr(variations[0], f))
+                                  for f in fields])
+        initial_data["quantity"] = 1
+        return initial_data
+
+    def get_form_kwargs(self):
+        """
+        Return the argumentst that will be passed to AddProductForm
+        constructor, other than `initial` and `data`
+        """
+        kwargs = super(ProductDetailView, self).get_form_kwargs()
+        kwargs['product'] = self.object
+        kwargs['to_cart'] = self.to_cart()
+        return kwargs
+
+    def get_queryset(self):
+        """
+        Restrict viewable products to ones that have been published for
+        the user
+        """
+        return Product.objects.published(for_user=self.request.user)
+
+    def to_cart(self):
+        """
+        Return True if product should be added to cart, False if should be
+        added to wishlist
+        """
+        return (self.request.method == "POST" and
+                self.request.POST.get("add_wishlist") is None)
+
+    def form_valid(self, form):
+        """
+        Called after form has been validated.
+        """
+        add_product_form = form
+        if self.to_cart():
+            quantity = add_product_form.cleaned_data["quantity"]
+            self.request.cart.add_item(add_product_form.variation, quantity)
+            recalculate_discount(self.request)
+            info(self.request, _("Item added to cart"))
+            return redirect("shop_cart")
+        else:
+            skus = self.request.wishlist
+            sku = add_product_form.variation.sku
+            if sku not in skus:
+                skus.append(sku)
+            info(self.request, _("Item added to wishlist"))
+            response = redirect("shop_wishlist")
+            set_cookie(response, "wishlist", ",".join(skus))
+            return response
+
+    def get_context_data(self, **kwargs):
+        """
+        Return additional variables to be passed to the template
+        """
+        context = super(ProductDetailView, self).get_context_data(**kwargs)
+        product = self.object
+        fields = [f.name for f in ProductVariation.option_fields()]
+        variations = product.variations.all()
+        variations_json = simplejson.dumps([dict([(f, getattr(v, f))
+                                for f in fields + ["sku", "image_id"]])
+                                for v in variations])
+        context["editable_obj"] = product
+        context["images"] = product.images.all()
+        context["variations"] = variations
+        context["variations_json"] = variations_json
+        context["has_available_variations"] = any([v.has_price() for v in
+                                                   variations])
+        context["related_products"] = product.related_products.published(
+                                               for_user=self.request.user)
+
+        # Since the existing template uses add_product_form, we switch
+        # the form key to add_product_form
+        context["add_product_form"] = context.pop("form")
+        return context
 
 
 @never_cache

@@ -38,7 +38,7 @@ class AddProductForm(forms.Form):
     quantity = forms.IntegerField(label=_("Quantity"), min_value=1)
     sku = forms.CharField(required=False, widget=forms.HiddenInput())
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, **kwargs):
         """
         Handles adding a variation to the cart or wishlist.
 
@@ -59,9 +59,10 @@ class AddProductForm(forms.Form):
         """
         self._product = kwargs.pop("product", None)
         self._to_cart = kwargs.pop("to_cart")
-        super(AddProductForm, self).__init__(*args, **kwargs)
+        super(AddProductForm, self).__init__(**kwargs)
+        data = kwargs.get('data')
         # Adding from the wishlist with a sku, bail out.
-        if args[0] is not None and args[0].get("sku", None):
+        if data is not None and data.get("sku", None):
             return
         # Adding from the product page, remove the sku field
         # and build the choice fields for the variations.
