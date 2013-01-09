@@ -1,4 +1,3 @@
-import mock
 
 from datetime import timedelta
 from decimal import Decimal
@@ -7,7 +6,7 @@ from operator import mul
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django.utils.unittest import skipIf
+from django.utils.unittest import skipUnless
 from mezzanine.conf import settings
 from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
 from mezzanine.utils.tests import run_pyflakes_for_package
@@ -407,6 +406,7 @@ class SaleTests(TestCase):
 
 try:
     __import__("stripe")
+    import mock
 except ImportError:
     stripe_used = False
 else:
@@ -417,7 +417,6 @@ else:
         from cartridge.shop.payment import stripe_api
 
 
-@skipIf(not stripe_used, "Stripe not used")
 class StripeTests(TestCase):
     """Test the Stripe payment backend"""
 
@@ -461,6 +460,7 @@ class StripeTests(TestCase):
                   'country': "USA"})
 
 
+StripeTests = skipUnless(stripe_used, "Stripe not used")(StripeTests)
 if stripe_used:
     charge = "stripe.Charge"
     StripeTests.test_charge = mock.patch(charge)(StripeTests.test_charge)
