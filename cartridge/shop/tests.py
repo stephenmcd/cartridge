@@ -421,7 +421,6 @@ class ProductViewTests(TestCase):
         Test that the item gets added to the cart when clicking the buy
         button
         """
-        self._product.save()
 
         # Test initial cart.
         cart = Cart.objects.from_request(self.client)
@@ -445,8 +444,6 @@ class ProductViewTests(TestCase):
         Test that the item gets add to the wishlist when clicking the wishlist
         button
         """
-        self._product.available = True
-        self._product.save()
 
         url = self._product.get_absolute_url()
         response = self.client.get(url)
