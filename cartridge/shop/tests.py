@@ -5,9 +5,11 @@ from decimal import Decimal
 from operator import mul
 
 from django.core.urlresolvers import reverse
+from django.db.models import F
 from django.test import TestCase
 from django.test.client import RequestFactory
 from mezzanine.conf import settings
+from mezzanine.core.models import CONTENT_STATUS_DRAFT
 from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
 from mezzanine.utils.tests import run_pyflakes_for_package
 from mezzanine.utils.tests import run_pep8_for_package
@@ -41,12 +43,11 @@ class ShopTests(TestCase):
     def test_views(self):
         """
         Test the main shop views for errors.
+
+        Product view tests are in the ProductViewTests class
         """
         # Category.
         response = self.client.get(self._category.get_absolute_url())
-        self.assertEqual(response.status_code, 200)
-        # Product.
-        response = self.client.get(self._product.get_absolute_url())
         self.assertEqual(response.status_code, 200)
         # Cart.
         response = self.client.get(reverse("shop_cart"))
@@ -350,6 +351,112 @@ class ShopTests(TestCase):
         warnings.extend(run_pep8_for_package("cartridge"))
         if warnings:
             self.fail("Syntax warnings!\n\n%s" % "\n".join(warnings))
+
+
+class ProductViewTests(TestCase):
+    """
+    Test Product views
+    """
+
+    def setUp(self):
+        """
+        Set up test data - product, options and variations
+        """
+        self._published = {"status": CONTENT_STATUS_PUBLISHED}
+        self._product = Product.objects.create(**self._published)
+        self._product.available = True
+        self._product.save()
+        ProductOption.objects.create(type=1, name="Small")
+        ProductOption.objects.create(type=1, name="Medium")
+        ProductOption.objects.create(type=2, name="Blue")
+        ProductOption.objects.create(type=2, name="Read")
+        product_options = ProductOption.objects.as_fields()
+        self._product.variations.create_from_options(product_options)
+        self._product.variations.manage_empty()
+        self._product.variations.update(unit_price=F("id") + "10000")
+        self._product.variations.update(unit_price=F("unit_price") / "1000.0")
+        self._product.variations.update(num_in_stock=TEST_STOCK)
+
+        product_variation = ProductVariation.objects.get(option1='Small',
+                                                         option2='Blue')
+        product_variation.sku = "widget-small-blue"
+        product_variation.save()
+
+    def test_get(self):
+        """
+        Test the product view
+        """
+        # Product.
+        response = self.client.get(self._product.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+
+        # Check if quantity defaults correctly
+        self.assertContains(response,
+            '<input type="text" name="quantity" value="1" id="id_quantity">',
+            html=True)
+
+    def test_404_on_not_published(self):
+        """
+        Test that we get a 404 if it's not published
+        """
+        self._product.status = CONTENT_STATUS_DRAFT
+        self._product.save()
+
+        response = self.client.get(self._product.get_absolute_url())
+        self.assertEqual(response.status_code, 404)
+
+    def test_not_available(self):
+        """
+        Test that we get the appropriate message when the product is not
+        available
+        """
+        self._product.available = False
+        self._product.save()
+        response = self.client.get(self._product.get_absolute_url())
+        self.assertContains(response,
+                            "This product is currently unavailable.")
+
+    def test_add_to_cart(self):
+        """
+        Test that the item gets added to the cart when clicking the buy
+        button
+        """
+        self._product.save()
+
+        # Test initial cart.
+        cart = Cart.objects.from_request(self.client)
+        self.assertFalse(cart.has_items())
+        self.assertEqual(cart.total_quantity(), 0)
+
+        url = self._product.get_absolute_url()
+        response = self.client.get(url)
+        payload = {'quantity': '1',
+                   'option1': 'Small',
+                   'option2': 'Blue',
+                  'add_cart': 'Buy'}
+        response = self.client.post(url, payload, follow=True)
+        self.assertRedirects(response, "/shop/cart/")
+        cart = Cart.objects.from_request(self.client)
+
+        self.assertEqual(cart.skus(), ["widget-small-blue"])
+
+    def test_add_to_wishlist(self):
+        """
+        Test that the item gets add to the wishlist when clicking the wishlist
+        button
+        """
+        self._product.available = True
+        self._product.save()
+
+        url = self._product.get_absolute_url()
+        response = self.client.get(url)
+        payload = {'quantity': '1',
+                   'option1': 'Small',
+                   'option2': 'Blue',
+                  'add_wishlist': 'Save for later'}
+        response = self.client.post(url, payload, follow=True)
+        self.assertRedirects(response, "/shop/wishlist/")
+        self.assertEqual(response._request.wishlist, ["widget-small-blue"])
 
 
 class SaleTests(TestCase):
