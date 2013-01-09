@@ -124,13 +124,12 @@ up a development environment and run the Cartridge unit tests, using
     $ mkvirtualenv cartridge
     $ workon cartridge
     $ pip install -e git://github.com/stephenmcd/mezzanine.git#egg=mezzanine
-    $ pip install pep8 pyflakes mock stripe
+    $ pip install pep8 pyflakes
     $ git clone https://github.com/stephenmcd/cartridge
     $ cd cartridge
     $ python setup.py develop
     $ cp cartridge/project_template/local_settings.py.template cartridge/project_template/local_settings.py
     $ ./cartridge/project_template/manage.py test shop
-
 
 
 Language Translations
