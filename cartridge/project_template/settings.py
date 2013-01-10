@@ -10,8 +10,8 @@
 # Sequence of available credit card types for payment.
 # SHOP_CARD_TYPES = ("Mastercard", "Visa", "Diners", "Amex")
 
-# If True, users must create a login for the checkout process.
-# SHOP_CHECKOUT_ACCOUNT_REQUIRED = False
+# Setting to turn on featured images for shop categories. Defaults to False.
+# SHOP_CATEGORY_USE_FEATURED_IMAGE = True
 
 # Set an alternative OrderForm class for the checkout process.
 # SHOP_CHECKOUT_FORM_CLASS = 'cartridge.shop.forms.OrderForm'
@@ -24,16 +24,10 @@
 # completion.
 # SHOP_CHECKOUT_STEPS_CONFIRMATION = True
 
-# If False, there is no payment step on the checkout process.
-# SHOP_PAYMENT_STEP_ENABLED = True
-
 # Controls the formatting of monetary values accord to the locale
 # module in the python standard library. If an empty string is
 # used, will fall back to the system's locale.
 # SHOP_CURRENCY_LOCALE = ""
-
-# Default cost of shipping when no custom shipping is implemented.
-# SHOP_DEFAULT_SHIPPING_VALUE = 10
 
 # Dotted package path and class name of the function that
 # is called on submit of the billing/shipping checkout step. This
@@ -142,23 +136,6 @@
 # Setting to turn on featured images for blog posts. Defaults to False.
 #
 # BLOG_USE_FEATURED_IMAGE = True
-
-# If ``True``, users will be automatically redirected to HTTPS
-# for the URLs specified by the ``SSL_FORCE_URL_PREFIXES`` setting.
-#
-# SSL_ENABLED = True
-
-# Host name that the site should always be accessed via that matches
-# the SSL certificate.
-#
-# SSL_FORCE_HOST = "www.example.com"
-
-# Sequence of URL prefixes that will be forced to run over
-# SSL when ``SSL_ENABLED`` is ``True``. i.e.
-# ('/admin', '/example') would force all URLs beginning with
-# /admin or /example to run over SSL. Defaults to:
-#
-# SSL_FORCE_URL_PREFIXES = ("/admin", "/account", "/shop/checkout",)
 
 # If True, the south application will be automatically added to the
 # INSTALLED_APPS setting.
@@ -363,6 +340,7 @@ MIDDLEWARE_CLASSES = (
     "mezzanine.core.middleware.TemplateForDeviceMiddleware",
     "mezzanine.core.middleware.TemplateForHostMiddleware",
     "mezzanine.core.middleware.AdminLoginInterfaceSelectorMiddleware",
+    "mezzanine.core.middleware.SitePermissionMiddleware",
     # Uncomment the following if using any of the SSL settings:
     # "mezzanine.core.middleware.SSLRedirectMiddleware",
     "mezzanine.pages.middleware.PageMiddleware",

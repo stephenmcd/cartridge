@@ -9,15 +9,28 @@
 {{ page.category.content|safe }}
 {% endeditable %}
 
-{% with page.category.children.active as child_categories %}
 {% if child_categories %}
-<ul class="unstyled categories">
-	{% for category in child_categories %}
-	<li><a href="{{ category.get_absolute_url }}">{{ category.title }}</a></li>
-	{% endfor %}
+<ul class="thumbnails categories">
+{% if settings.SHOP_CATEGORY_USE_FEATURED_IMAGE %}
+    {% for category in child_categories %}
+    <li><a href="{{ category.get_absolute_url }}" class="thumbnail">
+        {% if category.featured_image %}
+        <img src="{{ MEDIA_URL }}{% thumbnail category.featured_image 100 100 %}" />
+        {% else %}
+        <div class="placeholder"></div>
+        {% endif %}
+        <h6>{{ category.title }}</h6>
+    </a></li>
+    {% endfor %}
+{% else %}
+    {% for category in child_categories %}
+    <li><a href="{{ category.get_absolute_url }}">
+        {{ category.title }}
+    </a></li>
+    {% endfor %}
+{% endif %}
 </ul>
 {% endif %}
-{% endwith %}
 
 {% if products.paginator.count != 0 %}
 

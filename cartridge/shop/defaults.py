@@ -26,6 +26,18 @@ register_setting(
     ),
 )
 
+# Add the product model to the list of search choices.
+register_setting(
+    name="SEARCH_MODEL_CHOICES",
+    description=_("Sequence of models that will be provided by default as "
+        "choices in the search form. Each model should be in the format "
+        "``app_label.model_name``. Only models that subclass "
+        "``mezzanine.core.models.Displayable`` should be used."),
+    editable=False,
+    default=("shop.Product",),
+    append=True,
+)
+
 # Add the checkout URLs prefix to those forced to run over SSL.
 # Only relevant if SSL_ENABLED (defined in Mezzanine) is True.
 register_setting(
@@ -45,8 +57,8 @@ register_setting(
     name="TEMPLATE_ACCESSIBLE_SETTINGS",
     description=_("Sequence of setting names available within templates."),
     editable=False,
-    default=("SHOP_CARD_TYPES", "SHOP_CHECKOUT_STEPS_SPLIT",
-             "SHOP_PRODUCT_SORT_OPTIONS",),
+    default=("SHOP_CARD_TYPES", "SHOP_CATEGORY_USE_FEATURED_IMAGE",
+             "SHOP_CHECKOUT_STEPS_SPLIT", "SHOP_PRODUCT_SORT_OPTIONS",),
     append=True,
 )
 
@@ -68,6 +80,13 @@ register_setting(
     description="Number of minutes of inactivity until carts are abandoned.",
     editable=False,
     default=30,
+)
+
+register_setting(
+    name="SHOP_CATEGORY_USE_FEATURED_IMAGE",
+    description=_("Enable featured images in shop categories"),
+    editable=False,
+    default=False,
 )
 
 register_setting(

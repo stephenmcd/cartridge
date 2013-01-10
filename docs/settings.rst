@@ -14,6 +14,13 @@ Number of minutes of inactivity until carts are abandoned.
 
 Default: ``30``
 
+``SHOP_CATEGORY_USE_FEATURED_IMAGE``
+------------------------------------
+
+Enable featured images in shop categories
+
+Default: ``False``
+
 ``SHOP_CHECKOUT_ACCOUNT_REQUIRED``
 ----------------------------------
 

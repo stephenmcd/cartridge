@@ -66,6 +66,8 @@ category_fieldsets[0][1]["fields"][3:3] = ["content", "products"]
 category_fieldsets += ((_("Product filters"), {
     "fields": ("sale", ("price_min", "price_max"), "combined"),
     "classes": ("collapse-closed",)},),)
+if settings.SHOP_CATEGORY_USE_FEATURED_IMAGE:
+    category_fieldsets[0][1]["fields"].insert(3, "featured_image")
 
 # Options are only used when variations are in use, so only provide
 # them as filters for dynamic categories when this is the case.

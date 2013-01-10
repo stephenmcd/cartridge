@@ -199,7 +199,7 @@ def checkout_steps(request):
         # for the previous step and maintain the field values entered.
         step -= 1
         form = form_class(request, step, initial=initial)
-    elif request.method == "POST":
+    elif request.method == "POST" and request.cart.has_items():
         form = form_class(request, step, initial=initial, data=data)
         if form.is_valid():
             # Copy the current form fields to the session so that

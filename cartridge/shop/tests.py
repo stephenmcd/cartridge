@@ -5,6 +5,8 @@ from operator import mul
 
 from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.test.client import RequestFactory
+from django.utils.unittest import skipUnless
 from mezzanine.conf import settings
 from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
 from mezzanine.utils.tests import run_pyflakes_for_package
@@ -400,3 +402,65 @@ class SaleTests(TestCase):
             self.assertTrue(product.sale_price)
         for variation in ProductVariation.objects.all():
             self.assertTrue(variation.sale_price)
+
+
+try:
+    __import__("stripe")
+    import mock
+except ImportError:
+    stripe_used = False
+else:
+    stripe_handler = "cartridge.shop.payment.stripe_api.process"
+    stripe_used = settings.SHOP_HANDLER_PAYMENT == stripe_handler
+    if stripe_used:
+        settings.STRIPE_API_KEY = "dummy"
+        from cartridge.shop.payment import stripe_api
+
+
+class StripeTests(TestCase):
+    """Test the Stripe payment backend"""
+
+    def setUp(self):
+        # Every test needs access to the request factory.
+        self.factory = RequestFactory()
+
+    def test_charge(self, mock_charge):
+
+        # Create a fake request object with the test data
+        request = self.factory.post("/shop/checkout/")
+        request.POST["card_number"] = "4242424242424242"
+        request.POST["card_expiry_month"] = "06"
+        request.POST["card_expiry_year"] = "2014"
+        request.POST["billing_detail_street"] = "123 Evergreen Terrace"
+        request.POST["billing_detail_city"] = "Springfield"
+        request.POST["billing_detail_state"] = "WA"
+        request.POST["billing_detail_postcode"] = "01234"
+        request.POST["billing_detail_country"] = "USA"
+
+        # Order form isn't used by stripe backend
+        order_form = None
+
+        # Create an order
+        order = Order.objects.create(total=Decimal("22.37"))
+
+        # Code under test
+        stripe_api.process(request, order_form, order)
+
+        # Assertion
+        mock_charge.create.assert_called_with(
+            amount=2237,
+            currency="usd",
+            card={'number': "4242424242424242",
+                  'exp_month': "06",
+                  'exp_year': "14",
+                  'address_line1': "123 Evergreen Terrace",
+                  'address_city': "Springfield",
+                  'address_state': "WA",
+                  'address_zip': "01234",
+                  'country': "USA"})
+
+
+StripeTests = skipUnless(stripe_used, "Stripe not used")(StripeTests)
+if stripe_used:
+    charge = "stripe.Charge"
+    StripeTests.test_charge = mock.patch(charge)(StripeTests.test_charge)

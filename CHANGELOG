@@ -1,3 +1,33 @@
+Version 0.7.0 (Dec 26, 2012)
+----------------------------
+
+  * Specify the product object in the product view to be the editable object to link to from the admin toolbar - Stephen McDonald
+  * add featured image for category - Dmitry Falk
+  * Update url templatetags for Django 1.5. See ``https://docs.djangoproject.com/en/1.4/releases/1.3/#changes-to-url-and-ssi``. "{% load url from future %}" is omitted in favour of a global import in. mezzanine's ``boot/__init__.py`` - Alex Hill
+  * Load future tag lib explicitly in templates - Stephen McDonald
+  * get ``child_categories`` via ``page_processor`` - Dmitry Falk
+  * fix child categories css - Dmitry Falk
+  * Initialize credit card expiry month to the current month - Josh Cartmell
+  * Added Stripe Integration - Sean Voss
+  * Rename stripe package and clean up some of the exception handling - Stephen McDonald
+  * Fix imports - Stephen McDonald
+  * ``Order.setup`` stores ``discount_code`` from session - Luke Miller
+  * Add Mezzanine's new 404 handler to project template's ``urls.py`` - Stephen McDonald
+  * Update ``.po`` files - Sebastián Ramírez Magrí
+  * #66 - Execute the MySQL workaround code - Josh VanderLinden
+  * Ensure valid cart in handling checkout steps. Fixes the case of session timeout in final step - Stephen McDonald
+  * Use Mezzanine's ``upload_to`` handler for configurable ``upload_to`` args on file fields - Stephen McDonald
+  * Catch a missing key error. Since you can't guarantee that every session has the `order` key in it,. put a try/except around the deletion - Kenneth Love
+  * shensac: ``locale.currency`` was failing on Windows for GBP (£) as it returned hex string \xa3 for the currency symbol. Added a platform check and if Windows convert the string to unicode using ``iso_8859_1`` encoding - Sachin Shende
+  * shensac: The previous commit made the build fail. The issue was with the length of line. Have fixed it now - Sachin Shende
+  * Make the windows handling of currency symbol a bit drier - Stephen McDonald
+  * Add the product model to Mezzanine's new ``SEARCH_MODEL_CHOICES`` setting - Stephen McDonald
+  * Add Mezzanine's new site perms middleware to ``project_template's`` ``settings.py`` - Stephen McDonald
+  * Updated comments in ``project_template's`` ``urls.py`` module from Mezzanine - Stephen McDonald
+  * Added migration for Mezzanine's ``Displayable.in_sitemap`` - Stephen McDonald
+  * Remove editable settings commented out in project template's ``settings.py`` since it led to confusion when updated via admin - Stephen McDonald
+  * Bump mezzanine version to 1.3.0 - Stephen McDonald
+
 Version 0.6.0 (Aug 05, 2012)
 ----------------------------
 

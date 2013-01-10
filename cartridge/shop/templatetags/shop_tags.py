@@ -1,5 +1,6 @@
 from decimal import Decimal
 import locale
+import platform
 
 from django.core.urlresolvers import NoReverseMatch
 
@@ -23,6 +24,8 @@ def currency(value):
         value = 0
     if hasattr(locale, "currency"):
         value = locale.currency(value, grouping=True)
+        if platform.system() == 'Windows':
+            value = unicode(value, encoding='iso_8859_1')
     else:
         # based on locale.currency() in python >= 2.5
         conv = locale.localeconv()

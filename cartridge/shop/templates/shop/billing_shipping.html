@@ -1,5 +1,5 @@
 {% extends "shop/checkout.html" %}
-{% load i18n mezzanine_tags %}
+{% load i18n future mezzanine_tags %}
 
 {% block extra_head %}
 {{ block.super }}
@@ -11,8 +11,8 @@
 {% if not request.user.is_authenticated %}
 {% ifinstalled mezzanine.accounts %}
 <p>
-{% url login as login_url %}
-{% url signup as signup_url %}
+{% url "login" as login_url %}
+{% url "signup" as signup_url %}
 {% with request.path as next %}
 {% blocktrans %}
 If you have an existing account or would like to create one, please

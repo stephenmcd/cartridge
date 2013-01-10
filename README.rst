@@ -1,4 +1,5 @@
 .. image:: https://secure.travis-ci.org/stephenmcd/cartridge.png?branch=master
+   :target: http://travis-ci.org/#!/stephenmcd/cartridge
 
 Created by `Stephen McDonald <http://twitter.com/stephen_mcd>`_
 
@@ -116,6 +117,21 @@ Please note the following guidelines for contributing:
   * If you are adding new functionality, you must include basic tests
     and documentation.
 
+If you want to do development with Cartridge, here's a quick way to set
+up a development environment and run the Cartridge unit tests, using
+`virtualenvwrapper`_ to set up a virtualenv::
+
+    $ mkvirtualenv cartridge
+    $ workon cartridge
+    $ pip install -e git://github.com/stephenmcd/mezzanine.git#egg=mezzanine
+    $ pip install pep8 pyflakes
+    $ git clone https://github.com/stephenmcd/cartridge
+    $ cd cartridge
+    $ python setup.py develop
+    $ cp cartridge/project_template/local_settings.py.template cartridge/project_template/local_settings.py
+    $ ./cartridge/project_template/manage.py test shop
+
+
 Language Translations
 =====================
 
@@ -160,6 +176,11 @@ Sites Using Cartridge
   * `Life is Good <http://lifeisgoodforall.co.uk/>`_
   * `Brooklyn Navy Yard <http://bldg92.org/>`_
   * `Cotton On Asia <http://asia.cottonon.com/>`_
+  * `Manai Glitter <https://manai.co.uk>`_
+  * `Tactical Bags <http://tacticalbags.ru>`_
+  * `Charles Koll Jewelry <http://charleskoll.com>`_
+  * `Puraforce Remedies <http://puraforceremedies.com/>`_
+  * `Adrenaline <http://www.adrln.com/>`_
 
 .. _`Django`: http://djangoproject.com/
 .. _`BSD licensed`: http://www.linfo.org/bsdlicense.html
@@ -180,4 +201,4 @@ Sites Using Cartridge
 .. _`#mezzanine IRC channel`: irc://freenode.net/mezzanine
 .. _`Freenode`: http://freenode.net
 .. _`Django's internationalization`: https://docs.djangoproject.com/en/dev/topics/i18n/translation/
-
+.. _`virtualenvwrapper`: http://www.doughellmann.com/projects/virtualenvwrapper

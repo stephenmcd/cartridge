@@ -1,4 +1,3 @@
-
 import hmac
 from locale import setlocale, LC_MONETARY
 try:
@@ -21,6 +20,7 @@ class EmptyCart(object):
     """
 
     id = None
+    pk = None
     has_items = lambda *a, **k: False
     skus = lambda *a, **k: []
     upsell_products = lambda *a, **k: []
