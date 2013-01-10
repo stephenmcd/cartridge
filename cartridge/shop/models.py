@@ -342,6 +342,7 @@ class Category(Page, RichText):
     A category of products on the website.
     """
 
+    product_model = models.CharField(editable=False, max_length=50, null=True)
     featured_image = FileField(verbose_name=_("Featured Image"),
         upload_to=upload_to("shop.Category.featured_image", "shop"),
         format="Image", max_length=255, null=True, blank=True)
