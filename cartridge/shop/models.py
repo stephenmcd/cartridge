@@ -87,7 +87,20 @@ class Priced(models.Model):
         obj_to.save()
 
 
-class Product(Displayable, Priced, RichText, AdminThumbMixin):
+class BaseProduct(Displayable):
+    """
+    Exists solely to store ``DisplayableManager`` as the main manager.
+    If it's defined on ``Product``, a concrete model, then each
+    ``Product`` subclass loses the custom manager.
+    """
+
+    objects = DisplayableManager()
+
+    class Meta:
+        abstract = True
+
+
+class Product(BaseProduct, Priced, RichText, AdminThumbMixin):
     """
     Container model for a product that stores information common to
     all of its variations such as the product's title and description.
@@ -107,8 +120,6 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
     upsell_products = models.ManyToManyField("self",
                              verbose_name=_("Upsell products"), blank=True)
     rating = RatingField(verbose_name=_("Rating"))
-
-    objects = DisplayableManager()
 
     admin_thumb_field = "image"
 
