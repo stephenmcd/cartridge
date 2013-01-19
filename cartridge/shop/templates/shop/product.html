@@ -16,7 +16,8 @@
 
 {% block extra_head %}
 {{ block.super }}
-<script src="{{ STATIC_URL }}mezzanine/js/jquery.tools.js"></script>
+<script src="{{ STATIC_URL }}mezzanine/js/jquery.tools.toolbox.expose.js"></script>
+<script src="{{ STATIC_URL }}mezzanine/js/jquery.tools.overlay.js"></script>
 <script>var variations = {{ variations_json|safe }};</script>
 <script src="{{ STATIC_URL }}cartridge/js/product_variations.js"></script>
 {% endblock %}
