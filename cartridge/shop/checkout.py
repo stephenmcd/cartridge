@@ -41,10 +41,9 @@ def default_billship_handler(request, order_form):
 
 def default_tax_handler(request, order_form):
     """
-    Default tax handler - called when the first step in
-    the checkout process with billing/shipping address fields is
-    submitted. Implement your own and specify the path to import it
-    from via the setting ``SHOP_HANDLER_TAX``.
+    Default tax handler - called immediately after the handler defined by
+    ``SHOP_HANDLER_BILLING_SHIPPING``. Implement your own and specify the path
+    to import it from via the setting ``SHOP_HANDLER_TAX``.
     This function will typically contain any tax calculation
     where the tax amount can then be set using the function
     ``cartridge.shop.utils.set_tax``. The Cart object is also
