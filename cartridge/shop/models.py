@@ -407,6 +407,8 @@ class Order(models.Model):
     user_id = models.IntegerField(blank=True, null=True)
     shipping_type = CharField(_("Shipping type"), max_length=50, blank=True)
     shipping_total = fields.MoneyField(_("Shipping total"))
+    tax_type = CharField(_("Tax type"), max_length=50, blank=True)
+    tax_total = fields.MoneyField(_("Tax total"))
     item_total = fields.MoneyField(_("Item total"))
     discount_code = fields.DiscountCodeField(_("Discount code"), blank=True)
     discount_total = fields.MoneyField(_("Discount total"))
@@ -423,7 +425,7 @@ class Order(models.Model):
     # These are fields that are stored in the session. They're copied to
     # the order in setup() and removed from the session in complete().
     session_fields = ("shipping_type", "shipping_total", "discount_total",
-                      "discount_code")
+                      "discount_code", "tax_type", "tax_total")
 
     class Meta:
         verbose_name = _("Order")
@@ -455,6 +457,8 @@ class Order(models.Model):
             self.total += self.shipping_total
         if self.discount_total is not None:
             self.total -= self.discount_total
+        if self.tax_total is not None:
+            self.total += self.tax_total
         self.save()  # We need an ID before we can add related items.
         for item in request.cart:
             product_fields = [f.name for f in SelectedProduct._meta.fields]
