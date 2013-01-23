@@ -10,7 +10,7 @@ from mezzanine.conf import settings
 from mezzanine.utils.email import send_mail_template
 
 from cartridge.shop.models import Order
-from cartridge.shop.utils import set_shipping, sign
+from cartridge.shop.utils import set_shipping, set_tax, sign
 
 
 class CheckoutError(Exception):
@@ -37,6 +37,22 @@ def default_billship_handler(request, order_form):
         settings.use_editable()
         set_shipping(request, _("Flat rate shipping"),
                      settings.SHOP_DEFAULT_SHIPPING_VALUE)
+
+
+def default_tax_handler(request, order_form):
+    """
+    Default billing/shipping handler - called when the first step in
+    the checkout process with billing/shipping address fields is
+    submitted. Implement your own and specify the path to import it
+    from via the setting ``SHOP_HANDLER_BILLING_SHIPPING``.
+    This function will typically contain any shipping calculation
+    where the shipping amount can then be set using the function
+    ``cartridge.shop.utils.set_shipping``. The Cart object is also
+    accessible via ``request.cart``
+    """
+    if not request.session.get('tax_free'):
+        settings.use_editable()
+        set_tax(request, _("Tax"), 15)
 
 
 def default_payment_handler(request, order_form, order):
