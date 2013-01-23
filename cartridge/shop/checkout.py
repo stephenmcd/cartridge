@@ -52,7 +52,7 @@ def default_tax_handler(request, order_form):
     """
     if not request.session.get('tax_free'):
         settings.use_editable()
-        set_tax(request, _("Tax"), 15)
+        set_tax(request, _("Tax"), 0)
 
 
 def default_payment_handler(request, order_form, order):
