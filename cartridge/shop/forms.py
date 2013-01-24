@@ -332,8 +332,8 @@ class OrderForm(FormsetForm, DiscountForm):
         choices = make_choices(range(year, year + 21))
         self.fields["card_expiry_year"].choices = choices
 
-    @staticmethod
-    def preprocess(data):
+    @classmethod
+    def preprocess(cls, data):
         if "same_billing_shipping" in data:
             for field in data:
                 bill_field = field.replace("shipping_detail", "billing_detail")
