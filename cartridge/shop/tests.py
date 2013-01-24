@@ -465,16 +465,18 @@ if stripe_used:
     charge = "stripe.Charge"
     StripeTests.test_charge = mock.patch(charge)(StripeTests.test_charge)
 
+
 class TaxationTests(TestCase):
 
     def test_default_settings(self):
         settings.use_editable()
-        assert hasattr(settings, 'SHOP_HANDLER_TAX'), 'Setting SHOP_HANDLER_TAX not found.'
+        assert hasattr(settings, 'SHOP_HANDLER_TAX'), \
+            'Setting SHOP_HANDLER_TAX not found.'
 
     def test_default_handler_exists(self):
         from mezzanine.utils.importing import import_dotted_path
         settings.use_editable()
         handler = lambda s: import_dotted_path(s) if s else lambda *args: None
         tax_handler = handler(settings.SHOP_HANDLER_TAX)
-        assert tax_handler is not None, 'Could not find default SHOP_HANDLER_TAX function.'
-
+        assert tax_handler is not None, \
+            'Could not find default SHOP_HANDLER_TAX function.'
