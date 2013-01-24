@@ -475,8 +475,26 @@ class TaxationTests(TestCase):
 
     def test_default_handler_exists(self):
         from mezzanine.utils.importing import import_dotted_path
+
         settings.use_editable()
         handler = lambda s: import_dotted_path(s) if s else lambda *args: None
         tax_handler = handler(settings.SHOP_HANDLER_TAX)
+
         assert tax_handler is not None, \
             'Could not find default SHOP_HANDLER_TAX function.'
+
+    def test_set_tax(self):
+        from cartridge.shop.utils import set_tax
+
+        tax_type = 'Tax for Testing'
+        tax_total = 56.65
+
+        class request:
+            session = {}
+
+        set_tax(request, tax_type, tax_total)
+
+        assert request.session.get('tax_type') == tax_type, \
+            'tax_type not set with set_tax'
+        assert request.session.get('tax_total') == tax_total, \
+            'tax_total not set with set_tax'
