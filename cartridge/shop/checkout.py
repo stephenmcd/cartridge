@@ -81,7 +81,7 @@ def initial_order_data(request, form_class=None):
         try:
             data = form_class.preprocess(data)
         except (AttributeError, TypeError) as e:
-            print(e)
+            # form_class has no preprocess attribute, or it isn't callable
             pass
         return dict(data.items())
     if "order" in request.session:
