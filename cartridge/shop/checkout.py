@@ -80,7 +80,7 @@ def initial_order_data(request, form_class=None):
         data = copy(request.POST)
         try:
             data = form_class.preprocess(data)
-        except (AttributeError, TypeError) as e:
+        except (AttributeError, TypeError):
             # form_class has no preprocess attribute, or it isn't callable
             pass
         return dict(data.items())
