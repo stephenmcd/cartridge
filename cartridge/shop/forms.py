@@ -283,9 +283,10 @@ class OrderForm(FormsetForm, DiscountForm):
         the current step.
         """
 
+        # data is usually the POST attribute of a Request object, which is an
+        # immutable QueryDict. We want to modify it, so we need to make a copy.
         data = copy(data)
 
-        # Copy billing fields to shipping fields if "same" checked.
         first = step == checkout.CHECKOUT_STEP_FIRST
         last = step == checkout.CHECKOUT_STEP_LAST
 
@@ -293,6 +294,9 @@ class OrderForm(FormsetForm, DiscountForm):
             # Force the specified step in the posted data - this is
             # required to allow moving backwards in steps.
             data["step"] = step
+
+            # Pre-process our data - initially handle the same_billing_shipping
+            # field, but subclasses might override this and do more.
             data = self.preprocess(data)
 
         if initial is not None:
@@ -334,6 +338,7 @@ class OrderForm(FormsetForm, DiscountForm):
 
     @classmethod
     def preprocess(cls, data):
+        # Copy billing fields to shipping fields if "same" checked.
         if "same_billing_shipping" in data:
             for field in data:
                 bill_field = field.replace("shipping_detail", "billing_detail")
