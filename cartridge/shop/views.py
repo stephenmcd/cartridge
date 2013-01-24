@@ -182,7 +182,7 @@ def checkout_steps(request):
     form_class = get_callable(settings.SHOP_CHECKOUT_FORM_CLASS)
 
     step = int(request.POST.get("step", checkout.CHECKOUT_STEP_FIRST))
-    initial = checkout.initial_order_data(request)
+    initial = checkout.initial_order_data(request, form_class)
     form = form_class(request, step, initial=initial)
     data = request.POST
     checkout_errors = []

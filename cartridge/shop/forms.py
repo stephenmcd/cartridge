@@ -283,26 +283,21 @@ class OrderForm(FormsetForm, DiscountForm):
         the current step.
         """
 
-        # Copy billing fields to shipping fields if "same" checked.
-        first = step == checkout.CHECKOUT_STEP_FIRST
-        last = step == checkout.CHECKOUT_STEP_LAST
-        if (first and data is not None and "same_billing_shipping" in data):
-            data = copy(data)
-            # Prevent second copy occuring for forcing step below when
-            # moving backwards in steps.
+        # data is usually the POST attribute of a Request object, which is an
+        # immutable QueryDict. We want to modify it, so we need to make a copy.
+        data = copy(data)
+
+        if data is not None:
+            # Force the specified step in the posted data - this is
+            # required to allow moving backwards in steps.
             data["step"] = step
-            for field in data:
-                billing = field.replace("shipping_detail", "billing_detail")
-                if "shipping_detail" in field and billing in data:
-                    data[field] = data[billing]
+
+            # Pre-process our data - initially handle the same_billing_shipping
+            # field, but subclasses might override this and do more.
+            data = self.preprocess(data)
 
         if initial is not None:
             initial["step"] = step
-        # Force the specified step in the posted data - this is
-        # required to allow moving backwards in steps.
-        if data is not None and int(data["step"]) != step:
-            data = copy(data)
-            data["step"] = step
 
         super(OrderForm, self).__init__(request, data=data, initial=initial)
         self._checkout_errors = errors
@@ -313,6 +308,8 @@ class OrderForm(FormsetForm, DiscountForm):
             self.fields["discount_code"].widget = forms.HiddenInput()
 
         # Determine which sets of fields to hide for each checkout step.
+        first = step == checkout.CHECKOUT_STEP_FIRST
+        last = step == checkout.CHECKOUT_STEP_LAST
         hidden = None
         if settings.SHOP_CHECKOUT_STEPS_SPLIT:
             if first:
@@ -337,6 +334,16 @@ class OrderForm(FormsetForm, DiscountForm):
         year = now().year
         choices = make_choices(range(year, year + 21))
         self.fields["card_expiry_year"].choices = choices
+
+    @classmethod
+    def preprocess(cls, data):
+        # Copy billing fields to shipping fields if "same" checked.
+        if "same_billing_shipping" in data:
+            for field in data:
+                bill_field = field.replace("shipping_detail", "billing_detail")
+                if field.startswith("shipping_detail") and bill_field in data:
+                    data[field] = data[bill_field]
+        return data
 
     def clean_card_expiry_year(self):
         """

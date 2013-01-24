@@ -2,6 +2,8 @@
 Checkout process utilities.
 """
 
+from copy import copy
+
 from django.contrib.auth.models import SiteProfileNotAvailable
 from django.utils.translation import ugettext as _
 from django.template.loader import get_template, TemplateDoesNotExist
@@ -61,7 +63,7 @@ def default_order_handler(request, order_form, order):
     pass
 
 
-def initial_order_data(request):
+def initial_order_data(request, form_class=None):
     """
     Return the initial data for the order form, trying the following in
     order:
@@ -75,7 +77,13 @@ def initial_order_data(request):
     """
     from cartridge.shop.forms import OrderForm
     if request.method == "POST":
-        return dict(request.POST.items())
+        data = copy(request.POST)
+        try:
+            data = form_class.preprocess(data)
+        except (AttributeError, TypeError):
+            # form_class has no preprocess attribute, or it isn't callable
+            pass
+        return dict(data.items())
     if "order" in request.session:
         return request.session["order"]
     previous_lookup = {}
