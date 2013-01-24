@@ -468,15 +468,19 @@ if stripe_used:
 
 class TaxationTests(TestCase):
 
-    def test_default_settings(self):
-        settings.use_editable()
-        assert hasattr(settings, 'SHOP_HANDLER_TAX'), \
-            'Setting SHOP_HANDLER_TAX not found.'
-
     def test_default_handler_exists(self):
+        '''
+        Ensure that the handler specified in default settings exists as well as
+        the default setting itself.
+        '''
         from mezzanine.utils.importing import import_dotted_path
 
         settings.use_editable()
+
+
+        assert hasattr(settings, 'SHOP_HANDLER_TAX'), \
+            'Setting SHOP_HANDLER_TAX not found.'
+
         handler = lambda s: import_dotted_path(s) if s else lambda *args: None
         tax_handler = handler(settings.SHOP_HANDLER_TAX)
 
@@ -484,6 +488,10 @@ class TaxationTests(TestCase):
             'Could not find default SHOP_HANDLER_TAX function.'
 
     def test_set_tax(self):
+        '''
+        Regression test to ensure that set_tax still sets the appropriate
+        session variables.
+        '''
         from cartridge.shop.utils import set_tax
 
         tax_type = 'Tax for Testing'
