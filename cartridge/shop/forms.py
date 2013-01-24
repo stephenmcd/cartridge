@@ -287,9 +287,6 @@ class OrderForm(FormsetForm, DiscountForm):
         # immutable QueryDict. We want to modify it, so we need to make a copy.
         data = copy(data)
 
-        first = step == checkout.CHECKOUT_STEP_FIRST
-        last = step == checkout.CHECKOUT_STEP_LAST
-
         if data is not None:
             # Force the specified step in the posted data - this is
             # required to allow moving backwards in steps.
@@ -311,6 +308,8 @@ class OrderForm(FormsetForm, DiscountForm):
             self.fields["discount_code"].widget = forms.HiddenInput()
 
         # Determine which sets of fields to hide for each checkout step.
+        first = step == checkout.CHECKOUT_STEP_FIRST
+        last = step == checkout.CHECKOUT_STEP_LAST
         hidden = None
         if settings.SHOP_CHECKOUT_STEPS_SPLIT:
             if first:
