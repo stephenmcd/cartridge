@@ -477,7 +477,6 @@ class TaxationTests(TestCase):
 
         settings.use_editable()
 
-
         assert hasattr(settings, 'SHOP_HANDLER_TAX'), \
             'Setting SHOP_HANDLER_TAX not found.'
 
