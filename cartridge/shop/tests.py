@@ -16,6 +16,7 @@ from mezzanine.utils.timezone import now
 from cartridge.shop.models import Product, ProductOption, ProductVariation
 from cartridge.shop.models import Category, Cart, Order, DiscountCode
 from cartridge.shop.models import Sale
+from cartridge.shop.forms import OrderForm
 from cartridge.shop.checkout import CHECKOUT_STEPS
 
 
@@ -319,7 +320,14 @@ class ShopTests(TestCase):
         cart = Cart.objects.from_request(self.client)
 
         # Post order.
-        data = {"step": len(CHECKOUT_STEPS)}
+        data = {
+            "step": len(CHECKOUT_STEPS),
+            "billing_detail_email": "example@example.com",
+            "discount_code": "",
+        }
+        for field_name, field in OrderForm(None, None).fields.items():
+            value = field.choices[-1][1] if hasattr(field, "choices") else "1"
+            data.setdefault(field_name, value)
         self.client.post(reverse("shop_checkout"), data)
         try:
             order = Order.objects.from_request(self.client)
