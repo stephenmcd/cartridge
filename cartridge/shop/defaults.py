@@ -178,6 +178,17 @@ register_setting(
 )
 
 register_setting(
+    name="SHOP_HANDLER_TAX",
+    label=_("Tax Handler"),
+    description="Dotted package path and class name of the function "
+        "called upon submission of the billing/shipping checkout step. This "
+        "is where tax calculations can be performed and set using the "
+        "function ``cartridge.shop.utils.set_tax``.",
+    editable=False,
+    default="cartridge.shop.checkout.default_tax_handler",
+)
+
+register_setting(
     name="SHOP_HANDLER_ORDER",
     label=_("Order Handler"),
     description="Dotted package path and class name of the function that "

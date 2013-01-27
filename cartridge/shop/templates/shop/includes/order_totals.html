@@ -25,5 +25,16 @@
 	    </label> {{ shipping_total|currency }}
 	</div>
 	{% endif %}
+	{% if tax_total %}
+	<div>
+	    <label>
+	    {% if tax_type %}
+	    {{ tax_type }}:
+	    {% else %}
+	    {% trans "Tax" %}:
+	    {% endif %}
+	    </label> {{ tax_total|currency }}
+	</div>
+	{% endif %}
 	<div class="total"><label>{% trans "Total" %}:</label> {{ order_total|currency }}</div>
 </div>

@@ -472,3 +472,44 @@ StripeTests = skipUnless(stripe_used, "Stripe not used")(StripeTests)
 if stripe_used:
     charge = "stripe.Charge"
     StripeTests.test_charge = mock.patch(charge)(StripeTests.test_charge)
+
+
+class TaxationTests(TestCase):
+
+    def test_default_handler_exists(self):
+        '''
+        Ensure that the handler specified in default settings exists as well as
+        the default setting itself.
+        '''
+        from mezzanine.utils.importing import import_dotted_path
+
+        settings.use_editable()
+
+        assert hasattr(settings, 'SHOP_HANDLER_TAX'), \
+            'Setting SHOP_HANDLER_TAX not found.'
+
+        handler = lambda s: import_dotted_path(s) if s else lambda *args: None
+        tax_handler = handler(settings.SHOP_HANDLER_TAX)
+
+        assert tax_handler is not None, \
+            'Could not find default SHOP_HANDLER_TAX function.'
+
+    def test_set_tax(self):
+        '''
+        Regression test to ensure that set_tax still sets the appropriate
+        session variables.
+        '''
+        from cartridge.shop.utils import set_tax
+
+        tax_type = 'Tax for Testing'
+        tax_total = 56.65
+
+        class request:
+            session = {}
+
+        set_tax(request, tax_type, tax_total)
+
+        assert request.session.get('tax_type') == tax_type, \
+            'tax_type not set with set_tax'
+        assert request.session.get('tax_total') == tax_total, \
+            'tax_total not set with set_tax'
