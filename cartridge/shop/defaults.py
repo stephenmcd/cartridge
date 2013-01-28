@@ -58,7 +58,8 @@ register_setting(
     description=_("Sequence of setting names available within templates."),
     editable=False,
     default=("SHOP_CARD_TYPES", "SHOP_CATEGORY_USE_FEATURED_IMAGE",
-             "SHOP_CHECKOUT_STEPS_SPLIT", "SHOP_PRODUCT_SORT_OPTIONS",),
+             "SHOP_CHECKOUT_STEPS_SPLIT", "SHOP_PAYMENT_STEP_ENABLED",
+             "SHOP_PRODUCT_SORT_OPTIONS",),
     append=True,
 )
 

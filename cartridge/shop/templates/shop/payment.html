@@ -1,9 +1,9 @@
 {% extends "shop/checkout.html" %}
-{% load i18n %}
+{% load i18n mezzanine_tags %}
 
 {% block fields %}
 {% if request.cart.has_items %}
 {% include "shop/includes/payment_fields.html" %}
-{{ form.other_fields.as_ul }}
+{% fields_for form.other_fields %}
 {% endif %}
 {% endblock %}
