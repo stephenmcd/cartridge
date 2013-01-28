@@ -35,7 +35,7 @@ def default_billship_handler(request, order_form):
     ``cartridge.shop.utils.set_shipping``. The Cart object is also
     accessible via ``request.cart``
     """
-    if not request.session.get('free_shipping'):
+    if not request.session.get("free_shipping"):
         settings.use_editable()
         set_shipping(request, _("Flat rate shipping"),
                      settings.SHOP_DEFAULT_SHIPPING_VALUE)
@@ -43,11 +43,11 @@ def default_billship_handler(request, order_form):
 
 def default_tax_handler(request, order_form):
     """
-    Default tax handler - called immediately after the handler defined by
-    ``SHOP_HANDLER_BILLING_SHIPPING``. Implement your own and specify the path
-    to import it from via the setting ``SHOP_HANDLER_TAX``.
-    This function will typically contain any tax calculation
-    where the tax amount can then be set using the function
+    Default tax handler - called immediately after the handler defined
+    by ``SHOP_HANDLER_BILLING_SHIPPING``. Implement your own and
+    specify the path to import it from via the setting
+    ``SHOP_HANDLER_TAX``. This function will typically contain any tax
+    calculation where the tax amount can then be set using the function
     ``cartridge.shop.utils.set_tax``. The Cart object is also
     accessible via ``request.cart``
     """
@@ -174,6 +174,7 @@ def send_order_email(request, order):
 
 
 # Set up some constants for identifying each checkout step.
+
 CHECKOUT_STEPS = [{"template": "billing_shipping", "url": "details",
                    "title": _("Details")}]
 CHECKOUT_STEP_FIRST = CHECKOUT_STEP_PAYMENT = CHECKOUT_STEP_LAST = 1
