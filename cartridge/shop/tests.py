@@ -16,6 +16,7 @@ from mezzanine.utils.timezone import now
 from cartridge.shop.models import Product, ProductOption, ProductVariation
 from cartridge.shop.models import Category, Cart, Order, DiscountCode
 from cartridge.shop.models import Sale
+from cartridge.shop.forms import OrderForm
 from cartridge.shop.checkout import CHECKOUT_STEPS
 
 
@@ -319,7 +320,14 @@ class ShopTests(TestCase):
         cart = Cart.objects.from_request(self.client)
 
         # Post order.
-        data = {"step": len(CHECKOUT_STEPS)}
+        data = {
+            "step": len(CHECKOUT_STEPS),
+            "billing_detail_email": "example@example.com",
+            "discount_code": "",
+        }
+        for field_name, field in OrderForm(None, None).fields.items():
+            value = field.choices[-1][1] if hasattr(field, "choices") else "1"
+            data.setdefault(field_name, value)
         self.client.post(reverse("shop_checkout"), data)
         try:
             order = Order.objects.from_request(self.client)
@@ -464,3 +472,44 @@ StripeTests = skipUnless(stripe_used, "Stripe not used")(StripeTests)
 if stripe_used:
     charge = "stripe.Charge"
     StripeTests.test_charge = mock.patch(charge)(StripeTests.test_charge)
+
+
+class TaxationTests(TestCase):
+
+    def test_default_handler_exists(self):
+        '''
+        Ensure that the handler specified in default settings exists as well as
+        the default setting itself.
+        '''
+        from mezzanine.utils.importing import import_dotted_path
+
+        settings.use_editable()
+
+        assert hasattr(settings, 'SHOP_HANDLER_TAX'), \
+            'Setting SHOP_HANDLER_TAX not found.'
+
+        handler = lambda s: import_dotted_path(s) if s else lambda *args: None
+        tax_handler = handler(settings.SHOP_HANDLER_TAX)
+
+        assert tax_handler is not None, \
+            'Could not find default SHOP_HANDLER_TAX function.'
+
+    def test_set_tax(self):
+        '''
+        Regression test to ensure that set_tax still sets the appropriate
+        session variables.
+        '''
+        from cartridge.shop.utils import set_tax
+
+        tax_type = 'Tax for Testing'
+        tax_total = 56.65
+
+        class request:
+            session = {}
+
+        set_tax(request, tax_type, tax_total)
+
+        assert request.session.get('tax_type') == tax_type, \
+            'tax_type not set with set_tax'
+        assert request.session.get('tax_total') == tax_total, \
+            'tax_total not set with set_tax'

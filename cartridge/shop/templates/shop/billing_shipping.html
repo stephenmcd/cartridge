@@ -36,6 +36,7 @@ If you have an existing account or would like to create one, please
 	{% fields_for form.additional_instructions_field %}
     {% fields_for form.remember_field %}
 </fieldset>
+
 {% if not settings.SHOP_CHECKOUT_STEPS_SPLIT and settings.SHOP_PAYMENT_STEP_ENABLED %}
 {% include "shop/includes/payment_fields.html" %}
 {% endif %}

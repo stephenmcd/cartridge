@@ -146,8 +146,30 @@ class FormsetForm(object):
     """
     Form mixin that provides template methods for iterating through
     sets of fields by prefix, single fields and finally remaning
-    fields that haven't been iterated with each fieldset made up from
-    a copy of the original form giving access to as_* methods.
+    fields that haven't been, iterated with each fieldset made up from
+    a copy of the original form, giving access to as_* methods.
+
+    The use case for this is ``OrderForm`` below. It contains a
+    handful of fields named with the prefixes ``billing_detail_XXX``
+    and ``shipping_detail_XXX``. Using ``FormsetForm`` we can then
+    group these into fieldsets in our templates::
+
+        <!-- Fields prefixed with "billing_detail_" -->
+        <fieldset>{{ form.billing_detail_fields.as_p }}</fieldset>
+
+        <!-- Fields prefixed with "shipping_detail_" -->
+        <fieldset>{{ form.shipping_detail_fields.as_p }}</fieldset>
+
+        <!-- All remaining fields -->
+        <fieldset>{{ form.other_fields.as_p }}</fieldset>
+
+    Some other helpers exist for use with an individual field name:
+
+    - ``XXX_field`` returns a fieldset containing the field named XXX
+    - ``fields_before_XXX`` returns a fieldset with all fields before
+      the field named XXX
+    - ``fields_after_XXX`` returns a fieldset with all fields after
+      the field named XXX
     """
 
     def _fieldset(self, field_names):
@@ -278,65 +300,80 @@ class OrderForm(FormsetForm, DiscountForm):
 
     def __init__(self, request, step, data=None, initial=None, errors=None):
         """
-        Handle setting shipping field values to the same as billing
-        field values in case JavaScript is disabled, hiding fields for
-        the current step.
+        Setup for each order form step which does a few things:
+
+        - Calls OrderForm.preprocess on posted data
+        - Sets up any custom checkout errors
+        - Hides the discount code field if applicable
+        - Hides sets of fields based on the checkout step
+        - Sets year choices for cc expiry field based on current date
         """
 
-        # Copy billing fields to shipping fields if "same" checked.
-        first = step == checkout.CHECKOUT_STEP_FIRST
-        last = step == checkout.CHECKOUT_STEP_LAST
-        if (first and data is not None and "same_billing_shipping" in data):
-            data = copy(data)
-            # Prevent second copy occuring for forcing step below when
-            # moving backwards in steps.
-            data["step"] = step
-            for field in data:
-                billing = field.replace("shipping_detail", "billing_detail")
-                if "shipping_detail" in field and billing in data:
-                    data[field] = data[billing]
+        # ``data`` is usually the POST attribute of a Request object,
+        # which is an immutable QueryDict. We want to modify it, so we
+        # need to make a copy.
+        data = copy(data)
 
+        # Force the specified step in the posted data, which is
+        # required to allow moving backwards in steps. Also handle any
+        # data pre-processing, which subclasses may override.
+        if data is not None:
+            data["step"] = step
+            data = self.preprocess(data)
         if initial is not None:
             initial["step"] = step
-        # Force the specified step in the posted data - this is
-        # required to allow moving backwards in steps.
-        if data is not None and int(data["step"]) != step:
-            data = copy(data)
-            data["step"] = step
 
         super(OrderForm, self).__init__(request, data=data, initial=initial)
         self._checkout_errors = errors
-        settings.use_editable()
+
         # Hide Discount Code field if no codes are active.
-        if (DiscountCode.objects.active().count() == 0 or
-            not settings.SHOP_DISCOUNT_FIELD_IN_CHECKOUT):
+        settings.use_editable()
+        no_discounts = DiscountCode.objects.active().count() == 0
+        if no_discounts or not settings.SHOP_DISCOUNT_FIELD_IN_CHECKOUT:
             self.fields["discount_code"].widget = forms.HiddenInput()
 
         # Determine which sets of fields to hide for each checkout step.
-        hidden = None
+        # A ``hidden_filter`` function is defined that's used for
+        # filtering out the fields to hide.
+        is_first_step = step == checkout.CHECKOUT_STEP_FIRST
+        is_last_step = step == checkout.CHECKOUT_STEP_LAST
+        is_payment_step = step == checkout.CHECKOUT_STEP_PAYMENT
+        hidden_filter = lambda f: False
         if settings.SHOP_CHECKOUT_STEPS_SPLIT:
-            if first:
-                # Hide the cc fields for billing/shipping if steps are split.
-                hidden = lambda f: f.startswith("card_")
-            elif step == checkout.CHECKOUT_STEP_PAYMENT:
-                # Hide the non-cc fields for payment if steps are split.
-                hidden = lambda f: not f.startswith("card_")
+            if is_first_step:
+                # Hide cc fields for billing/shipping if steps are split.
+                hidden_filter = lambda f: f.startswith("card_")
+            elif is_payment_step:
+                # Hide non-cc fields for payment if steps are split.
+                hidden_filter = lambda f: not f.startswith("card_")
         elif not settings.SHOP_PAYMENT_STEP_ENABLED:
-            # Hide all the cc fields if payment step is not enabled.
-            hidden = lambda f: f.startswith("card_")
-        if settings.SHOP_CHECKOUT_STEPS_CONFIRMATION and last:
+            # Hide all cc fields if payment step is not enabled.
+            hidden_filter = lambda f: f.startswith("card_")
+        if settings.SHOP_CHECKOUT_STEPS_CONFIRMATION and is_last_step:
             # Hide all fields for the confirmation step.
-            hidden = lambda f: True
-        if hidden is not None:
-            for field in self.fields:
-                if hidden(field):
-                    self.fields[field].widget = forms.HiddenInput()
-                    self.fields[field].required = False
+            hidden_filter = lambda f: True
+        for field in filter(hidden_filter, self.fields):
+            self.fields[field].widget = forms.HiddenInput()
+            self.fields[field].required = False
 
-        # Set the choices for the cc expiry year relative to the current year.
+        # Set year choices for cc expiry, relative to the current year.
         year = now().year
         choices = make_choices(range(year, year + 21))
         self.fields["card_expiry_year"].choices = choices
+
+    @classmethod
+    def preprocess(cls, data):
+        """
+        A preprocessor for the order form data that can be overridden
+        by custom form classes. The default preprocessor here handles
+        copying billing fields to shipping fields if "same" checked.
+        """
+        if "same_billing_shipping" in data:
+            for field in data:
+                bill_field = field.replace("shipping_detail", "billing_detail")
+                if field.startswith("shipping_detail") and bill_field in data:
+                    data[field] = data[bill_field]
+        return data
 
     def clean_card_expiry_year(self):
         """
