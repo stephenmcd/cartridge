@@ -66,8 +66,11 @@ class AddProductForm(forms.Form):
         # Adding from the product page, remove the sku field
         # and build the choice fields for the variations.
         del self.fields["sku"]
+        option_fields = ProductVariation.option_fields()
+        if not option_fields:
+            return
         option_names, option_labels = zip(*[(f.name, f.verbose_name)
-            for f in ProductVariation.option_fields()])
+            for f in option_fields])
         option_values = zip(*self._product.variations.filter(
             unit_price__isnull=False).values_list(*option_names))
         if option_values:
