@@ -22,6 +22,8 @@
   * ``user_id``
   * ``shipping_type``
   * ``shipping_total``
+  * ``tax_type``
+  * ``tax_total``
   * ``item_total``
   * ``discount_code``
   * ``discount_total``

@@ -98,6 +98,13 @@ Dotted package path and class name of the function that is called upon submissio
 
 Default: ``'cartridge.shop.checkout.default_payment_handler'``
 
+``SHOP_HANDLER_TAX``
+--------------------
+
+Dotted package path and class name of the function called upon submission of the billing/shipping checkout step. This is where tax calculations can be performed and set using the function ``cartridge.shop.utils.set_tax``.
+
+Default: ``'cartridge.shop.checkout.default_tax_handler'``
+
 ``SHOP_OPTION_TYPE_CHOICES``
 ----------------------------
 
