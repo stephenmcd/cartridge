@@ -2,8 +2,12 @@ from decimal import Decimal
 import locale
 import platform
 
-from django import template
+from django.core.urlresolvers import NoReverseMatch
 
+from mezzanine import template
+from mezzanine.utils.urls import admin_url
+
+from cartridge.shop.models import Product
 from cartridge.shop.utils import set_locale
 
 
@@ -79,3 +83,22 @@ def order_totals_text(context):
     Text version of order_totals.
     """
     return _order_totals(context)
+
+
+@register.as_tag
+def models_for_products(*args):
+    """
+    Create a select list containing each of the models that subclass the
+    ``Product`` model, plus the ``Product`` model itself.
+    """
+    product_models = []
+    for model in Product.get_content_models():
+        try:
+            admin_add_url = admin_url(model, "add")
+        except NoReverseMatch:
+            continue
+        else:
+            setattr(model, "name", model._meta.verbose_name)
+            setattr(model, "add_url", admin_add_url)
+            product_models.append(model)
+    return product_models
