@@ -210,6 +210,9 @@ class FormsetForm(object):
         filters = (
             ("^other_fields$", lambda:
                 self.fields.keys()),
+            ("^hidden_fields$", lambda:
+                [n for n, f in self.fields.iteritems()
+                 if isinstance(f.widget, forms.HiddenInput)]),
             ("^(\w*)_fields$", lambda name:
                 [f for f in self.fields.keys() if f.startswith(name)]),
             ("^(\w*)_field$", lambda name:
