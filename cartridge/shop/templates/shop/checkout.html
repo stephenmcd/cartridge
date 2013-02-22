@@ -28,6 +28,8 @@ $(function() {$('.middle :input:visible:enabled:first').focus();});
 
 {% block main %}
 
+{% block before-form %}{% endblock %}
+
 {% if request.cart.has_items %}
 <div class="panel checkout-panel span3">
 <ul class="unstyled">
@@ -82,5 +84,7 @@ $(function() {$('.middle :input:visible:enabled:first').focus();});
 	{% endif %}
 
 </form>
+
+{% block after-form %}{% endblock after-form %}
 
 {% endblock %}
