@@ -1,3 +1,12 @@
+Version 0.8.1 (Feb 23, 2013)
+----------------------------
+
+  * Add a ``hidden_fields`` option for the ``fields_for`` tag. Useful if you want to display some field directly (without using the tag, for example iterating some payment type choices) and yet include all fields hidden for the current step - wrwrwr
+  * Secondary block for checkout subtemplates for valid html - Evan Leis
+  * Add before-form and after-form blocks - Evan Leis
+  * Addd migration for rating sums - Stephen McDonald
+  * Bump Mezzanine version to 1.4.2 - Stephen McDonald
+
 Version 0.8.0 (Feb 17, 2013)
 ----------------------------
 
@@ -27,6 +36,7 @@ Version 0.8.0 (Feb 17, 2013)
   * Use dummy test data in order test, since form validation will fail if ``SHOP_CHECKOUT_STEPS_CONFIRMATION`` is False - Stephen McDonald
   * Added docs for the new tax handling - Stephen McDonald
   * Added a section about categories as pages to the docs - Stephen McDonald
+  * Fix displaying product form with empty ``SHOP_OPTION_TYPE_CHOICES`` - wrwrwr
   * Bump Mezzanine version to 1.4.0 - Stephen McDonald
 
 Version 0.7.0 (Dec 26, 2012)
