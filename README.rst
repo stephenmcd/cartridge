@@ -29,7 +29,7 @@ Features
 
   * Hierarchical categories
   * Easily configurable product options (colours, sizes, etc.)
-  * Hooks for shipping calculations and payment gateways
+  * Hooks for tax/shipping calculations and payment gateways
   * Sale pricing
   * Promotional discount codes
   * PDF invoice generation (for packing slips)
@@ -181,6 +181,7 @@ Sites Using Cartridge
   * `Charles Koll Jewelry <http://charleskoll.com>`_
   * `Puraforce Remedies <http://puraforceremedies.com/>`_
   * `Adrenaline <http://www.adrln.com/>`_
+  * `The Peculiar Store <http://thepeculiarstore.com>`_
 
 .. _`Django`: http://djangoproject.com/
 .. _`BSD licensed`: http://www.linfo.org/bsdlicense.html
