@@ -1,14 +1,5 @@
-<!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
-<head>
-<link rel="stylesheet" href="{{ STATIC_URL }}cartridge/css/invoice.css">
-{% if LANGUAGE_BIDI %}
-<link rel="stylesheet" href="{{ STATIC_URL }}cartridge/css/invoice.rtl.css">
+{% if not LANGUAGE_BIDI %}
+    {% include "shop/includes/order_details.html" %}
+{% else %}
+    {% include "shop/includes/order_details_rtl.html" %}
 {% endif %}
-</head>
-<body>
-<h1>{{ settings.SITE_TITLE }}</h1>
-
-{% include "shop/includes/order_details.html" %}
-</body>
-</html>

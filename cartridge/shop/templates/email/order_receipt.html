@@ -1,8 +1,13 @@
 {% extends "email/base.html" %}
-{% load shop_tags i18n %}
+{% load i18n %}
+
 
 {% block main %}
-<p>{% trans "Dear" %} {{ order.billing_detail_first_name }},</p>
-<p>{% trans "Your order has been successful, details are below." %}</p>
-{% include "shop/includes/order_details.html" %}
+
+{% if not LANGUAGE_BIDI %}
+    {% include "email/receipt.html" %}
+{% else %}
+    {% include "email/receipt_rtl.html" %}
+{% endif %}
+
 {% endblock %}
