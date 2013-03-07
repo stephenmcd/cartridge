@@ -268,7 +268,10 @@ def checkout_steps(request):
 
     # Update the step so that we don't rely on POST data to take us back to
     # the same point in the checkout process.
-    request.session["order"]["step"] = step
+    try:
+        request.session["order"]["step"] = step
+    except KeyError:
+        pass
 
     step_vars = checkout.CHECKOUT_STEPS[step - 1]
     template = "shop/%s.html" % step_vars["template"]
