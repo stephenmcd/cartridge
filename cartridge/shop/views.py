@@ -266,6 +266,10 @@ def checkout_steps(request):
                 step += 1
                 form = form_class(request, step, initial=initial)
 
+    # Update the step so that we don't rely on POST data to take us back to
+    # the same point in the checkout process.
+    request.session["order"]["step"] = step
+
     step_vars = checkout.CHECKOUT_STEPS[step - 1]
     template = "shop/%s.html" % step_vars["template"]
     CHECKOUT_STEP_FIRST = step == checkout.CHECKOUT_STEP_FIRST
