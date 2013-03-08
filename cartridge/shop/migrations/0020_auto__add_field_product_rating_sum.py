@@ -7,6 +7,11 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = [
+        ("generic", "0008_set_keyword_order"),
+        ("pages", "0013_auto__add_field_page_in_sitemap"),
+    ]
+
     def forwards(self, orm):
         # Adding field 'Product.rating_sum'
         db.add_column('shop_product', 'rating_sum',
