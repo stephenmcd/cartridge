@@ -174,6 +174,7 @@ def import_products(csv_file):
         if image:
             variation.image = image
         product.variations.manage_empty()
+        product.variations.set_default_images([])
         product.copy_default_variation()
         product.save()
 

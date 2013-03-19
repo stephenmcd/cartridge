@@ -1,3 +1,44 @@
+Version 0.8.1 (Feb 23, 2013)
+----------------------------
+
+  * Add a ``hidden_fields`` option for the ``fields_for`` tag. Useful if you want to display some field directly (without using the tag, for example iterating some payment type choices) and yet include all fields hidden for the current step - wrwrwr
+  * Secondary block for checkout subtemplates for valid html - Evan Leis
+  * Add before-form and after-form blocks - Evan Leis
+  * Addd migration for rating sums - Stephen McDonald
+  * Bump Mezzanine version to 1.4.2 - Stephen McDonald
+
+Version 0.8.0 (Feb 17, 2013)
+----------------------------
+
+  * Provide better exception messages for required settings in each of the payment processors - Stephen McDonald
+  * Pass amount to Stripe as integer intead of string. The Stripe API docs indicate that the "amount" passed to a Stripe. charge object should be an int, not a string. See ``https://stripe.com/docs/api?lang=python#create_charge`` - Lorin Hochstein
+  * Don't put payment specific settings in ``local_settings`` template - Stephen McDonald
+  * Move dummy stripe key setting into its test - Stephen McDonald
+  * Fix AttributeError with empty cart in Django 1.5. Django 1.5 looks for a pk in BaseInlineFormSet's ``__init__``, which it couldn't find on EmptyCart. The fix adds the attribute with value None - Alex Hill
+  * Only run stripe tests if its used, since it breaks Python 2.5 support (stripe package doesn't work in 2.5) - Stephen McDonald
+  * Fix class decorator for stripe tests for Python 2.5 - Stephen McDonald
+  * Fix ``jquery.tools`` references for product image overlay. Closes #83 - Stephen McDonald
+  * Added fields ``'tax_type'`` and ``'tax_total'`` and processors that mimic the functionality of ``'shipping_type'`` and ``'shipping_total'`` - Evan Leis
+  * By default, ``tax_total`` is 0 - Evan Leis
+  * ``tax_free`` session option is unnecessary, updated documentation on ``default_tax_handler`` - Evan Leis
+  * Add ``OrderForm.preprocess()`` class method - Alex Hill
+  * preprocess should be a class method, not static - Alex Hill
+  * Removed redundant JS on checkout page - Alex Hill
+  * Remove stray print() call - Alex Hill
+  * Fix and add comments - Alex Hill
+  * Move variable declarations around for clarity - Alex Hill
+  * Remove unused variable - Alex Hill
+  * Taxation defaults/settings tests - Evan Leis
+  * Added test for ``set_tax`` - Evan Leis
+  * Added documentation. Merged two tests as they are entirely co-dependent - Evan Leis
+  * Fix rendering of payment fields when checkout steps aren't split - Stephen McDonald
+  * Implemented handling for the createdb --nodata management command option, splitting out fixtures into required/optional. Closes #29 - Stephen McDonald
+  * Use dummy test data in order test, since form validation will fail if ``SHOP_CHECKOUT_STEPS_CONFIRMATION`` is False - Stephen McDonald
+  * Added docs for the new tax handling - Stephen McDonald
+  * Added a section about categories as pages to the docs - Stephen McDonald
+  * Fix displaying product form with empty ``SHOP_OPTION_TYPE_CHOICES`` - wrwrwr
+  * Bump Mezzanine version to 1.4.0 - Stephen McDonald
+
 Version 0.7.0 (Dec 26, 2012)
 ----------------------------
 

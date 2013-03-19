@@ -1,0 +1,73 @@
+.thumbnails > li {
+    float: right;
+}
+
+element.style {
+    float: right;
+}
+.form-horizontal .control-label {
+    float: right;
+    padding: 10px;
+    text-align: left;
+}
+.form-cart .form-actions-wrap {
+    float: left;
+    margin-left: 5px;
+}
+
+/* shop cart*/
+.order-history .left, .form-cart .left {
+    text-align: right;
+}
+
+.form-shop .form-actions-wrap * {
+    float: left;
+}
+
+.order-totals {
+    float: left;
+    margin: 10
+px 0;
+}
+
+.order-totals label {
+    margin-left: 10px;
+}
+
+.order-history th, .form-cart td {
+    text-align: left;
+}
+
+.order-history th, .form-cart th {
+    text-align: left;
+
+}
+
+/* checkout */
+#checkout .checkout-panel {
+    float: left;
+    margin: 0 0 0 30px;
+}
+
+#checkout-form label {
+    padding: 4px 25px;
+}
+
+#checkout .checkout-panel .btn {
+    float: left;
+}
+.input_id_same_billing_shipping .controls, .input_id_remember .controls {
+    float: left !important;
+    font-weight: normal;
+    margin: 0 0 -24px 175px;
+    text-align: right !important;
+    width: auto !important;
+}
+#checkout-form .form-actions-wrap {
+    float: right;
+    margin-right: 170px;
+}
+#checkout .checkout-panel .price {
+    float: left;
+}
+

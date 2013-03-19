@@ -1,0 +1,61 @@
+{% load shop_tags i18n %}
+
+<h1 align="right">{{ settings.SITE_TITLE }}</h1>
+
+<table width="100%" border="0">
+    <tr>
+        <td align="left">{{ order.time }}</td>
+        <td align="right">{% trans "Order ID:" %} {{ order.id }}</td>
+    </tr>
+</table>
+
+<h2 align="right">{% trans "Your Details" %}</h2>
+<table width="100%" border="1" cellspacing="0" cellpadding="10">
+<tr>
+    <th align="right" width="50%">{% trans "Billing Details" %}</th>
+    <th align="right" width="50%">{% trans "Shipping Details" %}</th>
+</tr>
+<tr>
+    <td valign="top" align="right">
+        <table border="0">
+            {% for field, value in order_billing_detail_fields %}
+            <tr><td>{{ value }}</td><td> &nbsp;&nbsp;&nbsp;:&nbsp;{{ field }}</td></tr>
+            {% endfor %}
+        </table>
+    </td>
+    <td valign="top" align="right">
+        <table border="0" align="right">
+            {% for field, value in order_shipping_detail_fields %}
+            <tr><td>{{ value }}</td><td> &nbsp;&nbsp;&nbsp;:&nbsp;{{ field }}</td></tr>
+            {% endfor %}
+        </table>
+    </td>
+</tr>
+</table>
+
+<h2 align="right">{% trans "Items Ordered" %}</h2>
+<table width="100%" border="1" cellspacing="0" cellpadding="10">
+    <tr>
+
+
+
+		<th align="left">{% trans "Price" %}</th>
+		<th align="left">{% trans "Qty" %}</th>
+		<th align="left">{% trans "Unit Price" %}</th>
+		<th align="right">{% trans "Item" %}</th>
+	</tr>
+	{% for item in order.items.all %}
+	<tr>
+    	<td align="left" valign="top">{{ item.total_price|currency }}</td>
+    	<td align="left" valign="top">{{ item.quantity }}</td>
+    	<td align="left" valign="top">{{ item.unit_price|currency }}</td>
+    	<td align="right">{{ item.description }}</td>
+
+
+
+	</tr>
+	{% endfor %}
+	<tr>
+	    <td colspan="4" align="left">{% order_totals %}</td>
+	</tr>
+</table>

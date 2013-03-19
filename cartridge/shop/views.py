@@ -1,4 +1,3 @@
-
 from collections import defaultdict
 
 from django.contrib.auth.decorators import login_required
@@ -221,11 +220,11 @@ def checkout_steps(request):
 
             # FINAL CHECKOUT STEP - handle payment and process order.
             if step == checkout.CHECKOUT_STEP_LAST and not checkout_errors:
-                # Create and save the inital order object so that
+                # Create and save the initial order object so that
                 # the payment handler has access to all of the order
                 # fields. If there is a payment error then delete the
                 # order, otherwise remove the cart items from stock
-                # and send the order reciept email.
+                # and send the order receipt email.
                 order = form.save(commit=False)
                 order.setup(request)
                 # Try payment.
@@ -250,7 +249,7 @@ def checkout_steps(request):
                     # Set the cookie for remembering address details
                     # if the "remember" checkbox was checked.
                     response = redirect("shop_complete")
-                    if form.cleaned_data.get("remember") is not None:
+                    if form.cleaned_data.get("remember"):
                         remembered = "%s:%s" % (sign(order.key), order.key)
                         set_cookie(response, "remember", remembered,
                                    secure=request.is_secure())
@@ -261,7 +260,7 @@ def checkout_steps(request):
             # If any checkout errors, assign them to a new form and
             # re-run is_valid. If valid, then set form to the next step.
             form = form_class(request, step, initial=initial, data=data,
-                             errors=checkout_errors)
+                              errors=checkout_errors)
             if form.is_valid():
                 step += 1
                 form = form_class(request, step, initial=initial)

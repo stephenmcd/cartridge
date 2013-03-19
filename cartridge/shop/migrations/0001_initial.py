@@ -230,11 +230,6 @@ class Migration(SchemaMigration):
         ))
         db.create_unique('shop_discountcode_categories', ['discountcode_id', 'category_id'])
 
-        from cartridge.shop.management import create_initial_product
-        from cartridge.shop.models import Product
-        from atexit import register
-        register(create_initial_product, None, (Product,), 1, interactive=True)
-
     def backwards(self, orm):
 
         # Deleting model 'ProductOption'

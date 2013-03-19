@@ -95,8 +95,13 @@ def initial_order_data(request, form_class=None):
         try:
             data = form_class.preprocess(data)
         except (AttributeError, TypeError):
-            # form_class has no preprocess attribute, or it isn't callable
+            # form_class has no preprocess method, or isn't callable.
             pass
+        # POST on first step won't include the "remember" checkbox if
+        # it isn't checked, and it'll then get an actual value of False
+        # when it's a hidden field - so we give it an empty value when
+        # it's missing from the POST data, to persist it not checked.
+        data.setdefault("remember", "")
         return dict(data.items())
     if "order" in request.session:
         return request.session["order"]
