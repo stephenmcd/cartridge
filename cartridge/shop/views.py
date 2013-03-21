@@ -52,6 +52,11 @@ def product(request, slug, template="shop/product.html"):
     add_product_form = AddProductForm(request.POST or None, product=product,
                                       initial=initial_data, to_cart=to_cart)
     if request.method == "POST":
+        # Forget what checkout step we were up to if user changes cart.
+        try:
+            del request.session["order"]["step"]
+        except KeyError:
+            pass
         if add_product_form.is_valid():
             if to_cart:
                 quantity = add_product_form.cleaned_data["quantity"]
@@ -136,6 +141,11 @@ def cart(request, template="shop/cart.html"):
     cart_formset = CartItemFormSet(instance=request.cart)
     discount_form = DiscountForm(request, request.POST or None)
     if request.method == "POST":
+        # reset checkout step to 1.
+        try:
+            request.session["order"]["step"] = checkout.CHECKOUT_STEP_FIRST
+        except KeyError:
+            pass
         valid = True
         if request.POST.get("update_cart"):
             valid = request.cart.has_items()
