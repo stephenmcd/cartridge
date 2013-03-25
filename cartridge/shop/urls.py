@@ -1,5 +1,5 @@
 
-from django.conf.urls.defaults import patterns, url
+from django.conf.urls import patterns, url
 
 urlpatterns = patterns("cartridge.shop.views",
     url("^product/(?P<slug>.*)/$", "product", name="shop_product"),
