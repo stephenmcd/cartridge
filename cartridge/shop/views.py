@@ -277,6 +277,7 @@ def checkout_steps(request):
     # the same point in the checkout process.
     try:
         request.session["order"]["step"] = step
+        request.session.modified = True
     except KeyError:
         pass
 
