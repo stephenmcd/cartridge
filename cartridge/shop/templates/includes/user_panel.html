@@ -7,7 +7,7 @@
     {{ request.cart.total_price|currency }}</a><br>
     {% if request.cart.total_quantity != 0 %}
     <a href="{% url "shop_checkout" %}" class="btn btn-primary">
-        {% trans "Go to Checkout" %}
+        {% if request.session.order.step %}{% trans "Return to Checkout" %}{% else %}{% trans "Go to Checkout" %}{% endif %}
     </a><br>
     {% endif %}
     <a href="{% url "shop_wishlist" %}" class="btn-wishlist">

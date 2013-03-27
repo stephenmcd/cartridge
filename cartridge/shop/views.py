@@ -181,8 +181,10 @@ def checkout_steps(request):
     # Determine the Form class to use during the checkout process
     form_class = get_callable(settings.SHOP_CHECKOUT_FORM_CLASS)
 
-    step = int(request.POST.get("step", checkout.CHECKOUT_STEP_FIRST))
     initial = checkout.initial_order_data(request, form_class)
+    step = int(request.POST.get("step", None)
+               or initial.get("step", None)
+               or checkout.CHECKOUT_STEP_FIRST)
     form = form_class(request, step, initial=initial)
     data = request.POST
     checkout_errors = []
@@ -262,6 +264,14 @@ def checkout_steps(request):
             if form.is_valid():
                 step += 1
                 form = form_class(request, step, initial=initial)
+
+    # Update the step so that we don't rely on POST data to take us back to
+    # the same point in the checkout process.
+    try:
+        request.session["order"]["step"] = step
+        request.session.modified = True
+    except KeyError:
+        pass
 
     step_vars = checkout.CHECKOUT_STEPS[step - 1]
     template = "shop/%s.html" % step_vars["template"]
