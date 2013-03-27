@@ -38,10 +38,12 @@
     <label>{% trans "Sort by" %}</label>
     <select onchange="location.href = this[this.selectedIndex].value;">
     {% for name, option in settings.SHOP_PRODUCT_SORT_OPTIONS %}
+    {% if "rating" not in option or settings.SHOP_USE_RATINGS %}
     <option{% if option == products.sort_by %} selected{% endif %}
         value="{{ category.get_absolute_url }}?sort={{ option }}{{ querystring }}">
         {{ name }}
     </option>
+    {% endif %}
     {% endfor %}
     </select>
 </form>

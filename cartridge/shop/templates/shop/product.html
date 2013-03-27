@@ -100,7 +100,9 @@
 <p>{% trans "This product is currently unavailable." %}</p>
 {% endif %}
 
+{% if settings.SHOP_USE_RATINGS %}
 {% rating_for product %}
+{% endif %}
 
 {% if related_products %}
 <h2>{% trans "Related Products" %}</h2>
