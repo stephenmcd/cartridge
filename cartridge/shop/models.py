@@ -8,6 +8,7 @@ from django.db.models import CharField, F, Q
 from django.db.models.base import ModelBase
 from django.db.utils import DatabaseError
 from django.dispatch import receiver
+from django.utils.timezone import now
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 from mezzanine.conf import settings
@@ -17,7 +18,6 @@ from mezzanine.core.models import Displayable, RichText, Orderable
 from mezzanine.generic.fields import RatingField
 from mezzanine.pages.models import Page
 from mezzanine.utils.models import AdminThumbMixin, upload_to
-from mezzanine.utils.timezone import now
 
 from cartridge.shop import fields, managers
 

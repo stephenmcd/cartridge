@@ -4,9 +4,9 @@ from datetime import datetime, timedelta
 
 from django.db.models import Manager, Q
 from django.utils.datastructures import SortedDict
+from django.utils.timezone import now
 
 from mezzanine.conf import settings
-from mezzanine.utils.timezone import now
 
 
 class CartManager(Manager):

@@ -6,10 +6,10 @@ except ImportError:
     from md5 import new as digest
 
 from django.core.exceptions import ImproperlyConfigured
+from django.utils.timezone import now
 from django.utils.translation import ugettext as _
 
 from mezzanine.conf import settings
-from mezzanine.utils.timezone import now
 
 
 class EmptyCart(object):
