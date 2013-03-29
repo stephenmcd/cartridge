@@ -59,7 +59,7 @@ register_setting(
     editable=False,
     default=("SHOP_CARD_TYPES", "SHOP_CATEGORY_USE_FEATURED_IMAGE",
              "SHOP_CHECKOUT_STEPS_SPLIT", "SHOP_PAYMENT_STEP_ENABLED",
-             "SHOP_PRODUCT_SORT_OPTIONS",),
+             "SHOP_PRODUCT_SORT_OPTIONS", "SHOP_USE_RATINGS"),
     append=True,
 )
 
@@ -272,6 +272,14 @@ register_setting(
     name="SHOP_USE_VARIATIONS",
     label=_("Use product variations"),
     description="Use product variations.",
+    editable=False,
+    default=True,
+)
+
+register_setting(
+    name="SHOP_USE_RATINGS",
+    label=_("Use product ratings"),
+    description="Show the product rating form, and allow browsing by rating.",
     editable=False,
     default=True,
 )
