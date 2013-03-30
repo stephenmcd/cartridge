@@ -1,3 +1,29 @@
+Version 0.8.2 (Mar 31, 2013)
+----------------------------
+
+  * Use ``set_default_images`` in ``product_db`` command - Stephen McDonald
+  * Added another block to ``checkout.html``, encapsulating the back/next buttons - Evan Leis
+  * Fix text alignment - Stephen McDonald
+  * Update travis env for Django 1.5 - Stephen McDonald
+  * After POST data, check session for checkout step - Alex Hill
+  * Keep step in session data up-to-date - Alex Hill
+  * Handle exception when "order" isn't in session - Alex Hill
+  * Persist the remember field in the checkout form not being checked, throughout the other steps where it's a hidden field, by removing its value if it isn't checked - Stephen McDonald
+  * Bunch of migration fixes. Closes #95 - Stephen McDonald
+  * Fix remember field handling in checkout form - Stephen McDonald
+  * Forget checkout step when user POSTs to cart - Alex Hill
+  * Remove all use of ``django.conf.urls.defaults`` since we don't support Django 1.3 anymore - Stephen McDonald
+  * Forget checkout step every time the cart is shown - Alex Hill
+  * Set session modified flag when remembering checkout step - Alex Hill
+  * Forget checkout step only when creating new cart - Alex Hill
+  * Show "Return to Checkout" if checkout in progress - Alex Hill
+  * Make shop templates extend ``shop/base.html``. The change allows a site to supply shop-specific ``base.html``, potentially. overriding or extending the global ``base.html`` - mike wakerly
+  * Add ``SHOP_USE_RATINGS`` (default True), allowing ratings to be disabled - mike wakerly
+  * Remove deprecated ``ADMIN_MEDIA_PREFIX`` - Stephen McDonald
+  * Use Django's timezone support since Django 1.3 is not supported - Stephen McDonald
+  * Update ``.po`` files for latest revision - Sebastián Ramírez Magrí
+  * Bump Mezzanine version to 1.4.4 - Stephen McDonald
+
 Version 0.8.1 (Feb 23, 2013)
 ----------------------------
 

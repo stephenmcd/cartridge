@@ -154,6 +154,13 @@ Sequence of description/field+direction pairs defining the options available for
 
 Default: ``((u'Recently added', '-date_added'), (u'Highest rated', '-rating_average'), (u'Least expensive', 'unit_price'), (u'Most expensive', '-unit_price'))``
 
+``SHOP_USE_RATINGS``
+--------------------
+
+Show the product rating form, and allow browsing by rating.
+
+Default: ``True``
+
 ``SHOP_USE_VARIATIONS``
 -----------------------
 
