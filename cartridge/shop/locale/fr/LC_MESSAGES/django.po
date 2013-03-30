@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 #   <mathias.ettinger@gmail.com>, 2012.
 #   <strider@strycore.com>, 2012.
@@ -9,16 +9,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Cartridge\n"
-"Report-Msgid-Bugs-To: \n"
+"Report-Msgid-Bugs-To: https://github.com/stephenmcd/cartridge/issues\n"
 "POT-Creation-Date: 2012-11-17 17:59-0430\n"
-"PO-Revision-Date: 2012-11-02 18:09+0000\n"
+"PO-Revision-Date: 2012-11-24 14:02+0000\n"
 "Last-Translator: Kniyl <mathias.ettinger@gmail.com>\n"
-"Language-Team: French (http://www.transifex.com/projects/p/cartridge/"
-"language/fr/)\n"
-"Language: fr\n"
+"Language-Team: French (http://www.transifex.com/projects/p/cartridge/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: admin.py:63
@@ -115,7 +114,7 @@ msgstr "Liste des noms de paramètres utilisables dans les templates."
 
 #: defaults.py:75
 msgid "Enable featured images in shop categories"
-msgstr ""
+msgstr "Activer l'image d'aperçu pour les catégories"
 
 #: defaults.py:82
 msgid "Checkout account required"
@@ -123,9 +122,7 @@ msgstr "Compte nécessaire pour finaliser une commande"
 
 #: defaults.py:83
 msgid "If True, users must create a login for the checkout process."
-msgstr ""
-"Si ``vrai``, les utilisateurs doivent créer un compte pour le processus de "
-"commande."
+msgstr "Si ``vrai``, les utilisateurs doivent créer un compte pour le processus de commande."
 
 #: defaults.py:114
 msgid "Payment Enabled"
@@ -133,8 +130,7 @@ msgstr "Paiement activé"
 
 #: defaults.py:115
 msgid "If False, there is no payment step on the checkout process."
-msgstr ""
-"Si ``faux``, il n'y a pas d'étape de paiement dans le processus de commande."
+msgstr "Si ``faux``, il n'y a pas d'étape de paiement dans le processus de commande."
 
 #: defaults.py:123
 msgid "Currency Locale"
@@ -146,9 +142,7 @@ msgstr "Frais de port par défaut"
 
 #: defaults.py:134
 msgid "Default cost of shipping when no custom shipping is implemented."
-msgstr ""
-"Tarif par défaut des frais de ports lorsqu'une gestion personnalisée n'a pa "
-"été définie."
+msgstr "Tarif par défaut des frais de ports lorsqu'une gestion personnalisée n'a pa été définie."
 
 #: defaults.py:142
 msgid "Discount in Cart"
@@ -164,9 +158,7 @@ msgstr "Réduction sur la commande"
 
 #: defaults.py:151
 msgid "Discount codes can be entered on the first checkout step."
-msgstr ""
-"Les codes de réduction peuvent être renseignés lors de la première étape de "
-"la commande."
+msgstr "Les codes de réduction peuvent être renseignés lors de la première étape de la commande."
 
 #: defaults.py:158
 msgid "Billing & Shipping Handler"
@@ -287,9 +279,7 @@ msgstr "Nom du propriétaire de la carte"
 #: forms.py:268
 msgid ""
 "A security code, usually the last 3 digits found on the back of your card."
-msgstr ""
-"Code de sécurité, habituellement les 3 derniers chiifres au dos de votre "
-"carte."
+msgstr "Code de sécurité, habituellement les 3 derniers chiifres au dos de votre carte."
 
 #: forms.py:352
 msgid "A valid expiry date is required."
@@ -390,7 +380,7 @@ msgstr "Défaut"
 
 #: models.py:312
 msgid "Featured Image"
-msgstr ""
+msgstr "Image mise en avant"
 
 #: models.py:323 models.py:719
 msgid "Sale"
@@ -412,9 +402,7 @@ msgstr "Combiner les critères"
 msgid ""
 "If checked, products must match all specified filters, otherwise products "
 "can match any specified filter."
-msgstr ""
-"Si coché, les produits doivent correspondre a tous les critères spécifiés. "
-"Autrement ils peuvent correspondre a n'importe quel critère spécifié."
+msgstr "Si coché, les produits doivent correspondre a tous les critères spécifiés. Autrement ils peuvent correspondre a n'importe quel critère spécifié."
 
 #: models.py:333
 msgid "Product category"
@@ -567,11 +555,9 @@ msgstr "Utilisations restantes"
 
 #: models.py:818
 msgid ""
-"If you wish to limit the number of times a code may be used, set this value. "
-"It will be decremented upon each use."
-msgstr ""
-"Si vous souhaitez limiter le nombre d'utilisations d'un code, renseignez "
-"cette valeur. Elle sera décrémentée a chaque utilisation."
+"If you wish to limit the number of times a code may be used, set this value."
+" It will be decremented upon each use."
+msgstr "Si vous souhaitez limiter le nombre d'utilisations d'un code, renseignez cette valeur. Elle sera décrémentée a chaque utilisation."
 
 #: models.py:839
 msgid "Discount codes"
@@ -583,10 +569,7 @@ msgid ""
 "Invalid currency locale specified for SHOP_CURRENCY_LOCALE: '%s'. You'll "
 "need to set the locale for your system, or configure the "
 "SHOP_CURRENCY_LOCALE setting in your settings module."
-msgstr ""
-"Traduction invalide pour l'unité monétaire de SHOP_CURRENCY_LOCALE: '%s'. "
-"Vous devez préciser la langue locale de votre système, ou configurer la "
-"variable SHOP_CURRENCY_LOCALE dans votre module settings.py."
+msgstr "Traduction invalide pour l'unité monétaire de SHOP_CURRENCY_LOCALE: '%s'. Vous devez préciser la langue locale de votre système, ou configurer la variable SHOP_CURRENCY_LOCALE dans votre module settings.py."
 
 #: views.py:60 views.py:102
 msgid "Item added to cart"
@@ -686,9 +669,8 @@ msgid "Transaction declined: "
 msgstr "Transaction refusée : "
 
 #: payment/stripe_api.py:40
-#, fuzzy
 msgid "Transaction declined"
-msgstr "Transaction refusée : "
+msgstr "Transaction refusée"
 
 #: templates/accounts/account_profile_update.html:6
 msgid "View past orders"
@@ -704,9 +686,7 @@ msgstr "Cher"
 
 #: templates/email/order_receipt.html:6 templates/email/order_receipt.txt:7
 msgid "Your order has been successful, details are below."
-msgstr ""
-"Votre commande s'est déroulée avec succès, les détails sont disponibles ci-"
-"dessous."
+msgstr "Votre commande s'est déroulée avec succès, les détails sont disponibles ci-dessous."
 
 #: templates/email/order_receipt.txt:9
 #: templates/shop/includes/order_details.html:5
@@ -770,12 +750,7 @@ msgid ""
 "If you have an existing account or would like to create one, please\n"
 "<a href=\"%(login_url)s?next=%(next)s\">log in</a> or\n"
 "<a href=\"%(signup_url)s?next=%(next)s\">sign up</a>.\n"
-msgstr ""
-"\n"
-"Si vous avez déjà un compte,\n"
-"<a href=\"%(login_url)s?next=%(next)s\">identifiez vous</a>.\n"
-"Vous pouvez aussi <a href=\"%(signup_url)s?next=%(next)s\">créer un compte</"
-"a>.\n"
+msgstr "\nSi vous avez déjà un compte,\n<a href=\"%(login_url)s?next=%(next)s\">identifiez vous</a>.\nVous pouvez aussi <a href=\"%(signup_url)s?next=%(next)s\">créer un compte</a>.\n"
 
 #: templates/shop/billing_shipping.html:28 templates/shop/confirmation.html:8
 #: templates/shop/includes/order_details.html:13
@@ -862,9 +837,7 @@ msgstr "Votre panier est vide."
 #: templates/shop/checkout.html:78
 msgid ""
 "This may be due to your session timing out after a period of inactivity."
-msgstr ""
-"Ceci est peut être dû à votre session ayant expiré après une période "
-"d'inactivité."
+msgstr "Ceci est peut être dû à votre session ayant expiré après une période d'inactivité."
 
 #: templates/shop/checkout.html:79
 msgid "We apologize for the inconvenience."

@@ -1,22 +1,21 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 #   <edi.menclova@centrum.cz>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: Cartridge\n"
-"Report-Msgid-Bugs-To: \n"
+"Report-Msgid-Bugs-To: https://github.com/stephenmcd/cartridge/issues\n"
 "POT-Creation-Date: 2012-11-17 17:59-0430\n"
-"PO-Revision-Date: 2012-08-26 14:19+0000\n"
+"PO-Revision-Date: 2012-11-17 22:31+0000\n"
 "Last-Translator: Sebastián Ramírez Magrí <sebasmagri@gmail.com>\n"
-"Language-Team: Czech (http://www.transifex.com/projects/p/cartridge/language/"
-"cs/)\n"
-"Language: cs\n"
+"Language-Team: Czech (http://www.transifex.com/projects/p/cartridge/language/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: cs\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #: admin.py:63
@@ -379,7 +378,7 @@ msgstr "Standardní"
 
 #: models.py:312
 msgid "Featured Image"
-msgstr ""
+msgstr "Doporučené fotografie"
 
 #: models.py:323 models.py:719
 msgid "Sale"
@@ -554,8 +553,8 @@ msgstr ""
 
 #: models.py:818
 msgid ""
-"If you wish to limit the number of times a code may be used, set this value. "
-"It will be decremented upon each use."
+"If you wish to limit the number of times a code may be used, set this value."
+" It will be decremented upon each use."
 msgstr ""
 
 #: models.py:839
@@ -568,10 +567,7 @@ msgid ""
 "Invalid currency locale specified for SHOP_CURRENCY_LOCALE: '%s'. You'll "
 "need to set the locale for your system, or configure the "
 "SHOP_CURRENCY_LOCALE setting in your settings module."
-msgstr ""
-"Neplatná místní měna pro  SHOP_CURRENCY_LOCALE: '%s'. Potřebujete nastavit "
-"lokalitu ve vašem systému, nebo nakonfigurovat SHOP_CURRENCY_LOCALE "
-"nastavení ve vašem modulu."
+msgstr "Neplatná místní měna pro  SHOP_CURRENCY_LOCALE: '%s'. Potřebujete nastavit lokalitu ve vašem systému, nebo nakonfigurovat SHOP_CURRENCY_LOCALE nastavení ve vašem modulu."
 
 #: views.py:60 views.py:102
 msgid "Item added to cart"
@@ -671,9 +667,8 @@ msgid "Transaction declined: "
 msgstr "Transakce zamítnuta: "
 
 #: payment/stripe_api.py:40
-#, fuzzy
 msgid "Transaction declined"
-msgstr "Transakce zamítnuta: "
+msgstr ""
 
 #: templates/accounts/account_profile_update.html:6
 msgid "View past orders"
@@ -866,8 +861,7 @@ msgstr "Potvrzení jsme Vám poslali emailem."
 
 #: templates/shop/complete.html:77
 msgid "You can also view your invoice using one of the links below."
-msgstr ""
-"Fakturu si můžete zobrazit také pomocí některého z následujících odkazů."
+msgstr "Fakturu si můžete zobrazit také pomocí některého z následujících odkazů."
 
 #: templates/shop/complete.html:81
 msgid "View invoice in your browser"

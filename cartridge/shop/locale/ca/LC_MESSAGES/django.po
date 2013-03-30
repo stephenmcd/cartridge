@@ -1,23 +1,22 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # Sergi Almacellas Abellana <pokoli@gmail.com>, 2011.
 # Sergi Almacellas <pokoli@gmail.com>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: Cartridge\n"
-"Report-Msgid-Bugs-To: \n"
+"Report-Msgid-Bugs-To: https://github.com/stephenmcd/cartridge/issues\n"
 "POT-Creation-Date: 2012-11-17 17:59-0430\n"
-"PO-Revision-Date: 2012-08-26 14:19+0000\n"
+"PO-Revision-Date: 2012-11-17 22:31+0000\n"
 "Last-Translator: Sebastián Ramírez Magrí <sebasmagri@gmail.com>\n"
-"Language-Team: Catalan (http://www.transifex.com/projects/p/cartridge/"
-"language/ca/)\n"
-"Language: ca\n"
+"Language-Team: Catalan (http://www.transifex.com/projects/p/cartridge/language/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: admin.py:63
@@ -122,9 +121,7 @@ msgstr "Es requereix un compte per la compra."
 
 #: defaults.py:83
 msgid "If True, users must create a login for the checkout process."
-msgstr ""
-"Si Verdader, els usuaris han de registrar-se per realitzar el procès de "
-"compra. "
+msgstr "Si Verdader, els usuaris han de registrar-se per realitzar el procès de compra. "
 
 #: defaults.py:114
 msgid "Payment Enabled"
@@ -144,9 +141,7 @@ msgstr "Cost d'enviament per defecte"
 
 #: defaults.py:134
 msgid "Default cost of shipping when no custom shipping is implemented."
-msgstr ""
-"Cost d'enviament per defecte. S'utiulitzat quan no s'ha implementat cap "
-"enviament personalitzat."
+msgstr "Cost d'enviament per defecte. S'utiulitzat quan no s'ha implementat cap enviament personalitzat."
 
 #: defaults.py:142
 msgid "Discount in Cart"
@@ -162,9 +157,7 @@ msgstr "Descompte en compra"
 
 #: defaults.py:151
 msgid "Discount codes can be entered on the first checkout step."
-msgstr ""
-"Els codis de descompte es poden introduïr al primer pas del process de "
-"compra. "
+msgstr "Els codis de descompte es poden introduïr al primer pas del process de compra. "
 
 #: defaults.py:158
 msgid "Billing & Shipping Handler"
@@ -285,9 +278,7 @@ msgstr "Titular de la Tarjeta"
 #: forms.py:268
 msgid ""
 "A security code, usually the last 3 digits found on the back of your card."
-msgstr ""
-"Codi de seguretat, normalment els tres ultims digits de la part de radere de "
-"la vostra targeta."
+msgstr "Codi de seguretat, normalment els tres ultims digits de la part de radere de la vostra targeta."
 
 #: forms.py:352
 msgid "A valid expiry date is required."
@@ -388,7 +379,7 @@ msgstr "Per defecte"
 
 #: models.py:312
 msgid "Featured Image"
-msgstr ""
+msgstr "Imatge destacada"
 
 #: models.py:323 models.py:719
 msgid "Sale"
@@ -410,9 +401,7 @@ msgstr "Combinat"
 msgid ""
 "If checked, products must match all specified filters, otherwise products "
 "can match any specified filter."
-msgstr ""
-"Si es selecciona els productes han de compliar amb tots els filtres "
-"especificat, sinó els productes poden compliar qualsevol dels filtres"
+msgstr "Si es selecciona els productes han de compliar amb tots els filtres especificat, sinó els productes poden compliar qualsevol dels filtres"
 
 #: models.py:333
 msgid "Product category"
@@ -565,11 +554,9 @@ msgstr "Usos restants"
 
 #: models.py:818
 msgid ""
-"If you wish to limit the number of times a code may be used, set this value. "
-"It will be decremented upon each use."
-msgstr ""
-"Si voleu limitar el nombre de vegades que es pot utilitzar un codi de "
-"descompte utilitzeu aquest value. Es decrementarà cada vegada que s'utilitzi."
+"If you wish to limit the number of times a code may be used, set this value."
+" It will be decremented upon each use."
+msgstr "Si voleu limitar el nombre de vegades que es pot utilitzar un codi de descompte utilitzeu aquest value. Es decrementarà cada vegada que s'utilitzi."
 
 #: models.py:839
 msgid "Discount codes"
@@ -581,10 +568,7 @@ msgid ""
 "Invalid currency locale specified for SHOP_CURRENCY_LOCALE: '%s'. You'll "
 "need to set the locale for your system, or configure the "
 "SHOP_CURRENCY_LOCALE setting in your settings module."
-msgstr ""
-"La localizació especificada a SHOP_CURRENCY_LOCALE: '%s' és incorrecta. "
-"Sisplau, configureu la localització del seu sistema o configureu la opció "
-"SHOP_CURRENCY_LOCALE al seu modul de settings"
+msgstr "La localizació especificada a SHOP_CURRENCY_LOCALE: '%s' és incorrecta. Sisplau, configureu la localització del seu sistema o configureu la opció SHOP_CURRENCY_LOCALE al seu modul de settings"
 
 #: views.py:60 views.py:102
 msgid "Item added to cart"
@@ -684,9 +668,8 @@ msgid "Transaction declined: "
 msgstr "Transacció invàlida:"
 
 #: payment/stripe_api.py:40
-#, fuzzy
 msgid "Transaction declined"
-msgstr "Transacció invàlida:"
+msgstr ""
 
 #: templates/accounts/account_profile_update.html:6
 msgid "View past orders"
@@ -702,9 +685,7 @@ msgstr "Estimat"
 
 #: templates/email/order_receipt.html:6 templates/email/order_receipt.txt:7
 msgid "Your order has been successful, details are below."
-msgstr ""
-"S'ha creat la seva ordre correctament. En podeu trobar els detalls a "
-"continuació:"
+msgstr "S'ha creat la seva ordre correctament. En podeu trobar els detalls a continuació:"
 
 #: templates/email/order_receipt.txt:9
 #: templates/shop/includes/order_details.html:5
@@ -768,11 +749,7 @@ msgid ""
 "If you have an existing account or would like to create one, please\n"
 "<a href=\"%(login_url)s?next=%(next)s\">log in</a> or\n"
 "<a href=\"%(signup_url)s?next=%(next)s\">sign up</a>.\n"
-msgstr ""
-"\n"
-"Si ja teniu un compte o en voleu un de nou, sisplau\n"
-"<a href=\"%(login_url)s?next=%(next)s\">Identifiqueu-se</a> o\n"
-"<a href=\"%(signup_url)s?next=%(next)s\">Registreu-se</a>.\n"
+msgstr "\nSi ja teniu un compte o en voleu un de nou, sisplau\n<a href=\"%(login_url)s?next=%(next)s\">Identifiqueu-se</a> o\n<a href=\"%(signup_url)s?next=%(next)s\">Registreu-se</a>.\n"
 
 #: templates/shop/billing_shipping.html:28 templates/shop/confirmation.html:8
 #: templates/shop/includes/order_details.html:13
