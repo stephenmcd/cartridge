@@ -1,0 +1,26 @@
+[
+    {
+        "pk": 7,
+        "model": "shop.category",
+        "fields": {
+            "content": "<p>Shop</p>",
+            "keywords": [],
+            "combined": true
+        }
+    },
+    {
+        "pk": 7,
+        "model": "pages.page",
+        "fields": {
+            "status": 2,
+            "_order": 1,
+            "description": "<p>Shop</p>",
+            "title": "Shop",
+            "titles": "Shop",
+            "content_model": "category",
+            "in_menus": [1, 2, 3],
+            "slug": "shop",
+            "site": 1
+        }
+    }
+]

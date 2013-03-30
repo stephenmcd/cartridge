@@ -4,6 +4,14 @@ Components
 
 The following section describes the various components of Cartridge and the Django models used.
 
+Categories
+==========
+
+A category is the main approach for displaying products on the website.
+Categories in Cartridge are implemented as Mezzanine pages. Consult the
+`Mezzanine documentation
+<http://mezzanine.jupo.org/docs/content-architecture.html#the-page-model>`_ for a detailed overview of how pages are implemented in Mezzanine.
+
 Products
 ========
 
@@ -15,7 +23,7 @@ ForeignKeyField to ``Product`` and can be accessed via ``Product.images``
 and ``Product.variations`` respectively.
 
 As with the ``Category`` model, the ``Product`` model inherits from the
-abstract model ``Displayable``. It also inherits from the abstract model
+abstract model ``Displayable``, which provides the model with features such as a URL/slug, and publish dates. It also inherits from the abstract model
 ``Priced`` which is discussed next. The fields provided by the ``Priced``
 model are not editable via the admin. The rationale for this is discussed
 later in :ref:`ref-denormalized-fields`.
@@ -56,7 +64,7 @@ The ``ProductVariation`` model is editable via the admin as the inline
 attribute ``ProductVariationAdmin.extra`` is set to ``0`` and therefore
 ``ProductVariation`` instances cannot be added via the admin. Instead, when
 editing ``Product`` instances via the admin, a list of check-boxes is
-provided with the form for each type of option available such as colour
+provided with the form, for each type of option available such as colour
 and size, with a check-box provided for each individual option.
 When the ``Product`` instance is saved, a set of related ``ProductVariation``
 instances will be created for each combination of options that are checked.

@@ -1,9 +1,9 @@
 
 from urllib import urlencode, urlopen
 
+from django.core.exceptions import ImproperlyConfigured
 from django.http import QueryDict
 from django.utils.translation import ugettext as _
-
 from mezzanine.conf import settings
 
 from cartridge.shop.checkout import CheckoutError
@@ -13,6 +13,14 @@ GATEWAY_COMMAND = getattr(settings, "EGATE_GATEWAY_COMMAND", "pay")
 GATEWAY_VERSION = getattr(settings, "EGATE_GATEWAY_VERSION", "1")
 GATEWAY_URL = getattr(settings, "EGATE_GATEWAY_URL",
                       "https://migs.mastercard.com.au/vpcdps")
+
+try:
+    EGATE_ACCESS_CODE = settings.EGATE_ACCESS_CODE
+    EGATE_MERCHANT_ID = settings.EGATE_MERCHANT_ID
+except AttributeError:
+    raise ImproperlyConfigured("You need to define EGATE_ACCESS_CODE and "
+                               "EGATE_MERCHANT_ID in your settings module "
+                               "to use the egate payment processor.")
 
 
 def process(request, order_form, order):
@@ -24,8 +32,8 @@ def process(request, order_form, order):
     post_data = {
         "vpc_Version": GATEWAY_VERSION,
         "vpc_Command": GATEWAY_COMMAND,
-        "vpc_AccessCode": settings.EGATE_ACCESS_CODE,
-        "vpc_Merchant": settings.EGATE_MERCHANT_ID,
+        "vpc_AccessCode": EGATE_ACCESS_CODE,
+        "vpc_Merchant": EGATE_MERCHANT_ID,
         "vpc_Amount": unicode((order.total * 100).to_integral()),
         "vpc_CardNum": request.POST["card_number"].strip(),
         "vpc_CardExp": (request.POST["card_expiry_year"][2:].strip() +

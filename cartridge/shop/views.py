@@ -1,4 +1,3 @@
-
 from collections import defaultdict
 
 from django.contrib.auth.decorators import login_required
@@ -27,6 +26,7 @@ from cartridge.shop.utils import recalculate_discount, sign
 # Set up checkout handlers.
 handler = lambda s: import_dotted_path(s) if s else lambda *args: None
 billship_handler = handler(settings.SHOP_HANDLER_BILLING_SHIPPING)
+tax_handler = handler(settings.SHOP_HANDLER_TAX)
 payment_handler = handler(settings.SHOP_HANDLER_PAYMENT)
 order_handler = handler(settings.SHOP_HANDLER_ORDER)
 
@@ -181,8 +181,10 @@ def checkout_steps(request):
     # Determine the Form class to use during the checkout process
     form_class = get_callable(settings.SHOP_CHECKOUT_FORM_CLASS)
 
-    step = int(request.POST.get("step", checkout.CHECKOUT_STEP_FIRST))
-    initial = checkout.initial_order_data(request)
+    initial = checkout.initial_order_data(request, form_class)
+    step = int(request.POST.get("step", None)
+               or initial.get("step", None)
+               or checkout.CHECKOUT_STEP_FIRST)
     form = form_class(request, step, initial=initial)
     data = request.POST
     checkout_errors = []
@@ -192,7 +194,7 @@ def checkout_steps(request):
         # for the previous step and maintain the field values entered.
         step -= 1
         form = form_class(request, step, initial=initial)
-    elif request.method == "POST":
+    elif request.method == "POST" and request.cart.has_items():
         form = form_class(request, step, initial=initial, data=data)
         if form.is_valid():
             # Copy the current form fields to the session so that
@@ -211,17 +213,18 @@ def checkout_steps(request):
             if step == checkout.CHECKOUT_STEP_FIRST:
                 try:
                     billship_handler(request, form)
+                    tax_handler(request, form)
                 except checkout.CheckoutError, e:
                     checkout_errors.append(e)
                 form.set_discount()
 
             # FINAL CHECKOUT STEP - handle payment and process order.
             if step == checkout.CHECKOUT_STEP_LAST and not checkout_errors:
-                # Create and save the inital order object so that
+                # Create and save the initial order object so that
                 # the payment handler has access to all of the order
                 # fields. If there is a payment error then delete the
                 # order, otherwise remove the cart items from stock
-                # and send the order reciept email.
+                # and send the order receipt email.
                 order = form.save(commit=False)
                 order.setup(request)
                 # Try payment.
@@ -246,7 +249,7 @@ def checkout_steps(request):
                     # Set the cookie for remembering address details
                     # if the "remember" checkbox was checked.
                     response = redirect("shop_complete")
-                    if form.cleaned_data.get("remember") is not None:
+                    if form.cleaned_data.get("remember"):
                         remembered = "%s:%s" % (sign(order.key), order.key)
                         set_cookie(response, "remember", remembered,
                                    secure=request.is_secure())
@@ -257,10 +260,18 @@ def checkout_steps(request):
             # If any checkout errors, assign them to a new form and
             # re-run is_valid. If valid, then set form to the next step.
             form = form_class(request, step, initial=initial, data=data,
-                             errors=checkout_errors)
+                              errors=checkout_errors)
             if form.is_valid():
                 step += 1
                 form = form_class(request, step, initial=initial)
+
+    # Update the step so that we don't rely on POST data to take us back to
+    # the same point in the checkout process.
+    try:
+        request.session["order"]["step"] = step
+        request.session.modified = True
+    except KeyError:
+        pass
 
     step_vars = checkout.CHECKOUT_STEPS[step - 1]
     template = "shop/%s.html" % step_vars["template"]

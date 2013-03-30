@@ -1,7 +1,7 @@
 
 from socket import gethostname
 
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 
 from mezzanine.conf import register_setting
 
@@ -26,6 +26,18 @@ register_setting(
     ),
 )
 
+# Add the product model to the list of search choices.
+register_setting(
+    name="SEARCH_MODEL_CHOICES",
+    description=_("Sequence of models that will be provided by default as "
+        "choices in the search form. Each model should be in the format "
+        "``app_label.model_name``. Only models that subclass "
+        "``mezzanine.core.models.Displayable`` should be used."),
+    editable=False,
+    default=("shop.Product",),
+    append=True,
+)
+
 # Add the checkout URLs prefix to those forced to run over SSL.
 # Only relevant if SSL_ENABLED (defined in Mezzanine) is True.
 register_setting(
@@ -46,7 +58,8 @@ register_setting(
     description=_("Sequence of setting names available within templates."),
     editable=False,
     default=("SHOP_CARD_TYPES", "SHOP_CATEGORY_USE_FEATURED_IMAGE",
-             "SHOP_CHECKOUT_STEPS_SPLIT", "SHOP_PRODUCT_SORT_OPTIONS",),
+             "SHOP_CHECKOUT_STEPS_SPLIT", "SHOP_PAYMENT_STEP_ENABLED",
+             "SHOP_PRODUCT_SORT_OPTIONS", "SHOP_USE_RATINGS"),
     append=True,
 )
 
@@ -165,6 +178,17 @@ register_setting(
 )
 
 register_setting(
+    name="SHOP_HANDLER_TAX",
+    label=_("Tax Handler"),
+    description="Dotted package path and class name of the function "
+        "called upon submission of the billing/shipping checkout step. This "
+        "is where tax calculations can be performed and set using the "
+        "function ``cartridge.shop.utils.set_tax``.",
+    editable=False,
+    default="cartridge.shop.checkout.default_tax_handler",
+)
+
+register_setting(
     name="SHOP_HANDLER_ORDER",
     label=_("Order Handler"),
     description="Dotted package path and class name of the function that "
@@ -248,6 +272,14 @@ register_setting(
     name="SHOP_USE_VARIATIONS",
     label=_("Use product variations"),
     description="Use product variations.",
+    editable=False,
+    default=True,
+)
+
+register_setting(
+    name="SHOP_USE_RATINGS",
+    label=_("Use product ratings"),
+    description="Show the product rating form, and allow browsing by rating.",
     editable=False,
     default=True,
 )

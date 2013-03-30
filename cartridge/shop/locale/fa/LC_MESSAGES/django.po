@@ -3,577 +3,564 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Thomas Wajs <thomas.wajs@gmail.com>, 2012
-#   <mathias.ettinger@gmail.com>, 2012.
-#   <strider@strycore.com>, 2012.
-# Vincent Rialland <vincent.rialland@gmail.com>, 2011.
+#   <bornazadeh@gmail.com>, 2013.
+# Mahdi Bornazadeh <bornazadeh@gmail.com>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: Cartridge\n"
 "Report-Msgid-Bugs-To: https://github.com/stephenmcd/cartridge/issues\n"
 "POT-Creation-Date: 2012-11-17 17:59-0430\n"
-"PO-Revision-Date: 2012-11-24 14:02+0000\n"
-"Last-Translator: Kniyl <mathias.ettinger@gmail.com>\n"
-"Language-Team: French (http://www.transifex.com/projects/p/cartridge/language/fr/)\n"
+"PO-Revision-Date: 2013-02-25 11:31+0000\n"
+"Last-Translator: Bornazadeh <bornazadeh@gmail.com>\n"
+"Language-Team: Persian (Iran) (http://www.transifex.com/projects/p/cartridge/language/fa_IR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: fa_IR\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: admin.py:63
 msgid "Product filters"
-msgstr "Filtres produits"
+msgstr "فیلترهای محصولات"
 
 #: admin.py:100
 msgid "Current variations"
-msgstr "Variantes actuelles"
+msgstr "تنوع فعلی"
 
 #: admin.py:122
 msgid "Other products"
-msgstr "Autres produits"
+msgstr "محصولات دیگر"
 
 #: admin.py:134
 msgid "Create new variations"
-msgstr "Créer de nouvelles variantes"
+msgstr "ایجاد یک محصول متنوع"
 
 #: admin.py:244
 msgid "Items"
-msgstr "Articles"
+msgstr "موضوعات"
 
 #: admin.py:264
 msgid "Billing details"
-msgstr "Coordonnées de facturation"
+msgstr "جزئیات صورت حساب"
 
 #: admin.py:265
 msgid "Shipping details"
-msgstr "Coordonnées de livraison"
+msgstr "جزئیات ارسال"
 
 #: admin.py:282 admin.py:302
 msgid "Apply to product and/or products in categories"
-msgstr "Appliquer au produit et/ou aux produits des catégories"
+msgstr "درخواست برای محصول و / یا محصولات در دسته بندی های"
 
 #: admin.py:284 admin.py:304
 msgid "Reduce unit price by"
-msgstr "Réduire le prix unitaire de"
+msgstr "کاهش قیمت واحد توسط"
 
 #: admin.py:287
 msgid "Sale period"
-msgstr "Période de réduction"
+msgstr "دوره فروش"
 
 #: admin.py:307
 msgid "Valid for"
-msgstr "Valide pour"
+msgstr "معتبر برای"
 
 #: checkout.py:38
 msgid "Flat rate shipping"
-msgstr "Livraison standard"
+msgstr "نرخ حمل و نقل"
 
 #: checkout.py:156
 msgid "Details"
-msgstr "Coordonnées"
+msgstr "جزئیات"
 
 #: checkout.py:160
 msgid "Address"
-msgstr "Adresse"
+msgstr "آدرس"
 
 #: checkout.py:163
 msgid "Payment"
-msgstr "Paiement"
+msgstr "پرداخت"
 
 #: checkout.py:167
 msgid "Confirmation"
-msgstr "Confirmation"
+msgstr "تایید"
 
 #: defaults.py:17
 msgid "Controls the ordering and grouping of the admin menu."
-msgstr "Contrôler l'ordre et le regroupement du menu d'administration."
+msgstr "کنترل کردن ترتیب و گروه بندی منوی مدیریت"
 
 #: defaults.py:20 management/commands/product_db.py:31
 msgid "Content"
-msgstr "Contenu"
+msgstr "محتوا"
 
 #: defaults.py:21
 msgid "Media Library"
-msgstr "Bibliothèque de médias"
+msgstr "کتابخانه ی رسانه ها"
 
 #: defaults.py:22
 msgid "Shop"
-msgstr "Boutique"
+msgstr "فروشگاه"
 
 #: defaults.py:24
 msgid "Site"
-msgstr "Site"
+msgstr "سایت"
 
 #: defaults.py:25
 msgid "Users"
-msgstr "Utilisateurs"
+msgstr "کاربران"
 
 #: defaults.py:46
 msgid "Sequence of setting names available within templates."
-msgstr "Liste des noms de paramètres utilisables dans les templates."
+msgstr "توالی تعیین اسامی موجود در داخل قالب."
 
 #: defaults.py:75
 msgid "Enable featured images in shop categories"
-msgstr "Activer l'image d'aperçu pour les catégories"
+msgstr "فعال کردن عکس های ویژه در دسته بندی های فروشگاه"
 
 #: defaults.py:82
 msgid "Checkout account required"
-msgstr "Compte nécessaire pour finaliser une commande"
+msgstr "حساب کاربری برای پرداخت مورد نیاز است"
 
 #: defaults.py:83
 msgid "If True, users must create a login for the checkout process."
-msgstr "Si ``vrai``, les utilisateurs doivent créer un compte pour le processus de commande."
+msgstr "اگر علامت دار باشد, کابران برای پرداخت باید حساب کاربری ایجاد کنند."
 
 #: defaults.py:114
 msgid "Payment Enabled"
-msgstr "Paiement activé"
+msgstr "پرداخت فعال است"
 
 #: defaults.py:115
 msgid "If False, there is no payment step on the checkout process."
-msgstr "Si ``faux``, il n'y a pas d'étape de paiement dans le processus de commande."
+msgstr "اگر علامت دار نباشد, هیچ مرحله ی پرداختی وجود نخواهد داشت."
 
 #: defaults.py:123
 msgid "Currency Locale"
-msgstr "Devise"
+msgstr "پول رایج محلی"
 
 #: defaults.py:133
 msgid "Default Shipping Cost"
-msgstr "Frais de port par défaut"
+msgstr "هزینه ی حمل و نقل پیش فرض"
 
 #: defaults.py:134
 msgid "Default cost of shipping when no custom shipping is implemented."
-msgstr "Tarif par défaut des frais de ports lorsqu'une gestion personnalisée n'a pa été définie."
+msgstr "هزینه ی پیش فرض ارسال برای مواقعی که هیچ نوعی از ارسال درخواست نشده است."
 
 #: defaults.py:142
 msgid "Discount in Cart"
-msgstr "Réduction sur le panier"
+msgstr "تخفیف در سبد خرید"
 
 #: defaults.py:143
 msgid "Discount codes can be entered on the cart page."
-msgstr "Les codes de réduction peuvent être renseignés sur la page du panier."
+msgstr "کدهای تخفیف را می توان در صفحه ی سبد خرید وارد کرد."
 
 #: defaults.py:150
 msgid "Discount in Checkout"
-msgstr "Réduction sur la commande"
+msgstr "تخفیف در پرداخت"
 
 #: defaults.py:151
 msgid "Discount codes can be entered on the first checkout step."
-msgstr "Les codes de réduction peuvent être renseignés lors de la première étape de la commande."
+msgstr "کد های تخفیف را می توان در اولین مرحله ی پرداخت وارد کرد."
 
 #: defaults.py:158
 msgid "Billing & Shipping Handler"
-msgstr "Gestionnaire de facturation et d'expédition"
+msgstr "نگاه دارنده ی پرداخت و ارسال"
 
 #: defaults.py:169
 msgid "Order Handler"
-msgstr "Gestionnaire de commande"
+msgstr "نگاه دارنده ی سفارش"
 
 #: defaults.py:180
 msgid "Payment Handler"
-msgstr "Gestionnaire de payment"
+msgstr "نگاه دارنده ی پرداخت"
 
 #: defaults.py:194
 msgid "Size"
-msgstr "Taille"
+msgstr "اندازه"
 
 #: defaults.py:195
 msgid "Colour"
-msgstr "Couleur"
+msgstr "رنگ"
 
 #: defaults.py:201
 msgid "Order Email Subject"
-msgstr "Sujet de l'e-mail de confirmation de commande"
+msgstr "موضوع ایمیل سفارش"
 
 #: defaults.py:202
 msgid "Subject to be used when sending the order receipt email."
-msgstr "Sujet à utiliser lors de l'envoi du récépissé de la commande."
+msgstr "موضوعی که برای ایمیل دریافت سفارش مورد استفاده قرار می گیرد."
 
 #: defaults.py:204
 msgid "Order Receipt"
-msgstr "Reçu de commande"
+msgstr "رسید سفارش"
 
 #: defaults.py:209
 msgid "From Email"
-msgstr "E-mail de l'expéditeur"
+msgstr "از ایمیل"
 
 #: defaults.py:210
 msgid "Email address from which order receipts should be emailed."
-msgstr "Adresse e-mail de l'expéditeur des récépissés de commande."
+msgstr "آدرس ایمیلی که رسید های سفارش از این آدرس ارسال خواهند شد."
 
 #: defaults.py:221
 msgid "Unprocessed"
-msgstr "Non traité"
+msgstr "پردازش نشده"
 
 #: defaults.py:222
 msgid "Processed"
-msgstr "Traité"
+msgstr "پردازش شده"
 
 #: defaults.py:228
 msgid "Products Per Category Page"
-msgstr "Nombre de produits par page de catégorie"
+msgstr "محصولات در هر صفحه از دسته بندی"
 
 #: defaults.py:229
 msgid "Number of products to display per category page."
-msgstr "Nombre de produits à afficher par page de catégorie."
+msgstr "تعداد محصولاتی که در هرصفحه از دسته ی محصول, نمایش داده می شوند."
 
 #: defaults.py:240
 msgid "Recently added"
-msgstr "Ajoutés récemment"
+msgstr "جدید ترین ها"
 
 #: defaults.py:241
 msgid "Highest rated"
-msgstr "Meilleure note"
+msgstr "بالاترین امتیاز"
 
 #: defaults.py:242
 msgid "Least expensive"
-msgstr "Moins cher"
+msgstr "کم ترین هزینه"
 
 #: defaults.py:243
 msgid "Most expensive"
-msgstr "Plus cher"
+msgstr "بیش ترین هزینه"
 
 #: defaults.py:249
 msgid "Use product variations"
-msgstr "Utiliser des variantes pour les produits"
+msgstr "استفاده از تنوع محصول"
 
 #: fields.py:56 management/commands/product_db.py:33
 msgid "SKU"
-msgstr "Référence"
+msgstr "اس کی یو"
 
 #: forms.py:26 templates/shop/product.html:82
 msgid "The selected options are currently unavailable."
-msgstr "Les options sélectionnées ne sont pas disponibles."
+msgstr "گزینه های انتخاب شده در حال حاضر در دسترس نیست."
 
 #: forms.py:27
 msgid "The selected options are currently not in stock."
-msgstr "Les options sélectionnées ne sont pas en stock."
+msgstr "گزینه های انتخاب شده در حال حاضر در انبار موجود نیست ."
 
 #: forms.py:28
 msgid "The selected quantity is currently unavailable."
-msgstr "La quantité sélectionnée n'est pas en stock."
+msgstr "مقدار انتخاب شده است در حال حاضر در دسترس نیست."
 
 #: forms.py:38 models.py:613 templates/shop/order_history.html:20
 msgid "Quantity"
-msgstr "Quantité"
+msgstr "مقدار"
 
 #: forms.py:230
 msgid "The discount code entered is invalid."
-msgstr "Le code de réduction indiqué est invalide."
+msgstr "کد تخفیف وارد شده معتبر نمی باشد."
 
 #: forms.py:242 models.py:816
 msgid "Free shipping"
-msgstr "Livraison gratuite"
+msgstr "ارسال کالا به صورت رایگان"
 
 #: forms.py:257
 msgid "My delivery details are the same as my billing details"
-msgstr "Mes coordonnées de livraison et de facturation sont identiques"
+msgstr "جزئیات تحویل, همانند جزئیات صورت حساب می باشد"
 
 #: forms.py:259
 msgid "Remember my address for next time"
-msgstr "Se souvenir de mon adresse pour la prochaine fois"
+msgstr "آدرس من را برای دفعات بعدی به یاد داشته باشید"
 
 #: forms.py:260
 msgid "Cardholder name"
-msgstr "Nom du propriétaire de la carte"
+msgstr "نام نگاه دارنده کارت"
 
-#: forms.py:261
-msgid "Card type"
-msgstr "Moyen de paiement"
-
-#: forms.py:264
-msgid "Card number"
-msgstr "Numéro de carte"
-
-#: forms.py:269
-msgid "CCV"
-msgstr "Cryptograme"
 #: forms.py:268
 msgid ""
 "A security code, usually the last 3 digits found on the back of your card."
-msgstr "Code de sécurité, habituellement les 3 derniers chiifres au dos de votre carte."
+msgstr "یک کد امنیتی, معمولا 3 رقم آخرشماره ای که در پشت کارت نوشته شده است."
 
 #: forms.py:352
 msgid "A valid expiry date is required."
-msgstr "Une date d'expiration valide est requise."
+msgstr "یک تاریخ انقضای معتبر"
 
 #: forms.py:460
 msgid "Only one variation can be checked as the default."
-msgstr "Une seule variante peut être la variante par défaut."
+msgstr "فقط یک تنوع محصول را می توان به عنوان پیش فرض انتخاب کرد."
 
 #: forms.py:473
 msgid "Please enter a value for only one type of reduction."
-msgstr "Entrez une valeur pour un type seulement de réduction."
+msgstr "لطفا یک مقدار برای کاهش فقط یک نوع تخفیف وارد کنید."
 
 #: models.py:40 models.py:614
 msgid "Unit price"
-msgstr "Prix unitaire"
+msgstr "قیمت واحد"
 
 #: models.py:42
 msgid "Sale price"
-msgstr "Prix soldé"
+msgstr "قیمت فروش"
 
 #: models.py:43
 msgid "Sale start"
-msgstr "Début des soldes"
+msgstr "شروع عملیات فروش"
 
 #: models.py:44
 msgid "Sale end"
-msgstr "Fin des soldes"
+msgstr "پایان عملیات فروش"
 
 #: models.py:46
 msgid "Number in stock"
-msgstr "Quantité disponible"
+msgstr "تعداد موجود در انبار"
 
 #: models.py:96
 msgid "Available for purchase"
-msgstr "Disponible"
+msgstr "موجود برای خرید"
 
 #: models.py:98 models.py:154 models.py:159 models.py:213
 #: management/commands/product_db.py:34
 msgid "Image"
-msgstr "Image"
+msgstr "عکس"
 
 #: models.py:100 models.py:334
 msgid "Product categories"
-msgstr "Catégories de produits"
+msgstr "دسته های محصول"
 
 #: models.py:101
 msgid "Date added"
-msgstr "Date de mise en rayon"
+msgstr "تاریخ اضافه شدن"
 
 #: models.py:104
 msgid "Related products"
-msgstr "Produits connexes"
+msgstr "محصولات مرتبط"
 
 #: models.py:106
 msgid "Upsell products"
-msgstr "Produits mis en avant"
+msgstr "محصولات پیشنهادی"
 
 #: models.py:107
 msgid "Rating"
-msgstr "Note"
+msgstr "رتبه"
 
 #: models.py:114
 msgid "Product"
-msgstr "Produit"
+msgstr "محصول"
 
 #: models.py:115 models.py:316 models.py:683
 msgid "Products"
-msgstr "Produits"
+msgstr "محصولات"
 
 #: models.py:155 models.py:612 management/commands/product_db.py:32
 msgid "Description"
-msgstr "Description"
+msgstr "توضیح"
 
 #: models.py:160
 msgid "Images"
-msgstr "Images"
+msgstr "عکس ها"
 
 #: models.py:176
 msgid "Type"
-msgstr "Type"
+msgstr "نوع"
 
 #: models.py:178
 msgid "Name"
-msgstr "Nom"
+msgstr "نام"
 
 #: models.py:186
 msgid "Product option"
-msgstr "Option du produit"
+msgstr "گزینه ی محصول"
 
 #: models.py:187 models.py:320
 msgid "Product options"
-msgstr "Options du produit"
+msgstr "گزینه های محصول"
 
 #: models.py:212
 msgid "Default"
-msgstr "Défaut"
+msgstr "پیش فرض"
 
 #: models.py:312
 msgid "Featured Image"
-msgstr "Image mise en avant"
+msgstr "ویژگی تصویر"
 
 #: models.py:323 models.py:719
 msgid "Sale"
-msgstr "Réduction"
+msgstr "فروش"
 
 #: models.py:325
 msgid "Minimum price"
-msgstr "Prix minimum"
+msgstr "کمترین قیمت"
 
 #: models.py:326
 msgid "Maximum price"
-msgstr "Prix maximum"
+msgstr "بیشترین قیمت"
 
 #: models.py:327
 msgid "Combined"
-msgstr "Combiner les critères"
+msgstr "ترکیب شده"
 
 #: models.py:328
 msgid ""
 "If checked, products must match all specified filters, otherwise products "
 "can match any specified filter."
-msgstr "Si coché, les produits doivent correspondre a tous les critères spécifiés. Autrement ils peuvent correspondre a n'importe quel critère spécifié."
+msgstr "اگر علامت دار باشد, محصولات باید از همه ی فیلترها عبور کنند, وگرنه محصولات\nمی توانند با هر فیلتری منطبق شوند."
 
 #: models.py:333
 msgid "Product category"
-msgstr "Catégorie de produit"
+msgstr "دسته ی محصول"
 
 #: models.py:387 models.py:396
 msgid "First name"
-msgstr "Prénom"
+msgstr "نام"
 
 #: models.py:388 models.py:397
 msgid "Last name"
-msgstr "Nom"
+msgstr "نام خانوادگی"
 
 #: models.py:389 models.py:398
 msgid "Street"
-msgstr "Rue"
+msgstr "خیابان"
 
 #: models.py:390 models.py:399
 msgid "City/Suburb"
-msgstr "Ville"
+msgstr "شهر / حومه"
 
 #: models.py:391 models.py:400
 msgid "State/Region"
-msgstr "Région"
+msgstr "استان / منطقه"
 
 #: models.py:392 models.py:401
 msgid "Zip/Postcode"
-msgstr "Code postal"
+msgstr "کد پستی"
 
 #: models.py:393 models.py:402
 msgid "Country"
-msgstr "Pays"
+msgstr "کشور"
 
 #: models.py:394 models.py:403
 msgid "Phone"
-msgstr "Téléphone"
+msgstr "تلفن"
 
 #: models.py:395
 msgid "Email"
-msgstr "E-mail"
+msgstr "ایمیل"
 
 #: models.py:404
 msgid "Additional instructions"
-msgstr "Instructions spéciales"
+msgstr "توضیحات دیگر"
 
 #: models.py:406
 msgid "Time"
-msgstr "Temps"
+msgstr "زمان"
 
 #: models.py:409
 msgid "Shipping type"
-msgstr "Type de livraison"
+msgstr "نوع ارسال"
 
 #: models.py:410
 msgid "Shipping total"
-msgstr "Total livraison"
+msgstr "جمع هزینه ی ارسال"
 
 #: models.py:411
 msgid "Item total"
-msgstr "Total article"
+msgstr "کل آیتم ها"
 
 #: models.py:412 models.py:838
 msgid "Discount code"
-msgstr "Code de réduction"
+msgstr "کد تخفیف"
 
 #: models.py:413
 msgid "Discount total"
-msgstr "Total réduction"
+msgstr "کل تخفیف"
 
 #: models.py:414
 msgid "Order total"
-msgstr "Total commande"
+msgstr "کل سفارش"
 
 #: models.py:415
 msgid "Transaction ID"
-msgstr "Identifiant de transaction"
+msgstr "شماره ی تراکنش"
 
 #: models.py:418 templates/shop/order_history.html:22
 msgid "Status"
-msgstr "Statut"
+msgstr "وضعیت"
 
 #: models.py:430
 msgid "Order"
-msgstr "Commande"
+msgstr "سفارش"
 
 #: models.py:431
 msgid "Orders"
-msgstr "Commandes"
+msgstr "سفارشات"
 
 #: models.py:511 templates/admin/shop/order/change_form.html:7
 #: templates/shop/complete.html:80
 msgid "Download PDF invoice"
-msgstr "Télécharger la facture en PDF"
+msgstr "دانلود فایل پی دی اف فاکتور"
 
 #: models.py:519
 msgid "Last updated"
-msgstr "Mis à jour le"
+msgstr "آخرین به روز رسانی"
 
 #: models.py:615
 msgid "Total price"
-msgstr "Prix total"
+msgstr "قیمت کل"
 
 #: models.py:680 management/commands/product_db.py:30
 msgid "Title"
-msgstr "Titre"
+msgstr "عنوان"
 
 #: models.py:681
 msgid "Active"
-msgstr "Actif"
+msgstr "فعال"
 
 #: models.py:686
 msgid "Categories"
-msgstr "Catégories"
+msgstr "دسته بندی"
 
 #: models.py:687
 msgid "Reduce by amount"
-msgstr "Réduire d'un montant"
+msgstr "کاهش با مقدار"
 
 #: models.py:688
 msgid "Reduce by percent"
-msgstr "Réduire d'un pourcentage"
+msgstr "کاهش با درصد"
 
 #: models.py:691
 msgid "Reduce to amount"
-msgstr "Réduire à un montant fixe"
+msgstr "کاهش تا مقدار"
 
 #: models.py:692
 msgid "Valid from"
-msgstr "Valide à partir de "
+msgstr "معتبر از"
 
 #: models.py:693
 msgid "Valid to"
-msgstr "Valide jusqu'à"
+msgstr "معتبر تا"
 
 #: models.py:720
 msgid "Sales"
-msgstr "Réductions"
+msgstr "فروش"
 
 #: models.py:814
 msgid "Code"
-msgstr "Code"
+msgstr "کد"
 
 #: models.py:815
 msgid "Minimum total purchase"
-msgstr "Montant minimal d'achat"
+msgstr "حداقل خرید کل"
 
 #: models.py:817
 msgid "Uses remaining"
-msgstr "Utilisations restantes"
+msgstr "استفاده از باقی مانده"
 
 #: models.py:818
 msgid ""
 "If you wish to limit the number of times a code may be used, set this value."
 " It will be decremented upon each use."
-msgstr "Si vous souhaitez limiter le nombre d'utilisations d'un code, renseignez cette valeur. Elle sera décrémentée a chaque utilisation."
+msgstr "اگر می خواهید تعداد دفعات قابل استفاده بودن یک کد را محدود کنید, این مورد را تنظیم کنید\nپس از هر بار استفاده کم خواهد شد."
 
 #: models.py:839
 msgid "Discount codes"
-msgstr "Codes de réduction"
+msgstr "کد تخفیف"
 
 #: utils.py:103
 #, python-format
@@ -581,179 +568,177 @@ msgid ""
 "Invalid currency locale specified for SHOP_CURRENCY_LOCALE: '%s'. You'll "
 "need to set the locale for your system, or configure the "
 "SHOP_CURRENCY_LOCALE setting in your settings module."
-msgstr "Traduction invalide pour l'unité monétaire de SHOP_CURRENCY_LOCALE: '%s'. Vous devez préciser la langue locale de votre système, ou configurer la variable SHOP_CURRENCY_LOCALE dans votre module settings.py."
+msgstr "تنظیمات واحد پول محلی درSHOP_CURRENCY_LOCALE: '%s' نا درست است. شما \nباید این مورد را در سیستم یا درفایل تنظیمات\nگزینه ی  SHOP_CURRENCY_LOCALE را درست تنظیم کنید."
 
 #: views.py:60 views.py:102
 msgid "Item added to cart"
-msgstr "Article ajouté au panier"
+msgstr "مورد به سبد خرید اضافه شد"
 
 #: views.py:67
 msgid "Item added to wishlist"
-msgstr "Article ajouté à la liste d'envies"
+msgstr "مورد به موارد دلخواه اضافه شد"
 
 #: views.py:107
 msgid "Item removed from wishlist"
-msgstr "Article retiré de la liste d'envies"
+msgstr "مورد از موارد دلخواه حذف شد"
 
 #: views.py:144
 msgid "Your cart has expired"
-msgstr "Votre panier a expiré"
+msgstr "زمان سبد خرید شما تمام شده است"
 
 #: views.py:152
 msgid "Cart updated"
-msgstr "Panier mis à jour"
+msgstr "سبد خرید به روز شد"
 
 #: management/commands/product_db.py:35
 msgid "Category"
-msgstr "Catégorie"
+msgstr "دسته"
 
 #: management/commands/product_db.py:36
 msgid "Sub-Category"
-msgstr "Sous-catégorie"
+msgstr "زیر- دسته"
 
 #: management/commands/product_db.py:38
 msgid "Number in Stock"
-msgstr "Quantité en stock"
+msgstr "تعداد موجود در انبار"
 
 #: management/commands/product_db.py:39 templates/shop/cart.html:23
 #: templates/shop/includes/order_details.html:38
 msgid "Unit Price"
-msgstr "Prix unitaire"
+msgstr "قیمت واحد"
 
 #: management/commands/product_db.py:40
 msgid "Sale Price"
-msgstr "Prix de vente"
+msgstr "قیمت فروش"
 
 #: management/commands/product_db.py:41
 msgid "Sale Start Date"
-msgstr "Date de début des soldes"
+msgstr "تاریخ شروع فروش"
 
 #: management/commands/product_db.py:42
 msgid "Sale Start Time"
-msgstr "Heure de début des soldes"
+msgstr "زمان شروع فروش"
 
 #: management/commands/product_db.py:43
 msgid "Sale End Date"
-msgstr "Date de fin des soldes"
+msgstr "تاریخ پایان فروش"
 
 #: management/commands/product_db.py:44
 msgid "Sale End Time"
-msgstr "Heure de fin des soldes"
+msgstr "زمان پایان فروش"
 
 #: management/commands/product_db.py:47
 msgid "product"
-msgstr "produit"
+msgstr "محصول"
 
 #: management/commands/product_db.py:64
 msgid "Import/Export products from a csv file."
-msgstr "Importer/Exporter les produits à partir d'un fichier CSV."
+msgstr "وارد / صادر کردن محصولات از یک فایل CSV."
 
 #: management/commands/product_db.py:71
 msgid "Import products from csv file."
-msgstr "Importer les produits à partir d'un fichier CSV."
+msgstr "وارد کردن محصولات از فایل CSV."
 
 #: management/commands/product_db.py:76
 msgid "Export products from csv file."
-msgstr "Exporter les produits vers un fichier CSV."
+msgstr "صادر کردن محصولات از فایل CSV."
 
 #: management/commands/product_db.py:83
 msgid "Please provide csv file to import"
-msgstr "Indiquer le fichier CSV à importer"
+msgstr "لطفا فایل CSV را برای وارد کردن مشخص کنید."
 
 #: management/commands/product_db.py:87
 msgid "need to import or export"
-msgstr "spécifiez importer ou exporter"
+msgstr "نیاز به وارد یا صادر کردن"
 
 #: management/commands/product_db.py:138
 msgid "Importing .."
-msgstr "Importation en cours…"
+msgstr "در حال وارد کردن ..."
 
 #: management/commands/product_db.py:185
 msgid "Exporting .."
-msgstr "Exportation en cours…"
+msgstr "در حال صادر کردن ..."
 
 #: payment/egate.py:44 payment/stripe_api.py:42
 msgid "A general error occured: "
-msgstr "Une erreur s'est produite : "
+msgstr "یک خطای کلی رخ داده است:"
 
 #: payment/egate.py:47
 msgid "Transaction declined: "
-msgstr "Transaction refusée : "
+msgstr "تراکنش کاهش یافته است:"
 
 #: payment/stripe_api.py:40
 msgid "Transaction declined"
-msgstr "Transaction refusée"
+msgstr "تراکنش کاهش یافته است"
 
 #: templates/accounts/account_profile_update.html:6
 msgid "View past orders"
-msgstr "Voir les commandes précédentes"
+msgstr "مشاهده ی سفارش های قبلی"
 
 #: templates/admin/shop/order/change_form.html:8
 msgid "History"
-msgstr "Historique"
+msgstr "تاریخچه"
 
 #: templates/email/order_receipt.html:5 templates/email/order_receipt.txt:5
 msgid "Dear"
-msgstr "Cher"
+msgstr "گرامی"
 
 #: templates/email/order_receipt.html:6 templates/email/order_receipt.txt:7
 msgid "Your order has been successful, details are below."
-msgstr "Votre commande s'est déroulée avec succès, les détails sont disponibles ci-dessous."
+msgstr "سفارش شما با موفقیت ثبت شد, جزئیات به شرح زیر است."
 
 #: templates/email/order_receipt.txt:9
 #: templates/shop/includes/order_details.html:5
 msgid "Order ID:"
-msgstr "N° de commande :"
+msgstr "شماره سفارش:"
 
 #: templates/email/order_receipt.txt:11
 msgid "Billing Details:"
-msgstr "Détails de facturation :"
+msgstr "جزئیات صورت حساب:"
 
 #: templates/email/order_receipt.txt:16
 msgid "Shipping Details:"
-msgstr "Détails d'expédition :"
+msgstr "جزئیات ارسال:"
 
 #: templates/email/order_receipt.txt:21
 msgid "Items Ordered:"
-msgstr "Produits commandés :"
+msgstr "موارد سفارش داده شده:"
 
 #: templates/email/order_receipt.txt:23
 msgid "each"
-msgstr "chaque"
+msgstr "هر"
 
 #: templates/includes/user_panel.html:5
 #, python-format
 msgid "1 item"
 msgid_plural "%(cart_quantity)s items"
-msgstr[0] "1 produit"
-msgstr[1] "%(cart_quantity)s produits"
+msgstr[0] "%(cart_quantity)s آیتم"
 
 #: templates/includes/user_panel.html:6
 msgid "in cart"
-msgstr "ajouté au panier"
+msgstr "در سبد خرید"
 
 #: templates/includes/user_panel.html:10 templates/shop/cart.html:56
 msgid "Go to Checkout"
-msgstr "Valider la commande"
+msgstr "رفتن به صفحه ی پرداخت"
 
 #: templates/includes/user_panel.html:14
 #, python-format
 msgid "Wishlist contains 1 item"
 msgid_plural " Wishlist contains %(wishlist_count)s items"
-msgstr[0] "Votre liste d'envies contient 1 produit"
-msgstr[1] "Votre liste d'envies contient %(wishlist_count)s produits"
+msgstr[0] "موارد دلخواه شامل %(wishlist_count)s محصول است"
 
 #: templates/pages/category.html:38
 msgid "Sort by"
-msgstr "Classer par"
+msgstr "مرتب سازی براساس"
 
 #: templates/pages/category.html:62 templates/shop/product.html:77
 msgid "On sale:"
-msgstr "Soldé :"
+msgstr " فروش:"
 
 #: templates/pages/category.html:66
 msgid "Coming soon"
-msgstr "Bientôt"
+msgstr "به زودی"
 
 #: templates/shop/billing_shipping.html:17
 #, python-format
@@ -762,214 +747,214 @@ msgid ""
 "If you have an existing account or would like to create one, please\n"
 "<a href=\"%(login_url)s?next=%(next)s\">log in</a> or\n"
 "<a href=\"%(signup_url)s?next=%(next)s\">sign up</a>.\n"
-msgstr "\nSi vous avez déjà un compte,\n<a href=\"%(login_url)s?next=%(next)s\">identifiez vous</a>.\nVous pouvez aussi <a href=\"%(signup_url)s?next=%(next)s\">créer un compte</a>.\n"
+msgstr "\nاگر شما حساب کاربری دارید یا مایل به ایجاد یک حساب هستید, لطفاً\\n\n<a href=\\\"%(login_url)s?next=%(next)s\\\">وارد شوید</a> یا\\n\n<a href=\\\"%(signup_url)s?next=%(next)s\\\">ثبت نام کنید</a>.\\n\n"
 
 #: templates/shop/billing_shipping.html:28 templates/shop/confirmation.html:8
 #: templates/shop/includes/order_details.html:13
 msgid "Billing Details"
-msgstr "Coordonnées de facturation"
+msgstr "جزئیات صورت حساب"
 
 #: templates/shop/billing_shipping.html:33
 msgid "Delivery Details"
-msgstr "Coordonnées de livraison"
+msgstr "جزئیات تحویل"
 
 #: templates/shop/cart.html:4 templates/shop/cart.html.py:5
 #: templates/shop/cart.html:9
 msgid "Your Cart"
-msgstr "Votre panier"
+msgstr "سبد خرید شما"
 
 #: templates/shop/cart.html:22 templates/shop/includes/order_details.html:37
 msgid "Item"
-msgstr "Article"
+msgstr "آیتم"
 
 #: templates/shop/cart.html:24 templates/shop/includes/order_details.html:39
 msgid "Qty"
-msgstr "Qté"
+msgstr "مقدار"
 
 #: templates/shop/cart.html:25 templates/shop/includes/order_details.html:40
 msgid "Price"
-msgstr "Prix"
+msgstr "قیمت"
 
 #: templates/shop/cart.html:26
 msgid "Remove?"
-msgstr "Supprimer ?"
+msgstr "پاک شود؟"
 
 #: templates/shop/cart.html:57
 msgid "Update Cart"
-msgstr "Mettre à jour le panier"
+msgstr "به روز رسانی سبد خرید"
 
 #: templates/shop/cart.html:65
 msgid "Apply"
-msgstr "Appliquer la remise"
+msgstr "اعمال تغییرات"
 
 #: templates/shop/cart.html:71
 msgid "You may also like:"
-msgstr "Vous pourriez également être intéressé par :"
+msgstr "ممکن است به این ها هم علاقه مند باشید: "
 
 #: templates/shop/cart.html:96
 msgid "Your Cart is empty."
-msgstr "Votre panier est vide."
+msgstr "سبد خرید شما خالی است."
 
 #: templates/shop/checkout.html:4 templates/shop/checkout.html.py:5
 msgid "Checkout"
-msgstr "Commande"
+msgstr "پرداخت نهایی"
 
 #: templates/shop/checkout.html:5
 msgid "Step"
-msgstr "Étape"
+msgstr "مرحله"
 
 #: templates/shop/checkout.html:5
 msgid "of"
-msgstr "sur"
+msgstr "از"
 
 #: templates/shop/checkout.html:26 templates/shop/complete.html:70
 msgid "Complete"
-msgstr "Complétée"
+msgstr "کامل"
 
 #: templates/shop/checkout.html:46
 msgid "Edit Cart"
-msgstr "Modifier le panier"
+msgstr "ویرایش سبد خرید"
 
 #: templates/shop/checkout.html:59
 msgid "Please correct the errors below."
-msgstr "Veuillez corriger les erreurs ci-dessous."
+msgstr "لطفا خطا های زیر را تصحیح کنید."
 
 #: templates/shop/checkout.html:70
 msgid "Next"
-msgstr "Poursuivre"
+msgstr "بعدی"
 
 #: templates/shop/checkout.html:72
 msgid "Back"
-msgstr "Revenir"
+msgstr "قبلی"
 
 #: templates/shop/checkout.html:77
 msgid "Your cart is empty."
-msgstr "Votre panier est vide."
+msgstr "سبد خرید شما خالی است."
 
 #: templates/shop/checkout.html:78
 msgid ""
 "This may be due to your session timing out after a period of inactivity."
-msgstr "Ceci est peut être dû à votre session ayant expiré après une période d'inactivité."
+msgstr "این خطا ممکن است بدلیل اتمام جلسه کاربری شما بعد از مدت زمانی بیکاری باشد."
 
 #: templates/shop/checkout.html:79
 msgid "We apologize for the inconvenience."
-msgstr "Nous nous excusons pour le désagrément."
+msgstr " برای مشکل ایجاد شده پوزش می طلبیم."
 
 #: templates/shop/checkout.html:81 templates/shop/wishlist.html:40
 msgid "Continue Shopping"
-msgstr " Revenir aux achats"
+msgstr "ادامه خرید"
 
 #: templates/shop/complete.html:4 templates/shop/complete.html.py:61
 msgid "Order Complete"
-msgstr "Commande terminée"
+msgstr "اتمام سفارش"
 
 #: templates/shop/complete.html:75
 msgid "Thank you for shopping with us, your order is complete."
-msgstr "Merci d'avoir acheté chez nous, votre commande est terminée."
+msgstr "ضمن تشکراز خرید شما، سفارش شما کامل شد."
 
 #: templates/shop/complete.html:76
 msgid "We've sent you a receipt via email."
-msgstr "Nous vous avons envoyé un récépissé par e-mail."
+msgstr "یک رسید از طریق ایمیل برای شما فرستاده شده است."
 
 #: templates/shop/complete.html:77
 msgid "You can also view your invoice using one of the links below."
-msgstr "Vous pouvez aussi visualiser votre facture grâce aux liens ci dessous."
+msgstr "شما همچنین می توانید صورتحساب خود را با استفاده از یکی از لینک های زیر مشاهده کنید."
 
 #: templates/shop/complete.html:81
 msgid "View invoice in your browser"
-msgstr "Voir la facture dans votre navigateur"
+msgstr "مشاهده فاکتور در مرورگر خود"
 
 #: templates/shop/confirmation.html:17
 #: templates/shop/includes/order_details.html:14
 msgid "Shipping Details"
-msgstr "Livraison"
+msgstr "جزئیات ارسال"
 
 #: templates/shop/order_history.html:4 templates/shop/order_history.html:5
 #: templates/shop/order_history.html:9
 msgid "Order History"
-msgstr "Historique des commandes"
+msgstr "تاریخچه ی سفارش"
 
 #: templates/shop/order_history.html:19
 msgid "Date / time"
-msgstr "Date / Heure"
+msgstr "تاریخ / زمان"
 
 #: templates/shop/order_history.html:21
 msgid "Paid"
-msgstr "Payé"
+msgstr "پرداخت شده"
 
 #: templates/shop/order_history.html:32
 msgid "Download PDF"
-msgstr "Télécharger le PDF"
+msgstr "دانلود پی دی اف"
 
 #: templates/shop/order_history.html:33
 msgid "View invoice"
-msgstr "Voir la facture"
+msgstr "مشاهده فاکتور"
 
 #: templates/shop/order_history.html:41
 msgid "You have not ordered anything from us yet."
-msgstr "Vous n'avez encore jamais passé commande chez nous."
+msgstr "شما تاکنون هیچ خریدی از ما نداشته اید."
 
 #: templates/shop/product.html:93 templates/shop/wishlist.html:30
 msgid "Buy"
-msgstr "Acheter"
+msgstr "خرید"
 
 #: templates/shop/product.html:94
 msgid "Save for later"
-msgstr "Enregistrer pour plus tard"
+msgstr "ذخیره برای بعد"
 
 #: templates/shop/product.html:99
 msgid "This product is currently unavailable."
-msgstr "Ce produit n'est pas disponible actuellement."
+msgstr "این محصول در حال حاضر موجود نمی باشد."
 
 #: templates/shop/product.html:105
 msgid "Related Products"
-msgstr "Produits liés à celui-ci"
+msgstr "محصولات مرتبط"
 
 #: templates/shop/wishlist.html:4 templates/shop/wishlist.html.py:5
 #: templates/shop/wishlist.html:9
 msgid "Your Wishlist"
-msgstr "Votre liste d'envies"
+msgstr "لیست کالاهای دلخواه شما"
 
 #: templates/shop/wishlist.html:31
 msgid "Remove"
-msgstr "Supprimer"
+msgstr "پاک کردن"
 
 #: templates/shop/wishlist.html:38
 msgid "Your wishlist is empty."
-msgstr "Votre liste d'envies est vide."
+msgstr "لیست کالاهای دلخواه شما خالی است."
 
 #: templates/shop/includes/order_details.html:10
 msgid "Your Details"
-msgstr "Vos informations"
+msgstr "توضیحات شما"
 
 #: templates/shop/includes/order_details.html:34
 msgid "Items Ordered"
-msgstr "Objets commandés"
+msgstr "موارد سفارش داده شده"
 
 #: templates/shop/includes/order_totals.html:4
 #: templates/shop/includes/order_totals.txt:2
 msgid "Sub total"
-msgstr "Sous-total"
+msgstr "زیر جمع"
 
 #: templates/shop/includes/order_totals.html:12
 #: templates/shop/includes/order_totals.txt:4
 msgid "Discount"
-msgstr "Réduction"
+msgstr "تخفیف"
 
 #: templates/shop/includes/order_totals.html:23
 #: templates/shop/includes/order_totals.txt:6
 msgid "Shipping"
-msgstr "Livraison"
+msgstr "ارسال"
 
 #: templates/shop/includes/order_totals.html:28
 #: templates/shop/includes/order_totals.txt:7
 msgid "Total"
-msgstr "Total"
+msgstr "کل"
 
 #: templates/shop/includes/payment_fields.html:3
 msgid "Payment Details"
-msgstr "Paiement"
+msgstr "جزئیات پرداخت"
 
 #: templates/shop/includes/payment_fields.html:8
 msgid "Card Expiry"
-msgstr "Date d'expiration"
+msgstr "تاریخ انقضای کارت"

@@ -1,0 +1,6 @@
+{% load shop_tags i18n %}
+
+<p>{% trans "Dear" %} {{ order.billing_detail_first_name }},</p>
+<p>{% trans "Your order has been successful, details are below." %}</p>
+{% include "shop/includes/order_details.html" %}
+

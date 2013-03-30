@@ -1,7 +1,6 @@
 
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import ugettext as _
-
 from mezzanine.conf import settings
 
 from cartridge.shop.checkout import CheckoutError
@@ -12,8 +11,12 @@ try:
 except ImportError:
     raise ImproperlyConfigured("stripe package must be installed")
 
-
-stripe.api_key = settings.STRIPE_API_KEY
+try:
+    stripe.api_key = settings.STRIPE_API_KEY
+except AttributeError:
+    raise ImproperlyConfigured("You need to define STRIPE_API_KEY "
+                               "in your settings module to use the "
+                               "stripe payment processor.")
 
 
 def process(request, order_form, order):
@@ -21,7 +24,7 @@ def process(request, order_form, order):
     Payment handler for the stripe API.
     """
     data = {
-        "amount": unicode(order.total.to_integral() * 100),
+        "amount": int((order.total * 100).to_integral()),
         "currency": "usd",
         "card": {
             'number': request.POST["card_number"].strip(),

@@ -4,9 +4,9 @@ from datetime import datetime, timedelta
 
 from django.db.models import Manager, Q
 from django.utils.datastructures import SortedDict
+from django.utils.timezone import now
 
 from mezzanine.conf import settings
-from mezzanine.utils.timezone import now
 
 
 class CartManager(Manager):
@@ -33,6 +33,12 @@ class CartManager(Manager):
                 cart.save()
                 self.filter(last_updated__lt=expiry_time).delete()
         if not cart:
+            # Forget what checkout step we were up to.
+            try:
+                del request.session["order"]["step"]
+                request.session.modified = True
+            except KeyError:
+                pass
             from cartridge.shop.utils import EmptyCart
             cart = EmptyCart(request)
         return cart

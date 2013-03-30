@@ -14,6 +14,13 @@ Number of minutes of inactivity until carts are abandoned.
 
 Default: ``30``
 
+``SHOP_CATEGORY_USE_FEATURED_IMAGE``
+------------------------------------
+
+Enable featured images in shop categories
+
+Default: ``False``
+
 ``SHOP_CHECKOUT_ACCOUNT_REQUIRED``
 ----------------------------------
 
@@ -90,6 +97,13 @@ Default: ``'cartridge.shop.checkout.default_order_handler'``
 Dotted package path and class name of the function that is called upon submission of the payment checkout step. This is where integration with a payment gateway should be implemented.
 
 Default: ``'cartridge.shop.checkout.default_payment_handler'``
+
+``SHOP_HANDLER_TAX``
+--------------------
+
+Dotted package path and class name of the function called upon submission of the billing/shipping checkout step. This is where tax calculations can be performed and set using the function ``cartridge.shop.utils.set_tax``.
+
+Default: ``'cartridge.shop.checkout.default_tax_handler'``
 
 ``SHOP_OPTION_TYPE_CHOICES``
 ----------------------------

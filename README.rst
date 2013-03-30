@@ -29,7 +29,7 @@ Features
 
   * Hierarchical categories
   * Easily configurable product options (colours, sizes, etc.)
-  * Hooks for shipping calculations and payment gateways
+  * Hooks for tax/shipping calculations and payment gateways
   * Sale pricing
   * Promotional discount codes
   * PDF invoice generation (for packing slips)
@@ -117,6 +117,21 @@ Please note the following guidelines for contributing:
   * If you are adding new functionality, you must include basic tests
     and documentation.
 
+If you want to do development with Cartridge, here's a quick way to set
+up a development environment and run the Cartridge unit tests, using
+`virtualenvwrapper`_ to set up a virtualenv::
+
+    $ mkvirtualenv cartridge
+    $ workon cartridge
+    $ pip install -e git://github.com/stephenmcd/mezzanine.git#egg=mezzanine
+    $ pip install pep8 pyflakes
+    $ git clone https://github.com/stephenmcd/cartridge
+    $ cd cartridge
+    $ python setup.py develop
+    $ cp cartridge/project_template/local_settings.py.template cartridge/project_template/local_settings.py
+    $ ./cartridge/project_template/manage.py test shop
+
+
 Language Translations
 =====================
 
@@ -165,6 +180,10 @@ Sites Using Cartridge
   * `Tactical Bags <http://tacticalbags.ru>`_
   * `Charles Koll Jewelry <http://charleskoll.com>`_
   * `Puraforce Remedies <http://puraforceremedies.com/>`_
+  * `Adrenaline <http://www.adrln.com/>`_
+  * `The Peculiar Store <http://thepeculiarstore.com>`_
+  * `KisanHub <http://www.kisanhub.com/>`_
+  * `Kegbot <http://kegbot.org>`_
 
 .. _`Django`: http://djangoproject.com/
 .. _`BSD licensed`: http://www.linfo.org/bsdlicense.html
@@ -185,4 +204,4 @@ Sites Using Cartridge
 .. _`#mezzanine IRC channel`: irc://freenode.net/mezzanine
 .. _`Freenode`: http://freenode.net
 .. _`Django's internationalization`: https://docs.djangoproject.com/en/dev/topics/i18n/translation/
-
+.. _`virtualenvwrapper`: http://www.doughellmann.com/projects/virtualenvwrapper

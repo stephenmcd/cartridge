@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "shop/base.html" %}
 {% load mezzanine_tags shop_tags rating_tags i18n %}
 
 {% block meta_title %}{{ product.meta_title }}{% endblock %}
@@ -16,7 +16,8 @@
 
 {% block extra_head %}
 {{ block.super }}
-<script src="{{ STATIC_URL }}mezzanine/js/jquery.tools.js"></script>
+<script src="{{ STATIC_URL }}mezzanine/js/jquery.tools.toolbox.expose.js"></script>
+<script src="{{ STATIC_URL }}mezzanine/js/jquery.tools.overlay.js"></script>
 <script>var variations = {{ variations_json|safe }};</script>
 <script src="{{ STATIC_URL }}cartridge/js/product_variations.js"></script>
 {% endblock %}
@@ -96,10 +97,12 @@
     </div>
 </form>
 {% else %}
-<div>{% trans "This product is currently unavailable." %}</div>
+<p>{% trans "This product is currently unavailable." %}</p>
 {% endif %}
 
+{% if settings.SHOP_USE_RATINGS %}
 {% rating_for product %}
+{% endif %}
 
 {% if related_products %}
 <h2>{% trans "Related Products" %}</h2>
