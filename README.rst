@@ -183,6 +183,7 @@ Sites Using Cartridge
   * `Adrenaline <http://www.adrln.com/>`_
   * `The Peculiar Store <http://thepeculiarstore.com>`_
   * `KisanHub <http://www.kisanhub.com/>`_
+  * `Kegbot <http://kegbot.org>`_
 
 .. _`Django`: http://djangoproject.com/
 .. _`BSD licensed`: http://www.linfo.org/bsdlicense.html
