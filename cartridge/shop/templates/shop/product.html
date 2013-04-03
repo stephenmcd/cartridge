@@ -92,7 +92,9 @@
     <div class="form-actions clearfix">
         <div class="form-actions-wrap">
         <input type="submit" class="btn btn-primary btn-large" name="add_cart" value="{% trans "Buy" %}">
-        <input type="submit" class="btn btn-large" name="add_wishlist" value="{% trans "Save for later" %}">
+        {% if settings.SHOP_USE_WISHLIST %}
+        <input type="submit" class="btn btn -large" name="add_wishlist" value="{% trans "Save for later" %}">
+        {% endif %}
         </div>
     </div>
 </form>
