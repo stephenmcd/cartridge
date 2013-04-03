@@ -288,7 +288,8 @@ register_setting(
 register_setting(
     name="SHOP_USE_WISHLIST",
     label=_("Use product wishlist"),
-    description="Show the links to the wishlist, and allow adding products to it.",
+    description="Show the links to the wishlist, and allow adding "
+        "products to it.",
     editable=False,
     default=True,
 )
