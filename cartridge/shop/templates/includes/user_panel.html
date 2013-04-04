@@ -10,8 +10,10 @@
         {% if request.session.order.step %}{% trans "Return to Checkout" %}{% else %}{% trans "Go to Checkout" %}{% endif %}
     </a><br>
     {% endif %}
+    {% if settings.SHOP_USE_WISHLIST %}
     <a href="{% url "shop_wishlist" %}" class="btn-wishlist">
     {% blocktrans count request.wishlist|length as wishlist_count %}Wishlist contains 1 item{% plural %} Wishlist contains {{ wishlist_count }} items{% endblocktrans %}</a>
+    {% endif %}
     {% ifinstalled mezzanine.accounts %}
     <br>
     {% include "accounts/includes/user_panel.html" %}
