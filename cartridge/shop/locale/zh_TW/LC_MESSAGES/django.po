@@ -1,0 +1,1008 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-04-09 18:23+0800\n"
+"PO-Revision-Date: 2013-04-18 16:25+0800\n"
+"Last-Translator: Tzu-ping Chung <uranusjr@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: admin.py:63
+msgid "Product filters"
+msgstr "商品篩選"
+
+#: admin.py:100
+msgid "Current variations"
+msgstr "目前規格"
+
+#: admin.py:122
+msgid "Other products"
+msgstr "其他商品"
+
+#: admin.py:134
+msgid "Create new variations"
+msgstr "建立新規格"
+
+#: admin.py:244
+msgid "Items"
+msgstr "項目"
+
+#: admin.py:264
+msgid "Billing details"
+msgstr "帳單詳細資訊"
+
+#: admin.py:265
+msgid "Shipping details"
+msgstr "貨運詳細資訊"
+
+#: admin.py:283 admin.py:303
+msgid "Apply to product and/or products in categories"
+msgstr "套用至分類中的商品"
+
+#: admin.py:285 admin.py:305
+msgid "Reduce unit price by"
+msgstr "降價"
+
+#: admin.py:288
+msgid "Sale period"
+msgstr "促銷期間"
+
+#: admin.py:308
+msgid "Valid for"
+msgstr "有效期間"
+
+#: checkout.py:40
+msgid "Flat rate shipping"
+msgstr "固定運費"
+
+#: checkout.py:55 templates/shop/includes/order_totals.html:34
+#: templates/shop/includes/order_totals.txt:8
+msgid "Tax"
+msgstr "稅"
+
+#: checkout.py:184
+msgid "Details"
+msgstr "詳細資訊"
+
+#: checkout.py:188
+msgid "Address"
+msgstr "地址"
+
+#: checkout.py:191
+msgid "Payment"
+msgstr "付款方式"
+
+#: checkout.py:195
+msgid "Confirmation"
+msgstr "確認"
+
+#: defaults.py:17
+msgid "Controls the ordering and grouping of the admin menu."
+msgstr "控制網站管理選單中的排列與分類方式。"
+
+#: defaults.py:20 management/commands/product_db.py:31
+msgid "Content"
+msgstr "內容"
+
+#: defaults.py:21
+msgid "Media Library"
+msgstr "媒體資料庫"
+
+#: defaults.py:22
+msgid "Shop"
+msgstr "商店"
+
+#: defaults.py:24
+msgid "Site"
+msgstr "網站"
+
+#: defaults.py:25
+msgid "Users"
+msgstr "使用者"
+
+#: defaults.py:32
+msgid "Sequence of models that will be provided by default as "
+msgstr ""
+
+#: defaults.py:58
+msgid "Sequence of setting names available within templates."
+msgstr "在模板中有效的設定名稱。"
+
+#: defaults.py:89
+msgid "Enable featured images in shop categories"
+msgstr "在商店分類中使用封面圖片。"
+
+#: defaults.py:96
+msgid "Checkout account required"
+msgstr "需要帳號才可結帳"
+
+#: defaults.py:97
+msgid "If True, users must create a login for the checkout "
+msgstr ""
+
+#: defaults.py:128
+msgid "Payment Enabled"
+msgstr "啟用付款方式"
+
+#: defaults.py:129
+msgid "If False, there is no payment step on the checkout "
+msgstr ""
+
+#: defaults.py:137
+msgid "Currency Locale"
+msgstr "貨幣地區"
+
+#: defaults.py:147
+msgid "Default Shipping Cost"
+msgstr "預設運費"
+
+#: defaults.py:148
+msgid "Default cost of shipping when no custom shipping is "
+msgstr ""
+
+#: defaults.py:156
+msgid "Discount in Cart"
+msgstr "購物車折扣"
+
+#: defaults.py:157
+msgid "Discount codes can be entered on the cart page."
+msgstr "可以於購物車頁面中輸入的折扣碼。"
+
+#: defaults.py:164
+msgid "Discount in Checkout"
+msgstr "結帳折扣"
+
+#: defaults.py:165
+msgid "Discount codes can be entered on the first checkout step."
+msgstr "可以在結帳的第一個步驟時輸入的折扣碼。"
+
+#: defaults.py:172
+msgid "Billing & Shipping Handler"
+msgstr "付款與貨運 Handler"
+
+#: defaults.py:183
+msgid "Tax Handler"
+msgstr "稅款 Handler"
+
+#: defaults.py:194
+msgid "Order Handler"
+msgstr "訂單 Handler"
+
+#: defaults.py:205
+msgid "Payment Handler"
+msgstr "付款方式 Handler"
+
+#: defaults.py:219
+msgid "Size"
+msgstr "尺寸"
+
+#: defaults.py:220
+msgid "Colour"
+msgstr "顏色"
+
+#: defaults.py:226
+msgid "Order Email Subject"
+msgstr "訂單 Email 主旨"
+
+#: defaults.py:227
+msgid "Subject to be used when sending the order receipt email."
+msgstr "送出訂單收據 email 時使用的主旨。"
+
+#: defaults.py:229
+msgid "Order Receipt"
+msgstr "訂單收據"
+
+#: defaults.py:234
+msgid "From Email"
+msgstr "寄件人"
+
+#: defaults.py:235
+msgid "Email address from which order receipts should be "
+msgstr ""
+
+#: defaults.py:246
+msgid "Unprocessed"
+msgstr "未處理"
+
+#: defaults.py:247
+msgid "Processed"
+msgstr "已處理"
+
+#: defaults.py:253
+msgid "Products Per Category Page"
+msgstr "分類頁商品數"
+
+#: defaults.py:254
+msgid "Number of products to display per category page."
+msgstr "每個分類頁面應該顯示的商品數。"
+
+#: defaults.py:265
+msgid "Recently added"
+msgstr "最近新增"
+
+#: defaults.py:266
+msgid "Highest rated"
+msgstr "評等最高"
+
+#: defaults.py:267
+msgid "Least expensive"
+msgstr "價格最低"
+
+#: defaults.py:268
+msgid "Most expensive"
+msgstr "價格最高"
+
+#: defaults.py:274
+msgid "Use product variations"
+msgstr "使用商品規格功能"
+
+#: defaults.py:282
+msgid "Use product ratings"
+msgstr "使用商品評分功能"
+
+#: defaults.py:290
+msgid "Use product wishlist"
+msgstr "使用下次再買功能"
+
+#: fields.py:56 management/commands/product_db.py:33
+msgid "SKU"
+msgstr "存貨單位"
+
+#: forms.py:26 templates/shop/product.html:83
+msgid "The selected options are currently unavailable."
+msgstr "目前無法購買您選擇的規格。"
+
+#: forms.py:27
+msgid "The selected options are currently not in stock."
+msgstr "您選擇的規格已無存貨。"
+
+#: forms.py:28
+msgid "The selected quantity is currently unavailable."
+msgstr "目前無法購買您選擇的數量。"
+
+#: forms.py:38 models.py:619 templates/shop/order_history.html:20
+msgid "Quantity"
+msgstr "數量"
+
+#: forms.py:258
+msgid "The discount code entered is invalid."
+msgstr "折扣碼無效。"
+
+#: forms.py:270 models.py:822
+msgid "Free shipping"
+msgstr "免運費"
+
+#: forms.py:285
+msgid "My delivery details are the same as my billing details"
+msgstr "貨運資料同帳單資料"
+
+#: forms.py:287
+msgid "Remember my address for next time"
+msgstr "記住我的地址"
+
+#: forms.py:288
+msgid "Cardholder name"
+msgstr "持卡人姓名"
+
+#: forms.py:289
+msgid "Card type"
+msgstr "卡片種類"
+
+#: forms.py:292
+msgid "Card number"
+msgstr "卡號"
+
+#: forms.py:297
+msgid "CCV"
+msgstr "安全號"
+
+#: forms.py:297
+msgid "A security code, "
+msgstr ""
+
+#: forms.py:396
+msgid "A valid expiry date is required."
+msgstr "請填入有效的到期日。"
+
+#: forms.py:504
+msgid "Only one variation can be checked as the default."
+msgstr "只能選擇一個預設規格"
+
+#: forms.py:517
+msgid "Please enter a value for only one type of reduction."
+msgstr "不可同時使用兩種減價方式。"
+
+#: models.py:40 models.py:620
+msgid "Unit price"
+msgstr "單價"
+
+#: models.py:42
+msgid "Sale price"
+msgstr "促銷價"
+
+#: models.py:43
+msgid "Sale start"
+msgstr "促銷開始"
+
+#: models.py:44
+msgid "Sale end"
+msgstr "促銷結束"
+
+#: models.py:46
+msgid "Number in stock"
+msgstr "庫存量"
+
+#: models.py:96
+msgid "Available for purchase"
+msgstr "可購買"
+
+#: models.py:98 models.py:154 models.py:160 models.py:214
+#: management/commands/product_db.py:34
+msgid "Image"
+msgstr "影像"
+
+#: models.py:100 models.py:333
+msgid "Product categories"
+msgstr "商品分類"
+
+#: models.py:101
+msgid "Date added"
+msgstr "加入日期"
+
+#: models.py:104
+msgid "Related products"
+msgstr "相關商品"
+
+#: models.py:106
+msgid "Upsell products"
+msgstr "推薦商品"
+
+#: models.py:107
+msgid "Rating"
+msgstr "評分"
+
+#: models.py:114
+msgid "Product"
+msgstr "商品"
+
+#: models.py:115 models.py:317 models.py:689
+msgid "Products"
+msgstr "商品"
+
+#: models.py:156 models.py:618 management/commands/product_db.py:32
+msgid "Description"
+msgstr "描述"
+
+#: models.py:161
+msgid "Images"
+msgstr "影像"
+
+#: models.py:177
+msgid "Type"
+msgstr "類型"
+
+#: models.py:179
+msgid "Name"
+msgstr "名稱"
+
+#: models.py:187
+msgid "Product option"
+msgstr "商品選項"
+
+#: models.py:188 models.py:320
+msgid "Product options"
+msgstr "商品選項"
+
+#: models.py:213
+msgid "Default"
+msgstr "預設"
+
+#: models.py:313
+msgid "Featured Image"
+msgstr "封面圖片"
+
+#: models.py:322 models.py:725
+msgid "Sale"
+msgstr "促銷"
+
+#: models.py:324
+msgid "Minimum price"
+msgstr "最低價格"
+
+#: models.py:325
+msgid "Maximum price"
+msgstr "最高價格"
+
+#: models.py:326
+msgid "Combined"
+msgstr "合計"
+
+#: models.py:327
+msgid "If checked, "
+msgstr ""
+
+#: models.py:332
+msgid "Product category"
+msgstr "商品分類"
+
+#: models.py:386 models.py:395
+msgid "First name"
+msgstr "名"
+
+#: models.py:387 models.py:396
+msgid "Last name"
+msgstr "姓"
+
+#: models.py:388 models.py:397
+msgid "Street"
+msgstr "路/街"
+
+#: models.py:389 models.py:398
+msgid "City/Suburb"
+msgstr "縣市"
+
+#: models.py:390 models.py:399
+msgid "State/Region"
+msgstr "州/區域"
+
+#: models.py:391 models.py:400
+msgid "Zip/Postcode"
+msgstr "郵遞區號"
+
+#: models.py:392 models.py:401
+msgid "Country"
+msgstr "國家"
+
+#: models.py:393 models.py:402
+msgid "Phone"
+msgstr "電話"
+
+#: models.py:394
+msgid "Email"
+msgstr "Email"
+
+#: models.py:403
+msgid "Additional instructions"
+msgstr "額外說明"
+
+#: models.py:405
+msgid "Time"
+msgstr "時間"
+
+#: models.py:408
+msgid "Shipping type"
+msgstr "貨運類別"
+
+#: models.py:409
+msgid "Shipping total"
+msgstr "運費總計"
+
+#: models.py:410
+msgid "Tax type"
+msgstr "稅別"
+
+#: models.py:411
+msgid "Tax total"
+msgstr "稅款總計"
+
+#: models.py:412
+msgid "Item total"
+msgstr "項目總計"
+
+#: models.py:413 models.py:844
+msgid "Discount code"
+msgstr "折扣碼"
+
+#: models.py:414
+msgid "Discount total"
+msgstr "折扣總計"
+
+#: models.py:415
+msgid "Order total"
+msgstr "訂單總計"
+
+#: models.py:416
+msgid "Transaction ID"
+msgstr "交易編號"
+
+#: models.py:419 templates/shop/order_history.html:22
+msgid "Status"
+msgstr "狀態"
+
+#: models.py:431
+msgid "Order"
+msgstr "訂單"
+
+#: models.py:432
+msgid "Orders"
+msgstr "訂單"
+
+#: models.py:517 templates/admin/shop/order/change_form.html:7
+#: templates/shop/complete.html:80
+msgid "Download PDF invoice"
+msgstr "下載 PDF 訂購資訊"
+
+#: models.py:525
+msgid "Last updated"
+msgstr "上次更新"
+
+#: models.py:621
+msgid "Total price"
+msgstr "總價"
+
+#: models.py:686 management/commands/product_db.py:30
+msgid "Title"
+msgstr "標題"
+
+#: models.py:687
+msgid "Active"
+msgstr "啟用"
+
+#: models.py:692
+msgid "Categories"
+msgstr "分類"
+
+#: models.py:693
+msgid "Reduce by amount"
+msgstr "數量折扣"
+
+#: models.py:694
+msgid "Reduce by percent"
+msgstr "百分比折扣"
+
+#: models.py:697
+msgid "Reduce to amount"
+msgstr "折扣至數量"
+
+#: models.py:698
+msgid "Valid from"
+msgstr "開始時間"
+
+#: models.py:699
+msgid "Valid to"
+msgstr "結束時間"
+
+#: models.py:726
+msgid "Sales"
+msgstr "促銷"
+
+#: models.py:820
+msgid "Code"
+msgstr "折扣碼"
+
+#: models.py:821
+msgid "Minimum total purchase"
+msgstr "最低購買量"
+
+#: models.py:823
+msgid "Uses remaining"
+msgstr "剩餘使用次數"
+
+#: models.py:824
+msgid "If you wish to limit the number of times a "
+msgstr ""
+
+#: models.py:845
+msgid "Discount codes"
+msgstr "折扣碼"
+
+#: utils.py:111
+msgid "Invalid currency locale specified for SHOP_CURRENCY_LOCALE: "
+msgstr ""
+
+#: views.py:60 views.py:105
+msgid "Item added to cart"
+msgstr "已加入購物車"
+
+#: views.py:67
+msgid "Item added to wishlist"
+msgstr "已加入下次再買清單"
+
+#: views.py:110
+msgid "Item removed from wishlist"
+msgstr "已從下次再買清單移除"
+
+#: views.py:147
+msgid "Your cart has expired"
+msgstr "您的購物車已過期"
+
+#: views.py:155
+msgid "Cart updated"
+msgstr "已更新購物車"
+
+#: management/commands/product_db.py:35
+msgid "Category"
+msgstr "分類"
+
+#: management/commands/product_db.py:36
+msgid "Sub-Category"
+msgstr "子分類"
+
+#: management/commands/product_db.py:38
+msgid "Number in Stock"
+msgstr "庫存量"
+
+#: management/commands/product_db.py:39 templates/shop/cart.html:23
+#: templates/shop/includes/order_details.html:40
+#: templates/shop/includes/order_details_rtl.html:44
+msgid "Unit Price"
+msgstr "單價"
+
+#: management/commands/product_db.py:40
+msgid "Sale Price"
+msgstr "促銷價"
+
+#: management/commands/product_db.py:41
+msgid "Sale Start Date"
+msgstr "促銷開始日期"
+
+#: management/commands/product_db.py:42
+msgid "Sale Start Time"
+msgstr "促銷開始時間"
+
+#: management/commands/product_db.py:43
+msgid "Sale End Date"
+msgstr "促銷結束日期"
+
+#: management/commands/product_db.py:44
+msgid "Sale End Time"
+msgstr "促銷結束時間"
+
+#: management/commands/product_db.py:47
+msgid "product"
+msgstr "商品"
+
+#: management/commands/product_db.py:64
+msgid "Import/Export products from a csv file."
+msgstr "將商品匯入/匯出為 CSV 檔。"
+
+#: management/commands/product_db.py:71
+msgid "Import products from csv file."
+msgstr "從 CSV 檔匯入商品。"
+
+#: management/commands/product_db.py:76
+msgid "Export products from csv file."
+msgstr "繪出商品至 CSV 檔。"
+
+#: management/commands/product_db.py:83
+msgid "Please provide csv file to import"
+msgstr "請選擇要匯入的 CSV 檔"
+
+#: management/commands/product_db.py:87
+msgid "need to import or export"
+msgstr "需要匯入或匯出"
+
+#: management/commands/product_db.py:138
+msgid "Importing .."
+msgstr "匯入中…"
+
+#: management/commands/product_db.py:186
+msgid "Exporting .."
+msgstr "匯出中…"
+
+#: payment/egate.py:52 payment/stripe_api.py:45
+msgid "A general error occured: "
+msgstr "發生了一般性的錯誤："
+
+#: payment/egate.py:55
+msgid "Transaction declined: "
+msgstr "交易被拒："
+
+#: payment/stripe_api.py:43
+msgid "Transaction declined"
+msgstr "交易被拒"
+
+#: templates/accounts/account_profile_update.html:6
+msgid "View past orders"
+msgstr "顯示過去的訂單"
+
+#: templates/admin/shop/order/change_form.html:8
+msgid "History"
+msgstr "歷史"
+
+#: templates/email/order_receipt.txt:5 templates/email/receipt.html:3
+#: templates/email/receipt_rtl.html:3
+msgid "Dear"
+msgstr "親愛的"
+
+#: templates/email/order_receipt.txt:7 templates/email/receipt.html:4
+#: templates/email/receipt_rtl.html:4
+msgid "Your order has been successful, details are below."
+msgstr "您的訂購已成功，細節如下。"
+
+#: templates/email/order_receipt.txt:9
+#: templates/shop/includes/order_details.html:7
+#: templates/shop/includes/order_details_rtl.html:8
+msgid "Order ID:"
+msgstr "訂單編號："
+
+#: templates/email/order_receipt.txt:11
+msgid "Billing Details:"
+msgstr "帳單資料："
+
+#: templates/email/order_receipt.txt:16
+msgid "Shipping Details:"
+msgstr "貨運資料："
+
+#: templates/email/order_receipt.txt:21
+msgid "Items Ordered:"
+msgstr "訂購的項目："
+
+#: templates/email/order_receipt.txt:23
+msgid "each"
+msgstr "每個"
+
+#: templates/includes/user_panel.html:5
+#, python-format
+msgid "1 item"
+msgid_plural "%(cart_quantity)s items"
+msgstr[0] "%(cart_quantity)s 個項目"
+
+#: templates/includes/user_panel.html:6
+msgid "in cart"
+msgstr "在購物車中"
+
+#: templates/includes/user_panel.html:10 templates/shop/cart.html:57
+msgid "Return to Checkout"
+msgstr "繼續結帳"
+
+#: templates/includes/user_panel.html:10 templates/shop/cart.html:57
+msgid "Go to Checkout"
+msgstr "前往結帳"
+
+#: templates/includes/user_panel.html:15
+#, python-format
+msgid "Wishlist contains 1 item"
+msgid_plural " Wishlist contains %(wishlist_count)s items"
+msgstr[0] "下次再買清單包含 %(wishlist_count)s 個項目"
+
+#: templates/pages/category.html:38
+msgid "Sort by"
+msgstr "排列方式："
+
+#: templates/pages/category.html:64 templates/shop/product.html:78
+msgid "On sale:"
+msgstr "促銷中："
+
+#: templates/pages/category.html:68
+msgid "Coming soon"
+msgstr "即將推出"
+
+#: templates/shop/billing_shipping.html:17
+#, python-format
+msgid ""
+"\n"
+"If you have an existing account or would like to create one, please\n"
+"<a href=\"%(login_url)s?next=%(next)s\">log in</a> or\n"
+"<a href=\"%(signup_url)s?next=%(next)s\">sign up</a>.\n"
+msgstr "\n如果您已經擁有，或想建立一個帳號，請\n"
+"<a href=\"%(login_url)s?next=%(next)s\">登入</a> 或\n"
+"<a href=\"%(signup_url)s?next=%(next)s\">註冊</a>。\n"
+
+#: templates/shop/billing_shipping.html:28 templates/shop/confirmation.html:8
+#: templates/shop/includes/order_details.html:15
+#: templates/shop/includes/order_details_rtl.html:15
+msgid "Billing Details"
+msgstr "付款細節"
+
+#: templates/shop/billing_shipping.html:33
+msgid "Delivery Details"
+msgstr "運送細節"
+
+#: templates/shop/cart.html:4 templates/shop/cart.html.py:5
+#: templates/shop/cart.html:9
+msgid "Your Cart"
+msgstr "您的購物車"
+
+#: templates/shop/cart.html:22 templates/shop/includes/order_details.html:39
+#: templates/shop/includes/order_details_rtl.html:45
+msgid "Item"
+msgstr "項目"
+
+#: templates/shop/cart.html:24 templates/shop/includes/order_details.html:41
+#: templates/shop/includes/order_details_rtl.html:43
+msgid "Qty"
+msgstr "數量"
+
+#: templates/shop/cart.html:25 templates/shop/includes/order_details.html:42
+#: templates/shop/includes/order_details_rtl.html:42
+msgid "Price"
+msgstr "價格"
+
+#: templates/shop/cart.html:26
+msgid "Remove?"
+msgstr "移除？"
+
+#: templates/shop/cart.html:59
+msgid "Update Cart"
+msgstr "更新購物車"
+
+#: templates/shop/cart.html:67
+msgid "Apply"
+msgstr "套用"
+
+#: templates/shop/cart.html:73
+msgid "You may also like:"
+msgstr "您可能也會喜歡："
+
+#: templates/shop/cart.html:98
+msgid "Your Cart is empty."
+msgstr "您的購物車是空的。"
+
+#: templates/shop/checkout.html:4 templates/shop/checkout.html.py:5
+msgid "Checkout"
+msgstr "結帳"
+
+#: templates/shop/checkout.html:5
+msgid "Step"
+msgstr "步驟"
+
+#: templates/shop/checkout.html:5
+msgid "of"
+msgstr "之"
+
+#: templates/shop/checkout.html:26 templates/shop/complete.html:70
+msgid "Complete"
+msgstr "完成"
+
+#: templates/shop/checkout.html:48
+msgid "Edit Cart"
+msgstr "編輯購物車"
+
+#: templates/shop/checkout.html:61
+msgid "Please correct the errors below."
+msgstr "請修正以下的錯誤。"
+
+#: templates/shop/checkout.html:73
+msgid "Next"
+msgstr "下一步"
+
+#: templates/shop/checkout.html:75
+msgid "Back"
+msgstr "上一步"
+
+#: templates/shop/checkout.html:80
+msgid "Your cart is empty."
+msgstr "您的購物車是空的。"
+
+#: templates/shop/checkout.html:81
+msgid ""
+"This may be due to your session timing out after a period of inactivity."
+msgstr "這可能是因為您的連線時段已因為太久沒有動作而逾時。"
+
+#: templates/shop/checkout.html:82
+msgid "We apologize for the inconvenience."
+msgstr "若有不便，在此至歉。"
+
+#: templates/shop/checkout.html:84 templates/shop/wishlist.html:40
+msgid "Continue Shopping"
+msgstr "繼續購物"
+
+#: templates/shop/complete.html:4 templates/shop/complete.html.py:61
+msgid "Order Complete"
+msgstr "訂單完成"
+
+#: templates/shop/complete.html:75
+msgid "Thank you for shopping with us, your order is complete."
+msgstr "感謝您的購買，您的訂單已完成。"
+
+#: templates/shop/complete.html:76
+msgid "We've sent you a receipt via email."
+msgstr "我們已經由 email 將收據送給您。"
+
+#: templates/shop/complete.html:77
+msgid "You can also view your invoice using one of the links below."
+msgstr "您也可以使用下列連結之一檢視您的訂購收據。"
+
+#: templates/shop/complete.html:81
+msgid "View invoice in your browser"
+msgstr "在瀏覽器中檢視訂購資訊"
+
+#: templates/shop/confirmation.html:17
+#: templates/shop/includes/order_details.html:16
+#: templates/shop/includes/order_details_rtl.html:16
+msgid "Shipping Details"
+msgstr "貨運詳細資料"
+
+#: templates/shop/order_history.html:4 templates/shop/order_history.html:5
+#: templates/shop/order_history.html:9
+msgid "Order History"
+msgstr "訂單歷史"
+
+#: templates/shop/order_history.html:19
+msgid "Date / time"
+msgstr "日期 / 時間"
+
+#: templates/shop/order_history.html:21
+msgid "Paid"
+msgstr "已付款"
+
+#: templates/shop/order_history.html:32
+msgid "Download PDF"
+msgstr "下載 PDF"
+
+#: templates/shop/order_history.html:33
+msgid "View invoice"
+msgstr "檢視訂購資訊"
+
+#: templates/shop/order_history.html:41
+msgid "You have not ordered anything from us yet."
+msgstr "您並未訂購任何商品。"
+
+#: templates/shop/product.html:94 templates/shop/wishlist.html:30
+msgid "Buy"
+msgstr "購買"
+
+#: templates/shop/product.html:96
+msgid "Save for later"
+msgstr "下次再買"
+
+#: templates/shop/product.html:102
+msgid "This product is currently unavailable."
+msgstr "目前無法購買此商品。"
+
+#: templates/shop/product.html:110
+msgid "Related Products"
+msgstr "相關商品"
+
+#: templates/shop/wishlist.html:4 templates/shop/wishlist.html.py:5
+#: templates/shop/wishlist.html:9
+msgid "Your Wishlist"
+msgstr "下次再買清單"
+
+#: templates/shop/wishlist.html:31
+msgid "Remove"
+msgstr "移除"
+
+#: templates/shop/wishlist.html:38
+msgid "Your wishlist is empty."
+msgstr "您的下次再買清單為空。"
+
+#: templates/shop/includes/order_details.html:12
+#: templates/shop/includes/order_details_rtl.html:12
+msgid "Your Details"
+msgstr "您的詳細資訊"
+
+#: templates/shop/includes/order_details.html:36
+#: templates/shop/includes/order_details_rtl.html:36
+msgid "Items Ordered"
+msgstr "已訂購的項目"
+
+#: templates/shop/includes/order_totals.html:4
+#: templates/shop/includes/order_totals.txt:2
+msgid "Sub total"
+msgstr "小計"
+
+#: templates/shop/includes/order_totals.html:12
+#: templates/shop/includes/order_totals.txt:4
+msgid "Discount"
+msgstr "折扣"
+
+#: templates/shop/includes/order_totals.html:23
+#: templates/shop/includes/order_totals.txt:6
+msgid "Shipping"
+msgstr "貨運"
+
+#: templates/shop/includes/order_totals.html:39
+#: templates/shop/includes/order_totals.txt:9
+msgid "Total"
+msgstr "總計"
+
+#: templates/shop/includes/payment_fields.html:3
+msgid "Payment Details"
+msgstr "付款方式詳細資料"
+
+#: templates/shop/includes/payment_fields.html:8
+msgid "Card Expiry"
+msgstr "到期日"
