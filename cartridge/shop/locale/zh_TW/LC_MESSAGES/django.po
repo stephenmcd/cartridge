@@ -747,8 +747,7 @@ msgstr "每個"
 #, python-format
 msgid "1 item"
 msgid_plural "%(cart_quantity)s items"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(cart_quantity)s 個項目"
 
 #: templates/includes/user_panel.html:6
 msgid "in cart"
@@ -766,8 +765,7 @@ msgstr "前往結帳"
 #, python-format
 msgid "Wishlist contains 1 item"
 msgid_plural " Wishlist contains %(wishlist_count)s items"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "下次再買清單包含 %(wishlist_count)s 個項目"
 
 #: templates/pages/category.html:38
 msgid "Sort by"
@@ -788,7 +786,9 @@ msgid ""
 "If you have an existing account or would like to create one, please\n"
 "<a href=\"%(login_url)s?next=%(next)s\">log in</a> or\n"
 "<a href=\"%(signup_url)s?next=%(next)s\">sign up</a>.\n"
-msgstr ""
+msgstr "\n如果您已經擁有，或想建立一個帳號，請\n"
+"<a href=\"%(login_url)s?next=%(next)s\">登入</a> 或\n"
+"<a href=\"%(signup_url)s?next=%(next)s\">註冊</a>。\n"
 
 #: templates/shop/billing_shipping.html:28 templates/shop/confirmation.html:8
 #: templates/shop/includes/order_details.html:15
