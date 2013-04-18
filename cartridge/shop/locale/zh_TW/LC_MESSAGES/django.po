@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-04-09 18:23+0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-04-18 16:25+0800\n"
+"Last-Translator: Tzu-ping Chung <uranusjr@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -24,15 +24,15 @@ msgstr "商品篩選"
 
 #: admin.py:100
 msgid "Current variations"
-msgstr "目前的種類"
+msgstr "目前規格"
 
 #: admin.py:122
 msgid "Other products"
-msgstr "其他產品"
+msgstr "其他商品"
 
 #: admin.py:134
 msgid "Create new variations"
-msgstr "建立新種類"
+msgstr "建立新規格"
 
 #: admin.py:244
 msgid "Items"
@@ -52,7 +52,7 @@ msgstr "套用至分類中的商品"
 
 #: admin.py:285 admin.py:305
 msgid "Reduce unit price by"
-msgstr "減少單價"
+msgstr "降價"
 
 #: admin.py:288
 msgid "Sale period"
@@ -97,7 +97,7 @@ msgstr "內容"
 
 #: defaults.py:21
 msgid "Media Library"
-msgstr "媒體檔案庫"
+msgstr "媒體資料庫"
 
 #: defaults.py:22
 msgid "Shop"
@@ -125,7 +125,7 @@ msgstr "在商店分類中使用封面圖片。"
 
 #: defaults.py:96
 msgid "Checkout account required"
-msgstr "需要結帳帳號"
+msgstr "需要帳號才可結帳"
 
 #: defaults.py:97
 msgid "If True, users must create a login for the checkout "
@@ -205,7 +205,7 @@ msgstr "訂單收據"
 
 #: defaults.py:234
 msgid "From Email"
-msgstr "從 Email"
+msgstr "寄件人"
 
 #: defaults.py:235
 msgid "Email address from which order receipts should be "
@@ -217,7 +217,7 @@ msgstr "未處理"
 
 #: defaults.py:247
 msgid "Processed"
-msgstr ""
+msgstr "已處理"
 
 #: defaults.py:253
 msgid "Products Per Category Page"
@@ -233,7 +233,7 @@ msgstr "最近新增"
 
 #: defaults.py:266
 msgid "Highest rated"
-msgstr "評分最高"
+msgstr "評等最高"
 
 #: defaults.py:267
 msgid "Least expensive"
@@ -245,27 +245,27 @@ msgstr "價格最高"
 
 #: defaults.py:274
 msgid "Use product variations"
-msgstr "使用產品種類"
+msgstr "使用商品規格功能"
 
 #: defaults.py:282
 msgid "Use product ratings"
-msgstr "使用商品評分機制"
+msgstr "使用商品評分功能"
 
 #: defaults.py:290
 msgid "Use product wishlist"
-msgstr "使用下次再買清單"
+msgstr "使用下次再買功能"
 
 #: fields.py:56 management/commands/product_db.py:33
 msgid "SKU"
-msgstr "SKU"
+msgstr "存貨單位"
 
 #: forms.py:26 templates/shop/product.html:83
 msgid "The selected options are currently unavailable."
-msgstr "目前無法購買您選擇的種類。"
+msgstr "目前無法購買您選擇的規格。"
 
 #: forms.py:27
 msgid "The selected options are currently not in stock."
-msgstr "您選擇的種類已無存貨。"
+msgstr "您選擇的規格已無存貨。"
 
 #: forms.py:28
 msgid "The selected quantity is currently unavailable."
@@ -317,7 +317,7 @@ msgstr "請填入有效的到期日。"
 
 #: forms.py:504
 msgid "Only one variation can be checked as the default."
-msgstr "只能選擇一個預設種類"
+msgstr "只能選擇一個預設規格"
 
 #: forms.py:517
 msgid "Please enter a value for only one type of reduction."
@@ -354,7 +354,7 @@ msgstr "影像"
 
 #: models.py:100 models.py:333
 msgid "Product categories"
-msgstr "商品種類"
+msgstr "商品分類"
 
 #: models.py:101
 msgid "Date added"
@@ -669,11 +669,11 @@ msgstr "將商品匯入/匯出為 CSV 檔。"
 
 #: management/commands/product_db.py:71
 msgid "Import products from csv file."
-msgstr "從 CSV 檔匯入產品。"
+msgstr "從 CSV 檔匯入商品。"
 
 #: management/commands/product_db.py:76
 msgid "Export products from csv file."
-msgstr "繪出產品至 CSV 檔。"
+msgstr "繪出商品至 CSV 檔。"
 
 #: management/commands/product_db.py:83
 msgid "Please provide csv file to import"
@@ -714,7 +714,7 @@ msgstr "歷史"
 #: templates/email/order_receipt.txt:5 templates/email/receipt.html:3
 #: templates/email/receipt_rtl.html:3
 msgid "Dear"
-msgstr ""
+msgstr "親愛的"
 
 #: templates/email/order_receipt.txt:7 templates/email/receipt.html:4
 #: templates/email/receipt_rtl.html:4
@@ -729,11 +729,11 @@ msgstr "訂單編號："
 
 #: templates/email/order_receipt.txt:11
 msgid "Billing Details:"
-msgstr "帳單細節："
+msgstr "帳單資料："
 
 #: templates/email/order_receipt.txt:16
 msgid "Shipping Details:"
-msgstr "貨運詳細資料："
+msgstr "貨運資料："
 
 #: templates/email/order_receipt.txt:21
 msgid "Items Ordered:"
@@ -813,7 +813,7 @@ msgstr "項目"
 #: templates/shop/cart.html:24 templates/shop/includes/order_details.html:41
 #: templates/shop/includes/order_details_rtl.html:43
 msgid "Qty"
-msgstr ""
+msgstr "數量"
 
 #: templates/shop/cart.html:25 templates/shop/includes/order_details.html:42
 #: templates/shop/includes/order_details_rtl.html:42
@@ -954,7 +954,7 @@ msgstr "目前無法購買此商品。"
 
 #: templates/shop/product.html:110
 msgid "Related Products"
-msgstr "相關產品"
+msgstr "相關商品"
 
 #: templates/shop/wishlist.html:4 templates/shop/wishlist.html.py:5
 #: templates/shop/wishlist.html:9
