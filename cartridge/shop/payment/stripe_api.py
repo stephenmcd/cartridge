@@ -29,6 +29,7 @@ def process(request, order_form, order):
             'number': request.POST["card_number"].strip(),
             'exp_month': request.POST["card_expiry_month"].strip(),
             'exp_year': request.POST["card_expiry_year"][2:].strip(),
+            'cvc': request.POST["card_ccv"].strip(),
             'address_line1': request.POST['billing_detail_street'],
             'address_city': request.POST['billing_detail_city'],
             'address_state': request.POST['billing_detail_state'],
