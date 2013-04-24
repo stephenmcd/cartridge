@@ -24,7 +24,7 @@ def process(request, order_form, order):
     """
     data = {
         "amount": int((order.total * 100).to_integral()),
-        "currency": settings.STRIPE_CURRENCY,
+        "currency": getattr(settings, "STRIPE_CURRENCY", "usd"),
         "card": {
             'number': request.POST["card_number"].strip(),
             'exp_month': request.POST["card_expiry_month"].strip(),
