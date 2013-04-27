@@ -2,6 +2,7 @@ from decimal import Decimal
 from operator import iand, ior
 
 from django.contrib.auth.models import User
+from django.contrib.auth.signals import user_logged_in
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.signals import m2m_changed, pre_save
@@ -882,3 +883,16 @@ class Wishlist(models.Model):
         unique_together = ('user', 'sku')
         verbose_name = _("Wishlist item")
         verbose_name_plural = _("Wishlist items")
+
+
+@receiver(user_logged_in, sender=User)
+def transfer_wishlist_data(sender, request, user):
+    skus = request.wishlist
+    existed = (Wishlist.objects.filter(user=user, sku__in=skus)
+                               .values_list("sku", flat=True))
+    for sku in skus:
+        if sku not in existed:
+            wishlist = Wishlist()
+            wishlist.user = user
+            wishlist.sku = sku
+            wishlist.save()
