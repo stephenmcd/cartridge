@@ -21,9 +21,7 @@ from cartridge.shop import checkout
 from cartridge.shop.forms import AddProductForm, DiscountForm, CartItemFormSet
 from cartridge.shop.models import Product, ProductVariation, Order, OrderItem
 from cartridge.shop.models import DiscountCode, Wishlist
-from cartridge.shop.utils import recalculate_discount, sign
-
-from .utils import get_wishlist
+from cartridge.shop.utils import recalculate_discount, sign, get_wishlist
 
 
 # Set up checkout handlers.

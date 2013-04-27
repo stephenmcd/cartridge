@@ -11,7 +11,7 @@ from django.utils.translation import ugettext as _
 
 from mezzanine.conf import settings
 
-from .models import Wishlist
+from cartridge.shop.models import Wishlist
 
 
 class EmptyCart(object):
