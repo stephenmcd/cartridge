@@ -223,3 +223,15 @@ class WishlistManager(Manager):
             if not wishlist[0]:
                 wishlist = []
         return wishlist
+
+    def delete_for_request(self, sku_to_delete, request):
+        """
+        Delete item from user's wishlist. Authenticated users' wishlists are
+        stored in the database, while unauthenticated users' are stored in a
+        cookie. In the latter case, the SKU is removed directly from
+        `request.wishlist`, which is provided by `ShopMiddleware`.
+        """
+        if request.user.is_authenticated():
+            self.get(user=request.user, sku=sku_to_delete).delete()
+        else:
+            request.wishlist.remove(sku_to_delete)

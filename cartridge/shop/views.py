@@ -23,6 +23,8 @@ from cartridge.shop.models import Product, ProductVariation, Order, OrderItem
 from cartridge.shop.models import DiscountCode, Wishlist
 from cartridge.shop.utils import recalculate_discount, sign
 
+from .utils import get_wishlist
+
 
 # Set up checkout handlers.
 handler = lambda s: import_dotted_path(s) if s else lambda *args: None
@@ -62,20 +64,14 @@ def product(request, slug, template="shop/product.html"):
                 return redirect("shop_cart")
             else:
                 response = redirect("shop_wishlist")
-                if not request.user.is_authenticated():
-                    skus = request.wishlist
-                    sku = add_product_form.variation.sku
-                    if sku not in skus:
-                        skus.append(sku)
-                    set_cookie(response, "wishlist", ",".join(skus))
-                else:
-                    wishlist = Wishlist()
-                    wishlist.user = request.user
-                    wishlist.sku = add_product_form.variation.sku
-                    try:
-                        wishlist.save()
-                    except IntegrityError:
-                        pass
+                wishlist = get_wishlist(request)
+                wishlist.user = request.user
+                wishlist.sku = add_product_form.variation.sku
+                try:
+                    wishlist.save()
+                except IntegrityError:
+                    pass
+                set_cookie(response, "wishlist", ",".join(request.wishlist))
                 info(request, _("Item added to wishlist"))
                 return response
     context = {
@@ -86,7 +82,8 @@ def product(request, slug, template="shop/product.html"):
         "variations_json": variations_json,
         "has_available_variations": any([v.has_price() for v in variations]),
         "related_products": product.related_products.published(
-                                                      for_user=request.user),
+            for_user=request.user
+        ),
         "add_product_form": add_product_form
     }
     return render(request, template, context)
@@ -120,21 +117,16 @@ def wishlist(request, template="shop/wishlist.html"):
             message = _("Item removed from wishlist")
             url = "shop_wishlist"
         sku = request.POST.get("sku")
-        if sku in skus:
-            if not request.user.is_authenticated():
-                skus.remove(sku)
-            else:
-                wishlist_item = Wishlist.objects.get(user=request.user,
-                                                                sku=sku)
-                wishlist_item.delete()
+        if sku in request.wishlist:
+            Wishlist.objects.delete_for_request(sku, request)
         if not error:
             info(request, message)
             response = redirect(url)
-            if not request.user.is_authenticated():
-                set_cookie(response, "wishlist", ",".join(skus))
+            set_cookie(response, "wishlist", ",".join(request.wishlist))
             return response
 
     # Remove skus from the cookie that no longer exist.
+    skus = request.wishlist
     published_products = Product.objects.published(for_user=request.user)
     f = {"product__in": published_products, "sku__in": skus}
     wishlist = ProductVariation.objects.filter(**f).select_related(depth=1)
