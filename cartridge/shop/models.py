@@ -307,8 +307,11 @@ class ProductVariation(Priced):
                 self.product.save()
 
 
-@receiver(pre_save, sender=ProductVariation)
+@receiver(pre_save, sender=ProductVariation,
+          dispatch_uid="wishlist_notifications_on_save")
 def wishlist_notifications_on_save(sender, instance, **kwargs):
+    if settings.SHOP_WISHLIST_NOTIFICATIONS is not True:
+        return
     if instance.id:
         productvariation = ProductVariation.objects.get(pk=instance.id)
         old_stock = productvariation.num_in_stock
@@ -872,6 +875,8 @@ class Wishlist(models.Model):
 
     user = models.ForeignKey(User)
     sku = fields.SKUField()
+
+    objects = managers.WishlistManager()
 
     class Meta:
         unique_together = ('user', 'sku')

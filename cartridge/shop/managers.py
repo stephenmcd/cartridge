@@ -202,3 +202,24 @@ class DiscountCodeManager(Manager):
             if products.filter(variations__sku__in=cart.skus()).count() == 0:
                 raise self.model.DoesNotExist
         return discount
+
+
+class WishlistManager(Manager):
+
+    def from_request(self, request):
+        """
+        Gets current user's wishlist. Authenticated users' wishlists are stored
+        in the database, while unauthenticated users' are stored in a cookie.
+        Note that this method returns a `list` of SKUs in both cases, not a
+        `QuerySet` of `ProductVariation` objects.
+        """
+        if request.user.is_authenticated():
+            wishlist = []
+            skus = self.filter(user=request.user).values_list("sku", flat=True)
+            for sku in skus:
+                wishlist.append(sku)
+        else:
+            wishlist = request.COOKIES.get("wishlist", "").split(",")
+            if not wishlist[0]:
+                wishlist = []
+        return wishlist

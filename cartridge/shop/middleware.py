@@ -29,13 +29,4 @@ class ShopMiddleware(SSLRedirect):
     """
     def process_request(self, request):
         request.cart = Cart.objects.from_request(request)
-        if not request.user.is_authenticated():
-            wishlist = request.COOKIES.get("wishlist", "").split(",")
-            if not wishlist[0]:
-                wishlist = []
-        else:
-            wishlist_items = Wishlist.objects.filter(user=request.user)
-            wishlist = []
-            for item in wishlist_items:
-                wishlist.append(item.sku)
-        request.wishlist = wishlist
+        request.wishlist = Wishlist.objects.from_request(request)

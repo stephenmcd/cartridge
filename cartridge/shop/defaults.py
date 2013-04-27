@@ -293,3 +293,15 @@ register_setting(
     editable=False,
     default=True,
 )
+
+register_setting(
+    name="SHOP_WISHLIST_NOTIFICATIONS",
+    label=_(
+        "Sends email notifications if an item in user's wishlist is in stock"
+    ),
+    description=_(
+        "Sends email notifications if an item in user's wishlist is in stock"
+    ),
+    editable=True,
+    default=True,
+)
