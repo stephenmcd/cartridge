@@ -11,8 +11,6 @@ from django.utils.translation import ugettext as _
 
 from mezzanine.conf import settings
 
-from cartridge.shop.models import Wishlist
-
 
 class EmptyCart(object):
     """
@@ -133,6 +131,7 @@ def set_locale():
 
 def get_wishlist(request):
     if request.user.is_authenticated():
+        from cartridge.shop.models import Wishlist
         wishlist = Wishlist()
     else:
         wishlist = CookieBackedWishlist(request)
