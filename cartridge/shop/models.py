@@ -887,7 +887,9 @@ class Wishlist(models.Model):
 
 @receiver(user_logged_in, sender=User)
 def transfer_wishlist_data(sender, request, user, *args, **kwargs):
-    skus = request.wishlist
+    skus = getattr(request, "wishlist", [])
+    if not skus:
+        return
     existed = (Wishlist.objects.filter(user=user, sku__in=skus)
                                .values_list("sku", flat=True))
     for sku in skus:
