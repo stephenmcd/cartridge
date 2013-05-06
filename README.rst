@@ -185,6 +185,8 @@ Sites Using Cartridge
   * `KisanHub <http://www.kisanhub.com/>`_
   * `Kegbot <http://kegbot.org>`_
   * `Amblitec <http://www.amblitec.com>`_
+  * `ZigZag Bags <http://www.zigzagbags.com.au>`_
+
 
 .. _`Django`: http://djangoproject.com/
 .. _`BSD licensed`: http://www.linfo.org/bsdlicense.html
