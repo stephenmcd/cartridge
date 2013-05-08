@@ -239,6 +239,14 @@ register_setting(
 )
 
 register_setting(
+    name="SHOP_ORDER_EMAIL_BCC",
+    label=_("BCC receipts to"),
+    description=_("All order receipts will be BCCd to this address."),
+    editable=True,
+    default="",
+)
+
+register_setting(
     name="SHOP_ORDER_STATUS_CHOICES",
     description="Sequence of value/name pairs for order statuses.",
     editable=False,

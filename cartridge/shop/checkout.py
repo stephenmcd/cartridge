@@ -173,9 +173,10 @@ def send_order_email(request, order):
         warn("Shop email receipt templates have moved from "
              "templates/shop/email/ to templates/email/")
     send_mail_template(settings.SHOP_ORDER_EMAIL_SUBJECT,
-        receipt_template, settings.SHOP_ORDER_FROM_EMAIL,
-        order.billing_detail_email, context=order_context,
-        fail_silently=settings.DEBUG)
+                       receipt_template, settings.SHOP_ORDER_FROM_EMAIL,
+                       order.billing_detail_email, context=order_context,
+                       fail_silently=settings.DEBUG,
+                       addr_bcc=settings.SHOP_ORDER_EMAIL_BCC or None)
 
 
 # Set up some constants for identifying each checkout step.
