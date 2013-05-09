@@ -20,6 +20,7 @@ class CartManager(Manager):
         n = now()
         expiry_minutes = timedelta(minutes=settings.SHOP_CART_EXPIRY_MINUTES)
         expiry_time = n - expiry_minutes
+        self.filter(last_updated__lt=expiry_time).delete()
         cart_id = request.session.get("cart", None)
         cart = None
         if cart_id:
@@ -31,7 +32,6 @@ class CartManager(Manager):
                 # Update timestamp and clear out old carts.
                 cart.last_updated = n
                 cart.save()
-                self.filter(last_updated__lt=expiry_time).delete()
         if not cart:
             # Forget what checkout step we were up to.
             try:
