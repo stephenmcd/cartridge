@@ -344,15 +344,15 @@ msgstr "Preço unitário"
 
 #: models.py:42
 msgid "Sale price"
-msgstr "Preço de venda"
+msgstr "Preço Promoção"
 
 #: models.py:43
 msgid "Sale start"
-msgstr "Início da venda"
+msgstr "Início Promoção"
 
 #: models.py:44
 msgid "Sale end"
-msgstr "Fim da venda"
+msgstr "Fim Promoção"
 
 #: models.py:46
 msgid "Number in stock"
@@ -509,12 +509,12 @@ msgstr "Total do frete"
 
 #: models.py:410
 msgid "Tax type"
-msgstr ""
+msgstr "Taxa"
 
 #: models.py:411
 #, fuzzy
 msgid "Tax total"
-msgstr "Total"
+msgstr "Total taxa"
 
 #: models.py:412
 msgid "Item total"
@@ -603,7 +603,7 @@ msgstr "Código"
 
 #: models.py:821
 msgid "Minimum total purchase"
-msgstr "Total mínimo da compra"
+msgstr "Total mínimo para compra"
 
 #: models.py:823
 msgid "Uses remaining"
@@ -672,23 +672,23 @@ msgstr "Preço Unitário"
 
 #: management/commands/product_db.py:40
 msgid "Sale Price"
-msgstr "Preço de Venda"
+msgstr "Preço Promoção"
 
 #: management/commands/product_db.py:41
 msgid "Sale Start Date"
-msgstr "Data de Início da Venda"
+msgstr "Data de Início Promoção"
 
 #: management/commands/product_db.py:42
 msgid "Sale Start Time"
-msgstr "Horário do Início da Venda"
+msgstr "Horário do Início Promoção"
 
 #: management/commands/product_db.py:43
 msgid "Sale End Date"
-msgstr "Data do Fim da Venda"
+msgstr "Data do Fim Promoção"
 
 #: management/commands/product_db.py:44
 msgid "Sale End Time"
-msgstr "Horário do Fim da Venda"
+msgstr "Horário do Fim Promoção"
 
 #: management/commands/product_db.py:47
 msgid "product"
@@ -732,7 +732,7 @@ msgstr "Transação recusada: "
 
 #: payment/stripe_api.py:43
 msgid "Transaction declined"
-msgstr ""
+msgstr "Transação recusada"
 
 #: templates/accounts/account_profile_update.html:6
 msgid "View past orders"
@@ -745,12 +745,12 @@ msgstr "Histórico"
 #: templates/email/order_receipt.txt:5 templates/email/receipt.html:3
 #: templates/email/receipt_rtl.html:3
 msgid "Dear"
-msgstr "Querido(a)"
+msgstr "Caro(a)"
 
 #: templates/email/order_receipt.txt:7 templates/email/receipt.html:4
 #: templates/email/receipt_rtl.html:4
 msgid "Your order has been successful, details are below."
-msgstr "Seu pedido foi registrado com sucesso; veja detalhes abaixo."
+msgstr "Seu pedido foi registrado com sucesso, veja detalhes abaixo."
 
 #: templates/email/order_receipt.txt:9
 #: templates/shop/includes/order_details.html:7
@@ -807,7 +807,7 @@ msgstr "Ordenar por"
 
 #: templates/pages/category.html:64 templates/shop/product.html:78
 msgid "On sale:"
-msgstr "À venda:"
+msgstr "Em Promoção:"
 
 #: templates/pages/category.html:68
 msgid "Coming soon"
