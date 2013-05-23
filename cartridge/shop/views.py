@@ -153,6 +153,8 @@ def cart(request, template="shop/cart.html"):
                     cart_formset.save()
                     recalculate_discount(request)
                     info(request, _("Cart updated"))
+                else:
+                    cart_formset = CartItemFormSet(instance=request.cart)
         else:
             valid = discount_form.is_valid()
             if valid:
