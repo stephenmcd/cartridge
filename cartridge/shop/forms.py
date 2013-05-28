@@ -137,8 +137,8 @@ class CartItemForm(forms.ModelForm):
         variation = ProductVariation.objects.get(sku=self.instance.sku)
         quantity = self.cleaned_data["quantity"]
         if not variation.has_stock(quantity - self.instance.quantity):
-            error = ADD_PRODUCT_ERRORS["no_stock_quantity"]
-            raise forms.ValidationError(error)
+            error = ADD_PRODUCT_ERRORS["no_stock_quantity"].rstrip(".")
+            raise forms.ValidationError("%s: %s" % (error, quantity))
         return quantity
 
 CartItemFormSet = inlineformset_factory(Cart, CartItem, form=CartItemForm,
