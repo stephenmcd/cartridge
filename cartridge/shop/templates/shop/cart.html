@@ -19,9 +19,9 @@
 {% for error in cart_formset.errors %}
 {% if error.values.0 %}{{ error.values.0 }}{% endif %}
 {% endfor %}
-{% endif %}
 </span>
 </div>
+{% endif %}
 {{ cart_formset.management_form }}
 <table class="table table-striped">
 	<tr>

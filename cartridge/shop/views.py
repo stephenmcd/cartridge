@@ -154,7 +154,14 @@ def cart(request, template="shop/cart.html"):
                     recalculate_discount(request)
                     info(request, _("Cart updated"))
                 else:
+                    # Reset the cart formset so that the cart
+                    # always indicates the correct quantities.
+                    # The user is shown their invalid quantity
+                    # via the error message, which we need to
+                    # copy over to the new formset here.
+                    errors = cart_formset._errors
                     cart_formset = CartItemFormSet(instance=request.cart)
+                    cart_formset._errors = errors
         else:
             valid = discount_form.is_valid()
             if valid:
