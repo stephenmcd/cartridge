@@ -644,7 +644,7 @@ class SelectedProduct(models.Model):
 class CartItem(SelectedProduct):
 
     cart = models.ForeignKey("Cart", related_name="items")
-    url = CharField(max_length=200)
+    url = CharField(max_length=2000)
     image = CharField(max_length=200, null=True)
 
     def get_absolute_url(self):
