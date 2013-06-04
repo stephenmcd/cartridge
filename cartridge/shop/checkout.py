@@ -2,8 +2,6 @@
 Checkout process utilities.
 """
 
-from copy import copy
-
 from django.contrib.auth.models import SiteProfileNotAvailable
 from django.utils.translation import ugettext as _
 from django.template.loader import get_template, TemplateDoesNotExist
