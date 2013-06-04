@@ -92,9 +92,9 @@ def initial_order_data(request, form_class=None):
     from cartridge.shop.forms import OrderForm
     initial = {}
     if request.method == "POST":
-        data = copy(request.POST)
+        initial = dict(request.POST.items())
         try:
-            data = form_class.preprocess(data)
+            initial = form_class.preprocess(initial)
         except (AttributeError, TypeError):
             # form_class has no preprocess method, or isn't callable.
             pass
@@ -102,22 +102,21 @@ def initial_order_data(request, form_class=None):
         # it isn't checked, and it'll then get an actual value of False
         # when it's a hidden field - so we give it an empty value when
         # it's missing from the POST data, to persist it not checked.
-        data.setdefault("remember", "")
-        initial = dict(data.items())
+        initial.setdefault("remember", "")
     if not initial:
+        # Look for a previous order.
         if "order" in request.session:
             return request.session["order"]
-        previous_lookup = {}
+        lookup = {}
         if request.user.is_authenticated():
-            previous_lookup["user_id"] = request.user.id
+            lookup["user_id"] = request.user.id
         remembered = request.COOKIES.get("remember", "").split(":")
         if len(remembered) == 2 and remembered[0] == sign(remembered[1]):
-            previous_lookup["key"] = remembered[1]
-
-        if previous_lookup:
-            previous_orders = Order.objects.filter(**previous_lookup).values()[:1]
-            if len(previous_orders) > 0:
-                initial.update(previous_orders[0])
+            lookup["key"] = remembered[1]
+        if lookup:
+            previous = Order.objects.filter(**lookup).values()[:1]
+            if len(previous) > 0:
+                initial.update(previous[0])
     if not initial and request.user.is_authenticated():
         # No previous order data - try and get field values from the
         # logged in user. Check the profile model before the user model
