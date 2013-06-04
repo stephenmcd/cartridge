@@ -217,3 +217,36 @@ class DiscountCodeManager(Manager):
             if products.filter(variations__sku__in=cart.skus()).count() == 0:
                 raise self.model.DoesNotExist
         return discount
+
+
+class WishlistManager(Manager):
+
+    def from_request(self, request):
+        """
+        Gets current user's wishlist. Authenticated users' wishlists are stored
+        in the database, while unauthenticated users' are stored in a cookie.
+        Note that this method returns a `list` of SKUs in both cases, not a
+        `QuerySet` of `ProductVariation` objects.
+        """
+        if request.user.is_authenticated():
+            wishlist = []
+            skus = self.filter(user=request.user).values_list("sku", flat=True)
+            for sku in skus:
+                wishlist.append(sku)
+        else:
+            wishlist = request.COOKIES.get("wishlist", "").split(",")
+            if not wishlist[0]:
+                wishlist = []
+        return wishlist
+
+    def delete_for_request(self, sku_to_delete, request):
+        """
+        Delete item from user's wishlist. Authenticated users' wishlists are
+        stored in the database, while unauthenticated users' are stored in a
+        cookie. In the latter case, the SKU is removed directly from
+        `request.wishlist`, which is provided by `ShopMiddleware`.
+        """
+        if request.user.is_authenticated():
+            self.get(user=request.user, sku=sku_to_delete).delete()
+        else:
+            request.wishlist.remove(sku_to_delete)

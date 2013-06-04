@@ -48,6 +48,20 @@ class EmptyCart(object):
         self._request.session["cart"] = cart.id
 
 
+class CookieBackedWishlist(object):
+    """
+    A dummy wishlist object used for unauthenticated users, backed by cookie
+    storage.
+    """
+    def __init__(self, request):
+        super(CookieBackedWishlist, self).__init__()
+        self.request = request
+
+    def save(self, *args, **kwargs):
+        if self.sku not in self.request.wishlist:
+            self.request.wishlist.append(self.sku)
+
+
 def make_choices(choices):
     """
     Zips a list with itself for field choices.
@@ -113,3 +127,12 @@ def set_locale():
                 "configure the SHOP_CURRENCY_LOCALE setting in your settings "
                 "module.")
         raise ImproperlyConfigured(msg % currency_locale)
+
+
+def get_wishlist(request):
+    if request.user.is_authenticated():
+        from cartridge.shop.models import Wishlist
+        wishlist = Wishlist()
+    else:
+        wishlist = CookieBackedWishlist(request)
+    return wishlist

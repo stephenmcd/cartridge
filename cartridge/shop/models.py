@@ -1,9 +1,11 @@
 from decimal import Decimal
 from operator import iand, ior
 
+from django.contrib.auth.models import User
+from django.contrib.auth.signals import user_logged_in
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.db.models.signals import m2m_changed
+from django.db.models.signals import m2m_changed, pre_save
 from django.db.models import CharField, F, Q
 from django.db.models.base import ModelBase
 from django.db.utils import DatabaseError
@@ -18,6 +20,7 @@ from mezzanine.core.models import Displayable, RichText, Orderable
 from mezzanine.generic.fields import RatingField
 from mezzanine.pages.models import Page
 from mezzanine.utils.models import AdminThumbMixin, upload_to
+from mezzanine.utils.email import send_mail_template
 
 from cartridge.shop import fields, managers
 
@@ -305,6 +308,30 @@ class ProductVariation(Priced):
             if self.default:
                 self.product.num_in_stock = self.num_in_stock
                 self.product.save()
+
+
+@receiver(pre_save, sender=ProductVariation,
+          dispatch_uid="wishlist_notifications_on_save")
+def wishlist_notifications_on_save(sender, instance, **kwargs):
+    if settings.SHOP_WISHLIST_NOTIFICATIONS is not True:
+        return
+    if instance.id:
+        productvariation = ProductVariation.objects.get(pk=instance.id)
+        old_stock = productvariation.num_in_stock
+        if (old_stock == 0) and (instance.num_in_stock > old_stock):
+            # Send email
+            email_from = settings.DEFAULT_FROM_EMAIL
+            wishlist = Wishlist.objects.filter(sku=productvariation.sku)
+            for item in wishlist:
+                email_to = item.user.email
+                subject = _("Notification from wishlist")
+                context = {
+                    "productvariation": productvariation,
+                    "user": item.user,
+                }
+                send_mail_template(subject, "email/wishlist_notification",
+                                   email_from, email_to, context,
+                                   fail_silently=settings.DEBUG)
 
 
 class Category(Page, RichText):
@@ -845,3 +872,31 @@ class DiscountCode(Discount):
     class Meta:
         verbose_name = _("Discount code")
         verbose_name_plural = _("Discount codes")
+
+
+class Wishlist(models.Model):
+
+    user = models.ForeignKey(User)
+    sku = fields.SKUField()
+
+    objects = managers.WishlistManager()
+
+    class Meta:
+        unique_together = ('user', 'sku')
+        verbose_name = _("Wishlist item")
+        verbose_name_plural = _("Wishlist items")
+
+
+@receiver(user_logged_in, sender=User)
+def transfer_wishlist_data(sender, request, user, *args, **kwargs):
+    skus = getattr(request, "wishlist", [])
+    if not skus:
+        return
+    existed = (Wishlist.objects.filter(user=user, sku__in=skus)
+                               .values_list("sku", flat=True))
+    for sku in skus:
+        if sku not in existed:
+            wishlist = Wishlist()
+            wishlist.user = user
+            wishlist.sku = sku
+            wishlist.save()
