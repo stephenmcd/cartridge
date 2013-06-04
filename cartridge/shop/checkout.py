@@ -90,6 +90,7 @@ def initial_order_data(request, form_class=None):
     - matching fields on an authenticated user and profile object
     """
     from cartridge.shop.forms import OrderForm
+    initial = {}
     if request.method == "POST":
         data = copy(request.POST)
         try:
@@ -102,20 +103,21 @@ def initial_order_data(request, form_class=None):
         # when it's a hidden field - so we give it an empty value when
         # it's missing from the POST data, to persist it not checked.
         data.setdefault("remember", "")
-        return dict(data.items())
-    if "order" in request.session:
-        return request.session["order"]
-    previous_lookup = {}
-    if request.user.is_authenticated():
-        previous_lookup["user_id"] = request.user.id
-    remembered = request.COOKIES.get("remember", "").split(":")
-    if len(remembered) == 2 and remembered[0] == sign(remembered[1]):
-        previous_lookup["key"] = remembered[1]
-    initial = {}
-    if previous_lookup:
-        previous_orders = Order.objects.filter(**previous_lookup).values()[:1]
-        if len(previous_orders) > 0:
-            initial.update(previous_orders[0])
+        initial = dict(data.items())
+    if not initial:
+        if "order" in request.session:
+            return request.session["order"]
+        previous_lookup = {}
+        if request.user.is_authenticated():
+            previous_lookup["user_id"] = request.user.id
+        remembered = request.COOKIES.get("remember", "").split(":")
+        if len(remembered) == 2 and remembered[0] == sign(remembered[1]):
+            previous_lookup["key"] = remembered[1]
+
+        if previous_lookup:
+            previous_orders = Order.objects.filter(**previous_lookup).values()[:1]
+            if len(previous_orders) > 0:
+                initial.update(previous_orders[0])
     if not initial and request.user.is_authenticated():
         # No previous order data - try and get field values from the
         # logged in user. Check the profile model before the user model

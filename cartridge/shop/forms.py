@@ -374,7 +374,7 @@ class OrderForm(FormsetForm, DiscountForm):
         by custom form classes. The default preprocessor here handles
         copying billing fields to shipping fields if "same" checked.
         """
-        if "same_billing_shipping" in data:
+        if data.get("same_billing_shipping", "") == "on":
             for field in data:
                 bill_field = field.replace("shipping_detail", "billing_detail")
                 if field.startswith("shipping_detail") and bill_field in data:
