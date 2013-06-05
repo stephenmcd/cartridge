@@ -229,7 +229,9 @@ class ProductVariation(Priced):
         for field in self.option_fields():
             name = getattr(self, field.name)
             if name is not None:
-                option = "%s: %s" % (field.verbose_name.encode("utf-8").decode("utf-8"), name)
+                option = "%s: %s" % (
+                    field.verbose_name.encode("utf-8").decode("utf-8"), name
+                )
                 options.append(option)
         return ("%s %s" % (unicode(self.product), ", ".join(options))).strip()
 
