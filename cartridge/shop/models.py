@@ -617,7 +617,7 @@ class SelectedProduct(models.Model):
     """
 
     sku = fields.SKUField()
-    description = CharField(_("Description"), max_length=200)
+    description = CharField(_("Description"), max_length=2000)
     quantity = models.IntegerField(_("Quantity"), default=0)
     unit_price = fields.MoneyField(_("Unit price"), default=Decimal("0"))
     total_price = fields.MoneyField(_("Total price"), default=Decimal("0"))
