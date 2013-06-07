@@ -37,7 +37,7 @@ $(function() {
 
     // Add overlay to large image.
     var expose = {color: '#333', loadSpeed: 200, opacity: 0.9};
-    var overlay = {expose: expose, close: '*'};
+    var overlay = {expose: expose, close: '*', fixed:false};
     $('.product-image-large').overlay(overlay);
 
 });
