@@ -234,7 +234,8 @@ class ProductVariation(Priced):
                     verbose_name = verbose_name.decode("utf-8")
                 option = u"%s: %s" % (verbose_name, name)
                 options.append(option)
-        return ("%s %s" % (unicode(self.product), ", ".join(options))).strip()
+        result = u"%s %s" % (unicode(self.product), u", ".join(options))
+        return result.strip()
 
     def save(self, *args, **kwargs):
         """
