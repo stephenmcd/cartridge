@@ -64,7 +64,7 @@
 {% endif %}
 
 {% editable product.content %}
-{{ product.content|safe }}
+{{ product.content|richtext_filter|safe }}
 {% endeditable %}
 
 {% if product.available and has_available_variations %}
