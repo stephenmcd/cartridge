@@ -1,0 +1,1016 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+# Translators:
+# mozgur <mozgurbayhan@gmail.com>, 2013
+msgid ""
+msgstr ""
+"Project-Id-Version: Cartridge\n"
+"Report-Msgid-Bugs-To: https://github.com/stephenmcd/cartridge/issues\n"
+"POT-Creation-Date: 2013-03-30 10:40-0430\n"
+"PO-Revision-Date: 2013-07-23 20:04+0000\n"
+"Last-Translator: mozgur <mozgurbayhan@gmail.com>\n"
+"Language-Team: Turkish (http://www.transifex.com/projects/p/cartridge/language/tr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: tr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: admin.py:63
+msgid "Product filters"
+msgstr "Ürün filtreleri"
+
+#: admin.py:100
+msgid "Current variations"
+msgstr "Güncel varyasyonları"
+
+#: admin.py:122
+msgid "Other products"
+msgstr "Diğer ürünler"
+
+#: admin.py:134
+msgid "Create new variations"
+msgstr "Yeni varyasyonlar yarat"
+
+#: admin.py:244
+msgid "Items"
+msgstr "Parçalar"
+
+#: admin.py:264
+msgid "Billing details"
+msgstr "Fatura detayları"
+
+#: admin.py:265
+msgid "Shipping details"
+msgstr "Sevkiyat detayları"
+
+#: admin.py:283 admin.py:303
+msgid "Apply to product and/or products in categories"
+msgstr "Kategorilerde bulunan ürün ve/veya ürünlere uygula"
+
+#: admin.py:285 admin.py:305
+msgid "Reduce unit price by"
+msgstr "Ürün fiyatını düşür"
+
+#: admin.py:288
+msgid "Sale period"
+msgstr "Satış periyodu"
+
+#: admin.py:308
+msgid "Valid for"
+msgstr "Geçerli"
+
+#: checkout.py:40
+msgid "Flat rate shipping"
+msgstr "Sabit sevkiyat fiyatı"
+
+#: checkout.py:55 templates/shop/includes/order_totals.html:34
+#: templates/shop/includes/order_totals.txt:8
+msgid "Tax"
+msgstr "Vergi"
+
+#: checkout.py:184
+msgid "Details"
+msgstr "Detaylar"
+
+#: checkout.py:188
+msgid "Address"
+msgstr "Adres"
+
+#: checkout.py:191
+msgid "Payment"
+msgstr "Ödeme"
+
+#: checkout.py:195
+msgid "Confirmation"
+msgstr "Onay"
+
+#: defaults.py:17
+msgid "Controls the ordering and grouping of the admin menu."
+msgstr "Yönetici menüsünün sıralamasını ve gruplanmasını kontrol eder."
+
+#: defaults.py:20 management/commands/product_db.py:31
+msgid "Content"
+msgstr "İçerik"
+
+#: defaults.py:21
+msgid "Media Library"
+msgstr "Medya Kütüphanesi"
+
+#: defaults.py:22
+msgid "Shop"
+msgstr "Mağaza"
+
+#: defaults.py:24
+msgid "Site"
+msgstr "Site"
+
+#: defaults.py:25
+msgid "Users"
+msgstr "Kullanıcılar"
+
+#: defaults.py:32
+msgid ""
+"Sequence of models that will be provided by default as choices in the search"
+" form. Each model should be in the format ``app_label.model_name``. Only "
+"models that subclass ``mezzanine.core.models.Displayable`` should be used."
+msgstr "Arama formunda varsayılan seçenekler olarak kullanılacak model listesi. Bütün modeller ``uygulama_etiketi.model_adı`` formatında olmalıdır.Sadece ``mezzanine.core.models.Displayable`` sınıfını miras alan modeller kullanılabilir."
+
+#: defaults.py:58
+msgid "Sequence of setting names available within templates."
+msgstr "Şablonlarda kullanılabilecek ayarlar listesi"
+
+#: defaults.py:88
+msgid "Enable featured images in shop categories"
+msgstr "Mağaza kategorilerinde tanımlayıcı resimleri etkinleştir"
+
+#: defaults.py:95
+msgid "Checkout account required"
+msgstr "Alışverişi tamamlamak için bir hesap olması gerekmektedir"
+
+#: defaults.py:96
+msgid "If True, users must create a login for the checkout process."
+msgstr "Eğer işaretli ise, kullanıcılar alışverişi tamamlamak için sisteme giriş yapmalıdır."
+
+#: defaults.py:127
+msgid "Payment Enabled"
+msgstr "Ödeme Etkinleştirildi"
+
+#: defaults.py:128
+msgid "If False, there is no payment step on the checkout process."
+msgstr "Eğer işaretli değil ise, alışverişte ödeme adımı kullanılmaz."
+
+#: defaults.py:136
+msgid "Currency Locale"
+msgstr "Para Birimi Yereli"
+
+#: defaults.py:146
+msgid "Default Shipping Cost"
+msgstr "Varsayılan sevkiyat bedeli"
+
+#: defaults.py:147
+msgid "Default cost of shipping when no custom shipping is implemented."
+msgstr "Eğer özel bir sevkiyat tanımlanmamışsa varsayılan sevkiyat tutarı."
+
+#: defaults.py:155
+msgid "Discount in Cart"
+msgstr "Sepetteki ürün indirimi"
+
+#: defaults.py:156
+msgid "Discount codes can be entered on the cart page."
+msgstr "İndirim kodları alışveriş sepeti sayfasından girilebilir."
+
+#: defaults.py:163
+msgid "Discount in Checkout"
+msgstr "Kasadaki ürün indirimi"
+
+#: defaults.py:164
+msgid "Discount codes can be entered on the first checkout step."
+msgstr "İndirim kodları ilk sipariş adımında girilebilir."
+
+#: defaults.py:171
+msgid "Billing & Shipping Handler"
+msgstr "Faturalandırma & Sevkiyat Yöneticisi"
+
+#: defaults.py:182
+msgid "Tax Handler"
+msgstr "Vergi Yöneticisi"
+
+#: defaults.py:193
+msgid "Order Handler"
+msgstr "Sipariş Yöneticisi"
+
+#: defaults.py:204
+msgid "Payment Handler"
+msgstr "Ödeme Yöneticisi"
+
+#: defaults.py:218
+msgid "Size"
+msgstr "Boyut"
+
+#: defaults.py:219
+msgid "Colour"
+msgstr "Renk"
+
+#: defaults.py:225
+msgid "Order Email Subject"
+msgstr "Sipariş E-Posta Konusu"
+
+#: defaults.py:226
+msgid "Subject to be used when sending the order receipt email."
+msgstr "Sipariş makbuzu e-postasını gönderilirken kullanılacak olan başlık."
+
+#: defaults.py:228
+msgid "Order Receipt"
+msgstr "Sipariş Makbuzu"
+
+#: defaults.py:233
+msgid "From Email"
+msgstr "Gelen E-posta Adresi"
+
+#: defaults.py:234
+msgid "Email address from which order receipts should be emailed."
+msgstr "Sipariş makbuzu e-postası gönderilirken kullanılacak olan e-posta adresi."
+
+#: defaults.py:245
+msgid "Unprocessed"
+msgstr "İşlenmemiş"
+
+#: defaults.py:246
+msgid "Processed"
+msgstr "İşlenmiş"
+
+#: defaults.py:252
+msgid "Products Per Category Page"
+msgstr "Kategori Sayfası Başına Ürün"
+
+#: defaults.py:253
+msgid "Number of products to display per category page."
+msgstr "Kategori sayfası başına gösterilecek olan ürün miktarı."
+
+#: defaults.py:264
+msgid "Recently added"
+msgstr "En son eklenen"
+
+#: defaults.py:265
+msgid "Highest rated"
+msgstr "En yüksek puanlı"
+
+#: defaults.py:266
+msgid "Least expensive"
+msgstr "En ucuz"
+
+#: defaults.py:267
+msgid "Most expensive"
+msgstr "En pahalı"
+
+#: defaults.py:273
+msgid "Use product variations"
+msgstr "Ürün çeşitlerine bak"
+
+#: defaults.py:281
+msgid "Use product ratings"
+msgstr "Ürün puanlamasını kullan"
+
+#: fields.py:56 management/commands/product_db.py:33
+msgid "SKU"
+msgstr "Ürün özellikleri"
+
+#: forms.py:26 templates/shop/product.html:83
+msgid "The selected options are currently unavailable."
+msgstr "Seçili özellikler şu an için mevcut değildir"
+
+#: forms.py:27
+msgid "The selected options are currently not in stock."
+msgstr "Seçili özellikler şu an için stokta bulunmamaktadır"
+
+#: forms.py:28
+msgid "The selected quantity is currently unavailable."
+msgstr "Seçili miktar şu an için mevcut değildir"
+
+#: forms.py:38 models.py:619 templates/shop/order_history.html:20
+msgid "Quantity"
+msgstr "Miktar"
+
+#: forms.py:258
+msgid "The discount code entered is invalid."
+msgstr "Girilen indirim kodu geçersiz"
+
+#: forms.py:270 models.py:822
+msgid "Free shipping"
+msgstr "Ücretsiz sevkiyat"
+
+#: forms.py:285
+msgid "My delivery details are the same as my billing details"
+msgstr "Teslimat ve fatura detaylarım aynı"
+
+#: forms.py:287
+msgid "Remember my address for next time"
+msgstr "Bir dahaki sefere bu adresi hatırla"
+
+#: forms.py:288
+msgid "Cardholder name"
+msgstr "Kart sahibinin adı"
+
+#: forms.py:289
+msgid "Card type"
+msgstr "Kart tipi"
+
+#: forms.py:292
+msgid "Card number"
+msgstr "Kart numarası"
+
+#: forms.py:297
+msgid "CCV"
+msgstr "CCV"
+
+#: forms.py:297
+msgid ""
+"A security code, usually the last 3 digits found on the back of your card."
+msgstr "Bir güvenlik kodu, genellikle kartınızın arkasaındaki 3 haneli rakamdır."
+
+#: forms.py:396
+msgid "A valid expiry date is required."
+msgstr "Geçerli bir son kullanma tarihi gerekli."
+
+#: forms.py:504
+msgid "Only one variation can be checked as the default."
+msgstr "Varsayılan olarak sadece bir seçenek işaretlenebilir."
+
+#: forms.py:517
+msgid "Please enter a value for only one type of reduction."
+msgstr "Sadece bir indirim tipi için değer giriniz."
+
+#: models.py:40 models.py:620
+msgid "Unit price"
+msgstr "Birim fiyatı"
+
+#: models.py:42
+msgid "Sale price"
+msgstr "Satış fiyatı"
+
+#: models.py:43
+msgid "Sale start"
+msgstr "Satış başlangıcı"
+
+#: models.py:44
+msgid "Sale end"
+msgstr "Satış bitişi"
+
+#: models.py:46
+msgid "Number in stock"
+msgstr "Stoktaki miktarı"
+
+#: models.py:96
+msgid "Available for purchase"
+msgstr "Satın alınabilir"
+
+#: models.py:98 models.py:154 models.py:160 models.py:214
+#: management/commands/product_db.py:34
+msgid "Image"
+msgstr "Resim"
+
+#: models.py:100 models.py:333
+msgid "Product categories"
+msgstr "Ürün kategorileri"
+
+#: models.py:101
+msgid "Date added"
+msgstr "Eklenme tarihi"
+
+#: models.py:104
+msgid "Related products"
+msgstr "İlgili ürünler"
+
+#: models.py:106
+msgid "Upsell products"
+msgstr "En çok satılan ürünler"
+
+#: models.py:107
+msgid "Rating"
+msgstr "Puanlama"
+
+#: models.py:114
+msgid "Product"
+msgstr "Ürün"
+
+#: models.py:115 models.py:317 models.py:689
+msgid "Products"
+msgstr "Ürünler"
+
+#: models.py:156 models.py:618 management/commands/product_db.py:32
+msgid "Description"
+msgstr "Tanım"
+
+#: models.py:161
+msgid "Images"
+msgstr "Resimler"
+
+#: models.py:177
+msgid "Type"
+msgstr "Tip"
+
+#: models.py:179
+msgid "Name"
+msgstr "İsim"
+
+#: models.py:187
+msgid "Product option"
+msgstr "Ürün seçeneği"
+
+#: models.py:188 models.py:320
+msgid "Product options"
+msgstr "Ürün seçenekleri"
+
+#: models.py:213
+msgid "Default"
+msgstr "Varsayılan"
+
+#: models.py:313
+msgid "Featured Image"
+msgstr "Tanımlayıcı Resim"
+
+#: models.py:322 models.py:725
+msgid "Sale"
+msgstr "Satış"
+
+#: models.py:324
+msgid "Minimum price"
+msgstr "En düşük fiyat"
+
+#: models.py:325
+msgid "Maximum price"
+msgstr "En yüksek fiyat"
+
+#: models.py:326
+msgid "Combined"
+msgstr "Kombine"
+
+#: models.py:327
+msgid ""
+"If checked, products must match all specified filters, otherwise products "
+"can match any specified filter."
+msgstr "Eğer işaretliyse ürünler bütün filtrelerle uyuşmalıdır, diğer türlü herhangi bir filtreyle de uyuşsada olur."
+
+#: models.py:332
+msgid "Product category"
+msgstr "Ürün kategorisi"
+
+#: models.py:386 models.py:395
+msgid "First name"
+msgstr "Ad"
+
+#: models.py:387 models.py:396
+msgid "Last name"
+msgstr "Soyad"
+
+#: models.py:388 models.py:397
+msgid "Street"
+msgstr "Sokak"
+
+#: models.py:389 models.py:398
+msgid "City/Suburb"
+msgstr "Şehir"
+
+#: models.py:390 models.py:399
+msgid "State/Region"
+msgstr "Bölge"
+
+#: models.py:391 models.py:400
+msgid "Zip/Postcode"
+msgstr "Posta kodu"
+
+#: models.py:392 models.py:401
+msgid "Country"
+msgstr "Ülke"
+
+#: models.py:393 models.py:402
+msgid "Phone"
+msgstr "Telefon"
+
+#: models.py:394
+msgid "Email"
+msgstr "E-posta"
+
+#: models.py:403
+msgid "Additional instructions"
+msgstr "İlave açıklamalar"
+
+#: models.py:405
+msgid "Time"
+msgstr "Zaman"
+
+#: models.py:408
+msgid "Shipping type"
+msgstr "Sevkiyat tipi"
+
+#: models.py:409
+msgid "Shipping total"
+msgstr "Sevkiyat toplamı"
+
+#: models.py:410
+msgid "Tax type"
+msgstr "Vergi tipi"
+
+#: models.py:411
+msgid "Tax total"
+msgstr "Vergi toplamı"
+
+#: models.py:412
+msgid "Item total"
+msgstr "Ürün toplamı"
+
+#: models.py:413 models.py:844
+msgid "Discount code"
+msgstr "İndirim kodu"
+
+#: models.py:414
+msgid "Discount total"
+msgstr "İndirim toplamı"
+
+#: models.py:415
+msgid "Order total"
+msgstr "Sipariş toplamı"
+
+#: models.py:416
+msgid "Transaction ID"
+msgstr "İşlem Numarası"
+
+#: models.py:419 templates/shop/order_history.html:22
+msgid "Status"
+msgstr "Durum"
+
+#: models.py:431
+msgid "Order"
+msgstr "Sipariş"
+
+#: models.py:432
+msgid "Orders"
+msgstr "Siparişler"
+
+#: models.py:517 templates/admin/shop/order/change_form.html:7
+#: templates/shop/complete.html:80
+msgid "Download PDF invoice"
+msgstr "Faturayı PDF olarak indir"
+
+#: models.py:525
+msgid "Last updated"
+msgstr "Son güncellenen"
+
+#: models.py:621
+msgid "Total price"
+msgstr "Toplam fiyat"
+
+#: models.py:686 management/commands/product_db.py:30
+msgid "Title"
+msgstr "Başlık"
+
+#: models.py:687
+msgid "Active"
+msgstr "Etkin"
+
+#: models.py:692
+msgid "Categories"
+msgstr "Kategoriler"
+
+#: models.py:693
+msgid "Reduce by amount"
+msgstr "Belirli bir fiyat kadar düşür"
+
+#: models.py:694
+msgid "Reduce by percent"
+msgstr "Yüzde olarak düşür"
+
+#: models.py:697
+msgid "Reduce to amount"
+msgstr "Belirli bir fiyata düşür"
+
+#: models.py:698
+msgid "Valid from"
+msgstr "Geçerlilik başlangıcı"
+
+#: models.py:699
+msgid "Valid to"
+msgstr "Geçerlilik sonu"
+
+#: models.py:726
+msgid "Sales"
+msgstr "Satışlar"
+
+#: models.py:820
+msgid "Code"
+msgstr "Kod"
+
+#: models.py:821
+msgid "Minimum total purchase"
+msgstr "En az toplu alım "
+
+#: models.py:823
+msgid "Uses remaining"
+msgstr "Var olanı kullanır"
+
+#: models.py:824
+msgid ""
+"If you wish to limit the number of times a code may be used, set this value."
+" It will be decremented upon each use."
+msgstr "Eğer sınırlamak isterseniz kodun kullanılabileceği miktarı buraya giriniz. Her bir kullanımda bir azalacaktır."
+
+#: models.py:845
+msgid "Discount codes"
+msgstr "İndirim kodları"
+
+#: utils.py:111
+#, python-format
+msgid ""
+"Invalid currency locale specified for SHOP_CURRENCY_LOCALE: '%s'. You'll "
+"need to set the locale for your system, or configure the "
+"SHOP_CURRENCY_LOCALE setting in your settings module."
+msgstr "SHOP_CURRENCY_LOCALE: '%s' için geçersiz para birimi yereli. Ya sisteminizin yerel değişkenlerini tanımlamalı, ya da ayarlar modülünden SHOP_CURRENCY_LOCALE ayarını tanımlamalısınız."
+
+#: views.py:60 views.py:102
+msgid "Item added to cart"
+msgstr "Ürün sepete eklendi"
+
+#: views.py:67
+msgid "Item added to wishlist"
+msgstr "Ürünler istek listesine eklendi"
+
+#: views.py:107
+msgid "Item removed from wishlist"
+msgstr "Ürünler istek listesinden çıkartıldı"
+
+#: views.py:144
+msgid "Your cart has expired"
+msgstr "Sepetiniz zaman aşımına uğradı"
+
+#: views.py:152
+msgid "Cart updated"
+msgstr "Sepet güncellendi"
+
+#: management/commands/product_db.py:35
+msgid "Category"
+msgstr "Kategori"
+
+#: management/commands/product_db.py:36
+msgid "Sub-Category"
+msgstr "Alt Kategori"
+
+#: management/commands/product_db.py:38
+msgid "Number in Stock"
+msgstr "Stoktaki miktar"
+
+#: management/commands/product_db.py:39 templates/shop/cart.html:23
+#: templates/shop/includes/order_details.html:40
+#: templates/shop/includes/order_details_rtl.html:44
+msgid "Unit Price"
+msgstr "Birim Fiyat"
+
+#: management/commands/product_db.py:40
+msgid "Sale Price"
+msgstr "Satış Fiyatı"
+
+#: management/commands/product_db.py:41
+msgid "Sale Start Date"
+msgstr "Satış Başlangıç Tarihi"
+
+#: management/commands/product_db.py:42
+msgid "Sale Start Time"
+msgstr "Satış Başlangıç Saati"
+
+#: management/commands/product_db.py:43
+msgid "Sale End Date"
+msgstr "Satış Bitiş Tarihi"
+
+#: management/commands/product_db.py:44
+msgid "Sale End Time"
+msgstr "Satış Bitiş Saati"
+
+#: management/commands/product_db.py:47
+msgid "product"
+msgstr "ürün"
+
+#: management/commands/product_db.py:64
+msgid "Import/Export products from a csv file."
+msgstr "Ürünleri bir csv dosyasından içe/dışa aktar."
+
+#: management/commands/product_db.py:71
+msgid "Import products from csv file."
+msgstr "Ürünleri bir csv dosyasından içe aktar."
+
+#: management/commands/product_db.py:76
+msgid "Export products from csv file."
+msgstr "Ürünleri bir csv dışa aktar"
+
+#: management/commands/product_db.py:83
+msgid "Please provide csv file to import"
+msgstr "Lütfen okunacak olan csv dosyasını seçin"
+
+#: management/commands/product_db.py:87
+msgid "need to import or export"
+msgstr "içe veya dışa aktarılması gerekli"
+
+#: management/commands/product_db.py:138
+msgid "Importing .."
+msgstr "İçe aktarılıyor..."
+
+#: management/commands/product_db.py:186
+msgid "Exporting .."
+msgstr "Dışa aktarılıyor.."
+
+#: payment/egate.py:52 payment/stripe_api.py:45
+msgid "A general error occured: "
+msgstr "Genel bir hata oluştu:"
+
+#: payment/egate.py:55
+msgid "Transaction declined: "
+msgstr "İşlem reddedildi:"
+
+#: payment/stripe_api.py:43
+msgid "Transaction declined"
+msgstr "İşlem reddedildi"
+
+#: templates/accounts/account_profile_update.html:6
+msgid "View past orders"
+msgstr "Eski şiparişlere göz at"
+
+#: templates/admin/shop/order/change_form.html:8
+msgid "History"
+msgstr "Geçmiş"
+
+#: templates/email/order_receipt.txt:5 templates/email/receipt.html:3
+#: templates/email/receipt_rtl.html:3
+msgid "Dear"
+msgstr "Sayın"
+
+#: templates/email/order_receipt.txt:7 templates/email/receipt.html:4
+#: templates/email/receipt_rtl.html:4
+msgid "Your order has been successful, details are below."
+msgstr "Siparişiniz başarıyla tamamlanmıştır, detaylar aşağıdadır."
+
+#: templates/email/order_receipt.txt:9
+#: templates/shop/includes/order_details.html:7
+#: templates/shop/includes/order_details_rtl.html:8
+msgid "Order ID:"
+msgstr "Sipariş Numarası:"
+
+#: templates/email/order_receipt.txt:11
+msgid "Billing Details:"
+msgstr "Fatura Detayları:"
+
+#: templates/email/order_receipt.txt:16
+msgid "Shipping Details:"
+msgstr "Sevkiyat Detayları:"
+
+#: templates/email/order_receipt.txt:21
+msgid "Items Ordered:"
+msgstr "Sipariş Edilmiş Ürünler:"
+
+#: templates/email/order_receipt.txt:23
+msgid "each"
+msgstr "her bir"
+
+#: templates/includes/user_panel.html:5
+#, python-format
+msgid "1 item"
+msgid_plural "%(cart_quantity)s items"
+msgstr[0] "1 ürün"
+msgstr[1] "%(cart_quantity)s ürün"
+
+#: templates/includes/user_panel.html:6
+msgid "in cart"
+msgstr "sepette"
+
+#: templates/includes/user_panel.html:10 templates/shop/cart.html:57
+msgid "Return to Checkout"
+msgstr "Satın alma işlemine geri dön"
+
+#: templates/includes/user_panel.html:10 templates/shop/cart.html:57
+msgid "Go to Checkout"
+msgstr "Kasaya Git"
+
+#: templates/includes/user_panel.html:14
+#, python-format
+msgid "Wishlist contains 1 item"
+msgid_plural " Wishlist contains %(wishlist_count)s items"
+msgstr[0] "İstek listesi 1 ürün içeriyor"
+msgstr[1] "İstek listesi %(wishlist_count)s ürün içeriyor"
+
+#: templates/pages/category.html:38
+msgid "Sort by"
+msgstr "Şuna göre sırala"
+
+#: templates/pages/category.html:64 templates/shop/product.html:78
+msgid "On sale:"
+msgstr "Satışta:"
+
+#: templates/pages/category.html:68
+msgid "Coming soon"
+msgstr "Yakında geliyor"
+
+#: templates/shop/billing_shipping.html:17
+#, python-format
+msgid ""
+"\n"
+"If you have an existing account or would like to create one, please\n"
+"<a href=\"%(login_url)s?next=%(next)s\">log in</a> or\n"
+"<a href=\"%(signup_url)s?next=%(next)s\">sign up</a>.\n"
+msgstr "\nEğer bir hesabınız varsa veya yeni bir tane yaratmak istiyorsanız, lütfen\n<a href=\"%(login_url)s?next=%(next)s\">giriş yapın</a> veya\n<a href=\"%(signup_url)s?next=%(next)s\">kayıt olun</a>.\n"
+
+#: templates/shop/billing_shipping.html:28 templates/shop/confirmation.html:8
+#: templates/shop/includes/order_details.html:15
+#: templates/shop/includes/order_details_rtl.html:15
+msgid "Billing Details"
+msgstr "Fatura Detayları"
+
+#: templates/shop/billing_shipping.html:33
+msgid "Delivery Details"
+msgstr "Teslimat Detayları"
+
+#: templates/shop/cart.html:4 templates/shop/cart.html.py:5
+#: templates/shop/cart.html:9
+msgid "Your Cart"
+msgstr "Sepetiniz"
+
+#: templates/shop/cart.html:22 templates/shop/includes/order_details.html:39
+#: templates/shop/includes/order_details_rtl.html:45
+msgid "Item"
+msgstr "Ürün"
+
+#: templates/shop/cart.html:24 templates/shop/includes/order_details.html:41
+#: templates/shop/includes/order_details_rtl.html:43
+msgid "Qty"
+msgstr "Miktar"
+
+#: templates/shop/cart.html:25 templates/shop/includes/order_details.html:42
+#: templates/shop/includes/order_details_rtl.html:42
+msgid "Price"
+msgstr "Fiyat"
+
+#: templates/shop/cart.html:26
+msgid "Remove?"
+msgstr "Kaldırılsın?"
+
+#: templates/shop/cart.html:59
+msgid "Update Cart"
+msgstr "Sepeti Güncelle"
+
+#: templates/shop/cart.html:67
+msgid "Apply"
+msgstr "Uygula"
+
+#: templates/shop/cart.html:73
+msgid "You may also like:"
+msgstr "Şunlar da ilginizi çekebilir:"
+
+#: templates/shop/cart.html:98
+msgid "Your Cart is empty."
+msgstr "Sepetiniz boş."
+
+#: templates/shop/checkout.html:4 templates/shop/checkout.html.py:5
+msgid "Checkout"
+msgstr "Kasa"
+
+#: templates/shop/checkout.html:5
+msgid "Step"
+msgstr "Adım"
+
+#: templates/shop/checkout.html:5
+msgid "of"
+msgstr "-"
+
+#: templates/shop/checkout.html:26 templates/shop/complete.html:70
+msgid "Complete"
+msgstr "Tamam"
+
+#: templates/shop/checkout.html:48
+msgid "Edit Cart"
+msgstr "Sepeti Düzenle"
+
+#: templates/shop/checkout.html:61
+msgid "Please correct the errors below."
+msgstr "Lütfen aşağıdaki hataları düzeltiniz."
+
+#: templates/shop/checkout.html:73
+msgid "Next"
+msgstr "Sonraki"
+
+#: templates/shop/checkout.html:75
+msgid "Back"
+msgstr "Önceki"
+
+#: templates/shop/checkout.html:80
+msgid "Your cart is empty."
+msgstr "Sepetiniz boş."
+
+#: templates/shop/checkout.html:81
+msgid ""
+"This may be due to your session timing out after a period of inactivity."
+msgstr "Bu genellikle hiç bir işlem yapmadan geçen belirli bir sürenin sonunda oturumunuzun kapanmasından kaynaklı olur."
+
+#: templates/shop/checkout.html:82
+msgid "We apologize for the inconvenience."
+msgstr "Verdiğimiz rahatsızlıktan dolayı özür dileriz."
+
+#: templates/shop/checkout.html:84 templates/shop/wishlist.html:40
+msgid "Continue Shopping"
+msgstr "Alışverişe Devam"
+
+#: templates/shop/complete.html:4 templates/shop/complete.html.py:61
+msgid "Order Complete"
+msgstr "Sipariş Tamam"
+
+#: templates/shop/complete.html:75
+msgid "Thank you for shopping with us, your order is complete."
+msgstr "Siparişiniz tamamlanmıştır. Bizden alışveriş yaptığınız için teşekkür ederiz."
+
+#: templates/shop/complete.html:76
+msgid "We've sent you a receipt via email."
+msgstr "E-Posta yoluyla makbuzunuz gönderilmiştir."
+
+#: templates/shop/complete.html:77
+msgid "You can also view your invoice using one of the links below."
+msgstr "Ayrıca faturanıza aşağıdaki linklerden birini kullanarak da bakabilirsiniz."
+
+#: templates/shop/complete.html:81
+msgid "View invoice in your browser"
+msgstr "Faturaya web tarayıcısında bak"
+
+#: templates/shop/confirmation.html:17
+#: templates/shop/includes/order_details.html:16
+#: templates/shop/includes/order_details_rtl.html:16
+msgid "Shipping Details"
+msgstr "Sevkiyat Detayları"
+
+#: templates/shop/order_history.html:4 templates/shop/order_history.html:5
+#: templates/shop/order_history.html:9
+msgid "Order History"
+msgstr "Sipariş Geçmişi"
+
+#: templates/shop/order_history.html:19
+msgid "Date / time"
+msgstr "Tarih/Saat"
+
+#: templates/shop/order_history.html:21
+msgid "Paid"
+msgstr "Ödendi"
+
+#: templates/shop/order_history.html:32
+msgid "Download PDF"
+msgstr "PDF'i indir"
+
+#: templates/shop/order_history.html:33
+msgid "View invoice"
+msgstr "Faturaya bak"
+
+#: templates/shop/order_history.html:41
+msgid "You have not ordered anything from us yet."
+msgstr "Şu ana kadar bizden hiç bir şey satın almadınız. "
+
+#: templates/shop/product.html:94 templates/shop/wishlist.html:30
+msgid "Buy"
+msgstr "Satın Al"
+
+#: templates/shop/product.html:95
+msgid "Save for later"
+msgstr "Sonrası için sakla"
+
+#: templates/shop/product.html:100
+msgid "This product is currently unavailable."
+msgstr "Bu ürün şu an için mevcut değil."
+
+#: templates/shop/product.html:108
+msgid "Related Products"
+msgstr "İlgili Ürünler"
+
+#: templates/shop/wishlist.html:4 templates/shop/wishlist.html.py:5
+#: templates/shop/wishlist.html:9
+msgid "Your Wishlist"
+msgstr "İstek Listeniz"
+
+#: templates/shop/wishlist.html:31
+msgid "Remove"
+msgstr "Kaldır"
+
+#: templates/shop/wishlist.html:38
+msgid "Your wishlist is empty."
+msgstr "İstek listeniz boş."
+
+#: templates/shop/includes/order_details.html:12
+#: templates/shop/includes/order_details_rtl.html:12
+msgid "Your Details"
+msgstr "Sizin Detaylarınız"
+
+#: templates/shop/includes/order_details.html:36
+#: templates/shop/includes/order_details_rtl.html:36
+msgid "Items Ordered"
+msgstr "Ürünler Sipariş Edildi"
+
+#: templates/shop/includes/order_totals.html:4
+#: templates/shop/includes/order_totals.txt:2
+msgid "Sub total"
+msgstr "Ara toplam"
+
+#: templates/shop/includes/order_totals.html:12
+#: templates/shop/includes/order_totals.txt:4
+msgid "Discount"
+msgstr "İndirim"
+
+#: templates/shop/includes/order_totals.html:23
+#: templates/shop/includes/order_totals.txt:6
+msgid "Shipping"
+msgstr "Sevkiyat"
+
+#: templates/shop/includes/order_totals.html:39
+#: templates/shop/includes/order_totals.txt:9
+msgid "Total"
+msgstr "Toplam"
+
+#: templates/shop/includes/payment_fields.html:3
+msgid "Payment Details"
+msgstr "Ödeme Detayları"
+
+#: templates/shop/includes/payment_fields.html:8
+msgid "Card Expiry"
+msgstr "Kartın Son Kullanma Tarihi"
