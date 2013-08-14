@@ -6,7 +6,7 @@ from django.contrib.auth.models import SiteProfileNotAvailable
 from django.utils.translation import ugettext as _
 from django.template.loader import get_template, TemplateDoesNotExist
 
-from mezzanine.conf import settings
+from mezzanine.conf import settings, context_processors
 from mezzanine.utils.email import send_mail_template
 
 from cartridge.shop.models import Order
@@ -162,6 +162,7 @@ def send_order_email(request, order):
     order_context = {"order": order, "request": request,
                      "order_items": order.items.all()}
     order_context.update(order.details_as_dict())
+    order_context.update(context_processors.settings(request))
     try:
         get_template("shop/email/order_receipt.html")
     except TemplateDoesNotExist:
