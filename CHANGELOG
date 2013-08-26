@@ -1,3 +1,28 @@
+Version 0.8.3 (Aug 27, 2013)
+----------------------------
+
+  * Make wishlist optional by ``SHOP_USE_WISHLIST`` setting - Sam Kingston
+  * Fix line length >80 - Sam Kingston
+  * Pull currency for Stripe from the settings file. With Stripe launching in different countries, the currency should be located in the configuration rather than hard coded in the processor - mrbiscuits
+  * Adding Card Verification Field - mrbiscuits
+  * Make ``STRIPE_CURRENCY`` setting backwards compatible - Stephen McDonald
+  * Add setting ``SHOP_ORDER_EMAIL_BCC``. This should be set to an internal email address. All order receipt emails will be sent to this address via BCC, as well as being sent to the customer - Alex Hill
+  * Ensure live stock lookup only uses unexpired carts - Stephen McDonald
+  * Revert cart to old values if update is not valid - Tzu-ping Chung
+  * Show invalid quantity in stock error in cart update, in prep for pr that resets cart form values - Stephen McDonald
+  * Mark up cart errors for correct styling - Stephen McDonald
+  * Maintain errors when creating new cart formset when cart update invalid - Stephen McDonald
+  * Fix non-ascii chars in product option names. Closes #112 - Stephen McDonald
+  * Increase cart item url size to allow for potentially long unicode slugs. Closes #113 - Stephen McDonald
+  * Fix handling of 'same shipping details' checkbox - Stephen McDonald
+  * Remove redundant import - Stephen McDonald
+  * Fix UnicodeEncodeError in ``ProductVariation.__unicode__``. ``field.verbose_name.decode(utf-8)`` raises UnicodeError if ``verbose_name`` can. not be encoded by ASCII. Add encode(utf-8) to fix it - Tzu-ping Chung
+  * Allow large product image overlays to scroll. Closes #117 - Stephen McDonald
+  * Increase description field lengths on SelectedProduct models - Stephen McDonald
+  * Use ``richtext_filter`` for product content. Closes #119 - Stephen McDonald
+  * Allow custom product templates matching product slugs - Stephen McDonald
+  * Migrations for timestamp fields - Stephen McDonald
+
 Version 0.8.2 (Mar 31, 2013)
 ----------------------------
 
