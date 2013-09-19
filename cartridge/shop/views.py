@@ -20,7 +20,7 @@ from cartridge.shop import checkout
 from cartridge.shop.forms import AddProductForm, DiscountForm, CartItemFormSet
 from cartridge.shop.models import Product, ProductVariation, Order, OrderItem
 from cartridge.shop.models import DiscountCode
-from cartridge.shop.utils import recalculate_discount, sign
+from cartridge.shop.utils import recalculate_discount, recalculate_billship_tax, sign
 
 
 # Set up checkout handlers.
@@ -57,6 +57,7 @@ def product(request, slug, template="shop/product.html"):
                 quantity = add_product_form.cleaned_data["quantity"]
                 request.cart.add_item(add_product_form.variation, quantity)
                 recalculate_discount(request)
+                recalculate_billship_tax(request)
                 info(request, _("Item added to cart"))
                 return redirect("shop_cart")
             else:
@@ -103,6 +104,7 @@ def wishlist(request, template="shop/wishlist.html"):
             if add_product_form.is_valid():
                 request.cart.add_item(add_product_form.variation, 1)
                 recalculate_discount(request)
+                recalculate_billship_tax(request)
                 message = _("Item added to cart")
                 url = "shop_cart"
             else:
@@ -153,6 +155,7 @@ def cart(request, template="shop/cart.html"):
                 if valid:
                     cart_formset.save()
                     recalculate_discount(request)
+                    recalculate_billship_tax(request)
                     info(request, _("Cart updated"))
                 else:
                     # Reset the cart formset so that the cart
