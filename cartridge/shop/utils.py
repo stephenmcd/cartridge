@@ -95,6 +95,7 @@ def recalculate_billship_tax(request):
     except KeyError:
         pass
 
+
 def set_shipping(request, shipping_type, shipping_total):
     """
     Stores the shipping type and total in the session.
