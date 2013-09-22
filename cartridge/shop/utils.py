@@ -10,7 +10,7 @@ from django.utils.timezone import now
 from django.utils.translation import ugettext as _
 
 from mezzanine.conf import settings
-
+from mezzanine.utils.importing import import_dotted_path
 
 class EmptyCart(object):
     """
@@ -72,6 +72,28 @@ def recalculate_discount(request):
             del request.session["discount_total"]
         except KeyError:
             pass
+
+
+def recalculate_billship_tax(request):
+    """
+    Updates billship and tax information when the cart is modified.
+    """
+    from cartridge.shop import checkout
+    handler = lambda s: import_dotted_path(s) if s else lambda *args: None
+    billship_handler = handler(settings.SHOP_HANDLER_BILLING_SHIPPING)
+    tax_handler = handler(settings.SHOP_HANDLER_TAX)
+    # call billship and tax handlers if
+    # past the first step and address is known.
+    try:
+        if request.session["order"]["step"] >= checkout.CHECKOUT_STEP_FIRST:
+            billship_handler(request, None)
+            tax_handler(request, None)
+    except checkout.CheckoutError:
+        pass
+    except ValueError:
+        pass
+    except KeyError:
+        pass
 
 
 def set_shipping(request, shipping_type, shipping_total):
