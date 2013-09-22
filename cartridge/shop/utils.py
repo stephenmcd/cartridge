@@ -12,6 +12,7 @@ from django.utils.translation import ugettext as _
 from mezzanine.conf import settings
 from mezzanine.utils.importing import import_dotted_path
 
+
 class EmptyCart(object):
     """
     A dummy cart object used before any items have been added.
@@ -55,12 +56,15 @@ def make_choices(choices):
     return zip(choices, choices)
 
 
-def recalculate_discount(request):
+def recalculate_cart(request):
     """
-    Updates an existing discount code when the cart is modified.
+    Updates an existing discount code, shipping, and tax when the
+    cart is modified.
     """
+    from cartridge.shop import checkout
     from cartridge.shop.forms import DiscountForm
     from cartridge.shop.models import Cart
+
     # Rebind the cart to request since it's been modified.
     request.cart = Cart.objects.from_request(request)
     discount_code = request.session.get("discount_code", "")
@@ -73,26 +77,14 @@ def recalculate_discount(request):
         except KeyError:
             pass
 
-
-def recalculate_billship_tax(request):
-    """
-    Updates billship and tax information when the cart is modified.
-    """
-    from cartridge.shop import checkout
     handler = lambda s: import_dotted_path(s) if s else lambda *args: None
     billship_handler = handler(settings.SHOP_HANDLER_BILLING_SHIPPING)
     tax_handler = handler(settings.SHOP_HANDLER_TAX)
-    # call billship and tax handlers if
-    # past the first step and address is known.
     try:
         if request.session["order"]["step"] >= checkout.CHECKOUT_STEP_FIRST:
             billship_handler(request, None)
             tax_handler(request, None)
-    except checkout.CheckoutError:
-        pass
-    except ValueError:
-        pass
-    except KeyError:
+    except (checkout.CheckoutError, ValueError, KeyError):
         pass
 
 
