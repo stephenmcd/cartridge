@@ -1,3 +1,12 @@
+Version 0.8.4 (Sep 29, 2013)
+----------------------------
+
+  * added ``recalculate_billship_tax`` util to update ``billship_handler`` and ``tax_handler`` when cart is modified after first step - justin
+  * removed extra spaces - justin
+  * Combine ``recalculate_discount`` and ``recalculate_billship_tax`` into a single function ``recalculate_cart`` - Stephen McDonald
+  * Update travis config - Stephen McDonald
+  * Bump minimum Mezzanine version to 1.4.15 - Stephen McDonald
+
 Version 0.8.3 (Aug 27, 2013)
 ----------------------------
 
