@@ -1,3 +1,5 @@
+;(function($){
+
 $(function() {
 
     var sameShipping = $('#id_same_billing_shipping');
@@ -8,3 +10,5 @@ $(function() {
     }).change();
 
 });
+
+})(jQuery);
