@@ -480,13 +480,9 @@ class Order(models.Model):
         """
         self.save()  # Save the transaction ID.
         discount_code = request.session.get('discount_code')
-        for field in self.session_fields:
+        for field in ("order",) + self.session_fields:
             if field in request.session:
                 del request.session[field]
-        try:
-            del request.session["order"]
-        except KeyError:
-            pass
         for item in request.cart:
             try:
                 variation = ProductVariation.objects.get(sku=item.sku)
