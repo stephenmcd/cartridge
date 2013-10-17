@@ -479,6 +479,7 @@ class Order(models.Model):
         delete the cart.
         """
         self.save()  # Save the transaction ID.
+        discount_code = request.session.get('discount_code')
         for field in self.session_fields:
             if field in request.session:
                 del request.session[field]
@@ -494,9 +495,8 @@ class Order(models.Model):
             else:
                 variation.update_stock(item.quantity * -1)
                 variation.product.actions.purchased()
-        code = request.session.get('discount_code')
-        if code:
-            DiscountCode.objects.active().filter(code=code).update(
+        if discount_code:
+            DiscountCode.objects.active().filter(code=discount_code).update(
                 uses_remaining=F('uses_remaining') - 1)
         request.cart.delete()
 
