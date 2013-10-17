@@ -101,10 +101,11 @@ def initial_order_data(request, form_class=None):
         # when it's a hidden field - so we give it an empty value when
         # it's missing from the POST data, to persist it not checked.
         initial.setdefault("remember", "")
+    # Look for order in current session.
     if not initial:
-        # Look for a previous order.
-        if "order" in request.session:
-            return request.session["order"]
+        initial = request.session.get("order", {})
+    # Look for order in previous session.
+    if not initial:
         lookup = {}
         if request.user.is_authenticated():
             lookup["user_id"] = request.user.id
@@ -151,6 +152,11 @@ def initial_order_data(request, form_class=None):
         shipping(f) in OrderForm._meta.fields and
         initial.get(f, "") != initial.get(shipping(f), "")]):
         initial["same_billing_shipping"] = False
+    # Never prepopulate discount code.
+    try:
+        del initial["discount_code"]
+    except KeyError:
+        pass
     return initial
 
 
