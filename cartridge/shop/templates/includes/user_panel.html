@@ -14,9 +14,11 @@
     <a href="{% url "shop_wishlist" %}" class="btn-wishlist">
     {% blocktrans count request.wishlist|length as wishlist_count %}Wishlist contains 1 item{% plural %} Wishlist contains {{ wishlist_count }} items{% endblocktrans %}</a>
     {% endif %}
+    {% if settings.SHOP_SHOW_SIGNUPLOGIN %}
     {% ifinstalled mezzanine.accounts %}
     <br>
     {% include "accounts/includes/user_panel.html" %}
     {% endifinstalled %}
+    {% endif %}
     {% endspaceless %}
 </div>
