@@ -301,3 +301,10 @@ register_setting(
     editable=False,
     default=True,
 )
+
+register_setting(
+    name="SHOP_HIDE_BILLING_SHIPPING_FIELDS",
+    description=_("Sequence of columns to hide in billing and shipping."),
+    editable=False,
+    default=(),
+)
