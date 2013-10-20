@@ -294,6 +294,10 @@ def checkout_steps(request):
     context = {"form": form, "CHECKOUT_STEP_FIRST": CHECKOUT_STEP_FIRST,
                "step_title": step_vars["title"], "step_url": step_vars["url"],
                "steps": checkout.CHECKOUT_STEPS, "step": step}
+    if settings.SHOP_TOS_ON_CHECKOUT and step == len(checkout.CHECKOUT_STEPS):
+        context['tos_url'] = settings.SHOP_TOS_URL
+    else:
+        context['tos_url'] = False
     return render(request, template, context)
 
 

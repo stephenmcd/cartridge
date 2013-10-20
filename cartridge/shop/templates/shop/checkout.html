@@ -68,6 +68,14 @@ $(function() {$('.middle :input:visible:enabled:first').focus();});
 	
 	{% block nav-buttons %}
 		{% if request.cart.has_items %}
+			{% if tos_url and step == steps|length %}
+				<div class="span7">
+					{% blocktrans %}
+					By continuing you accept the
+					<a href="{{ tos_url }}" target="_blanc">Terms of Service</a>.
+					{% endblocktrans %}
+				</div>
+			{% endif %}
 			<div class="form-actions clearfix">
 				<div class="form-actions-wrap">
 				<input type="submit" class="btn btn-large btn-primary" value="{% trans "Next" %}">

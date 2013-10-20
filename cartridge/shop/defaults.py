@@ -301,3 +301,19 @@ register_setting(
     editable=False,
     default=True,
 )
+
+register_setting(
+    name="SHOP_TOS_ON_CHECKOUT",
+    label=_("Show Terms of Service link on checkout."),
+    description="Show Terms of Service url and warning on last checkout page.",
+    editable=True,
+    default=False,
+)
+
+register_setting(
+    name="SHOP_TOS_URL",
+    label=_("Terms of Service url"),
+    description="Shown on last checkout page if SHOP_TOS_ON_CHECKOUT is enabled",
+    editable=True,
+    default="",
+)
