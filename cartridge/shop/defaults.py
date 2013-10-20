@@ -301,3 +301,13 @@ register_setting(
     editable=False,
     default=True,
 )
+
+register_setting(
+    name="SHOP_SHOW_SIGNUPLOGIN",
+    label=_("Show sign up and log in links"),
+    description="Show the links to sign up or log in. "
+        "Only affects the visibility of the links, not ability to sign up "
+        "or log in.",
+    editable=False,
+    default=True,
+)

@@ -8,6 +8,7 @@
 
 {% block fields %}
 {% if request.cart.has_items %}
+{% if settings.SHOP_SHOW_SIGNUPLOGIN %}
 {% if not request.user.is_authenticated %}
 {% ifinstalled mezzanine.accounts %}
 <p>
@@ -22,6 +23,7 @@ If you have an existing account or would like to create one, please
 {% endwith %}
 </p>
 {% endifinstalled %}
+{% endif %}
 {% endif %}
 
 <fieldset>
