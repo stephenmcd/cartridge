@@ -290,10 +290,10 @@ def checkout_steps(request):
 
     step_vars = checkout.CHECKOUT_STEPS[step - 1]
     template = "shop/%s.html" % step_vars["template"]
-    CHECKOUT_STEP_FIRST = step == checkout.CHECKOUT_STEP_FIRST
-    context = {"form": form, "CHECKOUT_STEP_FIRST": CHECKOUT_STEP_FIRST,
+    context = {"CHECKOUT_STEP_FIRST": step == checkout.CHECKOUT_STEP_FIRST,
+               "CHECKOUT_STEP_LAST": step == checkout.CHECKOUT_STEP_LAST,
                "step_title": step_vars["title"], "step_url": step_vars["url"],
-               "steps": checkout.CHECKOUT_STEPS, "step": step}
+               "steps": checkout.CHECKOUT_STEPS, "step": step, "form": form}
     return render(request, template, context)
 
 

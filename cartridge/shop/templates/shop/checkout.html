@@ -65,19 +65,15 @@ $(function() {$('.middle :input:visible:enabled:first').focus();});
 	{% endwith %}
 
 	{% block fields %}{% endblock %}
-	
+
 	{% block nav-buttons %}
 		{% if request.cart.has_items %}
 			<div class="form-actions clearfix">
 				<div class="form-actions-wrap">
-				{% if step == steps|length %}
-					<input type="submit" class="btn btn-large btn-primary" value="{% trans "Complete" %}">
-				{% else %}
-					<input type="submit" class="btn btn-large btn-primary" value="{% trans "Next" %}">
-				{% endif %}
-				{% if not CHECKOUT_STEP_FIRST %}
-				<input type="submit" class="btn btn-large" name="back" value="{% trans "Back" %}">
-				{% endif %}
+					<input type="submit" class="btn btn-large btn-primary" value="{% if CHECKOUT_STEP_LAST %}{% trans "Complete" %}{% else %}{% trans "Next" %}{% endif %}">
+					{% if not CHECKOUT_STEP_FIRST %}
+					<input type="submit" class="btn btn-large" name="back" value="{% trans "Back" %}">
+					{% endif %}
 				</div>
 			</div>
 		{% else %}
