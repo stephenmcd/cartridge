@@ -254,8 +254,9 @@ class DiscountForm(forms.ModelForm):
         testing = getattr(settings, "TESTING", False)
         if "discount_code" in self._request.session and not testing:
             # Already applied
-            return ""
-        code = self.cleaned_data.get("discount_code", "")
+            code = self._request.session["discount_code"]
+        else:
+            code = self.cleaned_data.get("discount_code", "")
         cart = self._request.cart
         if code:
             try:
