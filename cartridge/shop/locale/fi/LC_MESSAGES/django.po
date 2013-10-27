@@ -24,7 +24,7 @@ msgstr "Tuotefiltterit"
 
 #: admin.py:100
 msgid "Current variations"
-msgstr "Tänhetkiset muunnelmat"
+msgstr "Nykyiset muunnelmat"
 
 #: admin.py:122
 msgid "Other products"
