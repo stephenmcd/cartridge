@@ -143,7 +143,7 @@ msgstr "Maksaminen sallittu"
 
 #: defaults.py:128
 msgid "If False, there is no payment step on the checkout process."
-msgstr "Jos False, ostoprosessissa ei ole maksuvaihetta"
+msgstr "Jos False, ostoprosessissa ei ole maksuvaihetta."
 
 #: defaults.py:136
 msgid "Currency Locale"
