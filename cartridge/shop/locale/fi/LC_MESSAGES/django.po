@@ -217,7 +217,15 @@ msgstr "Lähettäjän sähköpostiosoite"
 msgid "Email address from which order receipts should be emailed."
 msgstr "Osoite, josta tilausten kuitit lähetetään."
 
-#: defaults.py:245
+#: defaults.py:243
+msgid "BCC receipts to"
+msgstr "Lähetä piilokopio kuiteista osoitteeseen"
+
+#: defaults.py:244
+msgid "All order receipts will be BCCd to this address."
+msgstr "Kaikista tilauskuiteista lähetetään BCC osoitteeseen"
+
+#: defaults.py:254
 msgid "Unprocessed"
 msgstr "Käsittelemätön"
 
@@ -256,6 +264,10 @@ msgstr "Käytä tuotevariaatioita"
 #: defaults.py:290
 msgid "Use product ratings"
 msgstr "Käytä tuotearvosteluja"
+
+#: defaults.py:298
+msgid "Use product wishlist"
+msgstr "Käytä tuotteiden toivomuslistaa"
 
 #: fields.py:56 management/commands/product_db.py:33
 msgid "SKU"
