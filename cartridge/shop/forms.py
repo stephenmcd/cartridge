@@ -297,10 +297,10 @@ class OrderForm(FormsetForm, DiscountForm):
         widget=forms.RadioSelect,
         choices=make_choices(settings.SHOP_CARD_TYPES))
     card_number = forms.CharField(label=_("Card number"))
-    card_expiry_month = forms.ChoiceField(
+    card_expiry_month = forms.ChoiceField(label=_("Card expiry month"),
         initial="%02d" % date.today().month,
         choices=make_choices(["%02d" % i for i in range(1, 13)]))
-    card_expiry_year = forms.ChoiceField()
+    card_expiry_year = forms.ChoiceField(label=_("Card expiry year"))
     card_ccv = forms.CharField(label=_("CCV"), help_text=_("A security code, "
         "usually the last 3 digits found on the back of your card."))
 
