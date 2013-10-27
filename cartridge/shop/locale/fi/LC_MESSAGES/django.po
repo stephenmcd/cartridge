@@ -243,7 +243,7 @@ msgstr "Montako tuotetta näytetään jokaisella kategoriasivulla"
 
 #: defaults.py:273
 msgid "Recently added"
-msgstr "Hiljattain lisätty"
+msgstr "Viimeksi lisätty"
 
 #: defaults.py:274
 msgid "Highest rated"
