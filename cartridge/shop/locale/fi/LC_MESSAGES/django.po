@@ -328,7 +328,7 @@ msgstr "Anna vain yhden alennuksen arvo."
 
 #: models.py:40 models.py:620
 msgid "Unit price"
-msgstr "Yksikön hinta"
+msgstr "Kappalehinta"
 
 #: models.py:42
 msgid "Sale price"
@@ -655,7 +655,7 @@ msgstr "Lukumäärä varastossa"
 #: templates/shop/includes/order_details.html:40
 #: templates/shop/includes/order_details_rtl.html:44
 msgid "Unit Price"
-msgstr "Yksikköhinta"
+msgstr "Kappalehinta"
 
 #: management/commands/product_db.py:40
 msgid "Sale Price"
