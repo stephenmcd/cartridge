@@ -942,7 +942,7 @@ msgstr "Tilaushistoria"
 
 #: templates/shop/order_history.html:19
 msgid "Date / time"
-msgstr "Päiivämäärä / kellonaika"
+msgstr "Päivämäärä / kellonaika"
 
 #: templates/shop/order_history.html:21
 msgid "Paid"
