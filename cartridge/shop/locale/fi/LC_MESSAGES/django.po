@@ -785,7 +785,7 @@ msgstr "kappale"
 #, python-format
 msgid "1 item"
 msgid_plural "%(cart_quantity)s items"
-msgstr[0] "tuote"
+msgstr[0] "1 tuote"
 msgstr[1] "%(cart_quantity)s tuotetta"
 
 #: templates/includes/user_panel.html:6
