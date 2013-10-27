@@ -139,7 +139,7 @@ msgstr "Jos True, käyttäjän pitää luoda tunnus ostaakseen."
 
 #: defaults.py:127
 msgid "Payment Enabled"
-msgstr "Maksaminen sallitltu"
+msgstr "Maksaminen sallittu"
 
 #: defaults.py:128
 msgid "If False, there is no payment step on the checkout process."
