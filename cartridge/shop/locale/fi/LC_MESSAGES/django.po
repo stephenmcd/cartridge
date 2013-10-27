@@ -778,7 +778,7 @@ msgstr "Palaa maksamiseen"
 
 #: templates/includes/user_panel.html:10 templates/shop/cart.html:57
 msgid "Go to Checkout"
-msgstr "Mene maksamiseen"
+msgstr "Jatka maksamiseen"
 
 #: templates/includes/user_panel.html:14
 #, python-format
