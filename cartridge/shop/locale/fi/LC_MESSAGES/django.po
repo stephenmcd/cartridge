@@ -774,11 +774,11 @@ msgstr "ostoskorissa"
 
 #: templates/includes/user_panel.html:10 templates/shop/cart.html:57
 msgid "Return to Checkout"
-msgstr "Palaa maksamiseen"
+msgstr "Palaa kassalle"
 
 #: templates/includes/user_panel.html:10 templates/shop/cart.html:57
 msgid "Go to Checkout"
-msgstr "Jatka maksamiseen"
+msgstr "Jatka kassalle"
 
 #: templates/includes/user_panel.html:14
 #, python-format
@@ -862,7 +862,7 @@ msgstr "Ostoskorisi on tyhjä."
 
 #: templates/shop/checkout.html:4 templates/shop/checkout.html.py:5
 msgid "Checkout"
-msgstr "Maksaminen"
+msgstr "Kassa"
 
 #: templates/shop/checkout.html:5
 msgid "Step"
