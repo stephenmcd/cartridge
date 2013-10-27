@@ -243,7 +243,7 @@ msgstr "Korkeimmaksi arvosteltu"
 
 #: defaults.py:266
 msgid "Least expensive"
-msgstr "Halvin"
+msgstr "Edullisin"
 
 #: defaults.py:267
 msgid "Most expensive"
