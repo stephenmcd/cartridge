@@ -14,7 +14,7 @@
 	    </label>{{ discount_total|currency }}
 	</div>
 	{% endif %}
-	{% if shipping_total %}
+	{% if shipping_type or shipping_total %}
 	<div>
 	    <label>
 	    {% if shipping_type %}
