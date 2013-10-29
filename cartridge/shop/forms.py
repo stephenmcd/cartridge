@@ -248,13 +248,6 @@ class DiscountForm(forms.ModelForm):
         Validate the discount code if given, and attach the discount
         instance to the form.
         """
-        # Test session behaves weirdly when we try and remove applied
-        # discounts when testing multiple discounts, so we allow multiple
-        # discounts when running tests.
-        testing = getattr(settings, "TESTING", False)
-        if "discount_code" in self._request.session and not testing:
-            # Already applied
-            return ""
         code = self.cleaned_data.get("discount_code", "")
         cart = self._request.cart
         if code:
@@ -339,14 +332,11 @@ class OrderForm(FormsetForm, DiscountForm):
         super(OrderForm, self).__init__(request, data=data, initial=initial)
         self._checkout_errors = errors
 
-        # Hide discount code field if discount already applied,
-        # discount field shouldn't appear in checkout, or if no
-        # discount codes are active.
+        # Hide discount code field if it shouldn't appear in checkout,
+        # or if no discount codes are active.
         settings.use_editable()
-        no_discounts = not DiscountCode.objects.active().exists()
-        discount_applied = "discount_code" in getattr(request, "session", {})
-        discount_in_checkout = settings.SHOP_DISCOUNT_FIELD_IN_CHECKOUT
-        if discount_applied or no_discounts or not discount_in_checkout:
+        if not (settings.SHOP_DISCOUNT_FIELD_IN_CHECKOUT and
+                DiscountCode.objects.active().exists()):
             self.fields["discount_code"].widget = forms.HiddenInput()
 
         # Determine which sets of fields to hide for each checkout step.

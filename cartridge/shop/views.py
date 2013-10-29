@@ -171,10 +171,8 @@ def cart(request, template="shop/cart.html"):
             return redirect("shop_cart")
     context = {"cart_formset": cart_formset}
     settings.use_editable()
-    no_discounts = not DiscountCode.objects.active().exists()
-    discount_applied = "discount_code" in request.session
-    discount_in_cart = settings.SHOP_DISCOUNT_FIELD_IN_CART
-    if not no_discounts and not discount_applied and discount_in_cart:
+    if (settings.SHOP_DISCOUNT_FIELD_IN_CART and
+        DiscountCode.objects.active().exists()):
         context["discount_form"] = discount_form
     return render(request, template, context)
 
