@@ -68,14 +68,10 @@ def recalculate_cart(request):
     # Rebind the cart to request since it's been modified.
     request.cart = Cart.objects.from_request(request)
     discount_code = request.session.get("discount_code", "")
-    discount_form = DiscountForm(request, {"discount_code": discount_code})
-    if discount_form.is_valid():
-        discount_form.set_discount()
-    else:
-        try:
-            del request.session["discount_total"]
-        except KeyError:
-            pass
+    if discount_code:
+        discount_form = DiscountForm(request, {"discount_code": discount_code})
+        if discount_form.is_valid():
+            discount_form.set_discount()
 
     handler = lambda s: import_dotted_path(s) if s else lambda *args: None
     billship_handler = handler(settings.SHOP_HANDLER_BILLING_SHIPPING)

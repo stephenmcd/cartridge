@@ -167,6 +167,14 @@ def cart(request, template="shop/cart.html"):
             valid = discount_form.is_valid()
             if valid:
                 discount_form.set_discount()
+            # Potentially need to set shipping if a discount code
+            # was previously entered with free shipping, and then
+            # another was entered (replacing the old) without
+            # free shipping, *and* the user has already progressed
+            # to the final checkout step, which they'd go straight
+            # to when returning to checkout, bypassing billing and
+            # shipping details step where shipping is normally set.
+            recalculate_cart(request)
         if valid:
             return redirect("shop_cart")
     context = {"cart_formset": cart_formset}
@@ -224,12 +232,15 @@ def checkout_steps(request):
 
             # FIRST CHECKOUT STEP - handle shipping and discount code.
             if step == checkout.CHECKOUT_STEP_FIRST:
+                # Discount should be set before shipping, to allow
+                # for free shipping to be first set by a discount
+                # code.
+                form.set_discount()
                 try:
                     billship_handler(request, form)
                     tax_handler(request, form)
                 except checkout.CheckoutError, e:
                     checkout_errors.append(e)
-                form.set_discount()
 
             # FINAL CHECKOUT STEP - handle payment and process order.
             if step == checkout.CHECKOUT_STEP_LAST and not checkout_errors:
