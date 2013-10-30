@@ -303,9 +303,9 @@ class ShopTests(TestCase):
                     cart = Cart.objects.from_request(self.client)
                     self._empty_cart(cart)
                     self._add_to_cart(invalid_variation, 1)
-                    self.client.post(reverse("shop_cart"), post_data)
-                    discount_total = self.client.session.get("discount_total")
-                    self.assertEqual(discount_total, None)
+                    r = self.client.post(reverse("shop_cart"), post_data)
+                    self.assertFormError(r, "discount_form", "discount_code",
+                                     "The discount code entered is invalid.")
 
     def test_order(self):
         """
