@@ -60,6 +60,10 @@
 #     (2, "Colour"),
 # )
 
+# Sequence of how the options should be ordered in the admin,
+# eg Black, Large
+#SHOP_OPTION_ADMIN_ORDER = ("option2","option1",)
+
 ######################
 # MEZZANINE SETTINGS #
 ######################
