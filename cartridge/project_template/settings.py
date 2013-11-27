@@ -60,9 +60,10 @@
 #     (2, "Colour"),
 # )
 
-# Sequence of how the options should be ordered in the admin,
-# eg Black, Large
-#SHOP_OPTION_ADMIN_ORDER = ("option2","option1",)
+# Sequence of indexes from the SHOP_OPTION_TYPE_CHOICES setting that
+# control how the options should be ordered in the admin,
+# eg for "Colour" then "Size" given the above:
+# SHOP_OPTION_ADMIN_ORDER = (2, 1)
 
 ######################
 # MEZZANINE SETTINGS #

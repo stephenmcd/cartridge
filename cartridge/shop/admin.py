@@ -105,8 +105,8 @@ class ProductVariationAdmin(admin.TabularInline):
     formfield_overrides = {MoneyField: {"widget": MoneyWidget}}
     form = ProductVariationAdminForm
     formset = ProductVariationAdminFormset
-    if hasattr(settings, 'SHOP_OPTION_ADMIN_ORDER'):
-        ordering = settings.SHOP_OPTION_ADMIN_ORDER
+    ordering = ["option%s" % i for i in settings.SHOP_OPTION_ADMIN_ORDER]
+
 
 class ProductImageAdmin(TabularDynamicInlineAdmin):
     model = ProductImage

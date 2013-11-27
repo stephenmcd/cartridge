@@ -222,6 +222,16 @@ register_setting(
 )
 
 register_setting(
+    name="SHOP_OPTION_ADMIN_ORDER",
+    description="Sequence of indexes from the ``SHOP_OPTION_TYPE_CHOICES`` "
+        "setting that control how the options should be ordered in the "
+        "admin, eg given the default for ``SHOP_OPTION_ADMIN_ORDER``, to "
+        "order by Colour then Size we'd use (2, 1)",
+    editable=False,
+    default=(),
+)
+
+register_setting(
     name="SHOP_ORDER_EMAIL_SUBJECT",
     label=_("Order Email Subject"),
     description=_("Subject to be used when sending the order receipt email."),
