@@ -1,4 +1,3 @@
-from collections import defaultdict
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages import info
@@ -19,7 +18,7 @@ from mezzanine.utils.views import render, set_cookie, paginate
 
 from cartridge.shop import checkout
 from cartridge.shop.forms import AddProductForm, DiscountForm, CartItemFormSet
-from cartridge.shop.models import Product, ProductVariation, Order, OrderItem
+from cartridge.shop.models import Product, ProductVariation, Order
 from cartridge.shop.models import DiscountCode
 from cartridge.shop.utils import recalculate_cart, sign
 
