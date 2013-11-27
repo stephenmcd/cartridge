@@ -3,6 +3,7 @@ from collections import defaultdict
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages import info
 from django.core.urlresolvers import get_callable, reverse
+from django.db.models import Sum
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.template import RequestContext
@@ -363,17 +364,12 @@ def order_history(request, template="shop/order_history.html"):
     """
     Display a list of the currently logged-in user's past orders.
     """
-    all_orders = Order.objects.filter(user_id=request.user.id)
+    all_orders = (Order.objects
+                  .filter(user_id=request.user.id)
+                  .annotate(quantity_total=Sum('items__quantity')))
     orders = paginate(all_orders.order_by('-time'),
                       request.GET.get("page", 1),
                       settings.SHOP_PER_PAGE_CATEGORY,
                       settings.MAX_PAGING_LINKS)
-    # Add the total quantity to each order - this can probably be
-    # replaced with fetch_related and Sum when we drop Django 1.3
-    order_quantities = defaultdict(int)
-    for item in OrderItem.objects.filter(order__user_id=request.user.id):
-        order_quantities[item.order_id] += item.quantity
-    for order in orders.object_list:
-        setattr(order, "quantity_total", order_quantities[order.id])
     context = {"orders": orders}
     return render(request, template, context)
