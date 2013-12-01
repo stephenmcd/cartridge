@@ -1,5 +1,6 @@
 {% load i18n future shop_tags mezzanine_tags %}
-<div class="panel">
+<div class="panel panel-default">
+    <div class="panel-body">
     {% spaceless %}
     <a href="{% url "shop_cart" %}">
     {% blocktrans count request.cart.total_quantity as cart_quantity %}1 item{% plural %}{{ cart_quantity }} items{% endblocktrans %}
@@ -19,4 +20,5 @@
     {% include "accounts/includes/user_panel.html" %}
     {% endifinstalled %}
     {% endspaceless %}
+    </div>
 </div>
