@@ -2,6 +2,7 @@
 {% load mezzanine_tags shop_tags rating_tags i18n %}
 
 {% block meta_title %}{{ product.meta_title }}{% endblock %}
+{% block body_id %}category{% endblock %}
 
 {% block meta_keywords %}{% metablock %}
 {% for keyword in product.keywords.all %}
@@ -35,7 +36,7 @@
 
 {% if images %}
 {% spaceless %}
-<ul id="product-images-large" class="thumbnails">
+<ul id="product-images-large" class="list-unstyled list-inline">
     {% for image in images %}
     <li id="image-{{ image.id }}-large"{% if not forloop.first %}style="display:none;"{% endif %}>
     	<a class="product-image-large thumbnail" rel="#image-full-{{ image.id }}" href="{{ MEDIA_URL }}{{ image.file }}">
@@ -49,9 +50,9 @@
 </ul>
 
 {% if images|length != 1 %}
-<ul id="product-images-thumb" class="thumbnails">
+<ul id="product-images-thumb" class="list-unstyled list-inline">
 	{% for image in images %}
-	<li>
+    <li>
         <a class="thumbnail" id="image-{{ image.id }}" href="{{ MEDIA_URL }}{{ image.file }}">
             <img alt="{{ image.description }}" src="{{ MEDIA_URL }}{% thumbnail image.file 75 75 %}">
         </a>
@@ -68,7 +69,7 @@
 {% endeditable %}
 
 {% if product.available and has_available_variations %}
-<ul id="variations" class="unstyled">
+<ul id="variations" class="list-unstyled">
 	{% for variation in variations %}
 	<li id="variation-{{ variation.sku }}"
 		{% if not variation.default %}style="display:none;"{% endif %}>
@@ -86,14 +87,14 @@
 	</li>
 	{% endfor %}
 </ul>
-<form method="post" id="add-cart" class="form-horizontal form-shop">
+<form method="post" id="add-cart" class="form-shop checkout-form">
     {% csrf_token %}
     {% fields_for add_product_form %}
     <div class="form-actions clearfix">
         <div class="form-actions-wrap">
-        <input type="submit" class="btn btn-primary btn-large" name="add_cart" value="{% trans "Buy" %}">
+        <input type="submit" class="btn btn-primary btn-lg" name="add_cart" value="{% trans "Buy" %}">
         {% if settings.SHOP_USE_WISHLIST %}
-        <input type="submit" class="btn btn -large" name="add_wishlist" value="{% trans "Save for later" %}">
+        <input type="submit" class="btn btn-default btn-lg" name="add_wishlist" value="{% trans "Save for later" %}">
         {% endif %}
         </div>
     </div>
@@ -108,9 +109,9 @@
 
 {% if related_products %}
 <h2>{% trans "Related Products" %}</h2>
-<ul id="related-products" class="thumbnails">
+<div class="row">
     {% for product in related_products %}
-    <li>
+    <div class="col-sm-4 col-md-3">
         <a class="thumbnail" href="{{ product.get_absolute_url }}">
             {% if product.image %}
             <img src="{{ MEDIA_URL }}{% thumbnail product.image 90 90 %}">
@@ -123,9 +124,9 @@
                 <span class="price">{{ product.price|currency }}</span>
             {% endif %}
         </a>
-    </li>
+    </div>
     {% endfor %}
-</ul>
+</div>
 {% endif %}
 
 {% endblock %}
