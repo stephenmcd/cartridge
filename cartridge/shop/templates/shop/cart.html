@@ -3,6 +3,7 @@
 
 {% block meta_title %}{% trans "Your Cart" %}{% endblock %}
 {% block title %}{% trans "Your Cart" %}{% endblock %}
+{% block body_id %}category{% endblock %}
 
 {% block breadcrumb_menu %}
 {{ block.super }}
@@ -59,10 +60,10 @@
 </table>
 <div class="form-actions clearfix">
     <div class="form-actions-wrap">
-    <a href="{% url "shop_checkout" %}" class="btn btn-primary btn-large">
+    <a href="{% url "shop_checkout" %}" class="btn btn-primary btn-lg">
         {% if request.session.order.step %}{% trans "Return to Checkout" %}{% else %}{% trans "Go to Checkout" %}{% endif %}
     </a>
-    <input type="submit" name="update_cart" class="btn btn-large" value="{% trans "Update Cart" %}">
+    <input type="submit" name="update_cart" class="btn btn-default btn-lg" value="{% trans "Update Cart" %}">
     </div>
 </div>
 </form>
@@ -77,9 +78,9 @@
 {% with request.cart.upsell_products as upsell_products %}
 {% if upsell_products %}
 <h2>{% trans "You may also like:" %}</h2>
-<ul id="related-products" class="thumbnails">
+<div class="row">
     {% for product in upsell_products %}
-    <li>
+    <div class="col-sm-4 col-md-3">
         <a class="thumbnail" href="{{ product.get_absolute_url }}">
             <div class="img">
 	            {% if product.image %}
@@ -94,9 +95,9 @@
                 <span class="price">{{ product.price|currency }}</span>
             {% endif %}
         </a>
-    </li>
+    </div>
     {% endfor %}
-</ul>
+</div>
 {% endif %}
 {% endwith %}
 
