@@ -64,7 +64,6 @@ _gaq.push(['_trackTrans']);
 {% for step in steps %}
 <li>
     {{ step.title }}
-    <span class="divider">/</span>
 </li>
 {% endfor %}
 <li><strong>{% trans "Complete" %}</strong></li>
@@ -77,8 +76,7 @@ _gaq.push(['_trackTrans']);
 <p>{% trans "You can also view your invoice using one of the links below." %}</p>
 <br>
 <p>
-    <a class="btn btn-large btn-primary" href="{% url "shop_invoice" order.id %}?format=pdf">{% trans "Download PDF invoice" %}</a>
-    <a class="btn btn-large" target="_blank" href="{% url "shop_invoice" order.id %}">{% trans "View invoice in your browser" %}</a>
+    <a class="btn btn-lg btn-primary" href="{% url "shop_invoice" order.id %}?format=pdf">{% trans "Download PDF invoice" %}</a>
+    <a class="btn btn-lg btn-default" target="_blank" href="{% url "shop_invoice" order.id %}">{% trans "View invoice in your browser" %}</a>
 </p>
 {% endblock %}
-
