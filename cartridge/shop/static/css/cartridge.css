@@ -3,22 +3,28 @@
 .btn-wishlist {line-height:30px;}
 .product-sorting {margin:20px 0 25px 0;}
 .product-sorting label {display:inline;}
-.product-sorting select {margin:0 0 0 5px;}
-#category .thumbnails h6 {color:#777; height:50px; margin:10px 0 5px 0; border-bottom:1px dashed #ddd;}
+.product-sorting select {margin:0 0 0 5px; width:250px;}
+#category .thumbnail h6 {color:#777; font-weight:bold; height:50px; margin:10px 0 5px 0; border-bottom:1px dashed #ddd;}
 #category .thumbnails a {width:100px; height:200px; color:#666; padding:20px;}
 #category .categories.thumbnails h6 {border-bottom:0px;}
 #category .categories.thumbnails a {width:100px; height:140px; color:#666; padding:20px;}
-#category .thumbnails a:hover {text-decoration:none;}
+#category .thumbnail:hover {text-decoration:none;}
 #category .thumbnails .placeholder {width:100px; height:100px; background:rgba(220,220,220, 0.1);}
 #related-products.thumbnails h6 {color:#777; height:40px; margin:10px 0 5px 0; border-bottom:1px dashed #ddd;}
 #related-products.thumbnails a {width:90px; height:170px; color:#666; padding:12px;}
 #related-products.thumbnails a:hover {text-decoration:none;}
 #related-products.thumbnails li {margin-right:-14px;}
 .old-price {text-decoration:line-through; display:block; color:#ccc; margin-bottom:3px;}
-#product-images-thumb li {display:inline; margin-right:-10px;}
-.product-image-full {background:#fff; padding:20px;}
+.product-image-full {background:#fff; padding:20px; }
+#product-images-large li {padding: 0px;}
 .right .btn-primary {margin:5px 0;}
 
+/* turn off position:relative */
+#category .middle {position:static;}
+
+/* ratings */
+.rating-head {float: left; padding-top: 5px;}
+.rating ul {list-style: none:}
 
 /* Form actions (put primary button on right) */
 .form-shop .form-actions {width:100%; padding-left:0; padding-right:0; margin:40px 0 !important;}
@@ -38,7 +44,6 @@
 .btn-order-history {float:right; margin:-75px 20px 0 0;}
 .discount-form {float:right;}
 .discount-form .btn {float:right; margin:-5px 7px 0 0;}
-.discount-form .help-inline {display:block; padding-top:5px;}
 
 /* Wishlist */
 .wishlist img {vertical-align:middle; margin-right:5px;}
@@ -56,39 +61,49 @@
 .order-totals label {margin-right:10px; display:inline;}
 .order-totals {float:right; margin:10px 0;}
 
+.form-group ul, .form-group li {list-style-type:none; display:inline; margin:0;}
+.form-group li {line-height:20px;}
+.form-group li label {width: auto; padding: 5px;}
 
 /* Checkout forms */
 #checkout .left, #checkout .right {display:none !important;}
 #checkout .middle {width:100%;}
-#checkout-form {margin-left:5px;}
-#checkout-form .non-field-errors:after {display:none;}
-#checkout-form .form-actions {width:100%; padding-left:0; padding-right:0; margin:40px 0 !important;}
-#checkout-form .form-actions-wrap {float:left; margin-left:170px;}
-#checkout-form .form-actions input {float:right;}
-#checkout-form legend {text-indent:170px;}
-#checkout-form label {padding:4px 15px;}
-#checkout-form fieldset {background:rgba(220,220,220, 0.1); padding-bottom:10px; margin-bottom:20px;}
-#checkout-form .control-group input, #checkout-form textarea {width:60%;}
+.checkout-form legend {text-indent:170px; padding: 10px;}
+.checkout-form fieldset {background:rgba(220,220,220, 0.1); padding-bottom:10px; margin-bottom:20px;}
+.checkout-form .form-group label {padding:4px 15px; width:200px; text-align:right; float:left;}
+.checkout-form .form-group input, #checkout-form textarea {width:60%;}
+.checkout-form .form-actions-wrap {float:left; margin-left:200px;}
+.checkout-form .form-actions input {float:right; margin-left: 10px;}
+.checkout-form .non-field-errors:after {display:none;}
+.checkout-form .form-actions {width:100%; padding-left:0; padding-right:0; margin:40px 0 !important;}
+.checkout-form .form-group ul {list-style:none}
+.checkout-form .form-group li label {width:auto;float:left;}
+.checkout-form .help-block {display: inline}
 #id_card_ccv {width:50px !important;}
 
+/* Needed from the deprecated mezzanine.css */
+.form-group li label {width: auto !important; float: none !important; display: inline; font-weight: normal; vertical-align: middle; padding: 0px !important; line-height: 27px; margin-right: 10px;}
 
-/* Checkout checkboxes (right aligned labels) */
-.input_id_same_billing_shipping .controls, .input_id_remember .controls {float:left; margin-left:170px;}
-.input_id_same_billing_shipping input, .input_id_remember input {width:auto !important;}
+.form-group li input {width:auto !important;}
+.form-group ul {padding-left: 0px;}
+
+/* Checkout checkboxes (right aligned labels)*/
+.input_id_same_billing_shipping input, .input_id_remember input {width:auto !important;float:left;margin-left: 170px;}
 .input_id_same_billing_shipping label, .input_id_remember label {width:auto !important;
-    float:none !important; margin:0 0 -24px 175px; text-align:left !important; font-weight:normal;}
+    float:none !important; margin:-5px 0 -24px 5px; text-align:left !important; font-weight:normal;} 
 
 
 /* Checkout expiry fields (mmake two fields look like one) */
 .card-expiry-fields select {width:auto;}
-.card-expiry-fields .control-group label {display:none;}
-.card-expiry-fields .control-group, .card-expiry-fields .controls {display:inline; margin:0;}
-.card-expiry-fields .control-group:before, .card-expiry-fields .control-group:after {display:none;}
+.card-expiry-fields .form-group label {display:none;}
+.card-expiry-fields .form-group {display:inline; margin:0; float:left; padding-right:10px;}
+.card-expiry-fields .form-group:before, .card-expiry-fields .form-group:after {display:none;}
+.card-expiry-fields {margin-bottom: 60px;}
 
 
 /* Checkout confirmation */
 .confirmation {width:40% !important; float:left; margin-right:20px;}
 .confirmation legend {text-indent:50px !important;}
-.confirmation ul {margin:20px;}
+.confirmation ul {margin:20px; float:none;}
 .confirmation li {margin:5px 0; color:#999;}
-.confirmation label {display:inline; padding-right:5px; width:170px;}
+.confirmation label {display:inline; padding-right:5px; width:auto;}
