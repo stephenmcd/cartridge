@@ -20,7 +20,6 @@ $(function() {$('.middle :input:visible:enabled:first').focus();});
 	{% else %}
 	{{ step.title }}
 	{% endif %}
-	<span class="divider">/</span>
 </li>
 {% endfor %}
 <li>{% trans "Complete" %}</li>
@@ -31,8 +30,9 @@ $(function() {$('.middle :input:visible:enabled:first').focus();});
 {% block before-form %}{% endblock %}
 
 {% if request.cart.has_items %}
-<div class="panel checkout-panel span3">
-<ul class="unstyled">
+<div class="panel panel-default checkout-panel col-md-3">
+<div class="panel-body">
+<ul class="list-unstyled">
 {% for item in request.cart %}
 <li>
 	{% if item.image %}
@@ -45,35 +45,36 @@ $(function() {$('.middle :input:visible:enabled:first').focus();});
 </ul>
 {% order_totals %}
 <br style="clear:both;">
-<a class="btn" href="{% url "shop_cart" %}">{% trans "Edit Cart" %}</a>
+<a class="btn btn-default" href="{% url "shop_cart" %}">{% trans "Edit Cart" %}</a>
+</div>
 </div>
 {% endif %}
 
-<form method="post" id="checkout-form" class="form-horizontal form-shop span8">
+<form method="post" class="col-md-8 checkout-form">
 	{% csrf_token %}
 
 	{% with form.non_field_errors as errors %}
 	{% if errors or form.errors %}
-	<div class="control-group error non-field-errors">
+	<div class="alert alert-danger">
 		{% for error in errors %}
-		<span class="help-inline">{{ error }}</span>
+		<p>{{ error }}</p>
 		{% empty %}
-		<span class="help-inline">{% trans "Please correct the errors below." %}</span>
+		<p>{% trans "Please correct the errors below." %}</p>
 		{% endfor %}
 	</div>
 	{% endif %}
 	{% endwith %}
 
 	{% block fields %}{% endblock %}
-
+	
 	{% block nav-buttons %}
 		{% if request.cart.has_items %}
 			<div class="form-actions clearfix">
 				<div class="form-actions-wrap">
-					<input type="submit" class="btn btn-large btn-primary" value="{% if CHECKOUT_STEP_LAST %}{% trans "Complete" %}{% else %}{% trans "Next" %}{% endif %}">
-					{% if not CHECKOUT_STEP_FIRST %}
-					<input type="submit" class="btn btn-large" name="back" value="{% trans "Back" %}">
-					{% endif %}
+				<input type="submit" class="btn btn-lg btn-primary" value="{% trans "Next" %}">
+				{% if not CHECKOUT_STEP_FIRST %}
+				<input type="submit" class="btn btn-lg btn-default" name="back" value="{% trans "Back" %}">
+				{% endif %}
 				</div>
 			</div>
 		{% else %}
@@ -81,7 +82,7 @@ $(function() {$('.middle :input:visible:enabled:first').focus();});
 			<p>{% trans "This may be due to your session timing out after a period of inactivity." %}</p>
 			<p>{% trans "We apologize for the inconvenience." %}</p>
 			<br>
-			<p><a class="btn btn-large btn-primary" href="{% url "page" "shop" %}">{% trans "Continue Shopping" %}</a></p>
+			<p><a class="btn btn-lg btn-primary" href="{% url "page" "shop" %}">{% trans "Continue Shopping" %}</a></p>
 		{% endif %}
 	{% endblock %}
 
