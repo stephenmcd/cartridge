@@ -10,33 +10,37 @@
 {% endeditable %}
 
 {% if child_categories %}
-<ul class="thumbnails categories">
+<div class="row">
 {% if settings.SHOP_CATEGORY_USE_FEATURED_IMAGE %}
     {% for category in child_categories %}
-    <li><a href="{{ category.get_absolute_url }}" class="thumbnail">
+    <div class="col-sm-4 col-md-3">
+    <a href="{{ category.get_absolute_url }}" class="thumbnail">
         {% if category.featured_image %}
         <img src="{{ MEDIA_URL }}{% thumbnail category.featured_image 100 100 %}" />
         {% else %}
         <div class="placeholder"></div>
         {% endif %}
         <h6>{{ category.title }}</h6>
-    </a></li>
+    </a>
+    </div>
     {% endfor %}
 {% else %}
     {% for category in child_categories %}
-    <li><a href="{{ category.get_absolute_url }}">
+    <div class="col-sm-4 col-md-3">
+    <a href="{{ category.get_absolute_url }}" class="thumbnail">
         {{ category.title }}
-    </a></li>
+    </a>
+    </div>
     {% endfor %}
 {% endif %}
-</ul>
+</div>
 {% endif %}
 
 {% if products.paginator.count != 0 %}
 
-<form class="product-sorting">
-    <label>{% trans "Sort by" %}</label>
-    <select onchange="location.href = this[this.selectedIndex].value;">
+<form class="product-sorting form-inline">
+    <label >{% trans "Sort by" %}</label>
+    <select onchange="location.href = this[this.selectedIndex].value;" class="form-control">
     {% for name, option in settings.SHOP_PRODUCT_SORT_OPTIONS %}
     {% if "rating" not in option or settings.SHOP_USE_RATINGS %}
     <option{% if option == products.sort_by %} selected{% endif %}
@@ -48,15 +52,16 @@
     </select>
 </form>
 
-<ul class="thumbnails">
+<div class="row">
 {% for product in products.object_list %}
-<li>
+    <div class="col-sm-4 col-md-3">
     <a href="{{ product.get_absolute_url }}" class="thumbnail">
         {% if product.image %}
         <img src="{{ MEDIA_URL }}{% thumbnail product.image 100 100 %}">
         {% else %}
         <div class="placeholder"></div>
         {% endif %}
+        <div class="caption">
         <h6>{{ product }}</h6>
         {% if product.has_price %}
             {% if product.on_sale %}
@@ -67,14 +72,14 @@
         {% else %}
         {% trans "Coming soon" %}
         {% endif %}
+            </div>
     </a>
-</li>
+    </div>
 {% endfor %}
-</ul>
+</div>
 
 {% pagination_for products %}
 
 {% endif %}
 
 {% endblock %}
-
