@@ -6,7 +6,7 @@
 
 <fieldset class="confirmation">
 	<legend>{% trans "Billing Details" %}</legend>
-    <ul class="unstyled">
+    <ul class="list-unstyled">
 	    {% for field, value in form.billing_detail_fields.values %}
         <li><label>{{ field }}:</label> {{ value }}</li>
 	    {% endfor %}
@@ -15,7 +15,7 @@
 
 <fieldset class="confirmation">
 	<legend>{% trans "Shipping Details" %}</legend>
-	<ul class="unstyled">
+	<ul class="list-unstyled">
 	    {% for field, value in form.shipping_detail_fields.values %}
         <li><label>{{ field }}:</label> {{ value }}</li>
 	    {% endfor %}
@@ -29,7 +29,7 @@
 <br style="clear:both;">
 <fieldset class="confirmation">
 	<legend>{% trans "Payment Details" %}</legend>
-	<ul class="unstyled">
+	<ul class="list-unstyled">
 	    {% for field, value in form.card_name_field.values %}
         <li><label>{{ field }}:</label> {{ value }}</li>
         {% endfor %}
