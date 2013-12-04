@@ -38,9 +38,6 @@
 #product-images-large li {
     margin-bottom: 15px;
 }
-.right .btn-primary {
-    margin: 5px 0
-}
 /* Shop form */
 .shop-form {
     margin: 30px 0 40px
@@ -55,41 +52,46 @@
     width: 200px;
 }
 /* Cart and order history */
+.cart-form > .errorlist {
+    padding-left: 0;
+    list-style-type: none;
+    color: #B94A48;
+}
 .order-history th,
-.form-cart th {
+.cart-form th {
     white-space: nowrap;
     text-align: right;
 }
 .order-history th,
-.form-cart td {
+.cart-form tbody > tr > td {
     text-align: right;
     vertical-align: middle;
 }
 .order-history .left,
-.form-cart .left {
+.cart-form .left {
     text-align: left
 }
 .order-history .center,
-.form-cart .center,
-.form-cart .quantity {
+.cart-form .center,
+.cart-form .quantity {
     text-align: center
 }
-.form-cart .quantity input {
+.cart-form .quantity input {
     width: 25px;
     text-align: center;
     margin: 0;
 }
-.form-cart label {
+.cart-form label {
     margin-right: 10px;
     font-weight: bold;
 }
-.order-history .right,
-.form-cart .form-actions {
-    text-align: right
+.discount-form > .form-group,
+.discount-form > .form-group > input,
+.discount-form > .btn {
+    display: inline-block;
 }
-.form-cart .form-actions-wrap {
-    float: right;
-    margin-right: 5px;
+.discount-form > .form-group > input {
+    width: 180px;
 }
 .order-history .btn {
     float: right;
@@ -98,13 +100,6 @@
 .btn-order-history {
     float: right;
     margin: -75px 20px 0 0;
-}
-.discount-form {
-    float: right
-}
-.discount-form .btn {
-    float: right;
-    margin: -5px 7px 0 0;
 }
 /* Wishlist */
 .wishlist img {
