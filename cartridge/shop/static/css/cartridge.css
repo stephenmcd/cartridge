@@ -56,11 +56,6 @@
 /*================================
     Cart and order history
 ==================================*/
-.cart-form > .errorlist {
-    padding-left: 0;
-    list-style-type: none;
-    color: #B94A48;
-}
 .order-history th,
 .cart-form th {
     white-space: nowrap;
@@ -219,4 +214,14 @@
 }
 .card-expiry-fields .form-group label {
     display: none
+}
+/*================================
+            HELPERS
+==================================*/
+.errorlist,
+.error-msg {
+    padding-left: 0;
+    list-style-type: none;
+    color: #B94A48;
+    font-weight: bold;
 }

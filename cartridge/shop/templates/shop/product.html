@@ -93,7 +93,9 @@ $(document).ready(function() {
             <span class="price">{{ variation.price|currency }}</span>
         {% else %}
             {% if has_available_variations %}
+            <span class="error-msg">
             {% trans "The selected options are currently unavailable." %}
+            </span>
             {% endif %}
         {% endif %}
     </li>
@@ -109,7 +111,7 @@ $(document).ready(function() {
     </div>
 </form>
 {% else %}
-<p>{% trans "This product is currently unavailable." %}</p>
+<p class="error-msg">{% trans "This product is currently unavailable." %}</p>
 {% endif %}
 
 {% if settings.SHOP_USE_RATINGS %}
