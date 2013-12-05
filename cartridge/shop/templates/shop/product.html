@@ -133,8 +133,11 @@ $(document).ready(function() {
             {% if product.has_price %}
                 {% if product.on_sale %}
                 <span class="old-price">{{ product.unit_price|currency }}</span>
+                {% trans "On sale:" %}
                 {% endif %}
                 <span class="price">{{ product.price|currency }}</span>
+            {% else %}
+                <span class="coming-soon">{% trans "Coming soon" %}</span>
             {% endif %}
             </div>
             </div>

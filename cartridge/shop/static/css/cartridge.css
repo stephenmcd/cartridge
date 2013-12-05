@@ -16,7 +16,8 @@
 .product-thumb > a {
     text-decoration: none;
 }
-.price:only-child {
+.price:only-child,
+.coming-soon {
     margin: 20px 0 8px;
     display: block;
 }

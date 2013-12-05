@@ -20,7 +20,9 @@
         {% else %}
         <div class="placeholder"></div>
         {% endif %}
-        <h4>{{ category.title }}</h4>
+        <div class="caption">
+            <h4>{{ category.title }}</h4>
+        </div>
     </a>
     </div>  
     {% endfor %}
@@ -73,7 +75,7 @@
             {% endif %}
             <span class="price">{{ product.price|currency }}</span>
         {% else %}
-            {% trans "Coming soon" %}
+            <span class="coming-soon">{% trans "Coming soon" %}</span>
         {% endif %}
         </div>
         </div>
