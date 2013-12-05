@@ -105,7 +105,9 @@
 /* Wishlist */
 .wishlist img {
     vertical-align: middle;
-    margin-right: 5px;
+}
+.wishlist-actions {
+    white-space: nowrap;
 }
 .wishlist form {
     margin: 0;
@@ -115,7 +117,7 @@
     margin-left: 5px
 }
 .wishlist .btn-primary {
-    margin-left: 20px
+    margin-left: 15px
 }
 /* Cart panel in checkout */
 .checkout-panel li {
