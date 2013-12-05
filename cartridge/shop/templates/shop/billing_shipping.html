@@ -1,9 +1,9 @@
 {% extends "shop/checkout.html" %}
-{% load i18n future mezzanine_tags %}
+{% load staticfiles i18n future mezzanine_tags %}
 
 {% block extra_head %}
 {{ block.super }}
-<script src="{{ STATIC_URL }}cartridge/js/shipping_fields.js"></script>
+<script src="{% static "cartridge/js/shipping_fields.js" %}"></script>
 {% endblock %}
 
 {% block fields %}
