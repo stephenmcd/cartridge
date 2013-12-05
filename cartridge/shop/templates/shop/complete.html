@@ -36,18 +36,18 @@ var _gaq = [['_trackPageview'], ['_addTrans',
 
 {% for item in items %}
 _gaq.push(['_addItem',
-	// order ID - required
-	'{{ order.id }}',
-	// SKU/code - required
-	'{{ item.sku }}',
-	// product name
-	'{{ item.name|escapejs }}',
-	// category or variation
-	'{{ item.description|escapejs }}',
-	// unit price - required
-	decimal({{ item.unit_price }}),
-	// quantity - required
-	'{{ item.quantity }}'
+    // order ID - required
+    '{{ order.id }}',
+    // SKU/code - required
+    '{{ item.sku }}',
+    // product name
+    '{{ item.name|escapejs }}',
+    // category or variation
+    '{{ item.description|escapejs }}',
+    // unit price - required
+    decimal({{ item.unit_price }}),
+    // quantity - required
+    '{{ item.quantity }}'
 ]);
 {% endfor %}
 

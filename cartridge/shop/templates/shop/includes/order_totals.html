@@ -1,40 +1,40 @@
 {% load shop_tags i18n %}
 <div class="order-totals">
-	{% if discount_total or shipping_total %}
-	<div><label>{% trans "Sub total" %}:</label> {{ item_total|currency }}</div>
-	{% endif %}
-	{% if discount_total %}
-	<div>
-	    <label>
-	    {% if discount_type %}
-	    {{ discount_type }}:
-	    {% else %}
-	    {% trans "Discount" %}:
-	    {% endif %}
-	    </label>{{ discount_total|currency }}
-	</div>
-	{% endif %}
-	{% if shipping_type or shipping_total %}
-	<div>
-	    <label>
-	    {% if shipping_type %}
-	    {{ shipping_type }}:
-	    {% else %}
-	    {% trans "Shipping" %}:
-	    {% endif %}
-	    </label> {{ shipping_total|currency }}
-	</div>
-	{% endif %}
-	{% if tax_total %}
-	<div>
-	    <label>
-	    {% if tax_type %}
-	    {{ tax_type }}:
-	    {% else %}
-	    {% trans "Tax" %}:
-	    {% endif %}
-	    </label> {{ tax_total|currency }}
-	</div>
-	{% endif %}
-	<div class="total"><label>{% trans "Total" %}:</label> {{ order_total|currency }}</div>
+    {% if discount_total or shipping_total %}
+    <div><label>{% trans "Sub total" %}:</label> {{ item_total|currency }}</div>
+    {% endif %}
+    {% if discount_total %}
+    <div>
+        <label>
+        {% if discount_type %}
+        {{ discount_type }}:
+        {% else %}
+        {% trans "Discount" %}:
+        {% endif %}
+        </label>{{ discount_total|currency }}
+    </div>
+    {% endif %}
+    {% if shipping_type or shipping_total %}
+    <div>
+        <label>
+        {% if shipping_type %}
+        {{ shipping_type }}:
+        {% else %}
+        {% trans "Shipping" %}:
+        {% endif %}
+        </label> {{ shipping_total|currency }}
+    </div>
+    {% endif %}
+    {% if tax_total %}
+    <div>
+        <label>
+        {% if tax_type %}
+        {{ tax_type }}:
+        {% else %}
+        {% trans "Tax" %}:
+        {% endif %}
+        </label> {{ tax_total|currency }}
+    </div>
+    {% endif %}
+    <div class="total"><label>{% trans "Total" %}:</label> {{ order_total|currency }}</div>
 </div>

@@ -54,7 +54,7 @@ $(document).ready(function() {
 <ul id="product-images-large" class="list-unstyled list-inline">
     {% for image in images %}
     <li id="image-{{ image.id }}-large"{% if not forloop.first %}style="display:none;"{% endif %}>
-    	<a class="product-image-large" rel="#image-full-{{ image.id }}" href="{{ MEDIA_URL }}{{ image.file }}">
+        <a class="product-image-large" rel="#image-full-{{ image.id }}" href="{{ MEDIA_URL }}{{ image.file }}">
             <img alt="{{ image.description }}" src="{{ MEDIA_URL }}{% thumbnail image.file 0 300 %}" class="img-thumbnail img-responsive col-xs-12">
         </a>
         <div class="product-image-full" style="display:none;" id="image-full-{{ image.id }}">
@@ -66,13 +66,13 @@ $(document).ready(function() {
 
 {% if images|length != 1 %}
 <ul id="product-images-thumb" class="list-unstyled list-inline">
-	{% for image in images %}
+    {% for image in images %}
     <li>
         <a class="thumbnail" id="image-{{ image.id }}" href="{{ MEDIA_URL }}{{ image.file }}">
             <img alt="{{ image.description }}" src="{{ MEDIA_URL }}{% thumbnail image.file 75 75 %}">
         </a>
     </li>
-	{% endfor %}
+    {% endfor %}
 </ul>
 {% endif %}
 
@@ -85,22 +85,22 @@ $(document).ready(function() {
 
 {% if product.available and has_available_variations %}
 <ul id="variations" class="list-unstyled">
-	{% for variation in variations %}
-	<li id="variation-{{ variation.sku }}"
-		{% if not variation.default %}style="display:none;"{% endif %}>
-		{% if variation.has_price %}
-			{% if variation.on_sale %}
-				<span class="old-price">{{ variation.unit_price|currency }}</span>
-				{% trans "On sale:" %}
-			{% endif %}
-			<span class="price">{{ variation.price|currency }}</span>
-		{% else %}
-		    {% if has_available_variations %}
-		    {% trans "The selected options are currently unavailable." %}
-		    {% endif %}
-		{% endif %}
-	</li>
-	{% endfor %}
+    {% for variation in variations %}
+    <li id="variation-{{ variation.sku }}"
+        {% if not variation.default %}style="display:none;"{% endif %}>
+        {% if variation.has_price %}
+            {% if variation.on_sale %}
+                <span class="old-price">{{ variation.unit_price|currency }}</span>
+                {% trans "On sale:" %}
+            {% endif %}
+            <span class="price">{{ variation.price|currency }}</span>
+        {% else %}
+            {% if has_available_variations %}
+            {% trans "The selected options are currently unavailable." %}
+            {% endif %}
+        {% endif %}
+    </li>
+    {% endfor %}
 </ul>
 <form method="post" id="add-cart" class="shop-form">
     {% fields_for add_product_form %}
