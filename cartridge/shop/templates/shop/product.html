@@ -54,12 +54,9 @@ $(document).ready(function() {
 <ul id="product-images-large" class="list-unstyled list-inline">
     {% for image in images %}
     <li id="image-{{ image.id }}-large"{% if not forloop.first %}style="display:none;"{% endif %}>
-        <a class="product-image-large" rel="#image-full-{{ image.id }}" href="{{ MEDIA_URL }}{{ image.file }}">
+        <a class="product-image-large" href="{{ MEDIA_URL }}{{ image.file }}">
             <img alt="{{ image.description }}" src="{{ MEDIA_URL }}{% thumbnail image.file 0 300 %}" class="img-thumbnail img-responsive col-xs-12">
         </a>
-        <div class="product-image-full" style="display:none;" id="image-full-{{ image.id }}">
-            <img src="{{ MEDIA_URL }}{{ image.file }}">
-        </div>
     </li>
     {% endfor %}
 </ul>
