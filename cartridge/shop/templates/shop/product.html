@@ -15,10 +15,25 @@
 {{ product.description }}
 {% endmetablock %}{% endblock %}
 
-{% block extra_head %}
+{% block extra_css %}
 {{ block.super }}
-<script src="{% static "mezzanine/js/jquery.tools.toolbox.expose.js" %}"></script>
-<script src="{% static "mezzanine/js/jquery.tools.overlay.js" %}"></script>
+<link rel="stylesheet" href="{% static "mezzanine/css/magnific-popup.css" %}">
+{% endblock extra_css %}
+
+{% block extra_js %}
+{{ block.super }}
+<script src="{% static "mezzanine/js/magnific-popup.js" %}"></script>
+<script>
+$(document).ready(function() {
+    $('#product-images-large').magnificPopup({
+        delegate: 'a',
+        type: 'image',
+        gallery: {
+            enabled: true,
+        }
+    });
+});
+</script>
 <script>var variations = {{ variations_json|safe }};</script>
 <script src="{% static "cartridge/js/product_variations.js" %}"></script>
 {% endblock %}
