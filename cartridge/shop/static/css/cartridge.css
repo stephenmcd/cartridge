@@ -1,4 +1,6 @@
-/* Categories and products */
+/*================================
+    Categories and products
+==================================*/
 .shop-category-list h4 {
     margin: 0;
 }
@@ -24,7 +26,7 @@
     height: 50px;
     margin: 10px 0 5px 0;
     border-bottom: 1px dashed #ddd;
-}
+}   
 .old-price {
     text-decoration: line-through;
     display: block;
@@ -39,7 +41,9 @@
     margin: 0 0 15px 0;
     padding: 0;
 }
-/* Shop form */
+/*================================
+            Shop form
+==================================*/
 .shop-form {
     margin: 30px 0 40px
 }
@@ -52,7 +56,9 @@
     display: inline-block;
     width: 200px;
 }
-/* Cart and order history */
+/*================================
+    Cart and order history
+==================================*/
 .cart-form > .errorlist {
     padding-left: 0;
     list-style-type: none;
@@ -102,7 +108,9 @@
 .discount-form > .form-group > input {
     width: 180px;
 }
-/* Wishlist */
+/*================================
+            Wishlist
+==================================*/
 .wishlist img {
     vertical-align: middle;
 }
@@ -119,7 +127,9 @@
 .wishlist .btn-primary {
     margin-left: 15px
 }
-/* Cart panel in checkout */
+/*================================
+    Cart panel in checkout
+==================================*/
 .checkout-panel li {
     border-bottom: 1px dashed #bbb;
     color: #999;
@@ -131,7 +141,9 @@
     text-align: right;
     margin-top: 10px;
 }
-/* Checkout forms */
+/*================================
+        Checkout forms
+==================================*/
 #checkout .left,
 #checkout .right {
     display: none !important
@@ -174,7 +186,9 @@
     width: auto !important;
     font-weight: normal;
 }
-/* Inline card type selector */
+/*================================
+    Inline card type selector
+==================================*/
 .checkout-form .form-group > ul {
     display: inline-block;
     padding: 0;
@@ -193,7 +207,9 @@
     width: 70px !important;
     min-width: 70px;
 }
-/* Checkout expiry fields (mmake two fields look like one) */
+/*================================
+    Checkout expiry fields
+==================================*/
 .card-expiry-fields select {
     width: auto
 }
