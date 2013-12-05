@@ -117,51 +117,16 @@
     margin-left: 20px
 }
 /* Cart panel in checkout */
-#checkout .checkout-panel {
-    float: right;
-    margin: 0px 30px 0 0;
-}
-#checkout .checkout-panel li {
-    border-bottom: 1px dashed #eee;
-    padding: 10px 0;
+.checkout-panel li {
+    border-bottom: 1px dashed #bbb;
     color: #999;
-    line-height: 15px;
 }
-#checkout .checkout-panel img {
-    float: left;
-    margin-right: 10px;
-}
-#checkout .checkout-panel .price {
+.checkout-panel .price,
+.order-totals,
+.checkout-panel .btn {
     float: right;
-    line-height: 20px;
-}
-#checkout .checkout-panel .btn {
-    float: right;
-    margin-top: 15px;
-}
-#checkout .checkout-panel .order-totals {
-    text-align: right
-}
-.order-totals label {
-    margin-right: 10px;
-    display: inline;
-}
-.order-totals {
-    float: right;
-    margin: 10px 0;
-}
-.form-group ul,
-.form-group li {
-    list-style-type: none;
-    display: inline;
-    margin: 0;
-}
-.form-group li {
-    line-height: 20px
-}
-.form-group li label {
-    width: auto;
-    padding: 5px;
+    text-align: right;
+    margin-top: 10px;
 }
 /* Checkout forms */
 #checkout .left,
@@ -172,125 +137,70 @@
     width: 100%
 }
 .checkout-form legend {
-    text-indent: 170px;
+    border: 0;
+    margin: 0 0 0 15px;
     padding: 10px;
+    width: auto;
 }
 .checkout-form fieldset {
-    background: rgba(220,220,220, 0.1);
-    padding-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     margin-bottom: 20px;
+    padding: 5px 0;
 }
-.checkout-form .form-group label {
-    padding: 4px 15px;
+.checkout-form .form-group > label {
+    margin-left: 25px;
     width: 200px;
-    text-align: right;
-    float: left;
+    vertical-align: top;
 }
-.checkout-form .form-group input,
-#checkout-form textarea {
-    width: 60%
+.checkout-form .form-group > input,
+.checkout-form textarea {
+    display: inline-block;
+    min-width: 230px;
+    width: 60%;
+    margin: 0 20px 0 25px;
 }
-.checkout-form .form-actions-wrap {
-    float: left;
-    margin-left: 200px;
-}
-.checkout-form .form-actions input {
-    float: right;
-    margin-left: 10px;
-}
-.checkout-form .non-field-errors:after {
-    display: none
-}
-.checkout-form .form-actions {
-    width: 100%;
-    padding-left: 0;
-    padding-right: 0;
-    margin: 40px 0 !important;
-}
-.checkout-form .form-group ul {
-    list-style: none
-}
-.checkout-form .form-group li label {
-    width: auto;
-    float: left;
+.checkout-form .alert {
+    margin: 0 25px 25px;
 }
 .checkout-form .help-block {
-    display: inline
+    margin-left: 25px;
+}
+.checkout-form .input_id_same_billing_shipping label,
+.checkout-form .input_id_remember label {
+    width: auto !important;
+    font-weight: normal;
+}
+/* Inline card type selector */
+.checkout-form .form-group > ul {
+    display: inline-block;
+    padding: 0;
+    list-style-type: none;
+    margin: 0 15px 0 25px;
+}
+.checkout-form .form-group li {
+    display: inline;
+    margin-right: 5px;
+}
+.checkout-form .form-group li > label {
+    font-weight: normal;
+    margin-bottom: 0;
 }
 #id_card_ccv {
-    width: 50px !important
-}
-/* Needed from the deprecated mezzanine.css */
-.form-group li label {
-    width: auto !important;
-    float: none !important;
-    display: inline;
-    font-weight: normal;
-    vertical-align: middle;
-    padding: 0px !important;
-    line-height: 27px;
-    margin-right: 10px;
-}
-.form-group li input {
-    width: auto !important
-}
-.form-group ul {
-    padding-left: 0px
-}
-/* Checkout checkboxes (right aligned labels)*/
-.input_id_same_billing_shipping input,
-.input_id_remember input {
-    width: auto !important;
-    float: left;
-    margin-left: 170px;
-}
-.input_id_same_billing_shipping label,
-.input_id_remember label {
-    width: auto !important;
-    float: none !important;
-    margin: -5px 0 -24px 5px;
-    text-align: left !important;
-    font-weight: normal;
+    width: 70px !important;
+    min-width: 70px;
 }
 /* Checkout expiry fields (mmake two fields look like one) */
 .card-expiry-fields select {
     width: auto
 }
+.card-expiry-fields .form-group {
+    display: inline-block;
+    margin-bottom: 0;
+}
+.card-expiry-fields .form-group:first-of-type {
+    margin-left: 25px;
+}
 .card-expiry-fields .form-group label {
     display: none
-}
-.card-expiry-fields .form-group {
-    display: inline;
-    margin: 0;
-    float: left;
-    padding-right: 10px;
-}
-.card-expiry-fields .form-group:before,
-.card-expiry-fields .form-group:after {
-    display: none
-}
-.card-expiry-fields {
-    margin-bottom: 60px
-}
-/* Checkout confirmation */
-.confirmation {
-    width: 40% !important;
-    float: left;
-    margin-right: 20px;
-}
-.confirmation legend {
-    text-indent: 50px !important
-}
-.confirmation ul {
-    margin: 20px;
-    float: none;
-}
-.confirmation li {
-    margin: 5px 0;
-    color: #999;
-}
-.confirmation label {
-    display: inline;
-    padding-right: 5px;
-    width: auto;
 }
