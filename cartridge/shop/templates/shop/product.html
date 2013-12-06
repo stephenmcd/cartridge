@@ -18,7 +18,7 @@
 {% block extra_css %}
 {{ block.super }}
 <link rel="stylesheet" href="{% static "mezzanine/css/magnific-popup.css" %}">
-{% endblock extra_css %}
+{% endblock %}
 
 {% block extra_js %}
 {{ block.super }}
@@ -34,6 +34,9 @@ $(document).ready(function() {
     });
 });
 </script>
+{% endblock %}
+
+{% block extra_head %}
 <script>var variations = {{ variations_json|safe }};</script>
 <script src="{% static "cartridge/js/product_variations.js" %}"></script>
 {% endblock %}
