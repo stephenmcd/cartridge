@@ -45,4 +45,6 @@ $(function() {
         }
     }
 
+    $('.variations-help').insertAfter('.create-variations h2').show();
+
 });

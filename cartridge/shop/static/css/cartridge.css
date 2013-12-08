@@ -38,6 +38,7 @@
 .btn-order-history {float:right; margin:-75px 20px 0 0;}
 .discount-form {float:right;}
 .discount-form .btn {float:right; margin:-5px 7px 0 0;}
+.discount-form .help-inline {display:block; padding-top:5px;}
 
 /* Wishlist */
 .wishlist img {vertical-align:middle; margin-right:5px;}

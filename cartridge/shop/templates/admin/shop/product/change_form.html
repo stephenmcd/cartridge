@@ -1,0 +1,10 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+
+{% block after_related_objects %}
+{% if not change %}
+<p class="help variations-help" style="display:none; margin:5px 15px;">
+{% trans "Select all of the required variation options and then click 'Save and continue editing' below. You'll then be able to edit the price and other attributes for each variation individually." %}
+</p>
+{% endif %}
+{% endblock %}

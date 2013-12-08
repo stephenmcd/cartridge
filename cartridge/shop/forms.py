@@ -248,15 +248,7 @@ class DiscountForm(forms.ModelForm):
         Validate the discount code if given, and attach the discount
         instance to the form.
         """
-        # Test session behaves weirdly when we try and remove applied
-        # discounts when testing multiple discounts, so we allow multiple
-        # discounts when running tests.
-        testing = getattr(settings, "TESTING", False)
-        if "discount_code" in self._request.session and not testing:
-            # Already applied
-            code = self._request.session["discount_code"]
-        else:
-            code = self.cleaned_data.get("discount_code", "")
+        code = self.cleaned_data.get("discount_code", "")
         cart = self._request.cart
         if code:
             try:
@@ -272,10 +264,27 @@ class DiscountForm(forms.ModelForm):
         Assigns the session variables for the discount.
         """
         discount = getattr(self, "_discount", None)
+
+        def clear_session(*names):
+            for name in names:
+                try:
+                    del self._request.session[name]
+                except KeyError:
+                    pass
+
         if discount is not None:
+            # Clear out any previously defined discount code
+            # session vars.
+            clear_session("free_shipping", "discount_code", "discount_total")
             total = self._request.cart.calculate_discount(discount)
             if discount.free_shipping:
                 set_shipping(self._request, _("Free shipping"), 0)
+            else:
+                # A previously entered discount code providing free
+                # shipping may have been entered prior to this
+                # discount code beign entered, so clear out any
+                # previously set shipping vars.
+                clear_session("shipping_type", "shipping_total")
             self._request.session["free_shipping"] = discount.free_shipping
             self._request.session["discount_code"] = discount.code
             self._request.session["discount_total"] = total
@@ -298,10 +307,10 @@ class OrderForm(FormsetForm, DiscountForm):
         widget=forms.RadioSelect,
         choices=make_choices(settings.SHOP_CARD_TYPES))
     card_number = forms.CharField(label=_("Card number"))
-    card_expiry_month = forms.ChoiceField(
+    card_expiry_month = forms.ChoiceField(label=_("Card expiry month"),
         initial="%02d" % date.today().month,
         choices=make_choices(["%02d" % i for i in range(1, 13)]))
-    card_expiry_year = forms.ChoiceField()
+    card_expiry_year = forms.ChoiceField(label=_("Card expiry year"))
     card_ccv = forms.CharField(label=_("CCV"), help_text=_("A security code, "
         "usually the last 3 digits found on the back of your card."))
 
@@ -340,14 +349,11 @@ class OrderForm(FormsetForm, DiscountForm):
         super(OrderForm, self).__init__(request, data=data, initial=initial)
         self._checkout_errors = errors
 
-        # Hide discount code field if discount already applied,
-        # discount field shouldn't appear in checkout, or if no
-        # discount codes are active.
+        # Hide discount code field if it shouldn't appear in checkout,
+        # or if no discount codes are active.
         settings.use_editable()
-        no_discounts = not DiscountCode.objects.active().exists()
-        discount_applied = "discount_code" in getattr(request, "session", {})
-        discount_in_checkout = settings.SHOP_DISCOUNT_FIELD_IN_CHECKOUT
-        if discount_applied or no_discounts or not discount_in_checkout:
+        if not (settings.SHOP_DISCOUNT_FIELD_IN_CHECKOUT and
+                DiscountCode.objects.active().exists()):
             self.fields["discount_code"].widget = forms.HiddenInput()
 
         # Determine which sets of fields to hide for each checkout step.
