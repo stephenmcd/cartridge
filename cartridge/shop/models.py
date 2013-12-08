@@ -836,7 +836,7 @@ class DiscountCode(Discount):
         if self.discount_deduct is not None:
             # Don't apply to amounts that would be negative after
             # deduction.
-            if self.discount_deduct < amount:
+            if self.discount_deduct <= amount:
                 return self.discount_deduct
         elif self.discount_percent is not None:
             return amount / Decimal("100") * self.discount_percent
