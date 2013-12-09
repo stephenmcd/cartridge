@@ -14,13 +14,14 @@
 {% if orders %}
 
 <table class="table table-striped order-history">
-    <tr>
+    <thead>
         <th class="left">ID</th>
         <th class="left">{% trans "Date / time" %}</th>
-        <th>{% trans "Quantity" %}</th>
+        <th>{% trans "Qty" %}</th>
         <th>{% trans "Paid" %}</th>
         <th colspan="2" class="left">{% trans "Status" %}</th>
-    </tr>
+    </thead>
+    <tbody>
     {% for order in orders.object_list %}
     <tr>
         <td class="left">{{ order.id }}</td>
@@ -28,12 +29,13 @@
         <td class="right">{{ order.quantity_total }}</td>
         <td class="right">{{ order.total|currency }}</td>
         <td>{{ order.get_status_display }}</td>
-        <td>
+        <td class="order-actions">
             <a class="btn btn-sm btn-primary" href="{% url "shop_invoice" order.id %}?format=pdf">{% trans "Download PDF" %}</a>
             <a class="btn btn-sm btn-default" target="_blank" href="{% url "shop_invoice" order.id %}">{% trans "View invoice" %}</a>
         </td>
     </tr>
     {% endfor %}
+    </tbody>
 </table>
 {% pagination_for orders %}
 

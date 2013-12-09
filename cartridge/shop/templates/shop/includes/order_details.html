@@ -36,20 +36,20 @@
 <h2>{% trans "Items Ordered" %}</h2>
 <table width="100%" border="1" cellspacing="0" cellpadding="10">
     <tr>
-		<th align="left">{% trans "Item" %}</th>
-		<th align="right">{% trans "Unit Price" %}</th>
-		<th align="right">{% trans "Qty" %}</th>
-		<th align="right">{% trans "Price" %}</th>
-	</tr>
-	{% for item in order.items.all %}
-	<tr>
-    	<td>{{ item.description }}</td>
-    	<td align="right" valign="top">{{ item.unit_price|currency }}</td>
-    	<td align="right" valign="top">{{ item.quantity }}</td>
-    	<td align="right" valign="top">{{ item.total_price|currency }}</td>
-	</tr>
-	{% endfor %}
-	<tr>
-	    <td colspan="4" align="right">{% order_totals %}</td>
-	</tr>
+        <th align="left">{% trans "Item" %}</th>
+        <th align="right">{% trans "Unit Price" %}</th>
+        <th align="right">{% trans "Qty" %}</th>
+        <th align="right">{% trans "Price" %}</th>
+    </tr>
+    {% for item in order.items.all %}
+    <tr>
+        <td>{{ item.description }}</td>
+        <td align="right" valign="top">{{ item.unit_price|currency }}</td>
+        <td align="right" valign="top">{{ item.quantity }}</td>
+        <td align="right" valign="top">{{ item.total_price|currency }}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+        <td colspan="4" align="right">{% order_totals %}</td>
+    </tr>
 </table>
