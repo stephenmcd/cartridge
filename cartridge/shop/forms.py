@@ -421,7 +421,7 @@ class OrderForm(FormsetForm, DiscountForm):
         """
         if self._checkout_errors:
             raise forms.ValidationError(self._checkout_errors)
-        return self.cleaned_data
+        return super(OrderForm, self).clean()
 
 
 #######################
@@ -517,6 +517,7 @@ class ProductVariationAdminFormset(BaseInlineFormSet):
     Ensure no more than one variation is checked as default.
     """
     def clean(self):
+        super(ProductVariationAdminFormset, self).clean()
         if len([f for f in self.forms if hasattr(f, "cleaned_data") and
             f.cleaned_data.get("default", False)]) > 1:
             error = _("Only one variation can be checked as the default.")
@@ -534,4 +535,4 @@ class DiscountAdminForm(forms.ModelForm):
         if len(reductions) > 1:
             error = _("Please enter a value for only one type of reduction.")
             self._errors[fields[0]] = self.error_class([error])
-        return self.cleaned_data
+        return super(DiscountAdminForm, self).clean()
