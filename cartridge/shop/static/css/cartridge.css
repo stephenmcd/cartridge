@@ -146,10 +146,8 @@
     Inline card type selector
 ==================================*/
 .checkout-form .form-group > ul {
-    display: inline-block;
     padding: 0;
     list-style-type: none;
-    margin: 0 15px 0 25px;
 }
 .checkout-form .form-group li {
     display: inline;
@@ -169,14 +167,14 @@
 .card-expiry-fields select {
     width: auto
 }
+.card-expiry-fields > label {
+    display: block;
+}
 .card-expiry-fields .form-group {
     display: inline-block;
     margin-bottom: 0;
 }
-.card-expiry-fields .form-group:first-of-type {
-    margin-left: 25px;
-}
-.card-expiry-fields .form-group label {
+.card-expiry-fields .form-group > label {
     display: none
 }
 /*================================
