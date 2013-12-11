@@ -39,21 +39,6 @@
     padding: 0;
 }
 /*================================
-            Shop form
-==================================*/
-.shop-form {
-    margin: 30px 0 40px
-}
-.shop-form > .form-group > label {
-    width: 140px;
-    margin-right: 10px;
-}
-.shop-form > .form-group > input,
-.shop-form > .form-group > select {
-    display: inline-block;
-    width: 200px;
-}
-/*================================
     Cart and order history
 ==================================*/
 .order-history th,
@@ -145,7 +130,7 @@
 }
 .checkout-form legend {
     border: 0;
-    margin: 0 0 0 15px;
+    margin: 0 0 0 -10px;
     padding: 10px;
     width: auto;
 }
@@ -153,30 +138,13 @@
     border: 1px solid #ddd;
     border-radius: 4px;
     margin-bottom: 20px;
-    padding: 5px 0;
-}
-.checkout-form .form-group > label {
-    margin-left: 25px;
-    width: 200px;
-    vertical-align: top;
-}
-.checkout-form .form-group > input,
-.checkout-form textarea {
-    display: inline-block;
-    min-width: 230px;
-    width: 60%;
-    margin: 0 20px 0 25px;
-}
-.checkout-form .alert {
-    margin: 0 25px 25px;
-}
-.checkout-form .help-block {
-    margin-left: 25px;
+    padding: 5px 25px;
 }
 .checkout-form .input_id_same_billing_shipping label,
 .checkout-form .input_id_remember label {
     width: auto !important;
     font-weight: normal;
+    margin-right: 10px;
 }
 /*================================
     Inline card type selector
