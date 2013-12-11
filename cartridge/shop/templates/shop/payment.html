@@ -3,6 +3,7 @@
 
 {% block fields %}
 {% if request.cart.has_items %}
+{% errors_for form %}
 {% include "shop/includes/payment_fields.html" %}
 {% fields_for form.other_fields %}
 {% endif %}

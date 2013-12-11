@@ -104,6 +104,9 @@ $(document).ready(function() {
     </li>
     {% endfor %}
 </ul>
+
+{% errors_for add_product_form %}
+
 <form method="post" id="add-cart" class="shop-form">
     {% fields_for add_product_form %}
     <div class="form-actions">
