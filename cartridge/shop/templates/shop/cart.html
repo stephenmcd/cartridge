@@ -59,11 +59,11 @@
     </tbody>
 </table>
 
-<div class="form-actions text-right">
-    <input type="submit" name="update_cart" class="btn btn-default btn-lg" value="{% trans "Update Cart" %}">
-    <a href="{% url "shop_checkout" %}" class="btn btn-primary btn-lg">
+<div class="form-actions">
+    <a href="{% url "shop_checkout" %}" class="btn btn-primary btn-lg pull-right">
         {% if request.session.order.step %}{% trans "Return to Checkout" %}{% else %}{% trans "Go to Checkout" %}{% endif %}
     </a>
+    <input type="submit" name="update_cart" class="btn btn-default btn-lg pull-left" value="{% trans "Update Cart" %}">
 </div>
 </form>
 

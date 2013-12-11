@@ -107,9 +107,9 @@ $(document).ready(function() {
 <form method="post" id="add-cart" class="shop-form">
     {% fields_for add_product_form %}
     <div class="form-actions">
-        <input type="submit" class="btn btn-primary btn-lg" name="add_cart" value="{% trans "Buy" %}">
+        <input type="submit" class="btn btn-primary btn-lg pull-right" name="add_cart" value="{% trans "Buy" %}">
         {% if settings.SHOP_USE_WISHLIST %}
-        <input type="submit" class="btn btn-default btn-lg" name="add_wishlist" value="{% trans "Save for later" %}">
+        <input type="submit" class="btn btn-default btn-lg pull-left" name="add_wishlist" value="{% trans "Save for later" %}">
         {% endif %}
     </div>
 </form>
