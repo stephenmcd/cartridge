@@ -64,10 +64,6 @@
     float: right;
     margin: 0 0 5px 5px;
 }
-.btn-order-history {
-    float: right;
-    margin: -75px 20px 0 0;
-}
 .cart-form .quantity input {
     width: 25px;
     text-align: center;
