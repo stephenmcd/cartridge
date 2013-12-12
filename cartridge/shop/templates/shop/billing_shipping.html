@@ -24,6 +24,8 @@ If you have an existing account or would like to create one, please
 {% endifinstalled %}
 {% endif %}
 
+{% errors_for form %}
+
 <fieldset>
     <legend>{% trans "Billing Details" %}</legend>
     {% fields_for form.billing_detail_fields %}
