@@ -15,12 +15,11 @@ $(function() {$('.middle :input:visible:enabled:first').focus();});
 {% block breadcrumb_menu %}
 {% for step in steps %}
 <li>
-	{% if step.title == step_title %}
-	<strong>{{ step.title }}</strong>
-	{% else %}
-	{{ step.title }}
-	{% endif %}
-	<span class="divider">/</span>
+    {% if step.title == step_title %}
+    <strong>{{ step.title }}</strong>
+    {% else %}
+    {{ step.title }}
+    {% endif %}
 </li>
 {% endfor %}
 <li>{% trans "Complete" %}</li>
@@ -29,64 +28,56 @@ $(function() {$('.middle :input:visible:enabled:first').focus();});
 {% block main %}
 
 {% block before-form %}{% endblock %}
+<div class="row">
+<form method="post" class="col-md-8 checkout-form">
+    {% csrf_token %}
 
-{% if request.cart.has_items %}
-<div class="panel checkout-panel span3">
-<ul class="unstyled">
-{% for item in request.cart %}
-<li>
-	{% if item.image %}
-	<img alt="{{ item.description }}" src="{{ MEDIA_URL }}{% thumbnail item.image 30 30 %}">
-	{% endif %}
-	{{ item.quantity }} x {{ item.description }}
-	<span class="price">{{ item.total_price|currency }}</span>
-</li>
-{% endfor %}
-</ul>
-{% order_totals %}
-<br style="clear:both;">
-<a class="btn" href="{% url "shop_cart" %}">{% trans "Edit Cart" %}</a>
-</div>
-{% endif %}
-
-<form method="post" id="checkout-form" class="form-horizontal form-shop span8">
-	{% csrf_token %}
-
-	{% with form.non_field_errors as errors %}
-	{% if errors or form.errors %}
-	<div class="control-group error non-field-errors">
-		{% for error in errors %}
-		<span class="help-inline">{{ error }}</span>
-		{% empty %}
-		<span class="help-inline">{% trans "Please correct the errors below." %}</span>
-		{% endfor %}
-	</div>
-	{% endif %}
-	{% endwith %}
-
-	{% block fields %}{% endblock %}
-
-	{% block nav-buttons %}
-		{% if request.cart.has_items %}
-			<div class="form-actions clearfix">
-				<div class="form-actions-wrap">
-					<input type="submit" class="btn btn-large btn-primary" value="{% if CHECKOUT_STEP_LAST %}{% trans "Complete" %}{% else %}{% trans "Next" %}{% endif %}">
-					{% if not CHECKOUT_STEP_FIRST %}
-					<input type="submit" class="btn btn-large" name="back" value="{% trans "Back" %}">
-					{% endif %}
-				</div>
-			</div>
-		{% else %}
-			<p>{% trans "Your cart is empty." %}</p>
-			<p>{% trans "This may be due to your session timing out after a period of inactivity." %}</p>
-			<p>{% trans "We apologize for the inconvenience." %}</p>
-			<br>
-			<p><a class="btn btn-large btn-primary" href="{% url "page" "shop" %}">{% trans "Continue Shopping" %}</a></p>
-		{% endif %}
-	{% endblock %}
+    {% block fields %}{% endblock %}
+    
+    {% block nav-buttons %}
+        {% if request.cart.has_items %}
+            <div class="form-actions">
+                <input type="submit" class="btn btn-lg btn-primary pull-right" value="{% trans "Next" %}">
+                {% if not CHECKOUT_STEP_FIRST %}
+                <input type="submit" class="btn btn-lg btn-default pull-left" name="back" value="{% trans "Back" %}">
+                {% endif %}
+            </div>
+        {% else %}
+            <p>{% trans "Your cart is empty." %}</p>
+            <p>{% trans "This may be due to your session timing out after a period of inactivity." %}</p>
+            <p>{% trans "We apologize for the inconvenience." %}</p>
+            <br>
+            <p><a class="btn btn-lg btn-primary" href="{% url "page" "shop" %}">{% trans "Continue Shopping" %}</a></p>
+        {% endif %}
+    {% endblock %}
 
 </form>
 
-{% block after-form %}{% endblock after-form %}
+{% if request.cart.has_items %}
+<div class="col-md-4">
+    <div class="panel panel-default checkout-panel">
+    <div class="panel-body">
+    <ul class="media-list">
+    {% for item in request.cart %}
+    <li class="media">
+        {% if item.image %}
+        <img class="pull-left" alt="{{ item.description }}" src="{{ MEDIA_URL }}{% thumbnail item.image 30 30 %}">
+        {% endif %}
+        <div class="media-body">
+            {{ item.quantity }} x {{ item.description }}
+            <span class="price">{{ item.total_price|currency }}</span>
+        </div>
+    </li>
+    {% endfor %}
+    </ul>
+    {% order_totals %}
+    <br style="clear:both;">
+    <a class="btn btn-default" href="{% url "shop_cart" %}">{% trans "Edit Cart" %}</a>
+    </div>
+    </div>
+</div>
+{% endif %}
 
+{% block after-form %}{% endblock %}
+</div>
 {% endblock %}

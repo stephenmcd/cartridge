@@ -1,7 +1,8 @@
 {% extends "shop/base.html" %}
-{% load mezzanine_tags shop_tags rating_tags i18n %}
+{% load staticfiles mezzanine_tags shop_tags rating_tags i18n %}
 
 {% block meta_title %}{{ product.meta_title }}{% endblock %}
+{% block body_id %}category{% endblock %}
 
 {% block meta_keywords %}{% metablock %}
 {% for keyword in product.keywords.all %}
@@ -14,12 +15,30 @@
 {{ product.description }}
 {% endmetablock %}{% endblock %}
 
-{% block extra_head %}
+{% block extra_css %}
 {{ block.super }}
-<script src="{{ STATIC_URL }}mezzanine/js/jquery.tools.toolbox.expose.js"></script>
-<script src="{{ STATIC_URL }}mezzanine/js/jquery.tools.overlay.js"></script>
+<link rel="stylesheet" href="{% static "mezzanine/css/magnific-popup.css" %}">
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script src="{% static "mezzanine/js/magnific-popup.js" %}"></script>
+<script>
+$(document).ready(function() {
+    $('#product-images-large').magnificPopup({
+        delegate: 'a',
+        type: 'image',
+        gallery: {
+            enabled: true,
+        }
+    });
+});
+</script>
+{% endblock %}
+
+{% block extra_head %}
 <script>var variations = {{ variations_json|safe }};</script>
-<script src="{{ STATIC_URL }}cartridge/js/product_variations.js"></script>
+<script src="{% static "cartridge/js/product_variations.js" %}"></script>
 {% endblock %}
 
 {% block breadcrumb_menu %}
@@ -35,28 +54,25 @@
 
 {% if images %}
 {% spaceless %}
-<ul id="product-images-large" class="thumbnails">
+<ul id="product-images-large" class="list-unstyled list-inline">
     {% for image in images %}
     <li id="image-{{ image.id }}-large"{% if not forloop.first %}style="display:none;"{% endif %}>
-    	<a class="product-image-large thumbnail" rel="#image-full-{{ image.id }}" href="{{ MEDIA_URL }}{{ image.file }}">
-            <img alt="{{ image.description }}" src="{{ MEDIA_URL }}{% thumbnail image.file 0 300 %}">
+        <a class="product-image-large" href="{{ MEDIA_URL }}{{ image.file }}">
+            <img alt="{{ image.description }}" src="{{ MEDIA_URL }}{% thumbnail image.file 0 300 %}" class="img-thumbnail img-responsive col-xs-12">
         </a>
-        <div class="product-image-full" style="display:none;" id="image-full-{{ image.id }}">
-            <img src="{{ MEDIA_URL }}{{ image.file }}">
-        </div>
     </li>
     {% endfor %}
 </ul>
 
 {% if images|length != 1 %}
-<ul id="product-images-thumb" class="thumbnails">
-	{% for image in images %}
-	<li>
+<ul id="product-images-thumb" class="list-unstyled list-inline">
+    {% for image in images %}
+    <li>
         <a class="thumbnail" id="image-{{ image.id }}" href="{{ MEDIA_URL }}{{ image.file }}">
             <img alt="{{ image.description }}" src="{{ MEDIA_URL }}{% thumbnail image.file 75 75 %}">
         </a>
     </li>
-	{% endfor %}
+    {% endfor %}
 </ul>
 {% endif %}
 
@@ -68,64 +84,75 @@
 {% endeditable %}
 
 {% if product.available and has_available_variations %}
-<ul id="variations" class="unstyled">
-	{% for variation in variations %}
-	<li id="variation-{{ variation.sku }}"
-		{% if not variation.default %}style="display:none;"{% endif %}>
-		{% if variation.has_price %}
-			{% if variation.on_sale %}
-				<span class="old-price">{{ variation.unit_price|currency }}</span>
-				{% trans "On sale:" %}
-			{% endif %}
-			<span class="price">{{ variation.price|currency }}</span>
-		{% else %}
-		    {% if has_available_variations %}
-		    {% trans "The selected options are currently unavailable." %}
-		    {% endif %}
-		{% endif %}
-	</li>
-	{% endfor %}
-</ul>
-<form method="post" id="add-cart" class="form-horizontal form-shop">
-    {% csrf_token %}
-    {% fields_for add_product_form %}
-    <div class="form-actions clearfix">
-        <div class="form-actions-wrap">
-        <input type="submit" class="btn btn-primary btn-large" name="add_cart" value="{% trans "Buy" %}">
-        {% if settings.SHOP_USE_WISHLIST %}
-        <input type="submit" class="btn btn -large" name="add_wishlist" value="{% trans "Save for later" %}">
+<ul id="variations" class="list-unstyled">
+    {% for variation in variations %}
+    <li id="variation-{{ variation.sku }}"
+        {% if not variation.default %}style="display:none;"{% endif %}>
+        {% if variation.has_price %}
+            {% if variation.on_sale %}
+                <span class="old-price">{{ variation.unit_price|currency }}</span>
+                {% trans "On sale:" %}
+            {% endif %}
+            <span class="price">{{ variation.price|currency }}</span>
+        {% else %}
+            {% if has_available_variations %}
+            <span class="error-msg">
+            {% trans "The selected options are currently unavailable." %}
+            </span>
+            {% endif %}
         {% endif %}
-        </div>
+    </li>
+    {% endfor %}
+</ul>
+
+{% errors_for add_product_form %}
+
+<form method="post" id="add-cart" class="shop-form">
+    {% fields_for add_product_form %}
+    <div class="form-actions">
+        <input type="submit" class="btn btn-primary btn-lg pull-right" name="add_cart" value="{% trans "Buy" %}">
+        {% if settings.SHOP_USE_WISHLIST %}
+        <input type="submit" class="btn btn-default btn-lg pull-left" name="add_wishlist" value="{% trans "Save for later" %}">
+        {% endif %}
     </div>
 </form>
 {% else %}
-<p>{% trans "This product is currently unavailable." %}</p>
+<p class="error-msg">{% trans "This product is currently unavailable." %}</p>
 {% endif %}
 
 {% if settings.SHOP_USE_RATINGS %}
-{% rating_for product %}
+<div class="panel panel-default rating">
+    <div class="panel-body">{% rating_for product %}</div>
+</div>
 {% endif %}
 
 {% if related_products %}
 <h2>{% trans "Related Products" %}</h2>
-<ul id="related-products" class="thumbnails">
+<div class="row related-products">
     {% for product in related_products %}
-    <li>
+    <div class="col-xs-6 col-sm-4 col-md-3 product-thumb">
         <a class="thumbnail" href="{{ product.get_absolute_url }}">
             {% if product.image %}
             <img src="{{ MEDIA_URL }}{% thumbnail product.image 90 90 %}">
             {% endif %}
+            <div class="caption">
             <h6>{{ product }}</h6>
+            <div class="price-info">
             {% if product.has_price %}
                 {% if product.on_sale %}
                 <span class="old-price">{{ product.unit_price|currency }}</span>
+                {% trans "On sale:" %}
                 {% endif %}
                 <span class="price">{{ product.price|currency }}</span>
+            {% else %}
+                <span class="coming-soon">{% trans "Coming soon" %}</span>
             {% endif %}
+            </div>
+            </div>
         </a>
-    </li>
+    </div>
     {% endfor %}
-</ul>
+</div>
 {% endif %}
 
 {% endblock %}

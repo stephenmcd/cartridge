@@ -1,9 +1,9 @@
 {% extends "shop/checkout.html" %}
-{% load i18n future mezzanine_tags %}
+{% load staticfiles i18n future mezzanine_tags %}
 
 {% block extra_head %}
 {{ block.super }}
-<script src="{{ STATIC_URL }}cartridge/js/shipping_fields.js"></script>
+<script src="{% static "cartridge/js/shipping_fields.js" %}"></script>
 {% endblock %}
 
 {% block fields %}
@@ -24,16 +24,18 @@ If you have an existing account or would like to create one, please
 {% endifinstalled %}
 {% endif %}
 
+{% errors_for form %}
+
 <fieldset>
-	<legend>{% trans "Billing Details" %}</legend>
-	{% fields_for form.billing_detail_fields %}
+    <legend>{% trans "Billing Details" %}</legend>
+    {% fields_for form.billing_detail_fields %}
 </fieldset>
 
 <fieldset>
-	<legend>{% trans "Delivery Details" %}</legend>
-	{% fields_for form.same_billing_shipping_field %}
-	<div id="shipping_fields">{% fields_for form.shipping_detail_fields %}</div>
-	{% fields_for form.additional_instructions_field %}
+    <legend>{% trans "Delivery Details" %}</legend>
+    {% fields_for form.same_billing_shipping_field %}
+    <div id="shipping_fields">{% fields_for form.shipping_detail_fields %}</div>
+    {% fields_for form.additional_instructions_field %}
     {% fields_for form.remember_field %}
 </fieldset>
 

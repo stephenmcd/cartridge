@@ -10,54 +10,64 @@
 {% endeditable %}
 
 {% if child_categories %}
-<ul class="thumbnails categories">
+<div class="row shop-category-list">
 {% if settings.SHOP_CATEGORY_USE_FEATURED_IMAGE %}
     {% for category in child_categories %}
-    <li><a href="{{ category.get_absolute_url }}" class="thumbnail">
+    <div class="col-xs-6 col-sm-4 col-lg-3">
+    <a href="{{ category.get_absolute_url }}" class="thumbnail">
         {% if category.featured_image %}
-        <img src="{{ MEDIA_URL }}{% thumbnail category.featured_image 100 100 %}" />
+        <img src="{{ MEDIA_URL }}{% thumbnail category.featured_image 148 148 %}" />
         {% else %}
         <div class="placeholder"></div>
         {% endif %}
-        <h6>{{ category.title }}</h6>
-    </a></li>
+        <div class="caption">
+            <h4>{{ category.title }}</h4>
+        </div>
+    </a>
+    </div>  
     {% endfor %}
 {% else %}
     {% for category in child_categories %}
-    <li><a href="{{ category.get_absolute_url }}">
-        {{ category.title }}
-    </a></li>
+    <div class="col-xs-6 col-sm-4 col-lg-3">
+    <a href="{{ category.get_absolute_url }}" class="thumbnail">
+        <div class="caption"><h4>{{ category.title }}</h4></div>
+    </a>
+    </div>
     {% endfor %}
 {% endif %}
-</ul>
+</div>
 {% endif %}
 
 {% if products.paginator.count != 0 %}
 
-<form class="product-sorting">
-    <label>{% trans "Sort by" %}</label>
-    <select onchange="location.href = this[this.selectedIndex].value;">
-    {% for name, option in settings.SHOP_PRODUCT_SORT_OPTIONS %}
-    {% if "rating" not in option or settings.SHOP_USE_RATINGS %}
-    <option{% if option == products.sort_by %} selected{% endif %}
-        value="{{ category.get_absolute_url }}?sort={{ option }}{{ querystring }}">
-        {{ name }}
-    </option>
-    {% endif %}
-    {% endfor %}
-    </select>
+<form class="product-sorting" role="form">
+    <div class="form-group">
+    <label class="control-label" for="sorting-select">{% trans "Sort by" %}</label>
+        <select onchange="location.href = this[this.selectedIndex].value;" class="form-control" id="sorting-select">
+        {% for name, option in settings.SHOP_PRODUCT_SORT_OPTIONS %}
+        {% if "rating" not in option or settings.SHOP_USE_RATINGS %}
+        <option{% if option == products.sort_by %} selected{% endif %}
+            value="{{ category.get_absolute_url }}?sort={{ option }}{{ querystring }}">
+            {{ name }}
+        </option>
+        {% endif %}
+        {% endfor %}
+        </select>
+    </div>
 </form>
 
-<ul class="thumbnails">
+<div class="row product-list">
 {% for product in products.object_list %}
-<li>
+    <div class="col-xs-6 col-sm-4 col-lg-3 product-thumb">
     <a href="{{ product.get_absolute_url }}" class="thumbnail">
         {% if product.image %}
-        <img src="{{ MEDIA_URL }}{% thumbnail product.image 100 100 %}">
+        <img src="{{ MEDIA_URL }}{% thumbnail product.image 148 148 %}">
         {% else %}
         <div class="placeholder"></div>
         {% endif %}
+        <div class="caption">
         <h6>{{ product }}</h6>
+        <div class="price-info">
         {% if product.has_price %}
             {% if product.on_sale %}
             <span class="old-price">{{ product.unit_price|currency }}</span>
@@ -65,16 +75,17 @@
             {% endif %}
             <span class="price">{{ product.price|currency }}</span>
         {% else %}
-        {% trans "Coming soon" %}
+            <span class="coming-soon">{% trans "Coming soon" %}</span>
         {% endif %}
+        </div>
+        </div>
     </a>
-</li>
+    </div>
 {% endfor %}
-</ul>
+</div>
 
 {% pagination_for products %}
 
 {% endif %}
 
 {% endblock %}
-
