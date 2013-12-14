@@ -11,7 +11,7 @@
         {% else %}
         {% trans "Discount" %}:
         {% endif %}
-        </label>{{ discount_total|currency }}
+        </label> {{ discount_total|currency }}
     </div>
     {% endif %}
     {% if shipping_type or shipping_total %}
