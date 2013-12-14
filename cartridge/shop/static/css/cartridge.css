@@ -27,7 +27,7 @@
     height: 50px;
     margin: 10px 0 5px 0;
     border-bottom: 1px dashed #ddd;
-}   
+}
 .old-price {
     text-decoration: line-through;
     display: block;
@@ -140,6 +140,9 @@
 .checkout-form .input_id_remember label {
     width: auto !important;
     font-weight: normal;
+    margin-right: 10px;
+}
+#complete .btn-primary {
     margin-right: 10px;
 }
 /*================================

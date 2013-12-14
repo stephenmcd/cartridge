@@ -1,6 +1,8 @@
 {% extends "shop/base.html" %}
 {% load i18n future %}
 
+{% block body_id %}complete{% endblock %}
+
 {% block meta_title %}{% trans "Order Complete" %}{% endblock %}
 
 {% block extra_head %}
@@ -77,6 +79,7 @@ _gaq.push(['_trackTrans']);
 <br>
 <p>
     <a class="btn btn-lg btn-primary" href="{% url "shop_invoice" order.id %}?format=pdf">{% trans "Download PDF invoice" %}</a>
+
     <a class="btn btn-lg btn-default" target="_blank" href="{% url "shop_invoice" order.id %}">{% trans "View invoice in your browser" %}</a>
 </p>
 {% endblock %}
