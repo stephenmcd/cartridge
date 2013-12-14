@@ -473,9 +473,9 @@ class Order(models.Model):
             self.shipping_total = Decimal(str(self.shipping_total))
             self.total += self.shipping_total
         if self.discount_total is not None:
-            self.total -= self.discount_total
+            self.total -= Decimal(self.discount_total)
         if self.tax_total is not None:
-            self.total += self.tax_total
+            self.total += Decimal(self.tax_total)
         self.save()  # We need an ID before we can add related items.
         for item in request.cart:
             product_fields = [f.name for f in SelectedProduct._meta.fields]

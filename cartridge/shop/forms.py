@@ -1,6 +1,6 @@
 
 from __future__ import absolute_import, unicode_literals
-from future.builtins import filter, int, range, str, super, str, zip
+from future.builtins import filter, int, range, str, super, zip
 from future.utils import with_metaclass
 
 from copy import copy
@@ -291,7 +291,7 @@ class DiscountForm(forms.ModelForm):
                 clear_session("shipping_type", "shipping_total")
             self._request.session["free_shipping"] = discount.free_shipping
             self._request.session["discount_code"] = discount.code
-            self._request.session["discount_total"] = total
+            self._request.session["discount_total"] = str(total)
 
 
 class OrderForm(FormsetForm, DiscountForm):

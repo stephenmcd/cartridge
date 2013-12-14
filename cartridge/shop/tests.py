@@ -1,11 +1,11 @@
-from __future__ import division
-from __future__ import unicode_literals
-from future.builtins import range
-from future.builtins import zip
+
+from __future__ import division, unicode_literals
+from future.builtins import range, zip
 
 from datetime import timedelta
 from decimal import Decimal
 from operator import mul
+from functools import reduce
 
 from django.core.urlresolvers import reverse
 from django.test import TestCase
@@ -22,7 +22,6 @@ from cartridge.shop.models import Category, Cart, Order, DiscountCode
 from cartridge.shop.models import Sale
 from cartridge.shop.forms import OrderForm
 from cartridge.shop.checkout import CHECKOUT_STEPS
-from functools import reduce
 
 
 TEST_STOCK = 5
@@ -293,7 +292,7 @@ class ShopTests(TestCase):
                     discount.products.add(variation.product)
                 post_data = {"discount_code": code}
                 self.client.post(reverse("shop_cart"), post_data)
-                discount_total = self.client.session["discount_total"]
+                discount_total = Decimal(self.client.session["discount_total"])
                 if discount_type == "percent":
                     expected = TEST_PRICE / Decimal("100") * discount_value
                     if discount_target == "cart":
