@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from future.builtins import str
+from future.builtins import zip
 
 from collections import defaultdict
 from datetime import datetime, timedelta
@@ -107,12 +110,12 @@ class ProductVariationManager(Manager):
             options = SortedDict(options)
             # Build all combinations of options.
             variations = [[]]
-            for values_list in options.values():
+            for values_list in list(options.values()):
                 variations = [x + [y] for x in variations for y in values_list]
             for variation in variations:
                 # Lookup unspecified options as null to ensure a
                 # unique filter.
-                variation = dict(zip(options.keys(), variation))
+                variation = dict(list(zip(list(options.keys()), variation)))
                 lookup = dict(variation)
                 lookup.update(self._empty_options_lookup(exclude=variation))
                 try:
@@ -153,7 +156,7 @@ class ProductVariationManager(Manager):
             image = image[0]
         for variation in variations:
             save = False
-            if unicode(variation.image_id) in deleted_image_ids:
+            if str(variation.image_id) in deleted_image_ids:
                 variation.image = None
                 save = True
             if image and not variation.image:

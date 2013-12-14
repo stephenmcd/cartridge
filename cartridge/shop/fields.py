@@ -2,6 +2,9 @@
 Various model fields that mostly provide default field sizes to ensure
 these are consistant when used across multiple models.
 """
+from __future__ import absolute_import
+from __future__ import unicode_literals
+from future.builtins import super
 
 from locale import localeconv
 

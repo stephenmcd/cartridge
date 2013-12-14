@@ -1,3 +1,7 @@
+from __future__ import absolute_import
+from __future__ import unicode_literals
+from future.builtins import bytes, zip
+
 import hmac
 from locale import setlocale, LC_MONETARY
 try:
@@ -53,7 +57,7 @@ def make_choices(choices):
     """
     Zips a list with itself for field choices.
     """
-    return zip(choices, choices)
+    return list(zip(choices, choices))
 
 
 def recalculate_cart(request):
@@ -105,7 +109,9 @@ def sign(value):
     Returns the hash of the given value, used for signing order key stored in
     cookie for remembering address fields.
     """
-    return hmac.new(settings.SECRET_KEY, value, digest).hexdigest()
+    key = bytes(settings.SECRET_KEY, encoding="utf8")
+    value = bytes(value, encoding="utf8")
+    return hmac.new(key, value, digest).hexdigest()
 
 
 def set_locale():

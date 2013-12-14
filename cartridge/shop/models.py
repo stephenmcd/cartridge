@@ -1,3 +1,7 @@
+from __future__ import division
+from __future__ import unicode_literals
+from future.builtins import super
+from future.builtins import str
 from decimal import Decimal
 from operator import iand, ior
 
@@ -20,11 +24,13 @@ from mezzanine.pages.models import Page
 from mezzanine.utils.models import AdminThumbMixin, upload_to
 
 from cartridge.shop import fields, managers
+from functools import reduce
+from future.utils import with_metaclass
 
 try:
     from _mysql_exceptions import OperationalError
 except ImportError:
-    class OperationalError(StandardError):
+    class OperationalError(Exception):
         """
         This class is purely to prevent a NameError if
         _mysql_exceptions.OperationalError is not available.
@@ -203,7 +209,7 @@ class ProductVariationMetaclass(ModelBase):
         return super(ProductVariationMetaclass, cls).__new__(*args)
 
 
-class ProductVariation(Priced):
+class ProductVariation(with_metaclass(ProductVariationMetaclass, Priced)):
     """
     A combination of selected options from
     ``SHOP_OPTION_TYPE_CHOICES`` for a ``Product`` instance.
@@ -216,8 +222,6 @@ class ProductVariation(Priced):
 
     objects = managers.ProductVariationManager()
 
-    __metaclass__ = ProductVariationMetaclass
-
     class Meta:
         ordering = ("-default",)
 
@@ -229,12 +233,9 @@ class ProductVariation(Priced):
         for field in self.option_fields():
             name = getattr(self, field.name)
             if name is not None:
-                verbose_name = field.verbose_name
-                if isinstance(verbose_name, str):
-                    verbose_name = verbose_name.decode("utf-8")
-                option = u"%s: %s" % (verbose_name, name)
+                option = u"%s: %s" % (field.verbose_name, name)
                 options.append(option)
-        result = u"%s %s" % (unicode(self.product), u", ".join(options))
+        result = u"%s %s" % (str(self.product), u", ".join(options))
         return result.strip()
 
     def save(self, *args, **kwargs):
@@ -545,12 +546,12 @@ class Cart(models.Model):
         kwargs = {"sku": variation.sku, "unit_price": variation.price()}
         item, created = self.items.get_or_create(**kwargs)
         if created:
-            item.description = unicode(variation)
+            item.description = str(variation)
             item.unit_price = variation.price()
             item.url = variation.product.get_absolute_url()
             image = variation.image
             if image is not None:
-                item.image = unicode(image.file)
+                item.image = str(image.file)
             variation.product.actions.added_to_cart()
         item.quantity += quantity
         item.save()
@@ -776,7 +777,7 @@ class Sale(Discount):
                     # http://dev.mysql.com/
                     # doc/refman/5.0/en/subquery-errors.html
                     for priced in priced_objects.filter(**extra_filter):
-                        for field, value in update.items():
+                        for field, value in list(update.items()):
                             setattr(priced, field, value)
                         try:
                             priced.save()

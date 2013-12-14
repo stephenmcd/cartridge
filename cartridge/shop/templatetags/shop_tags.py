@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+from future.builtins import str
 from decimal import Decimal
 import locale
 import platform
@@ -21,7 +23,7 @@ def currency(value):
     if hasattr(locale, "currency"):
         value = locale.currency(value, grouping=True)
         if platform.system() == 'Windows':
-            value = unicode(value, encoding='iso_8859_1')
+            value = str(value, encoding='iso_8859_1')
     else:
         # based on locale.currency() in python >= 2.5
         conv = locale.localeconv()

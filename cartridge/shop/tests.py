@@ -1,3 +1,7 @@
+from __future__ import division
+from __future__ import unicode_literals
+from future.builtins import range
+from future.builtins import zip
 
 from datetime import timedelta
 from decimal import Decimal
@@ -18,6 +22,7 @@ from cartridge.shop.models import Category, Cart, Order, DiscountCode
 from cartridge.shop.models import Sale
 from cartridge.shop.forms import OrderForm
 from cartridge.shop.checkout import CHECKOUT_STEPS
+from functools import reduce
 
 
 TEST_STOCK = 5
@@ -62,7 +67,7 @@ class ShopTests(TestCase):
         Test creation of variations from options, and management of empty
         variations.
         """
-        total = reduce(mul, [len(v) for v in self._options.values()])
+        total = reduce(mul, [len(v) for v in list(self._options.values())])
         # Clear variations.
         self._product.variations.all().delete()
         self.assertEqual(self._product.variations.count(), 0)
@@ -116,7 +121,7 @@ class ShopTests(TestCase):
         # assign another option as a category filter. Check that no
         # products match the filters, then add the first option as a
         # category filter and check that the product is matched.
-        option_field, options = self._options.items()[0]
+        option_field, options = list(self._options.items())[0]
         option1, option2 = options[:2]
         # Variation with the first option.
         self._product.variations.create_from_options({option_field: [option1]})
@@ -184,7 +189,7 @@ class ShopTests(TestCase):
         form to add the variation, and posts it.
         """
         field_names = [f.name for f in ProductVariation.option_fields()]
-        data = dict(zip(field_names, variation.options()))
+        data = dict(list(zip(field_names, variation.options())))
         data["quantity"] = quantity
         self.client.post(variation.product.get_absolute_url(), data)
 
@@ -325,7 +330,7 @@ class ShopTests(TestCase):
             "billing_detail_email": "example@example.com",
             "discount_code": "",
         }
-        for field_name, field in OrderForm(None, None).fields.items():
+        for field_name, field in list(OrderForm(None, None).fields.items()):
             value = field.choices[-1][1] if hasattr(field, "choices") else "1"
             data.setdefault(field_name, value)
         self.client.post(reverse("shop_checkout"), data)

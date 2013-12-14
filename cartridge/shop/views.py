@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from future.builtins import int
+from future.builtins import str
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages import info
@@ -79,7 +82,7 @@ def product(request, slug, template="shop/product.html"):
                                                       for_user=request.user),
         "add_product_form": add_product_form
     }
-    templates = [u"shop/%s.html" % unicode(product.slug), template]
+    templates = [u"shop/%s.html" % str(product.slug), template]
     return render(request, templates, context)
 
 
@@ -106,7 +109,7 @@ def wishlist(request, template="shop/wishlist.html"):
                 message = _("Item added to cart")
                 url = "shop_cart"
             else:
-                error = add_product_form.errors.values()[0]
+                error = list(add_product_form.errors.values())[0]
         else:
             message = _("Item removed from wishlist")
             url = "shop_wishlist"
@@ -239,7 +242,7 @@ def checkout_steps(request):
                 try:
                     billship_handler(request, form)
                     tax_handler(request, form)
-                except checkout.CheckoutError, e:
+                except checkout.CheckoutError as e:
                     checkout_errors.append(e)
 
             # FINAL CHECKOUT STEP - handle payment and process order.
@@ -254,7 +257,7 @@ def checkout_steps(request):
                 # Try payment.
                 try:
                     transaction_id = payment_handler(request, form, order)
-                except checkout.CheckoutError, e:
+                except checkout.CheckoutError as e:
                     # Error in payment handler.
                     order.delete()
                     checkout_errors.append(e)

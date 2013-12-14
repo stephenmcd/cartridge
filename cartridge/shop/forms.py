@@ -1,3 +1,11 @@
+from __future__ import absolute_import
+from __future__ import unicode_literals
+from future.builtins import filter
+from future.builtins import super
+from future.builtins import str
+from future.builtins import int
+from future.builtins import zip
+from future.builtins import range
 
 from copy import copy
 from datetime import date
@@ -20,6 +28,7 @@ from cartridge.shop import checkout
 from cartridge.shop.models import Product, ProductOption, ProductVariation
 from cartridge.shop.models import Cart, CartItem, Order, DiscountCode
 from cartridge.shop.utils import make_choices, set_locale, set_shipping
+from future.utils import with_metaclass
 
 
 ADD_PRODUCT_ERRORS = {
@@ -69,13 +78,13 @@ class AddProductForm(forms.Form):
         option_fields = ProductVariation.option_fields()
         if not option_fields:
             return
-        option_names, option_labels = zip(*[(f.name, f.verbose_name)
-            for f in option_fields])
-        option_values = zip(*self._product.variations.filter(
-            unit_price__isnull=False).values_list(*option_names))
+        option_names, option_labels = list(zip(*[(f.name, f.verbose_name)
+            for f in option_fields]))
+        option_values = list(zip(*self._product.variations.filter(
+            unit_price__isnull=False).values_list(*option_names)))
         if option_values:
             for i, name in enumerate(option_names):
-                values = filter(None, set(option_values[i]))
+                values = [_f for _f in set(option_values[i]) if _f]
                 if values:
                     field = forms.ChoiceField(label=option_labels[i],
                                               choices=make_choices(values))
@@ -184,7 +193,7 @@ class FormsetForm(object):
         if not hasattr(self, "_fields_done"):
             self._fields_done = []
         fieldset.non_field_errors = lambda *args: None
-        names = filter(lambda f: f not in self._fields_done, field_names)
+        names = [f for f in field_names if f not in self._fields_done]
         fieldset.fields = SortedDict([(f, self.fields[f]) for f in names])
         self._fields_done.extend(names)
         return fieldset
@@ -211,7 +220,7 @@ class FormsetForm(object):
             ("^other_fields$", lambda:
                 self.fields.keys()),
             ("^hidden_fields$", lambda:
-                [n for n, f in self.fields.iteritems()
+                [n for n, f in self.fields.items()
                  if isinstance(f.widget, forms.HiddenInput)]),
             ("^(\w*)_fields$", lambda name:
                 [f for f in self.fields.keys() if f.startswith(name)]),
@@ -220,7 +229,7 @@ class FormsetForm(object):
             ("^fields_before_(\w*)$", lambda name:
                 takewhile(lambda f: f != name, self.fields.keys())),
             ("^fields_after_(\w*)$", lambda name:
-                list(dropwhile(lambda f: f != name, self.fields.keys()))[1:]),
+                dropwhile(lambda f: f != name, self.fields.keys())[1:]),
         )
         for filter_exp, filter_func in filters:
             filter_args = match(filter_exp, name)
@@ -382,7 +391,7 @@ class OrderForm(FormsetForm, DiscountForm):
 
         # Set year choices for cc expiry, relative to the current year.
         year = now().year
-        choices = make_choices(range(year, year + 21))
+        choices = make_choices(list(range(year, year + 21)))
         self.fields["card_expiry_year"].choices = choices
 
     @classmethod
@@ -474,11 +483,11 @@ class ProductAdminFormMetaclass(ModelFormMetaclass):
         return super(ProductAdminFormMetaclass, cls).__new__(*args)
 
 
-class ProductAdminForm(forms.ModelForm):
+class ProductAdminForm(with_metaclass(ProductAdminFormMetaclass,
+                                      forms.ModelForm)):
     """
     Admin form for the Product model.
     """
-    __metaclass__ = ProductAdminFormMetaclass
 
     class Meta:
         model = Product
@@ -490,7 +499,7 @@ class ProductAdminForm(forms.ModelForm):
         upsell products.
         """
         super(ProductAdminForm, self).__init__(*args, **kwargs)
-        for field, options in ProductOption.objects.as_fields().items():
+        for field, options in list(ProductOption.objects.as_fields().items()):
             self.fields[field].choices = make_choices(options)
         instance = kwargs.get("instance")
         if instance:
@@ -531,7 +540,8 @@ class DiscountAdminForm(forms.ModelForm):
     """
     def clean(self):
         fields = [f for f in self.fields if f.startswith("discount_")]
-        reductions = filter(None, [self.cleaned_data.get(f) for f in fields])
+        reductions = [self.cleaned_data.get(f) for f in fields
+                      if self.cleaned_data.get(f)]
         if len(reductions) > 1:
             error = _("Please enter a value for only one type of reduction.")
             self._errors[fields[0]] = self.error_class([error])

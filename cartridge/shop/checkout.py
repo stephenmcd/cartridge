@@ -1,6 +1,7 @@
 """
 Checkout process utilities.
 """
+from __future__ import unicode_literals
 
 from django.contrib.auth.models import SiteProfileNotAvailable
 from django.utils.translation import ugettext as _
@@ -90,7 +91,7 @@ def initial_order_data(request, form_class=None):
     from cartridge.shop.forms import OrderForm
     initial = {}
     if request.method == "POST":
-        initial = dict(request.POST.items())
+        initial = dict(list(request.POST.items()))
         try:
             initial = form_class.preprocess(initial)
         except (AttributeError, TypeError):
@@ -113,7 +114,7 @@ def initial_order_data(request, form_class=None):
         if len(remembered) == 2 and remembered[0] == sign(remembered[1]):
             lookup["key"] = remembered[1]
         if lookup:
-            previous = Order.objects.filter(**lookup).values()[:1]
+            previous = list(Order.objects.filter(**lookup).values())[:1]
             if len(previous) > 0:
                 initial.update(previous[0])
     if not initial and request.user.is_authenticated():

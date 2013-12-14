@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from future.builtins import int
+from future.builtins import str
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import ugettext as _
 from mezzanine.conf import settings
@@ -41,6 +44,6 @@ def process(request, order_form, order):
         response = stripe.Charge.create(**data)
     except stripe.CardError:
         raise CheckoutError(_("Transaction declined"))
-    except Exception, e:
+    except Exception as e:
         raise CheckoutError(_("A general error occured: ") + str(e))
     return response.id

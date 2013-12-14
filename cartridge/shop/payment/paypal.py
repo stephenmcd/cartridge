@@ -1,4 +1,7 @@
-import urllib2
+from __future__ import unicode_literals
+from future.builtins import str
+
+import urllib
 import locale
 
 from django.core.exceptions import ImproperlyConfigured
@@ -111,13 +114,14 @@ def process(request, order_form, order):
     part3 = "&" + urlencode(trans['custShipData'])
     trans['postString'] = (part1 + urlencode(trans['transactionData']) +
                            part2 + part3)
-    conn = urllib2.Request(url=trans['connection'], data=trans['postString'])
+    request_args = {"url": trans['connection'], "data": trans['postString']}
+    conn = urllib.request.Request(**request_args)
     # useful for debugging transactions
     # print trans['postString']
     try:
-        f = urllib2.urlopen(conn)
+        f = urllib.request.urlopen(conn)
         all_results = f.read()
-    except urllib2.URLError:
+    except urllib.error.URLError:
         raise CheckoutError("Could not talk to PayPal payment gateway")
     parsed_results = QueryDict(all_results)
     state = parsed_results['ACK']

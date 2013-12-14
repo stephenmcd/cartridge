@@ -1,5 +1,7 @@
-
-from urllib import urlencode, urlopen
+from __future__ import unicode_literals
+from future.builtins import str
+from urllib.parse import urlencode
+from urllib.request import urlopen
 
 from django.core.exceptions import ImproperlyConfigured
 from django.http import QueryDict
@@ -34,7 +36,7 @@ def process(request, order_form, order):
         "vpc_Command": GATEWAY_COMMAND,
         "vpc_AccessCode": EGATE_ACCESS_CODE,
         "vpc_Merchant": EGATE_MERCHANT_ID,
-        "vpc_Amount": unicode((order.total * 100).to_integral()),
+        "vpc_Amount": str((order.total * 100).to_integral()),
         "vpc_CardNum": request.POST["card_number"].strip(),
         "vpc_CardExp": (request.POST["card_expiry_year"][2:].strip() +
                         request.POST["card_expiry_month"].strip()),
@@ -48,7 +50,7 @@ def process(request, order_form, order):
     # a CheckoutError.
     try:
         response = QueryDict(urlopen(GATEWAY_URL, urlencode(post_data)).read())
-    except Exception, e:
+    except Exception as e:
         raise CheckoutError(_("A general error occured: ") + e)
     else:
         if response["vpc_TxnResponseCode"] != "0":

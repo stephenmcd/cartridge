@@ -1,3 +1,6 @@
+from __future__ import print_function
+from __future__ import unicode_literals
+from future.builtins import input
 
 import sys
 
@@ -15,14 +18,14 @@ def create_product(app, created_models, verbosity, interactive, **kwargs):
     if Product in created_models:
         call_command("loaddata", "cartridge_required.json")
         if interactive:
-            confirm = raw_input("\nWould you like to install an initial "
+            confirm = input("\nWould you like to install an initial "
                                 "demo product and sale? (yes/no): ")
             while True:
                 if confirm == "yes":
                     break
                 elif confirm == "no":
                     return
-                confirm = raw_input("Please enter either 'yes' or 'no': ")
+                confirm = input("Please enter either 'yes' or 'no': ")
         # This is a hack. Ideally to split fixtures between optional
         # and required, we'd use the same approach Mezzanine does,
         # within a ``createdb`` management command. Ideally to do this,
@@ -35,9 +38,9 @@ def create_product(app, created_models, verbosity, interactive, **kwargs):
         elif "--nodata" in sys.argv:
             return
         if verbosity >= 1:
-            print
-            print "Creating demo product and sale ..."
-            print
+            print()
+            print("Creating demo product and sale ...")
+            print()
         call_command("loaddata", "cartridge_optional.json")
         copy_test_to_media("cartridge.shop", "product")
 
