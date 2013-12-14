@@ -7,7 +7,7 @@ python:
   - "2.7"
 install:
   - pip install django==$DJANGO_VERSION --use-mirrors
-  - pip install -e git://github.com/stephenmcd/mezzanine.git@46fcfae7999382e4039486cdce92f56c76abd4df#egg=mezzanine
+  - pip install -e git://github.com/stephenmcd/mezzanine.git#egg=mezzanine
   - pip install . --use-mirrors
   - pip install pep8 pyflakes --use-mirrors
 before_script:
