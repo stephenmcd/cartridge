@@ -1,11 +1,7 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-from future.builtins import filter
-from future.builtins import super
-from future.builtins import str
-from future.builtins import int
-from future.builtins import zip
-from future.builtins import range
+
+from __future__ import absolute_import, unicode_literals
+from future.builtins import filter, int, range, str, super, str, zip
+from future.utils import with_metaclass
 
 from copy import copy
 from datetime import date
@@ -28,7 +24,6 @@ from cartridge.shop import checkout
 from cartridge.shop.models import Product, ProductOption, ProductVariation
 from cartridge.shop.models import Cart, CartItem, Order, DiscountCode
 from cartridge.shop.utils import make_choices, set_locale, set_shipping
-from future.utils import with_metaclass
 
 
 ADD_PRODUCT_ERRORS = {

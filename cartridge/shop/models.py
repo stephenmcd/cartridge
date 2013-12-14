@@ -226,7 +226,7 @@ class ProductVariation(with_metaclass(ProductVariationMetaclass, Priced)):
     """
 
     product = models.ForeignKey("Product", related_name="variations")
-    default = models.BooleanField(_("Default"))
+    default = models.BooleanField(_("Default"), default=False)
     image = models.ForeignKey("ProductImage", verbose_name=_("Image"),
                               null=True, blank=True)
 
@@ -697,7 +697,7 @@ class Discount(models.Model):
     """
 
     title = CharField(_("Title"), max_length=100)
-    active = models.BooleanField(_("Active"))
+    active = models.BooleanField(_("Active"), default=False)
     products = models.ManyToManyField("Product", blank=True,
                                       verbose_name=_("Products"))
     categories = models.ManyToManyField("Category", blank=True,
@@ -832,7 +832,7 @@ class DiscountCode(Discount):
 
     code = fields.DiscountCodeField(_("Code"), unique=True)
     min_purchase = fields.MoneyField(_("Minimum total purchase"))
-    free_shipping = models.BooleanField(_("Free shipping"))
+    free_shipping = models.BooleanField(_("Free shipping"), default=False)
     uses_remaining = models.IntegerField(_("Uses remaining"), blank=True,
         null=True, help_text=_("If you wish to limit the number of times a "
             "code may be used, set this value. It will be decremented upon "
