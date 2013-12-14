@@ -80,7 +80,7 @@ $(document).ready(function() {
 {% endif %}
 
 {% editable product.content %}
-{{ product.content|richtext_filter|safe }}
+{{ product.content|richtext_filters|safe }}
 {% endeditable %}
 
 {% if product.available and has_available_variations %}
