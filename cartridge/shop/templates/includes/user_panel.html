@@ -1,7 +1,9 @@
 {% load i18n future shop_tags mezzanine_tags %}
-<div class="panel">
+<div class="panel panel-default user-panel">
+    <div class="panel-body">
     {% spaceless %}
     <a href="{% url "shop_cart" %}">
+    <span class="glyphicon glyphicon-shopping-cart"></span>
     {% blocktrans count request.cart.total_quantity as cart_quantity %}1 item{% plural %}{{ cart_quantity }} items{% endblocktrans %}
     {% trans "in cart" %}:
     {{ request.cart.total_price|currency }}</a><br>
@@ -12,6 +14,7 @@
     {% endif %}
     {% if settings.SHOP_USE_WISHLIST %}
     <a href="{% url "shop_wishlist" %}" class="btn-wishlist">
+    <span class="glyphicon glyphicon-star"></span>
     {% blocktrans count request.wishlist|length as wishlist_count %}Wishlist contains 1 item{% plural %} Wishlist contains {{ wishlist_count }} items{% endblocktrans %}</a>
     {% endif %}
     {% ifinstalled mezzanine.accounts %}
@@ -19,4 +22,5 @@
     {% include "accounts/includes/user_panel.html" %}
     {% endifinstalled %}
     {% endspaceless %}
+    </div>
 </div>

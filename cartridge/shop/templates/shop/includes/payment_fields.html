@@ -1,13 +1,14 @@
 {% load i18n mezzanine_tags %}
 <fieldset>
-	<legend>{% trans "Payment Details" %}</legend>
-	{% fields_for form.card_name_field %}
-	{% fields_for form.card_type_field %}
+    <legend>{% trans "Payment Details" %}</legend>
+    {% fields_for form.card_name_field %}
+    {% fields_for form.card_type_field %}
     {% with form.card_expiry_fields as card_expiry_fields %}
-    <div class="control-group card-expiry-fields{% if card_expiry_fields.errors.card_expiry_year %} error{% endif %}">
-    	<label>{% trans "Card Expiry" %}</label>
-    	{% fields_for card_expiry_fields %}
+    <div class="form-group card-expiry-fields{% if card_expiry_fields.errors.card_expiry_year %} error{% endif %}">
+        <label>{% trans "Card Expiry" %}</label>
+        {% fields_for card_expiry_fields %}
     </div>
+    <div class="clearfix"></div>
     {% endwith %}
-	{% fields_for form.card_fields %}
+    {% fields_for form.card_fields %}
 </fieldset>
