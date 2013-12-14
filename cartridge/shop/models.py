@@ -1,14 +1,14 @@
-from __future__ import division
-from __future__ import unicode_literals
-from future.builtins import super
-from future.builtins import str
+
+from __future__ import division, unicode_literals
+from future.builtins import str, super
+
 from decimal import Decimal
 from operator import iand, ior
 
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.signals import m2m_changed
-from django.db.models import CharField, F, Q
+from django.db.models import CharField, Q
 from django.db.models.base import ModelBase
 from django.db.utils import DatabaseError
 from django.dispatch import receiver
@@ -35,6 +35,16 @@ except ImportError:
         This class is purely to prevent a NameError if
         _mysql_exceptions.OperationalError is not available.
         """
+
+
+class F(models.F):
+    """
+    Django 1.4's F objects don't support true division, which
+    we need for Python 3.x. This should be removed when we
+    drop support for Django 1.4.
+    """
+    def __truediv__(self, other):
+        return self._combine(other, self.DIV, False)
 
 
 class Priced(models.Model):
@@ -494,7 +504,7 @@ class Order(models.Model):
                 variation.product.actions.purchased()
         if discount_code:
             DiscountCode.objects.active().filter(code=discount_code).update(
-                uses_remaining=F('uses_remaining') - 1)
+                uses_remaining=models.F('uses_remaining') - 1)
         request.cart.delete()
 
     def details_as_dict(self):
@@ -747,7 +757,7 @@ class Sale(Discount):
                 sale_price = models.F("unit_price") - self.discount_deduct
             elif self.discount_percent is not None:
                 sale_price = models.F("unit_price") - (
-                    models.F("unit_price") / "100.0" * self.discount_percent)
+                    F("unit_price") / "100.0" * self.discount_percent)
             elif self.discount_exact is not None:
                 # Don't apply to prices that are cheaper than the sale
                 # amount.
