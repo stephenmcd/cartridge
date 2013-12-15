@@ -1,7 +1,11 @@
 from __future__ import unicode_literals
 from future.builtins import str
 
-import urllib
+try:
+    from urllib.request import Request, urlopen
+    from urllib.error import URLError
+except ImportError:
+    from urllib2 import Request, urlopen, URLError
 
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.http import urlencode
@@ -86,13 +90,9 @@ def process(request, order_form, order):
                            part2 + part3)
 
     request_args = {"url": trans['connection'], "data": trans['postString']}
-    conn = urllib.request.Request(**request_args)
-    # useful for debugging transactions
-    #print trans['postString']
     try:
-        f = urllib.request.urlopen(conn)
-        all_results = f.read()
-    except urllib.error.URLError:
+        all_results = urlopen(Request(**request_args)).read()
+    except URLError:
         raise CheckoutError("Could not talk to authorize.net payment gateway")
 
     parsed_results = all_results.split(trans['configuration']['x_delim_char'])

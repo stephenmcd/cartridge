@@ -1,7 +1,12 @@
 from __future__ import unicode_literals
 from future.builtins import str
 
-import urllib
+try:
+    from urllib.request import Request, urlopen
+    from urllib.error import URLError
+except ImportError:
+    from urllib2 import Request, urlopen, URLError
+
 import locale
 
 from django.core.exceptions import ImproperlyConfigured
@@ -40,8 +45,8 @@ def process(request, order_form, order):
 
     from cartridge.shop.payment.paypal import COUNTRIES
 
-    class OrderForm(OrderForm):
-        def __init__(self,*args,**kwrds):
+    class MyOrderForm(OrderForm):
+        def __init__(self, *args, **kwargs):
             super(OrderForm, self).__init__(*args, **kwrds)
             billing_country = forms.Select(choices=COUNTRIES)
             shipping_country = forms.Select(choices=COUNTRIES)
@@ -115,13 +120,11 @@ def process(request, order_form, order):
     trans['postString'] = (part1 + urlencode(trans['transactionData']) +
                            part2 + part3)
     request_args = {"url": trans['connection'], "data": trans['postString']}
-    conn = urllib.request.Request(**request_args)
     # useful for debugging transactions
     # print trans['postString']
     try:
-        f = urllib.request.urlopen(conn)
-        all_results = f.read()
-    except urllib.error.URLError:
+        all_results = urlopen(Request(**request_args)).read()
+    except URLError:
         raise CheckoutError("Could not talk to PayPal payment gateway")
     parsed_results = QueryDict(all_results)
     state = parsed_results['ACK']
