@@ -88,6 +88,15 @@ from __future__ import absolute_import, unicode_literals
 #     ("Users", ("auth.User", "auth.Group",)),
 # )
 
+# A three item sequence, each containing a sequence of template tags
+# used to render the admin dashboard.
+#
+# DASHBOARD_TAGS = (
+#     ("blog_tags.quick_blog", "mezzanine_tags.app_list"),
+#     ("comment_tags.recent_comments",),
+#     ("mezzanine_tags.recent_actions",),
+# )
+
 # A sequence of templates used by the ``page_menu`` template tag. Each
 # item in the sequence is a three item sequence, containing a unique ID
 # for the template, a label for the template, and the template path.
@@ -99,15 +108,6 @@ from __future__ import absolute_import, unicode_literals
 #     (1, "Top navigation bar", "pages/menus/dropdown.html"),
 #     (2, "Left-hand tree", "pages/menus/tree.html"),
 #     (3, "Footer", "pages/menus/footer.html"),
-# )
-
-# A three item sequence, each containing a sequence of template tags
-# used to render the admin dashboard.
-#
-# DASHBOARD_TAGS = (
-#     ("blog_tags.quick_blog", "mezzanine_tags.app_list"),
-#     ("comment_tags.recent_comments",),
-#     ("mezzanine_tags.recent_actions",),
 # )
 
 # A sequence of fields that will be injected into Mezzanine's (or any
@@ -160,6 +160,10 @@ ADMINS = (
 )
 MANAGERS = ADMINS
 
+# Hosts/domain names that are valid for this site; required if DEBUG is False
+# See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
+ALLOWED_HOSTS = []
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -190,9 +194,6 @@ SITE_ID = 1
 # to load the internationalization machinery.
 USE_I18N = False
 
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = "%(SECRET_KEY)s"
-
 # Tuple of IP addresses, as strings, that:
 #   * See debug comments, when DEBUG is true
 #   * Receive x-headers
@@ -213,6 +214,10 @@ STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
+
+# The numeric mode to set newly-uploaded files to. The value should be
+# a mode you'd pass directly to os.chmod.
+FILE_UPLOAD_PERMISSIONS = 0o644
 
 
 #############
@@ -348,12 +353,10 @@ MIDDLEWARE_CLASSES = (
     "mezzanine.core.middleware.FetchFromCacheMiddleware",
 )
 
-
 # Store these package names here as they may change in the future since
 # at the moment we are using custom forks of them.
 PACKAGE_NAME_FILEBROWSER = "filebrowser_safe"
 PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
-
 
 #########################
 # OPTIONAL APPLICATIONS #
@@ -369,6 +372,31 @@ OPTIONAL_APPS = (
 )
 
 DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
+
+###################
+# DEPLOY SETTINGS #
+###################
+
+# These settings are used by the default fabfile.py provided.
+# Check fabfile.py for defaults.
+
+# FABRIC = {
+#     "SSH_USER": "", # SSH username
+#     "SSH_PASS":  "", # SSH password (consider key-based authentication)
+#     "SSH_KEY_PATH":  "", # Local path to SSH key file, for key-based auth
+#     "HOSTS": [], # List of hosts to deploy to
+#     "VIRTUALENV_HOME":  "", # Absolute remote path for virtualenvs
+#     "PROJECT_NAME": "", # Unique identifier for project
+#     "REQUIREMENTS_PATH": "", # Path to pip requirements, relative to project
+#     "GUNICORN_PORT": 8000, # Port gunicorn will listen on
+#     "LOCALE": "en_US.UTF-8", # Should end with ".UTF-8"
+#     "LIVE_HOSTNAME": "www.example.com", # Host for public site.
+#     "REPO_URL": "", # Git or Mercurial remote repo URL for the project
+#     "DB_PASS": "", # Live database password
+#     "ADMIN_PASS": "", # Live admin user password
+#     "SECRET_KEY": SECRET_KEY,
+#     "NEVERCACHE_KEY": NEVERCACHE_KEY,
+# }
 
 
 ##################
@@ -390,6 +418,13 @@ except ImportError:
 
 # set_dynamic_settings() will rewrite globals based on what has been
 # defined so far, in order to provide some better defaults where
-# applicable.
-from mezzanine.utils.conf import set_dynamic_settings
-set_dynamic_settings(globals())
+# applicable. We also allow this settings module to be imported
+# without Mezzanine installed, as the case may be when using the
+# fabfile, where setting the dynamic settings below isn't strictly
+# required.
+try:
+    from mezzanine.utils.conf import set_dynamic_settings
+except ImportError:
+    pass
+else:
+    set_dynamic_settings(globals())
