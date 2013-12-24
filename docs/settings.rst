@@ -105,12 +105,19 @@ Dotted package path and class name of the function called upon submission of the
 
 Default: ``'cartridge.shop.checkout.default_tax_handler'``
 
+``SHOP_OPTION_ADMIN_ORDER``
+---------------------------
+
+Sequence of indexes from the ``SHOP_OPTION_TYPE_CHOICES`` setting that control how the options should be ordered in the admin, eg given the default for ``SHOP_OPTION_ADMIN_ORDER``, to order by Colour then Size we'd use (2, 1)
+
+Default: ``()``
+
 ``SHOP_OPTION_TYPE_CHOICES``
 ----------------------------
 
 Sequence of value/name pairs for types of product options (e.g. Size, Colour).
 
-Default: ``((1, u'Size'), (2, u'Colour'))``
+Default: ``((1, 'Size'), (2, 'Colour'))``
 
 ``SHOP_ORDER_EMAIL_BCC``
 ------------------------
@@ -124,7 +131,7 @@ Default: ``''``
 
 Subject to be used when sending the order receipt email.
 
-Default: ``u'Order Receipt'``
+Default: ``'Order Receipt'``
 
 ``SHOP_ORDER_FROM_EMAIL``
 -------------------------
@@ -138,7 +145,7 @@ Default: ``[dynamic]``
 
 Sequence of value/name pairs for order statuses.
 
-Default: ``((1, u'Unprocessed'), (2, u'Processed'))``
+Default: ``((1, 'Unprocessed'), (2, 'Processed'))``
 
 ``SHOP_PAYMENT_STEP_ENABLED``
 -----------------------------
@@ -159,7 +166,7 @@ Default: ``12``
 
 Sequence of description/field+direction pairs defining the options available for sorting a list of products.
 
-Default: ``((u'Recently added', '-date_added'), (u'Highest rated', '-rating_average'), (u'Least expensive', 'unit_price'), (u'Most expensive', '-unit_price'))``
+Default: ``(('Recently added', '-date_added'), ('Highest rated', '-rating_average'), ('Least expensive', 'unit_price'), ('Most expensive', '-unit_price'))``
 
 ``SHOP_USE_RATINGS``
 --------------------

@@ -1,3 +1,20 @@
+Version 0.9.0 (Dec 24, 2013)
+----------------------------
+
+  * Fix for true division on F objects in Django 1.4 - Stephen McDonald
+  * Django 1.6: BooleanField defaults - Stephen McDonald
+  * Django 1.6 doesn't support decimals in sessions - Stephen McDonald
+  * Replace deprecated ``richtext_filter`` template tag with ``richtext_filters`` (plural) - Stephen McDonald
+  * Add Django 1.6 + Python 3.3 to ``travis.yml`` and ``setup.py`` - Stephen McDonald
+  * Fix some broken imports from futurize conversion - Stephen McDonald
+  * Upgrade settings as in Mezzanine (merged) - Sebastian Clemens
+  * Fix initial fixtures. Closes #152 - Stephen McDonald
+  * Added LANGUAGES since we use a multi-lingual interface in admin - Sebastian Clemens
+  * Added Django's LocaleMiddleware to ``MIDDLEWARE_CLASSES`` - Sebastian Clemens
+  * Add config for wheel distribution - Stephen McDonald
+  * Remove use of deprecated simplejson module - Stephen McDonald
+  * Bump Mezzanine version to 3.0 - Stephen McDonald
+
 Version 0.8.4 (Sep 29, 2013)
 ----------------------------
 

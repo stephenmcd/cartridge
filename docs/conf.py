@@ -1,4 +1,4 @@
-from __future__ import with_statement
+
 # -*- coding: utf-8 -*-
 #
 # Cartridge documentation build configuration file, created by
@@ -16,8 +16,9 @@ import sys
 import os
 
 docs_path = os.path.abspath(os.path.dirname(__file__))
-sys.path.insert(0, os.path.join(docs_path, ".."))
-sys.path.insert(0, os.path.join(docs_path, "..", "..", "mezzanine"))
+parts = (docs_path, "..", "cartridge")
+sys.path.insert(0, os.path.join(*parts))
+sys.path.insert(0, os.path.join(*parts + ("project_template",)))
 os.environ["DJANGO_SETTINGS_MODULE"] = "cartridge.project_template.settings"
 
 import cartridge
