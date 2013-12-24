@@ -1,5 +1,4 @@
 
-from __future__ import with_statement
 import os
 
 exclude = ["cartridge/project_template/dev.db",
@@ -38,7 +37,7 @@ try:
         packages=find_packages(),
 
         install_requires=[
-            "mezzanine == 1.4.16",
+            "mezzanine >= 3.0",
             "pisa >= 3.0.33",
         ],
 
