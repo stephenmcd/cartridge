@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 from future.builtins import int
 from future.builtins import str
 
+from json import dumps
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages import info
 from django.core.urlresolvers import get_callable, reverse
@@ -11,7 +13,6 @@ from django.shortcuts import get_object_or_404, redirect
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
 from django.template.loader import get_template
-from django.utils import simplejson
 from django.utils.translation import ugettext as _
 from django.views.decorators.cache import never_cache
 
@@ -43,9 +44,8 @@ def product(request, slug, template="shop/product.html"):
     product = get_object_or_404(published_products, slug=slug)
     fields = [f.name for f in ProductVariation.option_fields()]
     variations = product.variations.all()
-    variations_json = simplejson.dumps([dict([(f, getattr(v, f))
-                                        for f in fields + ["sku", "image_id"]])
-                                        for v in variations])
+    variations_json = dumps([dict([(f, getattr(v, f))
+        for f in fields + ["sku", "image_id"]]) for v in variations])
     to_cart = (request.method == "POST" and
                request.POST.get("add_wishlist") is None)
     initial_data = {}
