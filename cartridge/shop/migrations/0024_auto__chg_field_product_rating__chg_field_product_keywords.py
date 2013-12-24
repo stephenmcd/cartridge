@@ -8,20 +8,22 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        pass
 
         # Changing field 'Product.rating'
-        db.alter_column(u'shop_product', 'rating', self.gf('mezzanine.generic.fields.RatingField')(object_id_field=u'object_pk', to=orm['generic.Rating'], frozen_by_south=True))
+        # db.alter_column(u'shop_product', 'rating', self.gf('mezzanine.generic.fields.RatingField')(object_id_field=u'object_pk', to=orm['generic.Rating'], frozen_by_south=True))
 
-        # Changing field 'Product.keywords'
-        db.alter_column(u'shop_product', 'keywords', self.gf('mezzanine.generic.fields.KeywordsField')(object_id_field=u'object_pk', to=orm['generic.AssignedKeyword'], frozen_by_south=True))
+        # # Changing field 'Product.keywords'
+        # db.alter_column(u'shop_product', 'keywords', self.gf('mezzanine.generic.fields.KeywordsField')(object_id_field=u'object_pk', to=orm['generic.AssignedKeyword'], frozen_by_south=True))
 
     def backwards(self, orm):
+        pass
 
         # Changing field 'Product.rating'
-        db.alter_column(u'shop_product', u'rating', self.gf(u'mezzanine.generic.fields.RatingField')(object_id_field='object_pk', frozen_by_south=True, to=orm['generic.Rating']))
+        # db.alter_column(u'shop_product', u'rating', self.gf(u'mezzanine.generic.fields.RatingField')(object_id_field='object_pk', frozen_by_south=True, to=orm['generic.Rating']))
 
-        # Changing field 'Product.keywords'
-        db.alter_column(u'shop_product', u'keywords', self.gf(u'mezzanine.generic.fields.KeywordsField')(object_id_field='object_pk', frozen_by_south=True, to=orm['generic.AssignedKeyword']))
+        # # Changing field 'Product.keywords'
+        # db.alter_column(u'shop_product', u'keywords', self.gf(u'mezzanine.generic.fields.KeywordsField')(object_id_field='object_pk', frozen_by_south=True, to=orm['generic.AssignedKeyword']))
 
     models = {
         u'auth.group': {
