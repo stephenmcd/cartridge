@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import csv
 import os
 import shutil
@@ -138,12 +140,12 @@ def _make_date(date_str, time_str):
 
 
 def import_products(csv_file):
-    print _("Importing ..")
+    print(_("Importing .."))
     # More appropriate for testing.
     #Product.objects.all().delete()
     reader = csv.DictReader(open(csv_file), delimiter=',')
     for row in reader:
-        print row
+        print(row)
         product = _product_from_row(row)
         try:
             variation = ProductVariation.objects.create(
@@ -181,12 +183,12 @@ def import_products(csv_file):
         product.copy_default_variation()
         product.save()
 
-    print "Variations: %s" % ProductVariation.objects.all().count()
-    print "Products: %s" % Product.objects.all().count()
+    print("Variations: %s" % ProductVariation.objects.all().count())
+    print("Products: %s" % Product.objects.all().count())
 
 
 def export_products(csv_file):
-    print _("Exporting ..")
+    print(_("Exporting .."))
     filehandle = open(csv_file, 'w')
     writer = csv.DictWriter(filehandle, delimiter=',', fieldnames=fieldnames)
     headers = dict()
