@@ -8,7 +8,7 @@ Overview
 ========
 
 Cartridge is a shopping cart application built using the `Django`_
-framework. It is `BSD licensed`_ and designed to provide a clean and
+framework. It is `BSD licensed`_, and designed to provide a clean and
 simple base for developing e-commerce websites. It purposely does not
 include every conceivable feature of an e-commerce website; instead,
 Cartridge focuses on providing core features common to most e-commerce
@@ -48,14 +48,14 @@ Dependencies
 ============
 
 Cartridge is designed as a plugin for the `Mezzanine`_ content
-management platform and, as such, requires `Mezzanine`_ to be
+management platform, and therefore requires `Mezzanine`_ to be
 installed. The integration of the two applications should occur
 automatically by following the installation instructions below.
 
 Installation
 ============
 
-The easiest method is to install directly from pypi using `pip`_ by
+The easiest method is to install directly from PyPI using `pip`_ by
 running the command below, which will also install the required
 dependencies mentioned above::
 
@@ -195,7 +195,6 @@ Sites Using Cartridge
 .. _`Mezzanine Project`: http://mezzanine.jupo.org/
 .. _`pip`: http://www.pip-installer.org/
 .. _`FAQ section of the Mezzanine documentation`: http://mezzanine.jupo.org/docs/frequently-asked-questions.html#how-can-i-add-mezzanine-to-an-existing-django-project
-.. _`setuptools`: http://pypi.python.org/pypi/setuptools
 .. _`South`: http://south.aeracode.org/
 .. _`Github`: http://github.com/stephenmcd/cartridge/
 .. _`Bitbucket`: http://bitbucket.org/stephenmcd/cartridge/
