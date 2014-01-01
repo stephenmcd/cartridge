@@ -1,5 +1,3 @@
-from __future__ import print_function
-from future.builtins import open, str
 import csv
 import os
 import shutil
@@ -7,19 +5,19 @@ import sys
 import datetime
 from optparse import make_option
 
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
+from django.core.management.base import CommandError
 from django.utils.translation import ugettext as _
 from django.db.utils import IntegrityError
-
 from mezzanine.conf import settings
+
+from cartridge.shop.models import Product
+from cartridge.shop.models import ProductOption
+from cartridge.shop.models import ProductImage
+from cartridge.shop.models import ProductVariation
+from cartridge.shop.models import Category
 from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
 
-from cartridge.shop.models import (Product, ProductOption, ProductImage,
-                                   ProductVariation, Category)
-
-DELIMITER = ","
-if sys.version_info[0] == 2:
-    DELIMITER = b","
 
 # images get copied from thie directory
 LOCAL_IMAGE_DIR = "/tmp/orig"
@@ -52,14 +50,14 @@ PRODUCT_IMAGE_DIR = os.path.join(settings.STATIC_ROOT, SITE_MEDIA_IMAGE_DIR)
 # python < 2.7 doesn't have dictionary comprehensions ;(
 #TYPE_CHOICES = {choice:id for id, choice in settings.SHOP_OPTION_TYPE_CHOICES}
 TYPE_CHOICES = dict()
-# for id, choice in settings.SHOP_OPTION_TYPE_CHOICES:
-#     TYPE_CHOICES[choice] = id
+for id, choice in settings.SHOP_OPTION_TYPE_CHOICES:
+    TYPE_CHOICES[choice] = id
 
 fieldnames = [TITLE, CONTENT, DESCRIPTION, CATEGORY, SUB_CATEGORY,
     SKU, IMAGE, NUM_IN_STOCK, UNIT_PRICE,
     SALE_PRICE, SALE_START_DATE, SALE_START_TIME, SALE_END_DATE, SALE_END_TIME]
 # TODO: Make sure no options conflict with other fieldnames.
-fieldnames += list(TYPE_CHOICES.keys())
+fieldnames += TYPE_CHOICES.keys()
 
 
 class Command(BaseCommand):
@@ -80,6 +78,8 @@ class Command(BaseCommand):
     )
 
     def handle(self, *args, **options):
+        if sys.version_info[0] == 3:
+            raise CommandError("Python 3 not supported")
         try:
             csv_file = args[0]
         except IndexError:
@@ -138,12 +138,12 @@ def _make_date(date_str, time_str):
 
 
 def import_products(csv_file):
-    print(_("Importing .."))
+    print _("Importing ..")
     # More appropriate for testing.
     #Product.objects.all().delete()
-    reader = csv.DictReader(open(csv_file), delimiter=DELIMITER)
+    reader = csv.DictReader(open(csv_file), delimiter=',')
     for row in reader:
-        print(row)
+        print row
         product = _product_from_row(row)
         try:
             variation = ProductVariation.objects.create(
@@ -181,15 +181,14 @@ def import_products(csv_file):
         product.copy_default_variation()
         product.save()
 
-    print("Variations: %s" % ProductVariation.objects.all().count())
-    print("Products: %s" % Product.objects.all().count())
+    print "Variations: %s" % ProductVariation.objects.all().count()
+    print "Products: %s" % Product.objects.all().count()
 
 
 def export_products(csv_file):
-    print(_("Exporting .."))
+    print _("Exporting ..")
     filehandle = open(csv_file, 'w')
-    writer = csv.DictWriter(filehandle, delimiter=DELIMITER,
-                            fieldnames=fieldnames)
+    writer = csv.DictWriter(filehandle, delimiter=',', fieldnames=fieldnames)
     headers = dict()
     for field in fieldnames:
         headers[field] = field
@@ -210,8 +209,8 @@ def export_products(csv_file):
             row[CATEGORY] = cat.title
             row[SUB_CATEGORY] = ""
 
-        # for option in TYPE_CHOICES:
-        #     row[option] = getattr(pv, "option%s" % TYPE_CHOICES[option])
+        for option in TYPE_CHOICES:
+            row[option] = getattr(pv, "option%s" % TYPE_CHOICES[option])
 
         row[NUM_IN_STOCK] = pv.num_in_stock
         row[UNIT_PRICE] = pv.unit_price
