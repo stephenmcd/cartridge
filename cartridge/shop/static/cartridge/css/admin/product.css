@@ -6,8 +6,9 @@
 .result-list .vTextField, .sku input {width:100px !important;}
 .tiny {font-size:70%;}
 .unit_price input, .sale_price input, .num_in_stock input {
-    width:50px !important;}
+    width:50px !important; text-align:right;}
 .item img {vertical-align:middle; margin-right:10px !important;}
 .viewsitelink {display:none !important;}
 tr.add-row {display:none;}
 #add_id_categories {display:none;}
+
