@@ -1,8 +1,10 @@
 
 from __future__ import division, unicode_literals
 from future.builtins import str, super
+from future.utils import with_metaclass
 
 from decimal import Decimal
+from functools import reduce
 from operator import iand, ior
 
 from django.core.urlresolvers import reverse
@@ -15,17 +17,11 @@ from django.dispatch import receiver
 from django.utils.timezone import now
 from django.utils.translation import ugettext, ugettext_lazy as _
 
-from mezzanine.conf import settings
-from mezzanine.core.fields import FileField
-from mezzanine.core.managers import DisplayableManager
-from mezzanine.core.models import Displayable, RichText, Orderable
-from mezzanine.generic.fields import RatingField
-from mezzanine.pages.models import Page
-from mezzanine.utils.models import AdminThumbMixin, upload_to
-
-from cartridge.shop import fields, managers
-from functools import reduce
-from future.utils import with_metaclass
+try:
+    from django.utils.encoding import force_text
+except ImportError:
+    # Backward compatibility for Py2 and Django < 1.5
+    from django.utils.encoding import force_unicode as force_text
 
 try:
     from _mysql_exceptions import OperationalError
@@ -35,6 +31,16 @@ except ImportError:
         This class is purely to prevent a NameError if
         _mysql_exceptions.OperationalError is not available.
         """
+
+from mezzanine.conf import settings
+from mezzanine.core.fields import FileField
+from mezzanine.core.managers import DisplayableManager
+from mezzanine.core.models import Displayable, RichText, Orderable
+from mezzanine.generic.fields import RatingField
+from mezzanine.pages.models import Page
+from mezzanine.utils.models import AdminThumbMixin, upload_to
+
+from cartridge.shop import fields, managers
 
 
 class F(models.F):
@@ -556,7 +562,7 @@ class Cart(models.Model):
         kwargs = {"sku": variation.sku, "unit_price": variation.price()}
         item, created = self.items.get_or_create(**kwargs)
         if created:
-            item.description = str(variation)
+            item.description = force_text(variation)
             item.unit_price = variation.price()
             item.url = variation.product.get_absolute_url()
             image = variation.image
