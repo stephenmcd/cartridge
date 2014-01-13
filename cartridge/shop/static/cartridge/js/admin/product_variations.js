@@ -1,4 +1,4 @@
-$(function() {
+jQuery(function($) {
 
     var grappelli = $('.admin-title').length == 1;
 
