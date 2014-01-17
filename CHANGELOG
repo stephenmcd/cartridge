@@ -1,3 +1,19 @@
+Version 0.9.2 (Jan 18, 2014)
+----------------------------
+
+  * merge changed Mezzanine settings into Cartridge - Sebastian Clemens
+  * Patch all migrations to remove generic fields - these break with Django 1.6 and aren't actually necessary with the latest version of south - Stephen McDonald
+  * Fix initial fixture loading - Stephen McDonald
+  * Restore old ``product_db`` command - Stephen McDonald
+  * Move the file browser url to i18n patterns - Sebastian Clemens
+  * Fix for str/unicode handling of ``SHOP_CURRENCY_LOCALE``. Closes #157 - Stephen McDonald
+  * Bump Mezzanine version to 3.0.5 - Stephen McDonald
+  * Unicode fix for product variations in cart - Stephen McDonald
+  * jquery fix in product admin. Closes #159 - Stephen McDonald
+  * Remove unnecessary filebrowser setup - Stephen McDonald
+  * Let ``fail_silently`` email arg fall back to new Mezzanine setting ``EMAIL_FAIL_SILENTLY``. Closes #160 - Stephen McDonald
+  * Bump Mezzanine version to 3.0.6 - Stephen McDonald
+
 Version 0.9.1 (Dec 24, 2013)
 ----------------------------
 
