@@ -354,7 +354,7 @@ def invoice(request, order_id, template="shop/order_invoice.html"):
         response = HttpResponse(mimetype="application/pdf")
         name = slugify("%s-invoice-%s" % (settings.SITE_TITLE, order.id))
         response["Content-Disposition"] = "attachment; filename=%s.pdf" % name
-        html = get_template(template).render(context)
+        html = get_template("shop/pdf_order_invoice.html").render(context)
         import ho.pisa
         ho.pisa.CreatePDF(html, response)
         return response
