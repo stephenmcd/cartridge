@@ -312,11 +312,3 @@ register_setting(
     editable=False,
     default=True,
 )
-
-register_setting(
-    name="SHOP_INVOICE_AS_PDF_TEMPLATE",
-    description="Relative path to the template to be used for rendering invoices "
-        " as PDFs",
-    editable=False,
-    default="shop/order_invoice.html",
-)
