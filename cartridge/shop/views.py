@@ -21,7 +21,6 @@ from mezzanine.utils.importing import import_dotted_path
 from mezzanine.utils.views import render, set_cookie, paginate
 
 from cartridge.shop import checkout
-from cartridge.shop.forms import AddProductForm, DiscountForm, CartItemFormSet
 from cartridge.shop.models import Product, ProductVariation, Order
 from cartridge.shop.models import DiscountCode
 from cartridge.shop.utils import recalculate_cart, sign
@@ -35,7 +34,8 @@ payment_handler = handler(settings.SHOP_HANDLER_PAYMENT)
 order_handler = handler(settings.SHOP_HANDLER_ORDER)
 
 
-def product(request, slug, template="shop/product.html"):
+def product(request, slug, template="shop/product.html",
+            form_name="cartridge.shop.forms.AddProductForm"):
     """
     Display a product - convert the product variations to JSON as well as
     handling adding the product to either the cart or the wishlist.
@@ -52,7 +52,8 @@ def product(request, slug, template="shop/product.html"):
     if variations:
         initial_data = dict([(f, getattr(variations[0], f)) for f in fields])
     initial_data["quantity"] = 1
-    add_product_form = AddProductForm(request.POST or None, product=product,
+    form_class = get_callable(form_name)
+    add_product_form = form_class(request.POST or None, product=product,
                                       initial=initial_data, to_cart=to_cart)
     if request.method == "POST":
         if add_product_form.is_valid():
@@ -87,7 +88,8 @@ def product(request, slug, template="shop/product.html"):
 
 
 @never_cache
-def wishlist(request, template="shop/wishlist.html"):
+def wishlist(request, template="shop/wishlist.html",
+             form_name="cartridge.shop.forms.AddProductForm"):
     """
     Display the wishlist and handle removing items from the wishlist and
     adding them to the cart.
@@ -100,8 +102,9 @@ def wishlist(request, template="shop/wishlist.html"):
     error = None
     if request.method == "POST":
         to_cart = request.POST.get("add_cart")
-        add_product_form = AddProductForm(request.POST or None,
-                                          to_cart=to_cart)
+        form_class = get_callable(form_name)
+        add_product_form = form_class(request.POST or None,
+                                      to_cart=to_cart)
         if to_cart:
             if add_product_form.is_valid():
                 request.cart.add_item(add_product_form.variation, 1)
@@ -136,12 +139,16 @@ def wishlist(request, template="shop/wishlist.html"):
 
 
 @never_cache
-def cart(request, template="shop/cart.html"):
+def cart(request, template="shop/cart.html",
+         formset_name="cartridge.shop.forms.CartItemFormSet",
+         form_name="cartridge.shop.forms.DiscountForm"):
     """
     Display cart and handle removing items from the cart.
     """
-    cart_formset = CartItemFormSet(instance=request.cart)
-    discount_form = DiscountForm(request, request.POST or None)
+    formset_class = get_callable(formset_name)
+    cart_formset = formset_class(instance=request.cart)
+    form_class = get_callable(form_name)
+    discount_form = form_class(request, request.POST or None)
     if request.method == "POST":
         valid = True
         if request.POST.get("update_cart"):
@@ -150,8 +157,8 @@ def cart(request, template="shop/cart.html"):
                 # Session timed out.
                 info(request, _("Your cart has expired"))
             else:
-                cart_formset = CartItemFormSet(request.POST,
-                                               instance=request.cart)
+                cart_formset = formset_class(request.POST,
+                                             instance=request.cart)
                 valid = cart_formset.is_valid()
                 if valid:
                     cart_formset.save()
@@ -164,7 +171,7 @@ def cart(request, template="shop/cart.html"):
                     # via the error message, which we need to
                     # copy over to the new formset here.
                     errors = cart_formset._errors
-                    cart_formset = CartItemFormSet(instance=request.cart)
+                    cart_formset = formset_class(instance=request.cart)
                     cart_formset._errors = errors
         else:
             valid = discount_form.is_valid()
