@@ -342,7 +342,8 @@ def complete(request, template="shop/complete.html"):
     return render(request, template, context)
 
 
-def invoice(request, order_id, template="shop/order_invoice.html"):
+def invoice(request, order_id, template="shop/order_invoice.html",
+                               template_pdf="shop/order_invoice_pdf.html"):
     """
     Display a plain text invoice for the given order. The order must
     belong to the user which is checked via session or ID if
@@ -361,7 +362,7 @@ def invoice(request, order_id, template="shop/order_invoice.html"):
         response = HttpResponse(mimetype="application/pdf")
         name = slugify("%s-invoice-%s" % (settings.SITE_TITLE, order.id))
         response["Content-Disposition"] = "attachment; filename=%s.pdf" % name
-        html = get_template("shop/pdf_order_invoice.html").render(context)
+        html = get_template(template_pdf).render(context)
         import ho.pisa
         ho.pisa.CreatePDF(html, response)
         return response
