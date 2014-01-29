@@ -264,8 +264,8 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = (OrderItemInline,)
     formfield_overrides = {MoneyField: {"widget": MoneyWidget}}
     fieldsets = (
-        (_("Billing details"), {"fields": (tuple(billing_fields),)}),
-        (_("Shipping details"), {"fields": (tuple(shipping_fields),)}),
+        (_("Billing details"), {"fields": (billing_fields)}),
+        (_("Shipping details"), {"fields": (shipping_fields)}),
         (None, {"fields": ("additional_instructions", ("shipping_total",
             "shipping_type"), ('tax_total', 'tax_type'),
              ("discount_total", "discount_code"), "item_total",
