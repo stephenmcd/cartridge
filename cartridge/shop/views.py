@@ -394,7 +394,8 @@ def order_history(request, template="shop/order_history.html"):
 @login_required
 def invoice_resend_email(request, order_id):
     """
-    Re-sends the order complete email for the given order and redirects to the previous page.
+    Re-sends the order complete email for the given order and redirects to the
+    previous page.
     """
     lookup = {"id": order_id}
     if not request.user.is_authenticated():
@@ -403,5 +404,6 @@ def invoice_resend_email(request, order_id):
         lookup["user_id"] = request.user.id
     order = get_object_or_404(Order, **lookup)
     checkout.send_order_email(request, order)
-    info(request, _("Your order email for order ID %s has been re-sent" % order_id))
+    msg = _("The order email for order ID %s has been re-sent" % order_id)
+    info(request, msg)
     return redirect(request.META.get('HTTP_REFERER'))
