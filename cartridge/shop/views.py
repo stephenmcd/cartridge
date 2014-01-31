@@ -396,7 +396,12 @@ def invoice_resend_email(request, order_id):
     """
     Re-sends the order complete email for the given order and redirects to the previous page.
     """
-    order = get_object_or_404(Order, id=order_id)
+    lookup = {"id": order_id}
+    if not request.user.is_authenticated():
+        lookup["key"] = request.session.session_key
+    elif not request.user.is_staff:
+        lookup["user_id"] = request.user.id
+    order = get_object_or_404(Order, **lookup)
     checkout.send_order_email(request, order)
     info(request, _("Your order email for order ID %s has been re-sent" % order_id))
     return redirect(request.META.get('HTTP_REFERER'))
