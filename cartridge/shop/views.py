@@ -389,3 +389,14 @@ def order_history(request, template="shop/order_history.html"):
                       settings.MAX_PAGING_LINKS)
     context = {"orders": orders}
     return render(request, template, context)
+
+
+@login_required
+def invoice_resend_email(request, order_id):
+    """
+    Re-sends the order complete email for the given order and redirects to the previous page.
+    """
+    order = get_object_or_404(Order, id=order_id)
+    checkout.send_order_email(request, order)
+    info(request, _("Your order email for order ID %s has been re-sent" % order_id))
+    return redirect(request.META.get('HTTP_REFERER'))
