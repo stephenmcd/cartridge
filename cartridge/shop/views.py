@@ -6,7 +6,7 @@ from json import dumps
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages import info
-from django.core.urlresolvers import reverse, get_script_prefix
+from django.core.urlresolvers import reverse
 from django.db.models import Sum
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
@@ -407,5 +407,11 @@ def invoice_resend_email(request, order_id):
     checkout.send_order_email(request, order)
     msg = _("The order email for order ID %s has been re-sent" % order_id)
     info(request, msg)
-    redirect_to = next_url(request) or get_script_prefix()
+    # Determine the URL to return the user to.
+    redirect_to = next_url(request)
+    if redirect_to is None:
+        if request.user.is_staff:
+            redirect_to = reverse("admin:shop_order_change", args=[order_id])
+        else:
+            redirect_to = reverse("shop_order_history")
     return redirect(redirect_to)
