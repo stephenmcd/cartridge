@@ -81,5 +81,6 @@ _gaq.push(['_trackTrans']);
     <a class="btn btn-lg btn-primary" href="{% url "shop_invoice" order.id %}?format=pdf">{% trans "Download PDF invoice" %}</a>
 
     <a class="btn btn-lg btn-default" target="_blank" href="{% url "shop_invoice" order.id %}">{% trans "View invoice in your browser" %}</a>
+    <a class="btn btn-lg btn-default" href="{% url "shop_invoice_resend" order.id %}">{% trans "Re-send order email" %}</a>
 </p>
 {% endblock %}
