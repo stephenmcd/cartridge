@@ -31,7 +31,7 @@
         <td>{{ order.get_status_display }}</td>
         <td class="order-actions">
             <a class="btn btn-sm btn-primary" href="{% url "shop_invoice" order.id %}?format=pdf">{% trans "Download PDF" %}</a>
-            <a class="btn btn-sm btn-default" href="{% url "shop_invoice_resend" order.id %}">{% trans "Re-send order email" %}</a>
+            <a class="btn btn-sm btn-default" href="{% url "shop_invoice_resend" order.id %}?next={{ request.path }}">{% trans "Re-send order email" %}</a>
             <a class="btn btn-sm btn-default" target="_blank" href="{% url "shop_invoice" order.id %}">{% trans "View invoice" %}</a>
         </td>
     </tr>

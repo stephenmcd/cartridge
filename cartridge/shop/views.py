@@ -6,7 +6,7 @@ from json import dumps
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages import info
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, get_script_prefix
 from django.db.models import Sum
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
@@ -19,6 +19,7 @@ from django.views.decorators.cache import never_cache
 from mezzanine.conf import settings
 from mezzanine.utils.importing import import_dotted_path
 from mezzanine.utils.views import render, set_cookie, paginate
+from mezzanine.utils.urls import next_url
 
 from cartridge.shop import checkout
 from cartridge.shop.forms import (AddProductForm, CartItemFormSet,
@@ -406,4 +407,5 @@ def invoice_resend_email(request, order_id):
     checkout.send_order_email(request, order)
     msg = _("The order email for order ID %s has been re-sent" % order_id)
     info(request, msg)
-    return redirect(request.META.get('HTTP_REFERER'))
+    redirect_to = next_url(request) or get_script_prefix()
+    return redirect(redirect_to)
