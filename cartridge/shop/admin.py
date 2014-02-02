@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-from future.builtins import super
+from future.builtins import super, zip
 """
 Admin classes for all the shop models.
 
@@ -52,9 +52,6 @@ option_fields = [f.name for f in ProductVariation.option_fields()]
 _flds = lambda s: [f.name for f in Order._meta.fields if f.name.startswith(s)]
 billing_fields = _flds("billing_detail")
 shipping_fields = _flds("shipping_detail")
-
-def fieldset_pairs(seq):
-    return zip(seq[::2], seq[1::2]) + ([seq[-1]] if len(seq) % 2 == 1 else [])
 
 
 ################
@@ -253,6 +250,17 @@ class OrderItemInline(admin.TabularInline):
     formfield_overrides = {MoneyField: {"widget": MoneyWidget}}
 
 
+def address_pairs(fields):
+    """
+    Zips address fields into pairs, appending the last field if the
+    total is an odd number.
+    """
+    pairs = list(zip(fields[::2], fields[1::2]))
+    if len(fields) % 2:
+        pairs.append(fields[-1])
+    return pairs
+
+
 class OrderAdmin(admin.ModelAdmin):
 
     class Media:
@@ -271,8 +279,8 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = (OrderItemInline,)
     formfield_overrides = {MoneyField: {"widget": MoneyWidget}}
     fieldsets = (
-        (_("Billing details"), {"fields": fieldset_pairs(billing_fields)}),
-         (_("Shipping details"), {"fields": fieldset_pairs(shipping_fields)}),
+        (_("Billing details"), {"fields": address_pairs(billing_fields)}),
+         (_("Shipping details"), {"fields": address_pairs(shipping_fields)}),
         (None, {"fields": ("additional_instructions", ("shipping_total",
             "shipping_type"), ('tax_total', 'tax_type'),
              ("discount_total", "discount_code"), "item_total",
