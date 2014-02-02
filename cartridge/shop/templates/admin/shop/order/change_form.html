@@ -3,10 +3,13 @@
 
 {% block object-tools %}
 {% if change %}{% if not is_popup %}
+<form id="resend-email" method="POST" action="{% url "shop_invoice_resend" object_id %}?next={{ request.path }}">
+    {% csrf_token %}
+</form>
 <ul class="object-tools">
-<li><a href="{% url "shop_invoice" object_id %}?format=pdf">{% trans "Download PDF invoice" %}</a></li>
-<li><a href="{% url "shop_invoice_resend" object_id %}?next={{ request.path }}">{% trans "Re-send order email" %}</a></li>
-<li><a href="history/" class="historylink">{% trans "History" %}</a></li>
+    <li><a href="{% url "shop_invoice" object_id %}?format=pdf">{% trans "Download PDF invoice" %}</a></li>
+    <li><a href="#" onclick="document.getElementById('resend-email').submit(); return false;">{% trans "Re-send order email" %}</a></li>
+    <li><a href="history/" class="historylink">{% trans "History" %}</a></li>
 </ul>
 {% endif %}{% endif %}
 {% endblock %}

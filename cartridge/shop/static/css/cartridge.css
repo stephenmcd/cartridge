@@ -81,6 +81,12 @@
 .discount-form > .form-group > input {
     width: 180px;
 }
+.order-complete-form {
+    margin-top: -10px;
+}
+.order-complete-form a {
+    margin-right: 10px;
+}
 /*================================
             Wishlist
 ==================================*/

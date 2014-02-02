@@ -64,9 +64,7 @@ _gaq.push(['_trackTrans']);
 
 {% block breadcrumb_menu %}
 {% for step in steps %}
-<li>
-    {{ step.title }}
-</li>
+<li>{{ step.title }}</li>
 {% endfor %}
 <li><strong>{% trans "Complete" %}</strong></li>
 {% endblock %}
@@ -77,10 +75,10 @@ _gaq.push(['_trackTrans']);
 <p>{% trans "We've sent you a receipt via email." %}</p>
 <p>{% trans "You can also view your invoice using one of the links below." %}</p>
 <br>
-<p>
-    <a class="btn btn-lg btn-primary" href="{% url "shop_invoice" order.id %}?format=pdf">{% trans "Download PDF invoice" %}</a>
-
-    <a class="btn btn-lg btn-default" target="_blank" href="{% url "shop_invoice" order.id %}">{% trans "View invoice in your browser" %}</a>
-    <a class="btn btn-lg btn-default" href="{% url "shop_invoice_resend" order.id %}">{% trans "Re-send order email" %}</a>
-</p>
+<form class="order-complete-form" method="post" action="{% url "shop_invoice_resend" order.id %}?next={{ request.path }}">
+    {% csrf_token %}
+    <a class="btn btn-primary" href="{% url "shop_invoice" order.id %}?format=pdf">{% trans "Download PDF invoice" %}</a>
+    <a class="btn btn-default" target="_blank" href="{% url "shop_invoice" order.id %}">{% trans "View invoice in your browser" %}</a>
+    <input type="submit" class="btn btn-default" value="{% trans "Re-send order email" %}">
+</form>
 {% endblock %}

@@ -356,12 +356,10 @@ def invoice(request, order_id, template="shop/order_invoice.html",
     belong to the user which is checked via session or ID if
     authenticated, or if the current user is staff.
     """
-    lookup = {"id": order_id}
-    if not request.user.is_authenticated():
-        lookup["key"] = request.session.session_key
-    elif not request.user.is_staff:
-        lookup["user_id"] = request.user.id
-    order = get_object_or_404(Order, **lookup)
+    try:
+        order = Order.objects.get_for_user(order_id, request)
+    except Order.DoesNotExist:
+        raise Http404
     context = {"order": order}
     context.update(order.details_as_dict())
     context = RequestContext(request, context)
@@ -395,23 +393,23 @@ def order_history(request, template="shop/order_history.html"):
 @login_required
 def invoice_resend_email(request, order_id):
     """
-    Re-sends the order complete email for the given order and redirects to the
-    previous page.
+    Re-sends the order complete email for the given order and redirects
+    to the previous page.
     """
-    lookup = {"id": order_id}
-    if not request.user.is_authenticated():
-        lookup["key"] = request.session.session_key
-    elif not request.user.is_staff:
-        lookup["user_id"] = request.user.id
-    order = get_object_or_404(Order, **lookup)
-    checkout.send_order_email(request, order)
-    msg = _("The order email for order ID %s has been re-sent" % order_id)
-    info(request, msg)
-    # Determine the URL to return the user to.
-    redirect_to = next_url(request)
-    if redirect_to is None:
-        if request.user.is_staff:
-            redirect_to = reverse("admin:shop_order_change", args=[order_id])
-        else:
-            redirect_to = reverse("shop_order_history")
+    try:
+        order = Order.objects.get_for_user(order_id, request)
+    except Order.DoesNotExist:
+        raise Http404
+    if request.method == "POST":
+        checkout.send_order_email(request, order)
+        msg = _("The order email for order ID %s has been re-sent" % order_id)
+        info(request, msg)
+        # Determine the URL to return the user to.
+        redirect_to = next_url(request)
+        if redirect_to is None:
+            if request.user.is_staff:
+                redirect_to = reverse("admin:shop_order_change",
+                    args=[order_id])
+            else:
+                redirect_to = reverse("shop_order_history")
     return redirect(redirect_to)

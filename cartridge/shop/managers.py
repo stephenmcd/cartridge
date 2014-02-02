@@ -75,6 +75,18 @@ class OrderManager(Manager):
             return orders[0]
         raise self.model.DoesNotExist
 
+    def get_for_user(self, order_id, request):
+        """
+        Used for retrieving a single order, ensuring the user in
+        the given request object can access it.
+        """
+        lookup = {"id": order_id}
+        if not request.user.is_authenticated():
+            lookup["key"] = request.session.session_key
+        elif not request.user.is_staff:
+            lookup["user_id"] = request.user.id
+        return self.get(**lookup)
+
 
 class ProductOptionManager(Manager):
 
