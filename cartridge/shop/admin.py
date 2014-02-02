@@ -53,6 +53,9 @@ _flds = lambda s: [f.name for f in Order._meta.fields if f.name.startswith(s)]
 billing_fields = _flds("billing_detail")
 shipping_fields = _flds("shipping_detail")
 
+def fieldset_pairs(seq):
+    return zip(seq[::2], seq[1::2]) + ([seq[-1]] if len(seq) % 2 == 1 else [])
+
 
 ################
 #  CATEGORIES  #
@@ -251,6 +254,10 @@ class OrderItemInline(admin.TabularInline):
 
 
 class OrderAdmin(admin.ModelAdmin):
+
+    class Media:
+        css = {"all": ("cartridge/css/admin/order.css",)}
+
     ordering = ("status", "-id")
     list_display = ("id", "billing_name", "total", "time", "status",
                     "transaction_id", "invoice")
@@ -264,8 +271,8 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = (OrderItemInline,)
     formfield_overrides = {MoneyField: {"widget": MoneyWidget}}
     fieldsets = (
-        (_("Billing details"), {"fields": (tuple(billing_fields),)}),
-        (_("Shipping details"), {"fields": (tuple(shipping_fields),)}),
+        (_("Billing details"), {"fields": fieldset_pairs(billing_fields)}),
+         (_("Shipping details"), {"fields": fieldset_pairs(shipping_fields)}),
         (None, {"fields": ("additional_instructions", ("shipping_total",
             "shipping_type"), ('tax_total', 'tax_type'),
              ("discount_total", "discount_code"), "item_total",
