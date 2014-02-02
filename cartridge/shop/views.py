@@ -19,6 +19,7 @@ from django.views.decorators.cache import never_cache
 from mezzanine.conf import settings
 from mezzanine.utils.importing import import_dotted_path
 from mezzanine.utils.views import render, set_cookie, paginate
+from mezzanine.utils.urls import next_url
 
 from cartridge.shop import checkout
 from cartridge.shop.forms import (AddProductForm, CartItemFormSet,
@@ -389,3 +390,28 @@ def order_history(request, template="shop/order_history.html"):
                       settings.MAX_PAGING_LINKS)
     context = {"orders": orders}
     return render(request, template, context)
+
+
+@login_required
+def invoice_resend_email(request, order_id):
+    """
+    Re-sends the order complete email for the given order and redirects to the
+    previous page.
+    """
+    lookup = {"id": order_id}
+    if not request.user.is_authenticated():
+        lookup["key"] = request.session.session_key
+    elif not request.user.is_staff:
+        lookup["user_id"] = request.user.id
+    order = get_object_or_404(Order, **lookup)
+    checkout.send_order_email(request, order)
+    msg = _("The order email for order ID %s has been re-sent" % order_id)
+    info(request, msg)
+    # Determine the URL to return the user to.
+    redirect_to = next_url(request)
+    if redirect_to is None:
+        if request.user.is_staff:
+            redirect_to = reverse("admin:shop_order_change", args=[order_id])
+        else:
+            redirect_to = reverse("shop_order_history")
+    return redirect(redirect_to)
