@@ -15,4 +15,6 @@ urlpatterns = patterns("cartridge.shop.views",
     url("^checkout/complete%s$" % _slash, "complete", name="shop_complete"),
     url("^invoice/(?P<order_id>\d+)%s$" % _slash, "invoice",
         name="shop_invoice"),
+    url("^invoice/(?P<order_id>\d+)/resend%s$" % _slash,
+        "invoice_resend_email", name="shop_invoice_resend"),
 )
