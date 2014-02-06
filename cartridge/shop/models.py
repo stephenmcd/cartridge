@@ -41,6 +41,7 @@ from mezzanine.pages.models import Page
 from mezzanine.utils.models import AdminThumbMixin, upload_to
 
 from cartridge.shop import fields, managers
+from cartridge.shop.utils import clear_session
 
 
 class F(models.F):
@@ -495,7 +496,6 @@ class Order(models.Model):
         remaining count for discount code (if applicable) and then
         delete the cart.
         """
-        from cartridge.utils import clear_session
         self.save()  # Save the transaction ID.
         discount_code = request.session.get('discount_code')
         clear_session(request, "order", *self.session_fields)
