@@ -495,11 +495,10 @@ class Order(models.Model):
         remaining count for discount code (if applicable) and then
         delete the cart.
         """
+        from cartridge.utils import clear_session
         self.save()  # Save the transaction ID.
         discount_code = request.session.get('discount_code')
-        for field in ("order",) + self.session_fields:
-            if field in request.session:
-                del request.session[field]
+        clear_session(request, "order", *self.session_fields)
         for item in request.cart:
             try:
                 variation = ProductVariation.objects.get(sku=item.sku)

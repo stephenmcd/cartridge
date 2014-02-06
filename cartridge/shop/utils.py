@@ -60,6 +60,18 @@ def make_choices(choices):
     return list(zip(choices, choices))
 
 
+def clear_session(request, *names):
+    """
+    Removes values for the given session variables names
+    if they exist.
+    """
+    for name in names:
+        try:
+            del request.session[name]
+        except KeyError:
+            pass
+
+
 def recalculate_cart(request):
     """
     Updates an existing discount code, shipping, and tax when the
@@ -73,6 +85,10 @@ def recalculate_cart(request):
     request.cart = Cart.objects.from_request(request)
     discount_code = request.session.get("discount_code", "")
     if discount_code:
+        # Clear out any previously defined discount code
+        # session vars.
+        names = ("free_shipping", "discount_code", "discount_total")
+        clear_session(request, *names)
         discount_form = DiscountForm(request, {"discount_code": discount_code})
         if discount_form.is_valid():
             discount_form.set_discount()

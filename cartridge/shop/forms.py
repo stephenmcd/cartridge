@@ -23,7 +23,8 @@ from mezzanine.core.templatetags.mezzanine_tags import thumbnail
 from cartridge.shop import checkout
 from cartridge.shop.models import Product, ProductOption, ProductVariation
 from cartridge.shop.models import Cart, CartItem, Order, DiscountCode
-from cartridge.shop.utils import make_choices, set_locale, set_shipping
+from cartridge.shop.utils import (make_choices, set_locale, set_shipping,
+                                  clear_session)
 
 
 ADD_PRODUCT_ERRORS = {
@@ -268,18 +269,11 @@ class DiscountForm(forms.ModelForm):
         Assigns the session variables for the discount.
         """
         discount = getattr(self, "_discount", None)
-
-        def clear_session(*names):
-            for name in names:
-                try:
-                    del self._request.session[name]
-                except KeyError:
-                    pass
-
         if discount is not None:
             # Clear out any previously defined discount code
             # session vars.
-            clear_session("free_shipping", "discount_code", "discount_total")
+            names = ("free_shipping", "discount_code", "discount_total")
+            clear_session(self._request, *names)
             total = self._request.cart.calculate_discount(discount)
             if discount.free_shipping:
                 set_shipping(self._request, _("Free shipping"), 0)
@@ -288,7 +282,7 @@ class DiscountForm(forms.ModelForm):
                 # shipping may have been entered prior to this
                 # discount code beign entered, so clear out any
                 # previously set shipping vars.
-                clear_session("shipping_type", "shipping_total")
+                clear_session(self._request, "shipping_type", "shipping_total")
             self._request.session["free_shipping"] = discount.free_shipping
             self._request.session["discount_code"] = discount.code
             self._request.session["discount_total"] = str(total)

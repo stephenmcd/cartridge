@@ -73,6 +73,9 @@
     margin-right: 10px;
     font-weight: bold;
 }
+#cart .discount-form .help-block {
+    float: right;
+}
 .discount-form > .form-group,
 .discount-form > .form-group > input,
 .discount-form > .btn {
