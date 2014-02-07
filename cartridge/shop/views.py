@@ -59,20 +59,22 @@ def product(request, slug, template="shop/product.html",
                                   initial=initial_data, to_cart=to_cart)
     if request.method == "POST":
         if add_product_form.is_valid():
+            quantity = add_product_form.cleaned_data["quantity"]
             if to_cart:
-                quantity = add_product_form.cleaned_data["quantity"]
                 request.cart.add_item(add_product_form.variation, quantity)
                 recalculate_cart(request)
                 info(request, _("Item added to cart"))
                 return redirect("shop_cart")
             else:
-                skus = request.wishlist
+                wishlist = request.wishlist
                 sku = add_product_form.variation.sku
-                if sku not in skus:
-                    skus.append(sku)
+                if sku not in wishlist:
+                    wishlist[sku] = quantity
+                else:
+                    wishlist[sku] += quantity
                 info(request, _("Item added to wishlist"))
                 response = redirect("shop_wishlist")
-                set_cookie(response, "wishlist", ",".join(skus))
+                set_cookie(response, "wishlist", dumps(wishlist))
                 return response
     context = {
         "product": product,
@@ -100,42 +102,47 @@ def wishlist(request, template="shop/wishlist.html",
     if not settings.SHOP_USE_WISHLIST:
         raise Http404
 
-    skus = request.wishlist
+    wishlist = request.wishlist
     error = None
     if request.method == "POST":
         to_cart = request.POST.get("add_cart")
         add_product_form = form_class(request.POST or None,
                                       to_cart=to_cart)
-        if to_cart:
-            if add_product_form.is_valid():
-                request.cart.add_item(add_product_form.variation, 1)
+        sku = None
+        quantity = 0
+        if add_product_form.is_valid():
+            item = add_product_form.variation
+            quantity = wishlist.pop(item.sku)
+            if to_cart:
+                request.cart.add_item(item, quantity)
                 recalculate_cart(request)
                 message = _("Item added to cart")
                 url = "shop_cart"
             else:
-                error = list(add_product_form.errors.values())[0]
+                message = _("Item removed from wishlist")
+                url = "shop_wishlist"
         else:
-            message = _("Item removed from wishlist")
-            url = "shop_wishlist"
-        sku = request.POST.get("sku")
-        if sku in skus:
-            skus.remove(sku)
+            error = list(add_product_form.errors.values())[0]
         if not error:
             info(request, message)
             response = redirect(url)
-            set_cookie(response, "wishlist", ",".join(skus))
+            set_cookie(response, "wishlist", dumps(wishlist))
             return response
 
     # Remove skus from the cookie that no longer exist.
     published_products = Product.objects.published(for_user=request.user)
+    skus = wishlist.keys()
     f = {"product__in": published_products, "sku__in": skus}
-    wishlist = ProductVariation.objects.filter(**f).select_related(depth=1)
-    wishlist = sorted(wishlist, key=lambda v: skus.index(v.sku))
-    context = {"wishlist_items": wishlist, "error": error}
+    items = ProductVariation.objects.filter(**f).select_related(depth=1)
+    items = sorted(items, key=lambda v: skus.index(v.sku))
+    if len(items) < len(skus):
+        for sku in (set(skus) - set([i.sku for i in items])):
+            del wishlist[sku]
+        set_cookie(response, "wishlist", dumps(wishlist))
+    for item in items:
+        item.quantity = wishlist[item.sku]
+    context = {"wishlist_items": items, "error": error}
     response = render(request, template, context)
-    if len(wishlist) < len(skus):
-        skus = [variation.sku for variation in wishlist]
-        set_cookie(response, "wishlist", ",".join(skus))
     return response
 
 

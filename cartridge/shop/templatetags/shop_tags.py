@@ -83,3 +83,14 @@ def order_totals_text(context):
     Text version of order_totals.
     """
     return _order_totals(context)
+
+
+@register.filter
+def sum_values(dictionary):
+    """
+    Returns the sum of values in dictionary
+    """
+    try:
+        return sum(dictionary.values())
+    except:
+        return dictionary

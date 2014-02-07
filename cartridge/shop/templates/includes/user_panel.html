@@ -15,7 +15,7 @@
     {% if settings.SHOP_USE_WISHLIST %}
     <a href="{% url "shop_wishlist" %}" class="btn-wishlist">
     <span class="glyphicon glyphicon-star"></span>
-    {% blocktrans count request.wishlist|length as wishlist_count %}Wishlist contains 1 item{% plural %} Wishlist contains {{ wishlist_count }} items{% endblocktrans %}</a>
+    {% blocktrans count request.wishlist|sum_values as wishlist_count %}Wishlist contains 1 item{% plural %} Wishlist contains {{ wishlist_count }} items{% endblocktrans %}</a>
     {% endif %}
     {% ifinstalled mezzanine.accounts %}
     <br>
