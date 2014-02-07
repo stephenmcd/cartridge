@@ -33,13 +33,13 @@ class ShopMiddleware(SSLRedirect):
     """
     def process_request(self, request):
         request.cart = Cart.objects.from_request(request)
-        wishlist = request.COOKIES.get("wishlist", "{}")
+        wishlist_str = request.COOKIES.get("wishlist", "{}")
         try:
-            wishlist = json.loads(wishlist,
+            wishlist = json.loads(wishlist_str,
                                   object_pairs_hook=OrderedDict)
         except ValueError:
             # for backwards compatibility; comma-separated strings will age out
             wishlist = OrderedDict()
-            for k in wishlist.split(","):
+            for k in wishlist_str.split(","):
                 wishlist[k] = 1
         request.wishlist = wishlist
