@@ -122,9 +122,16 @@ product_fieldsets = deepcopy(DisplayableAdmin.fieldsets)
 product_fieldsets[0][1]["fields"].insert(2, "available")
 product_fieldsets[0][1]["fields"].extend(["content", "categories"])
 product_fieldsets = list(product_fieldsets)
-product_fieldsets.append((_("Other products"), {
-    "classes": ("collapse-closed",),
-    "fields": ("related_products", "upsell_products")}))
+
+other_product_fields = []
+if settings.SHOP_USE_RELATED_PRODUCTS:
+    other_product_fields.append("related_products")
+if settings.SHOP_USE_UPSELL_PRODUCTS:
+    other_product_fields.append("upsell_products")
+if len(other_product_fields) > 0:
+    product_fieldsets.append((_("Other products"), {
+        "classes": ("collapse-closed",),
+        "fields": tuple(other_product_fields)}))
 
 product_list_display = ["admin_thumb", "title", "status", "available",
                         "admin_link"]
@@ -152,7 +159,7 @@ class ProductAdmin(DisplayableAdmin):
     list_display_links = ("admin_thumb", "title")
     list_editable = product_list_editable
     list_filter = ("status", "available", "categories")
-    filter_horizontal = ("categories", "related_products", "upsell_products")
+    filter_horizontal = ("categories",) + tuple(other_product_fields)
     search_fields = ("title", "content", "categories__title",
                      "variations__sku")
     inlines = (ProductImageAdmin, ProductVariationAdmin)

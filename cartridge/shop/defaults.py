@@ -61,7 +61,8 @@ register_setting(
     default=("SHOP_CARD_TYPES", "SHOP_CATEGORY_USE_FEATURED_IMAGE",
              "SHOP_CHECKOUT_STEPS_SPLIT", "SHOP_PAYMENT_STEP_ENABLED",
              "SHOP_PRODUCT_SORT_OPTIONS", "SHOP_USE_RATINGS",
-             "SHOP_USE_WISHLIST"),
+             "SHOP_USE_WISHLIST", "SHOP_USE_RELATED_PRODUCTS",
+             "SHOP_USE_UPSELL_PRODUCTS"),
     append=True,
 )
 
@@ -302,6 +303,24 @@ register_setting(
     label=_("Use product wishlist"),
     description="Show the links to the wishlist, and allow adding "
         "products to it.",
+    editable=False,
+    default=True,
+)
+
+register_setting(
+    name="SHOP_USE_RELATED_PRODUCTS",
+    label=_("Use related products"),
+    description="Show related products in templates, and allow "
+        "editing them in the admin.",
+    editable=False,
+    default=True,
+)
+
+register_setting(
+    name="SHOP_USE_UPSELL_PRODUCTS",
+    label=_("Use upsell products"),
+    description="Show upsell products in templates, and allow "
+        "editing them in the admin.",
     editable=False,
     default=True,
 )

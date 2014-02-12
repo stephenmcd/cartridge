@@ -74,6 +74,7 @@
 </form>
 {% endif %}
 
+{% if settings.SHOP_USE_UPSELL_PRODUCTS %}
 {% with request.cart.upsell_products as upsell_products %}
 {% if upsell_products %}
 <h2>{% trans "You may also like:" %}</h2>
@@ -104,6 +105,7 @@
 </div>
 {% endif %}
 {% endwith %}
+{% endif %}
 
 {% else %}
 <p>{% trans "Your Cart is empty." %}</p>

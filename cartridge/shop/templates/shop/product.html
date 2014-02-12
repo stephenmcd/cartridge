@@ -126,7 +126,7 @@ $(document).ready(function() {
 </div>
 {% endif %}
 
-{% if related_products %}
+{% if settings.SHOP_USE_RELATED_PRODUCTS and related_products %}
 <h2>{% trans "Related Products" %}</h2>
 <div class="row related-products">
     {% for product in related_products %}
