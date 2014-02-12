@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
-from future.builtins import int
-from future.builtins import str
+from future.builtins import int, str
 
 from json import dumps
 
@@ -74,6 +73,9 @@ def product(request, slug, template="shop/product.html",
                 response = redirect("shop_wishlist")
                 set_cookie(response, "wishlist", ",".join(skus))
                 return response
+    related = []
+    if settings.SHOP_USE_RELATED_PRODUCTS:
+        related = product.related_products.published(for_user=request.user)
     context = {
         "product": product,
         "editable_obj": product,
@@ -81,8 +83,7 @@ def product(request, slug, template="shop/product.html",
         "variations": variations,
         "variations_json": variations_json,
         "has_available_variations": any([v.has_price() for v in variations]),
-        "related_products": product.related_products.published(
-                                                      for_user=request.user),
+        "related_products": related,
         "add_product_form": add_product_form
     }
     templates = [u"shop/%s.html" % str(product.slug), template]

@@ -600,6 +600,8 @@ class Cart(models.Model):
         """
         Returns the upsell products for each of the items in the cart.
         """
+        if not settings.SHOP_USE_UPSELL_PRODUCTS:
+            return []
         cart = Product.objects.filter(variations__sku__in=self.skus())
         published_products = Product.objects.published()
         for_cart = published_products.filter(upsell_products__in=cart)
