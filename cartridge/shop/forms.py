@@ -485,7 +485,7 @@ class ProductAdminForm(with_metaclass(ProductAdminFormMetaclass,
         """
         Set the choices for each of the fields for product options.
         Also remove the current instance from choices for related and
-        upsell products.
+        upsell products (if enabled).
         """
         super(ProductAdminForm, self).__init__(*args, **kwargs)
         for field, options in list(ProductOption.objects.as_fields().items()):
@@ -493,8 +493,10 @@ class ProductAdminForm(with_metaclass(ProductAdminFormMetaclass,
         instance = kwargs.get("instance")
         if instance:
             queryset = Product.objects.exclude(id=instance.id)
-            self.fields["related_products"].queryset = queryset
-            self.fields["upsell_products"].queryset = queryset
+            if settings.SHOP_USE_RELATED_PRODUCTS:
+                self.fields["related_products"].queryset = queryset
+            if settings.SHOP_USE_UPSELL_PRODUCTS:
+                self.fields["upsell_products"].queryset = queryset
 
 
 class ProductVariationAdminForm(forms.ModelForm):
