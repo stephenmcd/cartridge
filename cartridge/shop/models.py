@@ -556,7 +556,7 @@ class Cart(models.Model):
             item.url = variation.product.get_absolute_url()
             image = variation.image
             if image is not None:
-                item.image = str(image.file)
+                item.image = force_text(image.file)
             variation.product.actions.added_to_cart()
         item.quantity += quantity
         item.save()
