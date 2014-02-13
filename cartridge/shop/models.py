@@ -8,11 +8,10 @@ from functools import reduce
 from operator import iand, ior
 
 from django.core.urlresolvers import reverse
-from django.db import models
+from django.db import models, connection
 from django.db.models.signals import m2m_changed
 from django.db.models import CharField, Q
 from django.db.models.base import ModelBase
-from django.db.utils import DatabaseError
 from django.dispatch import receiver
 from django.utils.timezone import now
 from django.utils.translation import ugettext, ugettext_lazy as _
@@ -22,15 +21,6 @@ try:
 except ImportError:
     # Backward compatibility for Py2 and Django < 1.5
     from django.utils.encoding import force_unicode as force_text
-
-try:
-    from _mysql_exceptions import OperationalError
-except ImportError:
-    class OperationalError(Exception):
-        """
-        This class is purely to prevent a NameError if
-        _mysql_exceptions.OperationalError is not available.
-        """
 
 from mezzanine.conf import settings
 from mezzanine.core.fields import FileField
@@ -775,33 +765,37 @@ class Sale(Discount):
             products = self.all_products()
             variations = ProductVariation.objects.filter(product__in=products)
             for priced_objects in (products, variations):
-                # MySQL will raise a 'Data truncated' warning here in
-                # some scenarios, presumably when doing a calculation
-                # that exceeds the precision of the price column. In
-                # this case it's safe to ignore it and the calculation
-                # will still be applied.
-                try:
-                    update = {"sale_id": self.id,
-                              "sale_price": sale_price,
-                              "sale_to": self.valid_to,
-                              "sale_from": self.valid_from}
+                update = {"sale_id": self.id,
+                          "sale_price": sale_price,
+                          "sale_to": self.valid_to,
+                          "sale_from": self.valid_from}
+                using = priced_objects.db
+                if "mysql" not in settings.DATABASES[using]["ENGINE"]:
                     priced_objects.filter(**extra_filter).update(**update)
-                except (OperationalError, DatabaseError):
+                else:
                     # Work around for MySQL which does not allow update
                     # to operate on subquery where the FROM clause would
-                    # have it operate on the same table.
-                    #
-                    # http://dev.mysql.com/
-                    # doc/refman/5.0/en/subquery-errors.html
+                    # have it operate on the same table, so we update
+                    # each instance individually:
+
+    # http://dev.mysql.com/doc/refman/5.0/en/subquery-errors.html
+
+                    # Also MySQL may raise a 'Data truncated' warning here
+                    # when doing a calculation that exceeds the precision
+                    # of the price column. In this case it's safe to ignore
+                    # it and the calculation will still be applied, but
+                    # we need to massage transaction management in order
+                    # to continue successfully:
+
+    # https://groups.google.com/forum/#!topic/django-developers/ACLQRF-71s8
+
                     for priced in priced_objects.filter(**extra_filter):
                         for field, value in list(update.items()):
                             setattr(priced, field, value)
                         try:
                             priced.save()
                         except Warning:
-                            pass
-                except Warning:
-                    pass
+                            connection.set_rollback(False)
 
     def delete(self, *args, **kwargs):
         """
