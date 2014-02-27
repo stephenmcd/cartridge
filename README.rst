@@ -202,7 +202,7 @@ Sites Using Cartridge
 .. _`Github issue tracker`: http://github.com/stephenmcd/cartridge/issues
 .. _`Django coding style`: http://docs.djangoproject.com/en/dev/internals/contributing/#coding-style
 .. _`PEP 8`: http://www.python.org/dev/peps/pep-0008/
-.. _`Transiflex`: https://www.transifex.net/projects/p/mezzanine/
+.. _`Transiflex`: https://www.transifex.com/projects/p/cartridge/
 .. _`security@jupo.org`: mailto:security@jupo.org?subject=Mezzanine+Security+Issue
 .. _`#mezzanine IRC channel`: irc://freenode.net/mezzanine
 .. _`Freenode`: http://freenode.net
