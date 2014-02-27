@@ -1,11 +1,11 @@
 {% load shop_tags i18n %}{% if discount_total or shipping_total %}
 {% trans "Sub total" %}: {{ item_total|currency }}
 {% endif %}{% if discount_total %}
-{% if discount_type %}{{ discount_type }}{% else %}{% trans "Discount" %}{% endif %}: {{ discount_total|currency }} {{ discount_total|currency }}
+{% if discount_type %}{{ discount_type }}{% else %}{% trans "Discount" %}{% endif %}: {{ discount_total|currency }}
 {% endif %}{% if shipping_type or shipping_total %}
-{% if shipping_type %}{{ shipping_type }}{% else %}{% trans "Shipping" %}{% endif %}: {{ shipping_total|currency }} {{ shipping_total|currency }}
+{% if shipping_type %}{{ shipping_type }}{% else %}{% trans "Shipping" %}{% endif %}: {{ shipping_total|currency }}
 {% endif %} {% if tax_total %}
-{% if tax_type %}{{ tax_type }}{% else %}{% trans "Tax" %}{% endif %}: {{ tax_total|currency }} {{ tax_total|currency }}
+{% if tax_type %}{{ tax_type }}{% else %}{% trans "Tax" %}{% endif %}: {{ tax_total|currency }}
 {% endif %}{% trans "Total" %}: {{ order_total|currency }}
 
 
