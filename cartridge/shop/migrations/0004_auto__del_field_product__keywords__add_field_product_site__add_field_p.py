@@ -13,7 +13,7 @@ class Migration(SchemaMigration):
         db.delete_column('shop_product', '_keywords')
 
         # Adding field 'Product.site'
-        db.add_column('shop_product', 'site', self.gf('django.db.models.fields.related.ForeignKey')(default='', to=orm['sites.Site']), keep_default=False)
+        db.add_column('shop_product', 'site', self.gf('django.db.models.fields.related.ForeignKey')(default=1, to=orm['sites.Site']), keep_default=False)
 
         # Adding field 'Product.keywords_string'
         db.add_column('shop_product', 'keywords_string', self.gf('django.db.models.fields.CharField')(default='', max_length=500, blank=True), keep_default=False)
