@@ -109,7 +109,7 @@ def set_shipping(request, shipping_type, shipping_total):
     Stores the shipping type and total in the session.
     """
     from future.builtins import str
-    request.session["shipping_type"] = str(shipping_type)
+    request.session["shipping_type"] = unicode(shipping_type)
     request.session["shipping_total"] = str(shipping_total)
 
 
@@ -118,7 +118,7 @@ def set_tax(request, tax_type, tax_total):
     Stores the tax type and total in the session.
     """
     from future.builtins import str
-    request.session["tax_type"] = str(tax_type)
+    request.session["tax_type"] = unicode(tax_type)
     request.session["tax_total"] = str(tax_total)
 
 
