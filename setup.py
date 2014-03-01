@@ -38,8 +38,7 @@ try:
 
         install_requires=[
             "mezzanine >= 3.0.6",
-            "pisa >= 3.0.33",
-            "reportlab == 2.7"
+            "xhtml2pdf",
         ],
 
         classifiers=[
