@@ -14,6 +14,7 @@ from django.utils.timezone import now
 from django.utils.unittest import skipUnless
 from mezzanine.conf import settings
 from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
+from mezzanine.utils.importing import import_dotted_path
 from mezzanine.utils.tests import run_pyflakes_for_package
 from mezzanine.utils.tests import run_pep8_for_package
 
@@ -22,6 +23,7 @@ from cartridge.shop.models import Category, Cart, Order, DiscountCode
 from cartridge.shop.models import Sale
 from cartridge.shop.forms import OrderForm
 from cartridge.shop.checkout import CHECKOUT_STEPS
+from cartridge.shop.utils import set_tax
 
 
 TEST_STOCK = 5
@@ -430,7 +432,9 @@ else:
 
 
 class StripeTests(TestCase):
-    """Test the Stripe payment backend"""
+    """
+    Test the Stripe payment backend.
+    """
 
     def setUp(self):
         # Every test needs access to the request factory.
@@ -481,29 +485,19 @@ if stripe_used:
 class TaxationTests(TestCase):
 
     def test_default_handler_exists(self):
-        '''
+        """
         Ensure that the handler specified in default settings exists as well as
         the default setting itself.
-        '''
-        from mezzanine.utils.importing import import_dotted_path
-
+        """
         settings.use_editable()
-
-        assert hasattr(settings, 'SHOP_HANDLER_TAX'), \
-            'Setting SHOP_HANDLER_TAX not found.'
-
         handler = lambda s: import_dotted_path(s) if s else lambda *args: None
-        tax_handler = handler(settings.SHOP_HANDLER_TAX)
-
-        assert tax_handler is not None, \
-            'Could not find default SHOP_HANDLER_TAX function.'
+        self.assertTrue(handler(settings.SHOP_HANDLER_TAX) is not None)
 
     def test_set_tax(self):
-        '''
+        """
         Regression test to ensure that set_tax still sets the appropriate
         session variables.
-        '''
-        from cartridge.shop.utils import set_tax
+        """
 
         tax_type = 'Tax for Testing'
         tax_total = 56.65
@@ -512,8 +506,5 @@ class TaxationTests(TestCase):
             session = {}
 
         set_tax(request, tax_type, tax_total)
-
-        assert request.session.get('tax_type') == tax_type, \
-            'tax_type not set with set_tax'
-        assert request.session.get('tax_total') == tax_total, \
-            'tax_total not set with set_tax'
+        self.assertEqual(request.session.get("tax_type"), str(tax_type))
+        self.assertEqual(request.session.get("tax_total"), str(tax_total))
