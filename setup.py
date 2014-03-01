@@ -41,10 +41,6 @@ try:
             "pisa >= 3.0.33",
             "reportlab == 2.7"
         ],
-        # NOTE: reportlab 3.0 does not work with pisa 3.0.33, due to a
-        # bad version check. 
-        # However, reportlab 2.7 will not work with Python 3!
-        # 
 
         classifiers=[
             "Development Status :: 4 - Beta",
