@@ -14,7 +14,7 @@ matrix:
 install:
   - pip install django==$DJANGO_VERSION --use-mirrors
   - pip install -e git://github.com/stephenmcd/mezzanine.git#egg=mezzanine
-  - pip install . --allow-unverified
+  - pip install . --allow-unverified pyPdf
   - pip install pep8 pyflakes
 before_script:
   - "cp cartridge/project_template/local_settings.py.template cartridge/project_template/local_settings.py"
