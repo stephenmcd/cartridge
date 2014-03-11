@@ -123,6 +123,8 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
 
     admin_thumb_field = "image"
 
+    search_fields = {"variations__sku": 100}
+
     class Meta:
         verbose_name = _("Product")
         verbose_name_plural = _("Products")
