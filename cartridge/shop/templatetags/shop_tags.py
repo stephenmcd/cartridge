@@ -25,7 +25,10 @@ def currency(value):
     if hasattr(locale, "currency"):
         value = locale.currency(Decimal(value), grouping=True)
         if platform.system() == 'Windows':
-            value = str(value, encoding='iso_8859_1')
+            try:
+                value = str(value, encoding='iso_8859_1')
+            except TypeError:
+                pass
     else:
         # based on locale.currency() in python >= 2.5
         conv = locale.localeconv()
