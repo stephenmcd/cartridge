@@ -27,22 +27,22 @@ demo of Cartridge can be found by visiting the `Mezzanine live demo`_.
 Features
 ========
 
-  * Hierarchical categories
-  * Easily configurable product options (colours, sizes, etc.)
-  * Hooks for tax/shipping calculations and payment gateways
-  * Sale pricing
-  * Promotional discount codes
-  * PDF invoice generation (for packing slips)
-  * Stock control
-  * Product popularity
-  * Thumbnail generation
-  * Built-in test suite
-  * Separation of presentation (no embedded markup)
-  * Smart categories (by price range, colour, etc)
-  * Registered or anonymous checkout
-  * Configurable number of checkout steps
-  * Denormalised data for accessiblilty and performance
-  * Authenticated customer accounts with transaction history
+* Hierarchical categories
+* Easily configurable product options (colours, sizes, etc.)
+* Hooks for tax/shipping calculations and payment gateways
+* Sale pricing
+* Promotional discount codes
+* PDF invoice generation (for packing slips)
+* Stock control
+* Product popularity
+* Thumbnail generation
+* Built-in test suite
+* Separation of presentation (no embedded markup)
+* Smart categories (by price range, colour, etc)
+* Registered or anonymous checkout
+* Configurable number of checkout steps
+* Denormalised data for accessiblilty and performance
+* Authenticated customer accounts with transaction history
 
 Dependencies
 ============
@@ -107,15 +107,15 @@ back your enhancements.
 
 Please note the following guidelines for contributing:
 
-  * Contributed code must be written in the existing style. This is
-    as simple as following the `Django coding style`_ and (most
-    importantly) `PEP 8`_.
-  * Contributions must be available on a separately named branch
-    based on the latest version of the main branch.
-  * Run the tests before committing your changes. If your changes
-    cause the tests to break, they won't be accepted.
-  * If you are adding new functionality, you must include basic tests
-    and documentation.
+* Contributed code must be written in the existing style. This is
+  as simple as following the `Django coding style`_ and (most
+  importantly) `PEP 8`_.
+* Contributions must be available on a separately named branch
+  based on the latest version of the main branch.
+* Run the tests before committing your changes. If your changes
+  cause the tests to break, they won't be accepted.
+* If you are adding new functionality, you must include basic tests
+  and documentation.
 
 If you want to do development with Cartridge, here's a quick way to set
 up a development environment and run the Cartridge unit tests, using
@@ -165,28 +165,28 @@ IRC channel`_ on `Freenode`_, for a chat.
 Sites Using Cartridge
 =====================
 
-  * `Ripe Maternity <http://www.ripematernity.com>`_
-  * `Cotton On <http://shop.cottonon.com>`_
-  * `Coopers Store <http://store.coopers.com.au>`_
-  * `Sheer Ethic <http://sheerethic.com>`_
-  * `tindie.com <http://tindie.com>`_
-  * `Ross A. Laird <http://rosslaird.com/shop>`_
-  * `Pink Twig <http://www.pinktwig.ca/shop>`_
-  * `Parfume Planet <http://parfumeplanet.com>`_
-  * `Life is Good <http://lifeisgoodforall.co.uk/>`_
-  * `Brooklyn Navy Yard <http://bldg92.org/>`_
-  * `Cotton On Asia <http://asia.cottonon.com/>`_
-  * `Manai Glitter <https://manai.co.uk>`_
-  * `Tactical Bags <http://tacticalbags.ru>`_
-  * `Charles Koll Jewelry <http://charleskoll.com>`_
-  * `Puraforce Remedies <http://puraforceremedies.com/>`_
-  * `Adrenaline <http://www.adrln.com/>`_
-  * `The Peculiar Store <http://thepeculiarstore.com>`_
-  * `KisanHub <http://www.kisanhub.com/>`_
-  * `Kegbot <http://kegbot.org>`_
-  * `Amblitec <http://www.amblitec.com>`_
-  * `ZigZag Bags <http://www.zigzagbags.com.au>`_
-  * `Justine & Katie's Bowtique <http://www.jnkbows.com>`_
+* `Ripe Maternity <http://www.ripematernity.com>`_
+* `Cotton On <http://shop.cottonon.com>`_
+* `Coopers Store <http://store.coopers.com.au>`_
+* `Sheer Ethic <http://sheerethic.com>`_
+* `tindie.com <http://tindie.com>`_
+* `Ross A. Laird <http://rosslaird.com/shop>`_
+* `Pink Twig <http://www.pinktwig.ca/shop>`_
+* `Parfume Planet <http://parfumeplanet.com>`_
+* `Life is Good <http://lifeisgoodforall.co.uk/>`_
+* `Brooklyn Navy Yard <http://bldg92.org/>`_
+* `Cotton On Asia <http://asia.cottonon.com/>`_
+* `Manai Glitter <https://manai.co.uk>`_
+* `Tactical Bags <http://tacticalbags.ru>`_
+* `Charles Koll Jewelry <http://charleskoll.com>`_
+* `Puraforce Remedies <http://puraforceremedies.com/>`_
+* `Adrenaline <http://www.adrln.com/>`_
+* `The Peculiar Store <http://thepeculiarstore.com>`_
+* `KisanHub <http://www.kisanhub.com/>`_
+* `Kegbot <http://kegbot.org>`_
+* `Amblitec <http://www.amblitec.com>`_
+* `ZigZag Bags <http://www.zigzagbags.com.au>`_
+* `Justine & Katie's Bowtique <http://www.jnkbows.com>`_
 
 
 .. _`Django`: http://djangoproject.com/
