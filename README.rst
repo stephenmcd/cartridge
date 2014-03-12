@@ -186,6 +186,7 @@ Sites Using Cartridge
   * `Kegbot <http://kegbot.org>`_
   * `Amblitec <http://www.amblitec.com>`_
   * `ZigZag Bags <http://www.zigzagbags.com.au>`_
+  * `Justine & Katie's Bowtique <http://www.jnkbows.com>`_
 
 
 .. _`Django`: http://djangoproject.com/
