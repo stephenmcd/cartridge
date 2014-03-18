@@ -206,6 +206,18 @@ register_setting(
 )
 
 register_setting(
+    name="SHOP_HANDLER_PAYMENT_VIEW",
+    label=_("Payment Handler View"),
+    description="Dotted package path and function name of the function that "
+        "handles creating an external payment view, such as for paypal "
+        "payments advanced.  Set to None to use the built in form instead."
+        "example- 'cartridge.shop.payment.paypal_advanced.payment_step_view'"
+        "SHOP_CHECKOUT_STEPS_CONFIRMATION = False must be set",
+    editable=False,
+    default=None,
+)
+
+register_setting(
     name="SHOP_OPTION_TYPE_CHOICES",
     description="Sequence of value/name pairs for types of product options "
         "(e.g. Size, Colour).",
