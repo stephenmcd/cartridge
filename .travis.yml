@@ -15,7 +15,8 @@ install:
   - pip install django==$DJANGO_VERSION --use-mirrors
   - pip install -e git://github.com/stephenmcd/mezzanine.git#egg=mezzanine
   - pip install . --allow-unverified pyPdf
-  - pip install pep8 pyflakes
+  - pip install pyflakes==0.6.1
+  - pip install pep8==1.4.1
 before_script:
   - "cp cartridge/project_template/local_settings.py.template cartridge/project_template/local_settings.py"
 script:
