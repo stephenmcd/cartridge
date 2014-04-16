@@ -188,6 +188,7 @@ Sites Using Cartridge
 * `ZigZag Bags <http://www.zigzagbags.com.au>`_
 * `Justine & Katie's Bowtique <http://www.jnkbows.com>`_
 * `The Art Rebellion <http://www.theartrebellion.com/>`_
+* `Engineered Arts <https://www.engineeredarts.co.uk>`_
 
 
 .. _`Django`: http://djangoproject.com/
