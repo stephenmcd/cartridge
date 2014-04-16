@@ -187,6 +187,7 @@ Sites Using Cartridge
 * `Amblitec <http://www.amblitec.com>`_
 * `ZigZag Bags <http://www.zigzagbags.com.au>`_
 * `Justine & Katie's Bowtique <http://www.jnkbows.com>`_
+* `The Art Rebellion <http://www.theartrebellion.com/>`_
 
 
 .. _`Django`: http://djangoproject.com/
