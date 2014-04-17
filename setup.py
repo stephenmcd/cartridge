@@ -37,7 +37,7 @@ try:
         packages=find_packages(),
 
         install_requires=[
-            "mezzanine >= 3.0.6",
+            "mezzanine >= 3.1",
             "xhtml2pdf",
         ],
 
