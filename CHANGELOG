@@ -1,3 +1,38 @@
+Version 0.9.3 (Apr 17, 2014)
+----------------------------
+
+  * Revert "Create a setting for which template is used when rendering an invoice as a ``PDF."``. This reverts commit 5ef6db6f71e55d06fb19d3dcc7a3cc5dad4a9190 - David SanderS
+  * Add a new template for rendering invoices as PDFs. Simply extends the normal order invoice template by default - David SanderS
+  * Change views which use forms to accept a ``form_name`` argument, which is a dotted path to the form class - David SanderS
+  * Rename pdf invoice template for consistency and allow it to be overridden as view arg - Stephen McDonald
+  * Make view args for forms actual class objects, and deprecate the ``SHOP_CHECKOUT_FORM_CLASS`` setting since we'll use a consistent approach for it too - Stephen McDonald
+  * Add url and view to resend an order complete email, accessible from admin, past orders and order complete pages - Sam Kingston
+  * Properly look up order in resend view - Sam Kingston
+  * Fix line length errors for travis - Sam Kingston
+  * Don't rely on ``HTTP_REFERER``, instead using a ?next query argument - Sam Kingston
+  * Handle the edge case where the next argument is not given by redirecting to either admin (if staff) or order history (user) - Sam Kingston
+  * Fix field alignment in order admin - Stephen McDonald
+  * Move permission checks for retreiving an order into ``OrderManager.get_for_user`` and make the order email re-send require a form post - Stephen McDonald
+  * Handle the ``APPEND_SLASH`` setting. This is done in mezzanine entirely - Sebastian Clemens
+  * Restore urlpattern for order email resend - Stephen McDonald
+  * Handle cart changes invalidating existing discount codes. Closes #168 - Stephen McDonald
+  * Fix import - Stephen McDonald
+  * Add settings to toggle related and upsell products - Sam Kingston
+  * Potentially save some db queries when related/upsell products are disabled - Stephen McDonald
+  * Fix unicode image names on cart items. Closes #173 - Stephen McDonald
+  * fix migrations,. assuming cartridge is before mezzanine in ``INSTALLED_APPS`` - Mario Rosa
+  * Remove duplicate template values - Mario Rosa
+  * Convert ``shipping_total`` and ``tax_total`` to strings. As of Django 1.6 Decimal's cannot be stored in sessions. Convert ``shipping_total`` and ``tax_total`` to strings before storing in the session - joshcartme
+  * Adding reportlab 2.7 as a dependency, with a comment that this is due to a bug in pisa, and also that this may not work on Python 3.x - Danny Sag
+  * Fix tax test - Stephen McDonald
+  * Update pdf invoices to use xhtml2pdf. Closes #180 - Stephen McDonald
+  * Travis fix for installing pypdf - Stephen McDonald
+  * Added variation sku as search fields to products - Stephen McDonald
+  * Potential fix for encoding currencies on Windows with python 3 - Stephen McDonald
+  * Clean up some imports - Stephen McDonald
+  * Pin test deps - Stephen McDonald
+  * Bump Mezzanine version to 3.1 - Stephen McDonald
+
 Version 0.9.2 (Jan 18, 2014)
 ----------------------------
 
@@ -12,6 +47,7 @@ Version 0.9.2 (Jan 18, 2014)
   * jquery fix in product admin. Closes #159 - Stephen McDonald
   * Remove unnecessary filebrowser setup - Stephen McDonald
   * Let ``fail_silently`` email arg fall back to new Mezzanine setting ``EMAIL_FAIL_SILENTLY``. Closes #160 - Stephen McDonald
+  * Create a setting for which template is used when rendering an invoice as a PDF - David SanderS
   * Bump Mezzanine version to 3.0.6 - Stephen McDonald
 
 Version 0.9.1 (Dec 24, 2013)

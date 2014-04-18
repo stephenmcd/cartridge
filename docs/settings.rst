@@ -28,13 +28,6 @@ If True, users must create a login for the checkout process.
 
 Default: ``False``
 
-``SHOP_CHECKOUT_FORM_CLASS``
-----------------------------
-
-Dotted path to the Form class to be used at checkout.
-
-Default: ``'cartridge.shop.forms.OrderForm'``
-
 ``SHOP_CHECKOUT_STEPS_CONFIRMATION``
 ------------------------------------
 
@@ -172,6 +165,20 @@ Default: ``(('Recently added', '-date_added'), ('Highest rated', '-rating_averag
 --------------------
 
 Show the product rating form, and allow browsing by rating.
+
+Default: ``True``
+
+``SHOP_USE_RELATED_PRODUCTS``
+-----------------------------
+
+Show related products in templates, and allow editing them in the admin.
+
+Default: ``True``
+
+``SHOP_USE_UPSELL_PRODUCTS``
+----------------------------
+
+Show upsell products in templates, and allow editing them in the admin.
 
 Default: ``True``
 
