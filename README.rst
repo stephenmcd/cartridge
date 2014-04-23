@@ -189,6 +189,7 @@ Sites Using Cartridge
 * `Justine & Katie's Bowtique <http://www.jnkbows.com>`_
 * `The Art Rebellion <http://www.theartrebellion.com/>`_
 * `Engineered Arts <https://www.engineeredarts.co.uk>`_
+* `Lipman Art <https://lipmanart.com/>`_
 
 
 .. _`Django`: http://djangoproject.com/
