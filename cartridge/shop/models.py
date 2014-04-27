@@ -268,7 +268,8 @@ class ProductVariation(with_metaclass(ProductVariationMetaclass, Priced)):
         ``ProductVariationMetaclass``.
         """
         all_fields = cls._meta.fields
-        return [f for f in all_fields if isinstance(f, fields.OptionField)]
+        return [f for f in all_fields if isinstance(f, fields.OptionField) and
+                not hasattr(f, "translated_field")]
 
     def options(self):
         """

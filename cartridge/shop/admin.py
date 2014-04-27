@@ -35,8 +35,12 @@ from django.db.models import ImageField
 from django.utils.translation import ugettext_lazy as _
 
 from mezzanine.conf import settings
-from mezzanine.core.admin import DisplayableAdmin, TabularDynamicInlineAdmin
+from mezzanine.core.admin import (DisplayableAdmin,
+                                  TabularDynamicInlineAdmin,
+                                  TRANSLATED)
 from mezzanine.pages.admin import PageAdmin
+if TRANSLATED:
+    from modeltranslation.admin import TranslationAdmin
 
 from cartridge.shop.fields import MoneyField
 from cartridge.shop.forms import ProductAdminForm, ProductVariationAdminForm
@@ -239,8 +243,21 @@ class ProductAdmin(DisplayableAdmin):
             # variation to the product.
             self._product.copy_default_variation()
 
+            # Save every translated fields from ``ProductOption`` into
+            # the required ``ProductVariation``
+            for opt_name in options:
+                for opt_value in options[opt_name]:
+                    opt_model = ProductOption.objects.get(type=opt_name[6:],
+                                                          name=opt_value)
+                    params = {opt_name: opt_value}
+                    for var in self._product.variations.filter(**params):
+                        for code, _ in settings.LANGUAGES:
+                            setattr(var, opt_name + "_" + code,
+                                    getattr(opt_model, "name_" + code))
+                        var.save()
 
-class ProductOptionAdmin(admin.ModelAdmin):
+
+class ProductOptionAdmin(TRANSLATED and TranslationAdmin or admin.ModelAdmin):
     ordering = ("type", "name")
     list_display = ("type", "name")
     list_display_links = ("type",)
