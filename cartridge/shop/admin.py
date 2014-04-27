@@ -245,16 +245,17 @@ class ProductAdmin(DisplayableAdmin):
 
             # Save every translated fields from ``ProductOption`` into
             # the required ``ProductVariation``
-            for opt_name in options:
-                for opt_value in options[opt_name]:
-                    opt_model = ProductOption.objects.get(type=opt_name[6:],
-                                                          name=opt_value)
-                    params = {opt_name: opt_value}
-                    for var in self._product.variations.filter(**params):
-                        for code, _ in settings.LANGUAGES:
-                            setattr(var, opt_name + "_" + code,
-                                    getattr(opt_model, "name_" + code))
-                        var.save()
+            if TRANSLATED:
+                for opt_name in options:
+                    for opt_value in options[opt_name]:
+                        opt_obj = ProductOption.objects.get(type=opt_name[6:],
+                                                            name=opt_value)
+                        params = {opt_name: opt_value}
+                        for var in self._product.variations.filter(**params):
+                            for code, _ in settings.LANGUAGES:
+                                setattr(var, opt_name + "_" + code,
+                                        getattr(opt_obj, "name_" + code))
+                            var.save()
 
 
 class ProductOptionAdmin(TRANSLATED and TranslationAdmin or admin.ModelAdmin):
