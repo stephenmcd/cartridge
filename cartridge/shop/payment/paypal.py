@@ -1,5 +1,4 @@
 from __future__ import unicode_literals
-from future.builtins import str
 
 try:
     from urllib.request import Request, urlopen
@@ -60,7 +59,7 @@ def process(request, order_form, order):
     trans = {}
     amount = order.total
     trans['amount'] = amount
-    locale.setlocale(locale.LC_ALL, settings.SHOP_CURRENCY_LOCALE)
+    locale.setlocale(locale.LC_ALL, str(settings.SHOP_CURRENCY_LOCALE))
     currency = locale.localeconv()
     try:
         ipaddress = request.META['HTTP_X_FORWARDED_FOR']
@@ -108,7 +107,7 @@ def process(request, order_form, order):
     trans['transactionData'] = {
         'CREDITCARDTYPE': data['card_type'].upper(),
         'ACCT': data['card_number'].replace(' ', ''),
-        'EXPDATE': (data['card_expiry_month'] + data['card_expiry_year']),
+        'EXPDATE': str(data['card_expiry_month'] + data['card_expiry_year']),
         'CVV2': data['card_ccv'],
         'AMT': trans['amount'],
         'INVNUM': str(order.id)
@@ -119,6 +118,7 @@ def process(request, order_form, order):
     part3 = "&" + urlencode(trans['custShipData'])
     trans['postString'] = (part1 + urlencode(trans['transactionData']) +
                            part2 + part3)
+    trans['postString'] = trans['postString'].encode('utf-8')
     request_args = {"url": trans['connection'], "data": trans['postString']}
     # useful for debugging transactions
     # print trans['postString']
