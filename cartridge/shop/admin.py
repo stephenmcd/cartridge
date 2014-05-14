@@ -34,10 +34,8 @@ from django.contrib import admin
 from django.db.models import ImageField
 from django.utils.translation import ugettext_lazy as _
 
-from mezzanine.conf import settings
-from mezzanine.core.admin import (DisplayableAdmin,
-                                  TabularDynamicInlineAdmin,
-                                  TRANSLATED)
+from mezzanine.conf import settings, TRANSLATED
+from mezzanine.core.admin import DisplayableAdmin, TabularDynamicInlineAdmin
 from mezzanine.pages.admin import PageAdmin
 if TRANSLATED:
     from modeltranslation.admin import TranslationAdmin
