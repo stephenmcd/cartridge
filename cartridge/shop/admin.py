@@ -34,7 +34,7 @@ from django.contrib import admin
 from django.db.models import ImageField
 from django.utils.translation import ugettext_lazy as _
 
-from mezzanine.conf import settings, TRANSLATED
+from mezzanine.conf import settings, TRANSLATED, CODE_LIST
 from mezzanine.core.admin import DisplayableAdmin, TabularDynamicInlineAdmin
 from mezzanine.pages.admin import PageAdmin
 if TRANSLATED:
@@ -250,7 +250,7 @@ class ProductAdmin(DisplayableAdmin):
                                                             name=opt_value)
                         params = {opt_name: opt_value}
                         for var in self._product.variations.filter(**params):
-                            for code, _ in settings.LANGUAGES:
+                            for code in CODE_LIST:
                                 setattr(var, opt_name + "_" + code,
                                         getattr(opt_obj, "name_" + code))
                             var.save()
