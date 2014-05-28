@@ -10,6 +10,7 @@ from django.utils.datastructures import SortedDict
 from django.utils.timezone import now
 
 from mezzanine.conf import settings
+from mezzanine.core.managers import CurrentSiteManager
 
 
 class CartManager(Manager):
@@ -86,6 +87,9 @@ class OrderManager(Manager):
         elif not request.user.is_staff:
             lookup["user_id"] = request.user.id
         return self.get(**lookup)
+
+if settings.SHOP_ORDERS_PER_SITE:
+    OrderManager.__bases__ = (CurrentSiteManager,)
 
 
 class ProductOptionManager(Manager):

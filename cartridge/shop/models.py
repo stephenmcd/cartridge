@@ -25,7 +25,7 @@ except ImportError:
 from mezzanine.conf import settings
 from mezzanine.core.fields import FileField
 from mezzanine.core.managers import DisplayableManager
-from mezzanine.core.models import Displayable, RichText, Orderable
+from mezzanine.core.models import Displayable, RichText, Orderable, SiteRelated
 from mezzanine.generic.fields import RatingField
 from mezzanine.pages.models import Page
 from mezzanine.utils.models import AdminThumbMixin, upload_to
@@ -397,7 +397,7 @@ class Category(Page, RichText):
         return products
 
 
-class Order(models.Model):
+class Order(SiteRelated):
 
     billing_detail_first_name = CharField(_("First name"), max_length=100)
     billing_detail_last_name = CharField(_("Last name"), max_length=100)
