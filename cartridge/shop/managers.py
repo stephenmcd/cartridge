@@ -63,7 +63,7 @@ class CartManager(Manager):
         return self.filter(last_updated__lt=self.expiry_time())
 
 
-class OrderManager(Manager):
+class OrderManager(CurrentSiteManager):
 
     def from_request(self, request):
         """
@@ -87,9 +87,6 @@ class OrderManager(Manager):
         elif not request.user.is_staff:
             lookup["user_id"] = request.user.id
         return self.get(**lookup)
-
-if settings.SHOP_ORDERS_PER_SITE:
-    OrderManager.__bases__ = (CurrentSiteManager,)
 
 
 class ProductOptionManager(Manager):

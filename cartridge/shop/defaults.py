@@ -262,16 +262,6 @@ register_setting(
 )
 
 register_setting(
-    name="SHOP_ORDERS_PER_SITE",
-    label=_("Orders per site"),
-    description="If True Orders will use the CurrentSiteManager, restricting "
-                "visible Orders in the admin to those placed on the current "
-                "site.",
-    editable=False,
-    default=False,
-)
-
-register_setting(
     name="SHOP_PER_PAGE_CATEGORY",
     label=_("Products Per Category Page"),
     description=_("Number of products to display per category page."),
