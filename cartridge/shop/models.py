@@ -14,7 +14,7 @@ from django.db.models import CharField, Q
 from django.db.models.base import ModelBase
 from django.dispatch import receiver
 from django.utils.timezone import now
-from django.utils.translation import ugettext, ugettext_lazy as _
+from django.utils.translation import ugettext, ugettext_lazy as _, pgettext_lazy as __
 
 try:
     from django.utils.encoding import force_text
@@ -444,8 +444,8 @@ class Order(SiteRelated):
                       "discount_code", "tax_type", "tax_total")
 
     class Meta:
-        verbose_name = _("Order")
-        verbose_name_plural = _("Orders")
+        verbose_name = __("commercial meaning", "Order")
+        verbose_name_plural = __("commercial meaning", "Orders")
         ordering = ("-id",)
 
     def __unicode__(self):
