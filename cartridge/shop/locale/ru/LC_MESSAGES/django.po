@@ -529,10 +529,12 @@ msgid "Status"
 msgstr "Статус"
 
 #: models.py:431
+msgctxt "commercial meaning"
 msgid "Order"
 msgstr "Заказ"
 
 #: models.py:432
+msgctxt "commercial meaning"
 msgid "Orders"
 msgstr "Заказы"
 

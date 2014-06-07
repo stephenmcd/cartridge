@@ -522,10 +522,12 @@ msgid "Status"
 msgstr "状态"
 
 #: models.py:431
+msgctxt "commercial meaning"
 msgid "Order"
 msgstr "订单"
 
 #: models.py:432
+msgctxt "commercial meaning"
 msgid "Orders"
 msgstr ""
 
