@@ -167,7 +167,7 @@ class ProductImage(Orderable):
     """
 
     file = models.ImageField(_("Image"),
-        upload_to=upload_to("shop.ProductImage.file", "product"))
+    upload_to=upload_to("shop.ProductImage.file", "product"))
     description = CharField(_("Description"), blank=True, max_length=100)
     product = models.ForeignKey("Product", related_name="images")
 
@@ -464,9 +464,9 @@ class Order(SiteRelated):
         """
         self.key = request.session.session_key
         self.user_id = request.user.id
-        for field in self.session_fields:
-            if field in request.session:
-                setattr(self, field, request.session[field])
+
+        for field in request.session.get("order"):
+            setattr(self, field, request.session["order"][field])
         self.total = self.item_total = request.cart.total_price()
         if self.shipping_total is not None:
             self.shipping_total = Decimal(str(self.shipping_total))

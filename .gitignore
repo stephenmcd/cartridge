@@ -3,3 +3,8 @@
 *.db
 *.egg-info
 .idea/
+*.project
+*.pydevproject
+
+.settings/
+cartridge/project_template/local_settings.py

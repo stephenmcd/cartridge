@@ -90,18 +90,6 @@ def initial_order_data(request, form_class=None):
     """
     from cartridge.shop.forms import OrderForm
     initial = {}
-    if request.method == "POST":
-        initial = dict(list(request.POST.items()))
-        try:
-            initial = form_class.preprocess(initial)
-        except (AttributeError, TypeError):
-            # form_class has no preprocess method, or isn't callable.
-            pass
-        # POST on first step won't include the "remember" checkbox if
-        # it isn't checked, and it'll then get an actual value of False
-        # when it's a hidden field - so we give it an empty value when
-        # it's missing from the POST data, to persist it not checked.
-        initial.setdefault("remember", "")
     # Look for order in current session.
     if not initial:
         initial = request.session.get("order", {})
@@ -182,7 +170,6 @@ def send_order_email(request, order):
                        receipt_template, settings.SHOP_ORDER_FROM_EMAIL,
                        order.billing_detail_email, context=order_context,
                        addr_bcc=settings.SHOP_ORDER_EMAIL_BCC or None)
-
 
 # Set up some constants for identifying each checkout step.
 

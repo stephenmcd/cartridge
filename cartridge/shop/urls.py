@@ -18,3 +18,9 @@ urlpatterns = patterns("cartridge.shop.views",
     url("^invoice/(?P<order_id>\d+)/resend%s$" % _slash,
         "invoice_resend_email", name="shop_invoice_resend"),
 )
+
+urlpatterns += patterns("",
+    url("^checkout/complete/paypal_advanced%s$" % _slash,
+        "cartridge.shop.payment.paypal_advanced.payment_redirect_view",
+        name="shop_paypal_complete"),
+)

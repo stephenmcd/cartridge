@@ -1,0 +1,12 @@
+{% extends "shop/checkout.html" %}
+{% load i18n mezzanine_tags %}
+
+{% block fields %}    
+    {% for field in form %}{{ field }}{% endfor %}
+{% endblock %}
+{% block nav-buttons %}
+
+        {{ paypal_command|safe }}
+        <p/>
+         <input type="submit" class="btn btn-lg btn-default pull-left" name="back" value="{% trans "Back" %}">
+{% endblock %}

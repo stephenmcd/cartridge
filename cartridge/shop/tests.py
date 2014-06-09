@@ -2,6 +2,7 @@
 from __future__ import division, unicode_literals
 from future.builtins import range, zip
 
+from mock import MagicMock
 from datetime import timedelta
 from decimal import Decimal
 from operator import mul
@@ -24,14 +25,16 @@ from cartridge.shop.models import Sale
 from cartridge.shop.forms import OrderForm
 from cartridge.shop.checkout import CHECKOUT_STEPS
 from cartridge.shop.utils import set_tax
-
+from cartridge.shop.payment import paypal_advanced
 
 TEST_STOCK = 5
 TEST_PRICE = Decimal("20")
 
 
-class ShopTests(TestCase):
-
+class BaseShopTests(TestCase):
+    """
+    This seperates the helper methods to allow reuse for the payment methods
+    """
     def setUp(self):
         """
         Set up test data - category, product and options.
@@ -44,6 +47,50 @@ class ShopTests(TestCase):
                 name = "test%s" % i
                 ProductOption.objects.create(type=option_type[0], name=name)
         self._options = ProductOption.objects.as_fields()
+
+    def _add_to_cart(self, variation, quantity):
+        """
+        Given a variation, creates the dict for posting to the cart
+        form to add the variation, and posts it.
+        """
+        field_names = [f.name for f in ProductVariation.option_fields()]
+        data = dict(list(zip(field_names, variation.options())))
+        data["quantity"] = quantity
+        self.client.post(variation.product.get_absolute_url(), data)
+
+    def _empty_cart(self, cart):
+        """
+        Given a cart, creates the dict for posting to the cart form
+        to remove all items from the cart, and posts it.
+        """
+        data = {"items-INITIAL_FORMS": 0, "items-TOTAL_FORMS": 0,
+                "update_cart": 1}
+        for i, item in enumerate(cart):
+            data["items-INITIAL_FORMS"] += 1
+            data["items-TOTAL_FORMS"] += 1
+            data["items-%s-id" % i] = item.id
+            data["items-%s-DELETE" % i] = "on"
+        self.client.post(reverse("shop_cart"), data)
+
+    def _reset_variations(self):
+        """
+        Recreates variations and sets up the first.
+        """
+        self._product.variations.all().delete()
+        self._product.variations.create_from_options(self._options)
+        variation = self._product.variations.all()[0]
+        variation.unit_price = TEST_PRICE
+        variation.num_in_stock = TEST_STOCK * 2
+        variation.save()
+
+
+class ShopTests(BaseShopTests):
+
+    def setUp(self):
+        """
+        Set up test data - category, product and options.
+        """
+        super(ShopTests, self).setUp()
 
     def test_views(self):
         """
@@ -184,41 +231,6 @@ class ShopTests(TestCase):
         self._category.combined = False
         self.assertCategoryFilteredProducts(1)
 
-    def _add_to_cart(self, variation, quantity):
-        """
-        Given a variation, creates the dict for posting to the cart
-        form to add the variation, and posts it.
-        """
-        field_names = [f.name for f in ProductVariation.option_fields()]
-        data = dict(list(zip(field_names, variation.options())))
-        data["quantity"] = quantity
-        self.client.post(variation.product.get_absolute_url(), data)
-
-    def _empty_cart(self, cart):
-        """
-        Given a cart, creates the dict for posting to the cart form
-        to remove all items from the cart, and posts it.
-        """
-        data = {"items-INITIAL_FORMS": 0, "items-TOTAL_FORMS": 0,
-                "update_cart": 1}
-        for i, item in enumerate(cart):
-            data["items-INITIAL_FORMS"] += 1
-            data["items-TOTAL_FORMS"] += 1
-            data["items-%s-id" % i] = item.id
-            data["items-%s-DELETE" % i] = "on"
-        self.client.post(reverse("shop_cart"), data)
-
-    def _reset_variations(self):
-        """
-        Recreates variations and sets up the first.
-        """
-        self._product.variations.all().delete()
-        self._product.variations.create_from_options(self._options)
-        variation = self._product.variations.all()[0]
-        variation.unit_price = TEST_PRICE
-        variation.num_in_stock = TEST_STOCK * 2
-        variation.save()
-
     def test_cart(self):
         """
         Test the cart object and cart add/remove forms.
@@ -334,6 +346,12 @@ class ShopTests(TestCase):
         for field_name, field in list(OrderForm(None, None).fields.items()):
             value = field.choices[-1][1] if hasattr(field, "choices") else "1"
             data.setdefault(field_name, value)
+
+        # steps are handled in the session
+        session = self.client.session
+        session["order"] = {"step": len(CHECKOUT_STEPS)}
+        session.save()
+
         self.client.post(reverse("shop_checkout"), data)
         try:
             order = Order.objects.from_request(self.client)
@@ -506,5 +524,89 @@ class TaxationTests(TestCase):
             session = {}
 
         set_tax(request, tax_type, tax_total)
+
         self.assertEqual(request.session.get("tax_type"), str(tax_type))
         self.assertEqual(request.session.get("tax_total"), str(tax_total))
+
+
+class PayPalAdvancedTests(BaseShopTests):
+    '''
+    Test the PayPal Advanced processing
+    '''
+    def setUp(self):
+
+        super(PayPalAdvancedTests, self).setUp()
+
+        # Set these variables for the test
+        try:
+            self.PAYPAL_USER = settings.PAYPAL_USER
+            self.PAYPAL_PASSWORD = settings.PAYPAL_PASSWORD
+            self.PAYPAL_VENDOR = settings.PAYPAL_VENDOR
+        except:
+            pass
+        settings.PAYPAL_USER = "user_string"
+        settings.PAYPAL_PASSWORD = "pass_string"
+        settings.PAYPAL_VENDOR = "vendor_string"
+        settings.SHOP_HANDLER_PAYMENT_VIEW = ("cartridge.shop.payment.paypal_"
+                                              "advanced.payment_step_view")
+        settings.SHOP_CHECKOUT_STEPS_CONFIRMATION = False
+
+        # Mock out the communicate with paypal function
+        fake_response = "RESULT=0&SECURETOKENID=5&SECURETOKEN=10"
+        paypal_advanced.send_html = MagicMock(return_value=fake_response)
+
+    def tearDown(self):
+        try:
+            settings.PAYPAL_USER = self.PAYPAL_USER
+            settings.PAYPAL_PASSWORD = self.PAYPAL_PASSWORD
+            settings.PAYPAL_VENDOR = self.PAYPAL_VENDOR
+        except:
+            pass
+
+    def test_charge(self):
+
+        # Add to cart.
+        self._reset_variations()
+        variation = self._product.variations.all()[0]
+        self._add_to_cart(variation, TEST_STOCK)
+
+        # Post order.
+        data = {
+            "step": 1,
+            "billing_detail_email": "example@example.com",
+            "discount_code": "",
+        }
+        for field_name, field in list(OrderForm(None, None).fields.items()):
+            value = field.choices[-1][1] if hasattr(field, "choices") else "1"
+            data.setdefault(field_name, value)
+
+        # steps are handled in the session
+        session = self.client.session
+        session["order"] = {"step": 1}
+        session.save()
+
+        # submit the data, check if the iframe is in the response
+        response = self.client.post(reverse("shop_checkout"),
+                                    data, follow=True)
+        self.assertContains(response, "<iframe seamless")
+        self.assertContains(response, "SECURETOKENID=5&SECURETOKEN=10")
+
+        # Check that an order got created with the correct total
+        order = Order.objects.get(id=self.client.session["order"]["id"])
+        self.assertEqual(order.total, 100, order.total)
+
+        # Post a response from Paypal
+        data = {
+            "RESULT": "0",
+            "PNREF": "888",
+        }
+        response = self.client.post(reverse("shop_paypal_complete"), data)
+
+        # use the id from the order we saved earlier, since it should have been
+        # wiped from the session
+        order_id = order.id
+        order = Order.objects.get(id=order_id)
+        self.assertIsNone(self.client.session.get("order", None),
+                          "order not cleared")
+        self.assertEqual(order.total, 100, order.total)
+        self.assertEqual(order.transaction_id, "888", order.transaction_id)

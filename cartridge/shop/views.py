@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from future.builtins import int, str
+import traceback
 
 from json import dumps
 
@@ -30,6 +31,7 @@ from cartridge.shop.forms import (AddProductForm, CartItemFormSet,
 from cartridge.shop.models import Product, ProductVariation, Order
 from cartridge.shop.models import DiscountCode
 from cartridge.shop.utils import recalculate_cart, sign
+from cartridge.shop.checkout import CheckoutError
 
 
 # Set up checkout handlers.
@@ -225,26 +227,21 @@ def checkout_steps(request, form_class=OrderForm):
         form_class = import_dotted_path(settings.SHOP_CHECKOUT_FORM_CLASS)
 
     initial = checkout.initial_order_data(request, form_class)
-    step = int(request.POST.get("step", None)
-               or initial.get("step", None)
-               or checkout.CHECKOUT_STEP_FIRST)
-    form = form_class(request, step, initial=initial)
-    data = request.POST
+    step = int(initial.get("step", None) or checkout.CHECKOUT_STEP_FIRST)
+    form = form_class(request, step, initial=initial,
+                      data=request.POST or None)
     checkout_errors = []
-
-    if request.POST.get("back") is not None:
-        # Back button in the form was pressed - load the order form
-        # for the previous step and maintain the field values entered.
-        step -= 1
-        form = form_class(request, step, initial=initial)
-    elif request.method == "POST" and request.cart.has_items():
-        form = form_class(request, step, initial=initial, data=data)
+    if request.method == 'POST':
+        if request.POST.get("back") is not None:
+            # Back button in the form was pressed - load the order form
+            # for the previous step and maintain the field values entered.
+            step -= 1
+            request.session["order"]["step"] = str(step)
+            request.session.modified = True
+            return redirect("shop_checkout")
         if form.is_valid():
-            # Copy the current form fields to the session so that
-            # they're maintained if the customer leaves the checkout
-            # process, but remove sensitive fields from the session
-            # such as the credit card fields so that they're never
-            # stored anywhere.
+            # Save the valid form data to the session
+            # (strip CC data if it is there)
             request.session["order"] = dict(form.cleaned_data)
             sensitive_card_fields = ("card_number", "card_expiry_month",
                                      "card_expiry_year", "card_ccv")
@@ -263,9 +260,9 @@ def checkout_steps(request, form_class=OrderForm):
                     tax_handler(request, form)
                 except checkout.CheckoutError as e:
                     checkout_errors.append(e)
-
             # FINAL CHECKOUT STEP - handle payment and process order.
             if step == checkout.CHECKOUT_STEP_LAST and not checkout_errors:
+
                 # Create and save the initial order object so that
                 # the payment handler has access to all of the order
                 # fields. If there is a payment error then delete the
@@ -276,7 +273,7 @@ def checkout_steps(request, form_class=OrderForm):
                 # Try payment.
                 try:
                     transaction_id = payment_handler(request, form, order)
-                except checkout.CheckoutError as e:
+                except CheckoutError as e:
                     # Error in payment handler.
                     order.delete()
                     checkout_errors.append(e)
@@ -303,28 +300,42 @@ def checkout_steps(request, form_class=OrderForm):
                         response.delete_cookie("remember")
                     return response
 
-            # If any checkout errors, assign them to a new form and
-            # re-run is_valid. If valid, then set form to the next step.
-            form = form_class(request, step, initial=initial, data=data,
-                              errors=checkout_errors)
-            if form.is_valid():
-                step += 1
-                form = form_class(request, step, initial=initial)
-
-    # Update the step so that we don't rely on POST data to take us back to
-    # the same point in the checkout process.
-    try:
-        request.session["order"]["step"] = step
-        request.session.modified = True
-    except KeyError:
-        pass
+            # Update the step, redirect back to this form
+            step += 1
+            request.session["order"]["step"] = str(step)
+            request.session.modified = True
+            if not ((settings.SHOP_CHECKOUT_STEPS_CONFIRMATION
+                     and step == checkout.CHECKOUT_STEP_LAST)
+                     or checkout_errors):
+                # Redirect after POST unless confirmation is enabled
+                # and it is that step.  (otherwise would have to store CC data
+                # also do not redirect if checkout_errors
+                return redirect("shop_checkout")
+            form = form_class(request, step, initial=initial,
+                              data=request.POST or None,
+                              errors=checkout_errors or None)
 
     step_vars = checkout.CHECKOUT_STEPS[step - 1]
     template = "shop/%s.html" % step_vars["template"]
     context = {"CHECKOUT_STEP_FIRST": step == checkout.CHECKOUT_STEP_FIRST,
                "CHECKOUT_STEP_LAST": step == checkout.CHECKOUT_STEP_LAST,
                "step_title": step_vars["title"], "step_url": step_vars["url"],
-               "steps": checkout.CHECKOUT_STEPS, "step": step, "form": form}
+               "steps": checkout.CHECKOUT_STEPS, "step": str(step),
+               "form": form
+               }
+
+    if (settings.SHOP_HANDLER_PAYMENT_VIEW and
+        step == checkout.CHECKOUT_STEP_PAYMENT):
+        payment_view_handler = handler(
+                settings.SHOP_HANDLER_PAYMENT_VIEW
+            )
+        try:
+            template, context["paypal_command"] = payment_view_handler(request,
+                                                                       form)
+        except:
+            traceback.print_exc()
+            # Error in payment handler.
+            raise Http404('Did not communicate properly with PayPal')
     return render(request, template, context)
 
 
