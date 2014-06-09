@@ -13,8 +13,15 @@
 {% if error %}{{ error }}{% endif %}
 {% if request.wishlist %}
 <table class="table table-striped wishlist">
+    <tr>
+	    <th colspan=2>{% trans "Item" %}</th>
+		<th colspan=2>{% trans "Unit Price" %}</th>
+		<th>{% trans "Qty" %}</th>
+		<th></th>
+	</tr>
     {% for item in wishlist_items %}
     <tr>
+    <form method="post">
     <td width="30">
         {% if item.image %}
         <a href="{{ item.get_absolute_url }}"><img alt="{{ item }}" src="{{ MEDIA_URL }}{% thumbnail item.image.file 30 30 %}"></a>
@@ -25,16 +32,25 @@
     <td>
         <a href="{{ item.get_absolute_url }}">{{ item }}</a>
     </td>
+    <td>
+	    {% if item.on_sale %}
+		<span class="old-price">{{ item.unit_price|currency }}</span>
+		{% endif %}
+	</td>
+	<td>
+		<span>{{ item.price|currency }}</span>
+	</td>
+    <td>
+	    {{ item.quantity }}
+    </td>
     <td class="wishlist-actions">
-        <form method="post">
-            {{ item.unit_price|currency }}
             {% csrf_token %}
             <input type="hidden" name="sku" value="{{ item.sku }}">
-            <input type="hidden" name="quantity" value="1">
+            <input type="hidden" name="quantity" value="{{ item.quantity }}">
             <input type="submit" class="btn btn-sm btn-primary" name="add_cart" value="{% trans "Buy" %}">
             <input type="submit" class="btn btn-sm btn-default" name="remove_wishlist" value="{% trans "Remove" %}">
-        </form>
     </td>
+    </form>
     </tr>
     {% endfor %}
 </table>
