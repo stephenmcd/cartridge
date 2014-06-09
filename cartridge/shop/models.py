@@ -14,7 +14,8 @@ from django.db.models import CharField, Q
 from django.db.models.base import ModelBase
 from django.dispatch import receiver
 from django.utils.timezone import now
-from django.utils.translation import ugettext, ugettext_lazy as _, pgettext_lazy as __
+from django.utils.translation import (ugettext, ugettext_lazy as _,
+                                      pgettext_lazy as __)
 
 try:
     from django.utils.encoding import force_text
