@@ -1,3 +1,12 @@
+Version 0.9.4 (Jun 09, 2014)
+----------------------------
+
+  * fixed paypal backend url quoting bug - slav0nic
+  * ``SHOP_PAYMENT_STEP_ENABLED`` shouldn't be editable - Stephen McDonald
+  * Update Order to inherit from SiteRelated. Add the setting ``SHOP_ORDERS_PER_SITE`` (default False) which if True updates the order Manager to inherit from the CurrentSiteManager - Josh Cartmell
+  * Orders are always site related - Stephen McDonald
+  * complete commit 30b641d17007d67f1922ab9035740d40488f43b7 with corrections for other languages - Luc MILLAND
+
 Version 0.9.3 (Apr 17, 2014)
 ----------------------------
 

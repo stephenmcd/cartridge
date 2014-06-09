@@ -1,4 +1,5 @@
   * ``id``
+  * ``site``
   * ``billing_detail_first_name``
   * ``billing_detail_last_name``
   * ``billing_detail_street``
