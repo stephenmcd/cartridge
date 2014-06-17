@@ -190,6 +190,7 @@ Sites Using Cartridge
 * `The Art Rebellion <http://www.theartrebellion.com/>`_
 * `Engineered Arts <https://www.engineeredarts.co.uk>`_
 * `Lipman Art <https://lipmanart.com/>`_
+* `ZHackers <https://www.zhackers.com>`_
 
 
 .. _`Django`: http://djangoproject.com/
