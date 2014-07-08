@@ -5,7 +5,6 @@ from future.builtins import str, chr
 from decimal import Decimal
 import locale
 import platform
-import sys
 
 from django import template
 
