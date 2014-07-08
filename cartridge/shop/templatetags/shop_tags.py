@@ -1,6 +1,6 @@
 
 from __future__ import unicode_literals
-from future.builtins import str
+from future.builtins import str, chr
 
 from decimal import Decimal
 import locale
@@ -38,10 +38,7 @@ def currency(value):
         hasattr(settings, "SHOP_CURRENCY_FRAC_DIGITS"):
         frac_digits = settings.SHOP_CURRENCY_FRAC_DIGITS
         try:
-            if sys.version_info[0] < 3:
-                currency_symbol = unichr(settings.SHOP_CURRENCY_SYMBOL)
-            else:
-                currency_symbol = chr(settings.SHOP_CURRENCY_SYMBOL)
+            currency_symbol = chr(settings.SHOP_CURRENCY_SYMBOL)
         except:
             currency_symbol = settings.SHOP_CURRENCY_SYMBOL
         if hasattr(settings, "SHOP_CURRENCY_SEP_BY_SPACE"):
