@@ -153,4 +153,3 @@ def get_frac_digits():
         set_locale()
         frac_digits = localeconv()["frac_digits"]
     return frac_digits
-

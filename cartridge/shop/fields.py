@@ -6,12 +6,8 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 from future.builtins import super
 
-from locale import localeconv
-
 from django.db.models import CharField, DecimalField
 from django.utils.translation import ugettext_lazy as _
-
-from mezzanine.conf import settings
 
 from cartridge.shop.utils import get_frac_digits
 

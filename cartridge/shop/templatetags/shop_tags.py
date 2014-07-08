@@ -26,11 +26,15 @@ def currency(value):
         pass
     if not value:
         value = 0
-    # if SHOP_CURRENCY_SYMBOL and SHOP_CURRENCY_FRAC_DIGITS are defined, they take precedence.
-    # SHOP_CURRENCY_SYMBOL can be an ASCII string like SHOP_CURRENCY_SYMBOL = "$",
-    # or it can be a number that represents a currency, like SHOP_CURRENCY_SYMBOL = 163
+    # if SHOP_CURRENCY_SYMBOL and SHOP_CURRENCY_FRAC_DIGITS are defined,
+    # they take precedence.
+    # SHOP_CURRENCY_SYMBOL can be an ASCII string like
+    # SHOP_CURRENCY_SYMBOL = "$",
+    # or it can be a number that represents a currency, like
+    # SHOP_CURRENCY_SYMBOL = 163
     # where 163 is the ASCII code for the British Pound currency symbol.
-    if hasattr(settings, "SHOP_CURRENCY_SYMBOL") and hasattr(settings, "SHOP_CURRENCY_FRAC_DIGITS"):
+    if hasattr(settings, "SHOP_CURRENCY_SYMBOL") and \
+        hasattr(settings, "SHOP_CURRENCY_FRAC_DIGITS"):
         frac_digits = settings.SHOP_CURRENCY_FRAC_DIGITS
         try:
             currency_symbol = unichr(settings.SHOP_CURRENCY_SYMBOL)
