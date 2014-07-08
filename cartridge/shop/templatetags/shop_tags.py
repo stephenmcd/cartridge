@@ -5,6 +5,7 @@ from future.builtins import str
 from decimal import Decimal
 import locale
 import platform
+import sys
 
 from django import template
 
@@ -37,9 +38,10 @@ def currency(value):
         hasattr(settings, "SHOP_CURRENCY_FRAC_DIGITS"):
         frac_digits = settings.SHOP_CURRENCY_FRAC_DIGITS
         try:
-            currency_symbol = unichr(settings.SHOP_CURRENCY_SYMBOL)
-        except NameError:
-            currency_symbol = chr(settings.SHOP_CURRENCY_SYMBOL)
+            if sys.version_info[0] < 3:
+                currency_symbol = unichr(settings.SHOP_CURRENCY_SYMBOL)
+            else:
+                currency_symbol = chr(settings.SHOP_CURRENCY_SYMBOL)
         except:
             currency_symbol = settings.SHOP_CURRENCY_SYMBOL
         if hasattr(settings, "SHOP_CURRENCY_SEP_BY_SPACE"):
