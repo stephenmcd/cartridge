@@ -144,3 +144,13 @@ def set_locale():
                 "configure the SHOP_CURRENCY_LOCALE setting in your settings "
                 "module.")
         raise ImproperlyConfigured(msg % currency_locale)
+
+
+def get_frac_digits():
+    if hasattr(settings, "SHOP_CURRENCY_FRAC_DIGITS"):
+        frac_digits = settings.SHOP_CURRENCY_FRAC_DIGITS
+    else:
+        set_locale()
+        frac_digits = localeconv()["frac_digits"]
+    return frac_digits
+

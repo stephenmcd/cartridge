@@ -11,7 +11,9 @@ from locale import localeconv
 from django.db.models import CharField, DecimalField
 from django.utils.translation import ugettext_lazy as _
 
-from cartridge.shop.utils import set_locale
+from mezzanine.conf import settings
+
+from cartridge.shop.utils import get_frac_digits
 
 
 class OptionField(CharField):
@@ -43,9 +45,9 @@ class MoneyField(DecimalField):
     precision.
     """
     def __init__(self, *args, **kwargs):
-        set_locale()
+        frac_digits = get_frac_digits()
         defaults = {"null": True, "blank": True, "max_digits": 10,
-                    "decimal_places": localeconv()["frac_digits"]}
+                    "decimal_places": frac_digits}
         defaults.update(kwargs)
         super(MoneyField, self).__init__(*args, **defaults)
 

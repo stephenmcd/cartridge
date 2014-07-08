@@ -23,7 +23,7 @@ from mezzanine.core.templatetags.mezzanine_tags import thumbnail
 from cartridge.shop import checkout
 from cartridge.shop.models import Product, ProductOption, ProductVariation
 from cartridge.shop.models import Cart, CartItem, Order, DiscountCode
-from cartridge.shop.utils import (make_choices, set_locale, set_shipping,
+from cartridge.shop.utils import (make_choices, get_frac_digits, set_shipping,
                                   clear_session)
 
 
@@ -451,8 +451,8 @@ class MoneyWidget(forms.TextInput):
         except (TypeError, ValueError):
             pass
         else:
-            set_locale()
-            value = ("%%.%sf" % localeconv()["frac_digits"]) % value
+            frac_digits = get_frac_digits()
+            value = ("%%.%sf" % frac_digits) % value
             attrs["style"] = "text-align:right;"
         return super(MoneyWidget, self).render(name, value, attrs)
 
