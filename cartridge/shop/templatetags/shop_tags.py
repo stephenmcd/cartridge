@@ -38,6 +38,8 @@ def currency(value):
         frac_digits = settings.SHOP_CURRENCY_FRAC_DIGITS
         try:
             currency_symbol = unichr(settings.SHOP_CURRENCY_SYMBOL)
+        except NameError:
+            currency_symbol = chr(settings.SHOP_CURRENCY_SYMBOL)
         except:
             currency_symbol = settings.SHOP_CURRENCY_SYMBOL
         if hasattr(settings, "SHOP_CURRENCY_SEP_BY_SPACE"):
