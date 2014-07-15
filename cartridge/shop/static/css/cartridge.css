@@ -123,6 +123,10 @@
     text-align: right;
     margin-top: 10px;
 }
+.order-totals span {
+    display: inline-block;
+    min-width: 60px;
+}
 /*================================
         Checkout forms
 ==================================*/
