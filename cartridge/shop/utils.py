@@ -133,7 +133,7 @@ def set_locale():
     """
     Sets the locale for currency formatting.
     """
-    currency_locale = str(settings.SHOP_CURRENCY_LOCALE)
+    currency_locale = str(settings.SHOP_CURRENCY_LOCALE)  # str() fixes errors with PyDev debugger issue #195
     try:
         if setlocale(LC_MONETARY, currency_locale) == "C":
             # C locale doesn't contain a suitable value for "frac_digits".
