@@ -3,9 +3,9 @@ Checkout process utilities.
 """
 from __future__ import unicode_literals
 
-from django.contrib.auth.models import SiteProfileNotAvailable
 from django.utils.translation import ugettext as _
 from django.template.loader import get_template, TemplateDoesNotExist
+from mezzanine.accounts import get_profile_for_user
 
 from mezzanine.conf import settings
 from mezzanine.utils.email import send_mail_template
@@ -126,10 +126,9 @@ def initial_order_data(request, form_class=None):
         # for the field value, to support custom matches on the profile
         # model.
         user_models = [request.user]
-        try:
-            user_models.insert(0, request.user.get_profile())
-        except SiteProfileNotAvailable:
-            pass
+        profile = get_profile_for_user(request.user)
+        if profile:
+            user_models.insert(0, profile)
         for order_field in OrderForm._meta.fields:
             check_fields = [order_field]
             for prefix in ("billing_detail_", "shipping_detail_"):
