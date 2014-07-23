@@ -55,7 +55,7 @@ class SKUField(CharField):
     A field for a product SKU. Provide the name and default field size.
     """
     def __init__(self, *args, **kwargs):
-        if not args:
+        if not args and "verbose_name" not in kwargs:
             args = (_("SKU"),)
         defaults = {"max_length": 20}
         defaults.update(kwargs)
