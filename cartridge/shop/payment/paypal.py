@@ -128,7 +128,7 @@ def process(request, order_form, order):
         raise CheckoutError("Could not talk to PayPal payment gateway")
     parsed_results = QueryDict(all_results)
     state = parsed_results['ACK']
-    if not state in ["Success", "SuccessWithWarning"]:
+    if state not in ["Success", "SuccessWithWarning"]:
         raise CheckoutError(parsed_results['L_LONGMESSAGE0'])
     return parsed_results['TRANSACTIONID']
 
