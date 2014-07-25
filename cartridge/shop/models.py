@@ -837,10 +837,12 @@ class DiscountCode(Discount):
     code = fields.DiscountCodeField(_("Code"), unique=True)
     min_purchase = fields.MoneyField(_("Minimum total purchase"))
     free_shipping = models.BooleanField(_("Free shipping"), default=False)
-    uses_remaining = models.IntegerField(_("Uses remaining"), blank=True,
-        null=True, help_text=_("If you wish to limit the number of times a "
-            "code may be used, set this value. It will be decremented upon "
-            "each use."))
+    uses_remaining = models.IntegerField(_("Uses remaining"),
+                                         blank=True,
+                                         null=True,
+                                         help_text=_("If you wish to limit the number of times a "
+                                                     "code may be used, set this value. It will be decremented upon "
+                                                     "each use."))
 
     objects = managers.DiscountCodeManager()
 
