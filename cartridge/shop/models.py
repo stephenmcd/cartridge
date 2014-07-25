@@ -781,7 +781,8 @@ class Sale(Discount):
                     # have it operate on the same table, so we update
                     # each instance individually:
 
-                    # http://dev.mysql.com/doc/refman/5.0/en/subquery-errors.html
+                    # http://dev.mysql.com/doc/refman/5.0/en/
+                    # subquery-errors.html
 
                     # Also MySQL may raise a 'Data truncated' warning here
                     # when doing a calculation that exceeds the precision
@@ -790,7 +791,8 @@ class Sale(Discount):
                     # we need to massage transaction management in order
                     # to continue successfully:
 
-                    # https://groups.google.com/forum/#!topic/django-developers/ACLQRF-71s8
+                    # https://groups.google.com/forum/#!topic/
+                    # django-developers/ACLQRF-71s8
 
                     for priced in priced_objects.filter(**extra_filter):
                         for field, value in list(update.items()):
