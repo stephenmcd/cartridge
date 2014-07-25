@@ -49,8 +49,7 @@ SALE_END_TIME = _("Sale End Time")
 DATETIME_FORMAT = "%s %s" % (DATE_FORMAT, TIME_FORMAT)
 SITE_MEDIA_IMAGE_DIR = _("product")
 PRODUCT_IMAGE_DIR = os.path.join(settings.STATIC_ROOT, SITE_MEDIA_IMAGE_DIR)
-# python < 2.7 doesn't have dictionary comprehensions ;(
-# TYPE_CHOICES = {choice:id for id, choice in settings.SHOP_OPTION_TYPE_CHOICES}
+
 TYPE_CHOICES = dict()
 for id, choice in settings.SHOP_OPTION_TYPE_CHOICES:
     TYPE_CHOICES[choice] = id
