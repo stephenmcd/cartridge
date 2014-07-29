@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from future.builtins import str
 
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 import locale
 import platform
 
@@ -20,10 +20,12 @@ def currency(value):
     Format a value as currency according to locale.
     """
     set_locale()
-    if not value:
-        value = 0
+    try:
+        value = Decimal(value)
+    except (InvalidOperation, TypeError):
+        value = Decimal('0.00')
     if hasattr(locale, "currency"):
-        value = locale.currency(Decimal(value), grouping=True)
+        value = locale.currency(value, grouping=True)
         if platform.system() == 'Windows':
             try:
                 value = str(value, encoding='iso_8859_1')
