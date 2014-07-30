@@ -124,7 +124,7 @@ up a development environment and run the Cartridge unit tests, using
     $ mkvirtualenv cartridge
     $ workon cartridge
     $ pip install -e git://github.com/stephenmcd/mezzanine.git#egg=mezzanine
-    $ pip install pep8 pyflakes
+    $ pip install pep8==1.4.1 pyflakes==0.6.1
     $ git clone https://github.com/stephenmcd/cartridge
     $ cd cartridge
     $ python setup.py develop
