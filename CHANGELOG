@@ -1,3 +1,18 @@
+Version 0.9.5 (Aug 11, 2014)
+----------------------------
+
+  * Add tax type label to the order receipt. Closes #194 - Stephen McDonald
+  * Nicer alignment of labels for order totals in cart display - Stephen McDonald
+  * Add a comment for the str() call. Comment explains that the str() call fixes issue #195 - Emlyn Clay
+  * Bring Cartridge in line with Mezzanine's profile changes - Alex Hill
+  * Handle ``verbose_name`` as a keyword arg on SKUField. Closes #198 #200 - Stephen McDonald
+  * Fix checkout pre-population from profile model - Stephen McDonald
+  * Add support for testing via setuptools using Mezzanine's bits - Stephen McDonald
+  * Update travis config to test via setuptools - Stephen McDonald
+  * Updated development setup instructions for contributing - Stephen McDonald
+  * Fix travis config - Stephen McDonald
+  * Better explansion example in dev setup docs - Stephen McDonald
+
 Version 0.9.4 (Jun 09, 2014)
 ----------------------------
 
