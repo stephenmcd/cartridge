@@ -216,6 +216,7 @@ Sites Using Cartridge
 * `Lipman Art <https://lipmanart.com/>`_
 * `ZHackers <https://www.zhackers.com>`_
 * `Potrillo al Pie <http://potrilloalpie.com/>`_
+* `You Name It <http://you-name-it.net>`_
 
 
 .. _`Django`: http://djangoproject.com/
