@@ -64,9 +64,11 @@
 .cart-form .quantity {
     text-align: center
 }
-.order-history .btn {
-    float: right;
-    margin: 0 0 5px 5px;
+.order-history td {
+    padding-top: 10px !important;
+}
+.order-history-form {
+    margin-top: -5px;
 }
 .cart-form .quantity input {
     width: 40px;

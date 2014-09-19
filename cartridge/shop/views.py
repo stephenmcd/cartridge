@@ -23,6 +23,7 @@ try:
     from xhtml2pdf import pisa
 except (ImportError, SyntaxError):
     pisa = None
+HAS_PDF = pisa is not None
 
 from cartridge.shop import checkout
 from cartridge.shop.forms import (AddProductForm, CartItemFormSet,
@@ -349,7 +350,7 @@ def complete(request, template="shop/complete.html"):
         names[variation.sku] = variation.product.title
     for i, item in enumerate(items):
         setattr(items[i], "name", names[item.sku])
-    context = {"order": order, "items": items, "has_pdf": pisa is not None,
+    context = {"order": order, "items": items, "has_pdf": HAS_PDF,
                "steps": checkout.CHECKOUT_STEPS}
     return render(request, template, context)
 
@@ -390,7 +391,7 @@ def order_history(request, template="shop/order_history.html"):
                       request.GET.get("page", 1),
                       settings.SHOP_PER_PAGE_CATEGORY,
                       settings.MAX_PAGING_LINKS)
-    context = {"orders": orders}
+    context = {"orders": orders, "has_pdf": HAS_PDF}
     return render(request, template, context)
 
 
