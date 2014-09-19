@@ -55,6 +55,10 @@
 .cart-form .left {
     text-align: left
 }
+.order-history .right,
+.cart-form .right {
+    text-align: right
+}
 .order-history .center,
 .cart-form .center,
 .cart-form .quantity {
