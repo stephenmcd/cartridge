@@ -228,7 +228,7 @@ class ProductVariation(with_metaclass(ProductVariationMetaclass, Priced)):
     product = models.ForeignKey("Product", related_name="variations")
     default = models.BooleanField(_("Default"), default=False)
     image = models.ForeignKey("ProductImage", verbose_name=_("Image"),
-                              null=True, blank=True)
+                              null=True, blank=True, on_delete=models.SET_NULL)
 
     objects = managers.ProductVariationManager()
 
