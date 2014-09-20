@@ -18,7 +18,8 @@ from mezzanine.utils.importing import import_dotted_path
 from mezzanine.utils.tests import run_pyflakes_for_package
 from mezzanine.utils.tests import run_pep8_for_package
 
-from cartridge.shop.models import Product, ProductOption, ProductVariation, ProductImage
+from cartridge.shop.models import Product, ProductOption, ProductVariation
+from cartridge.shop.models import ProductImage
 from cartridge.shop.models import Category, Cart, Order, DiscountCode
 from cartridge.shop.models import Sale
 from cartridge.shop.forms import OrderForm
@@ -365,7 +366,7 @@ class ShopTests(TestCase):
         if warnings:
             self.fail("Syntax warnings!\n\n%s" % "\n".join(warnings))
 
-    def test_ensure_product_image_deletion_does_not_delete_referenced_variation(self):
+    def test_product_image_deletion_does_not_delete_referenced_variation(self):
         try:
             from io import BytesIO
         except ImportError:
@@ -377,7 +378,7 @@ class ShopTests(TestCase):
         im.save(stream, "png")
         del im
         stream.seek(0)
-        
+
         from django.core.files import File
 
         product = Product(title="Doodah", unit_price="2.99")
