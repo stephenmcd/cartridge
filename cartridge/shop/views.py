@@ -135,7 +135,7 @@ def wishlist(request, template="shop/wishlist.html",
     # Remove skus from the cookie that no longer exist.
     published_products = Product.objects.published(for_user=request.user)
     f = {"product__in": published_products, "sku__in": skus}
-    wishlist = ProductVariation.objects.filter(**f).select_related(depth=1)
+    wishlist = ProductVariation.objects.filter(**f).select_related("product")
     wishlist = sorted(wishlist, key=lambda v: skus.index(v.sku))
     context = {"wishlist_items": wishlist, "error": error}
     response = render(request, template, context)
@@ -346,7 +346,7 @@ def complete(request, template="shop/complete.html"):
     skus = [item.sku for item in items]
     variations = ProductVariation.objects.filter(sku__in=skus)
     names = {}
-    for variation in variations.select_related(depth=1):
+    for variation in variations.select_related("product"):
         names[variation.sku] = variation.product.title
     for i, item in enumerate(items):
         setattr(items[i], "name", names[item.sku])
