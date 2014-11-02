@@ -480,6 +480,7 @@ class ProductAdminForm(with_metaclass(ProductAdminFormMetaclass,
 
     class Meta:
         model = Product
+        exclude = []
 
     def __init__(self, *args, **kwargs):
         """
