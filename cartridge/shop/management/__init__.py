@@ -1,5 +1,4 @@
-from __future__ import print_function
-from __future__ import unicode_literals
+from __future__ import print_function, unicode_literals
 from future.builtins import input
 
 import sys
@@ -8,6 +7,7 @@ from django.conf import settings
 from django.core.management import call_command
 from django.db.models.signals import post_syncdb
 
+from mezzanine.core.management import check_created
 from mezzanine.utils.tests import copy_test_to_media
 
 from cartridge.shop.models import Product
@@ -15,7 +15,7 @@ from cartridge.shop import models as shop_app
 
 
 def create_product(app, created_models, verbosity, interactive, **kwargs):
-    if Product in created_models:
+    if check_created(created_models, Product):
         call_command("loaddata", "cartridge_required.json")
         if interactive:
             confirm = input("\nWould you like to install an initial "
