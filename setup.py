@@ -50,7 +50,7 @@ try:
         include_package_data=True,
         packages=find_packages(),
         test_suite="runtests.main",
-        tests_require=["pyflakes==0.6.1", "pep8==1.4.1"],
+        tests_require=["pyflakes>=0.6.1", "pep8>=1.4.1"],
 
         install_requires=[
             "mezzanine >= 3.1",
