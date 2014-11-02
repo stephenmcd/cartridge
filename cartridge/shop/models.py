@@ -779,19 +779,14 @@ class Sale(Discount):
                     # Work around for MySQL which does not allow update
                     # to operate on subquery where the FROM clause would
                     # have it operate on the same table, so we update
-                    # each instance individually:
-
-    # http://dev.mysql.com/doc/refman/5.0/en/subquery-errors.html
-
+                    # each instance individually: http://bit.ly/1xMOGpU
+                    #
                     # Also MySQL may raise a 'Data truncated' warning here
                     # when doing a calculation that exceeds the precision
                     # of the price column. In this case it's safe to ignore
                     # it and the calculation will still be applied, but
                     # we need to massage transaction management in order
-                    # to continue successfully:
-
-    # https://groups.google.com/forum/#!topic/django-developers/ACLQRF-71s8
-
+                    # to continue successfully: http://bit.ly/1xMOJCd
                     for priced in priced_objects.filter(**extra_filter):
                         for field, value in list(update.items()):
                             setattr(priced, field, value)

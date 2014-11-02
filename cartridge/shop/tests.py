@@ -37,7 +37,7 @@ class ShopTests(TestCase):
         """
         Set up test data - category, product and options.
         """
-        self._published = {"status": CONTENT_STATUS_PUBLISHED}
+        self._published = {"title": "test", "status": CONTENT_STATUS_PUBLISHED}
         self._category = Category.objects.create(**self._published)
         self._product = Product.objects.create(**self._published)
         for option_type in settings.SHOP_OPTION_TYPE_CHOICES:

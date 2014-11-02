@@ -37,7 +37,7 @@ SKU = _("SKU")
 IMAGE = _("Image")
 CATEGORY = _("Category")
 SUB_CATEGORY = _("Sub-Category")
-#SIZE = _("Size")
+# SIZE = _("Size")
 NUM_IN_STOCK = _("Number in Stock")
 UNIT_PRICE = _("Unit Price")
 SALE_PRICE = _("Sale Price")
@@ -49,8 +49,6 @@ SALE_END_TIME = _("Sale End Time")
 DATETIME_FORMAT = "%s %s" % (DATE_FORMAT, TIME_FORMAT)
 SITE_MEDIA_IMAGE_DIR = _("product")
 PRODUCT_IMAGE_DIR = os.path.join(settings.STATIC_ROOT, SITE_MEDIA_IMAGE_DIR)
-# python < 2.7 doesn't have dictionary comprehensions ;(
-#TYPE_CHOICES = {choice:id for id, choice in settings.SHOP_OPTION_TYPE_CHOICES}
 TYPE_CHOICES = dict()
 for id, choice in settings.SHOP_OPTION_TYPE_CHOICES:
     TYPE_CHOICES[choice] = id
@@ -125,7 +123,7 @@ def _make_image(image_str, product):
     if not os.path.exists(image_path):
         raise CommandError("NO FILE %s" % image_path)
     shutil.copy(image_path, PRODUCT_IMAGE_DIR)
-    #shutil.copy(image_path, os.path.join(PRODUCT_IMAGE_DIR, "orig"))
+    # shutil.copy(image_path, os.path.join(PRODUCT_IMAGE_DIR, "orig"))
     image, created = ProductImage.objects.get_or_create(
         file="%s" % (os.path.join(SITE_MEDIA_IMAGE_DIR, image_str)),
         description=image_str,  # TODO: handle column for this.
@@ -142,7 +140,7 @@ def _make_date(date_str, time_str):
 def import_products(csv_file):
     print(_("Importing .."))
     # More appropriate for testing.
-    #Product.objects.all().delete()
+    # Product.objects.all().delete()
     reader = csv.DictReader(open(csv_file), delimiter=',')
     for row in reader:
         print(row)
