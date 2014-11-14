@@ -26,7 +26,7 @@ def currency(value):
         value = locale.currency(Decimal(value), grouping=True)
         if platform.system() == 'Windows':
             try:
-                value = str(value, encoding='iso_8859_1')
+                value = str(value, encoding=locale.getpreferredencoding())
             except TypeError:
                 pass
     else:
