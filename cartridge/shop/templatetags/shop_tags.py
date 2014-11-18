@@ -1,6 +1,6 @@
 
 from __future__ import unicode_literals
-from future.builtins import str
+from future.builtins import str, chr
 
 from decimal import Decimal
 import locale
@@ -10,6 +10,7 @@ from django import template
 
 from cartridge.shop.utils import set_locale
 
+from mezzanine.conf import settings
 
 register = template.Library()
 
@@ -19,10 +20,45 @@ def currency(value):
     """
     Format a value as currency according to locale.
     """
-    set_locale()
+    try:
+        set_locale()
+    except:
+        pass
     if not value:
         value = 0
-    if hasattr(locale, "currency"):
+    # if SHOP_CURRENCY_SYMBOL and SHOP_CURRENCY_FRAC_DIGITS are defined,
+    # they take precedence.
+    # SHOP_CURRENCY_SYMBOL can be an ASCII string like
+    # SHOP_CURRENCY_SYMBOL = "$",
+    # or it can be a number that represents a currency, like
+    # SHOP_CURRENCY_SYMBOL = 163
+    # where 163 is the ASCII code for the British Pound currency symbol.
+    if hasattr(settings, "SHOP_CURRENCY_SYMBOL") and \
+        hasattr(settings, "SHOP_CURRENCY_FRAC_DIGITS"):
+        frac_digits = settings.SHOP_CURRENCY_FRAC_DIGITS
+        try:
+            currency_symbol = chr(settings.SHOP_CURRENCY_SYMBOL)
+        except:
+            currency_symbol = settings.SHOP_CURRENCY_SYMBOL
+        if hasattr(settings, "SHOP_CURRENCY_SEP_BY_SPACE"):
+            p_sep_by_space = settings.SHOP_CURRENCY_SEP_BY_SPACE
+        else:
+            p_sep_by_space = False
+        if hasattr(settings, "SHOP_CURRENCY_MON_DECIMAL_POINT"):
+            mon_decimal_point = settings.SHOP_CURRENCY_MON_DECIMAL_POINT
+        else:
+            mon_decimal_point = "."
+        if hasattr(settings, "SHOP_CURRENCY_P_CS_PRECEDES"):
+            p_cs_precedes = settings.SHOP_CURRENCY_P_CS_PRECEDES
+        else:
+            p_cs_precedes = True
+
+        value = [currency_symbol, p_sep_by_space and " " or "",
+            (("%%.%sf" % frac_digits) % value).replace(".", mon_decimal_point)]
+        if not p_cs_precedes:
+            value.reverse()
+        value = "".join(value)
+    elif hasattr(locale, "currency"):
         value = locale.currency(Decimal(value), grouping=True)
         if platform.system() == 'Windows':
             try:

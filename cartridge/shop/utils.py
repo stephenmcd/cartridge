@@ -2,7 +2,7 @@ from __future__ import absolute_import, unicode_literals
 from future.builtins import bytes, zip, str as _str
 
 import hmac
-from locale import setlocale, LC_MONETARY
+from locale import setlocale, LC_MONETARY, localeconv
 try:
     from hashlib import sha512 as digest
 except ImportError:
@@ -144,3 +144,12 @@ def set_locale():
                 "configure the SHOP_CURRENCY_LOCALE setting in your settings "
                 "module.")
         raise ImproperlyConfigured(msg % currency_locale)
+
+
+def get_frac_digits():
+    if hasattr(settings, "SHOP_CURRENCY_FRAC_DIGITS"):
+        frac_digits = settings.SHOP_CURRENCY_FRAC_DIGITS
+    else:
+        set_locale()
+        frac_digits = localeconv()["frac_digits"]
+    return frac_digits
