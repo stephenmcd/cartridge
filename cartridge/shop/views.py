@@ -155,30 +155,7 @@ def cart(request, template="shop/cart.html",
     cart_formset = cart_formset_class(instance=request.cart)
     discount_form = discount_form_class(request, request.POST or None)
     if request.method == "POST":
-        valid = True
-        if request.POST.get("update_cart"):
-            valid = request.cart.has_items()
-            if not valid:
-                # Session timed out.
-                info(request, _("Your cart has expired"))
-            else:
-                cart_formset = cart_formset_class(request.POST,
-                                                  instance=request.cart)
-                valid = cart_formset.is_valid()
-                if valid:
-                    cart_formset.save()
-                    recalculate_cart(request)
-                    info(request, _("Cart updated"))
-                else:
-                    # Reset the cart formset so that the cart
-                    # always indicates the correct quantities.
-                    # The user is shown their invalid quantity
-                    # via the error message, which we need to
-                    # copy over to the new formset here.
-                    errors = cart_formset._errors
-                    cart_formset = cart_formset_class(instance=request.cart)
-                    cart_formset._errors = errors
-        else:
+        if request.POST.get("discount_code"):
             valid = discount_form.is_valid()
             if valid:
                 discount_form.set_discount()
@@ -190,6 +167,26 @@ def cart(request, template="shop/cart.html",
             # to when returning to checkout, bypassing billing and
             # shipping details step where shipping is normally set.
             recalculate_cart(request)
+        else:
+            cart_formset = cart_formset_class(request.POST,
+                                              instance=request.cart)
+            valid = cart_formset.is_valid()
+            if valid:
+                if not request.cart.pk:
+                    request.cart.save()
+                cart_formset.save()
+
+                recalculate_cart(request)
+                info(request, _("Cart updated"))
+            else:
+                # Reset the cart formset so that the cart
+                # always indicates the correct quantities.
+                # The user is shown their invalid quantity
+                # via the error message, which we need to
+                # copy over to the new formset here.
+                errors = cart_formset._errors
+                cart_formset = cart_formset_class(instance=request.cart)
+                cart_formset._errors = errors
         if valid:
             return redirect("shop_cart")
     context = {"cart_formset": cart_formset}

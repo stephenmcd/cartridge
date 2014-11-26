@@ -504,6 +504,7 @@ class Order(SiteRelated):
             DiscountCode.objects.active().filter(code=discount_code).update(
                 uses_remaining=models.F('uses_remaining') - 1)
         request.cart.delete()
+        del request.session['cart']
 
     def details_as_dict(self):
         """

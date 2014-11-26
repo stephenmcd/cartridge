@@ -4,10 +4,12 @@ from future.builtins import zip
 
 from collections import defaultdict
 from datetime import datetime, timedelta
+from django.contrib.messages import info
 
 from django.db.models import Manager, Q
 from django.utils.datastructures import SortedDict
 from django.utils.timezone import now
+from django.utils.translation import ugettext as _
 
 from mezzanine.conf import settings
 from mezzanine.core.managers import CurrentSiteManager
@@ -27,6 +29,7 @@ class CartManager(Manager):
             try:
                 cart = self.current().get(id=cart_id)
             except self.model.DoesNotExist:
+                info(request, _("Your cart has expired"))
                 request.session["cart"] = None
             else:
                 # Update timestamp and clear out old carts.
@@ -40,8 +43,8 @@ class CartManager(Manager):
                 request.session.modified = True
             except KeyError:
                 pass
-            from cartridge.shop.utils import EmptyCart
-            cart = EmptyCart(request)
+            from cartridge.shop.models import Cart
+            cart = Cart(last_updated=now())
         return cart
 
     def expiry_time(self):
