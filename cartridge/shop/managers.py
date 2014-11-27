@@ -29,7 +29,6 @@ class CartManager(Manager):
             try:
                 cart = self.current().get(id=cart_id)
             except self.model.DoesNotExist:
-                info(request, _("Your cart has expired"))
                 request.session["cart"] = None
             else:
                 # Update timestamp and clear out old carts.
