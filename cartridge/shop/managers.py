@@ -4,12 +4,10 @@ from future.builtins import zip
 
 from collections import defaultdict
 from datetime import datetime, timedelta
-from django.contrib.messages import info
 
 from django.db.models import Manager, Q
 from django.utils.datastructures import SortedDict
 from django.utils.timezone import now
-from django.utils.translation import ugettext as _
 
 from mezzanine.conf import settings
 from mezzanine.core.managers import CurrentSiteManager
