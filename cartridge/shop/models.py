@@ -552,6 +552,8 @@ class Cart(models.Model):
         Increase quantity of existing item if SKU matches, otherwise create
         new.
         """
+        if not self.pk:
+            self.save()
         kwargs = {"sku": variation.sku, "unit_price": variation.price()}
         item, created = self.items.get_or_create(**kwargs)
         if created:
