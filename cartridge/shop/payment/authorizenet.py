@@ -77,8 +77,8 @@ def process(request, order_form, order):
     trans['transactionData'] = {
         'x_amount': amount,
         'x_card_num': data['card_number'],
-        'x_exp_date': (data['card_expiry_month'] + "/" +
-                       data['card_expiry_year']),
+        'x_exp_date': '{month}/{year}'.format(month=data['card_expiry_month'],
+                                              year=data['card_expiry_year']),
         'x_card_code': data['card_ccv'],
         'x_invoice_num': str(order.id)
     }
