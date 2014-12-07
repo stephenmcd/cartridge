@@ -783,7 +783,7 @@ msgstr "chaque"
 #, python-format
 msgid "1 item"
 msgid_plural "%(cart_quantity)s items"
-msgstr[0] "1 produit"
+msgstr[0] "%(cart_quantity)s produit"
 msgstr[1] "%(cart_quantity)s produits"
 
 #: templates/includes/user_panel.html:6
@@ -803,7 +803,7 @@ msgstr "Valider la commande"
 #, python-format
 msgid "Wishlist contains 1 item"
 msgid_plural " Wishlist contains %(wishlist_count)s items"
-msgstr[0] "Votre liste d'envies contient 1 produit"
+msgstr[0] "Votre liste d'envies contient %(wishlist_count)s produit"
 msgstr[1] "Votre liste d'envies contient %(wishlist_count)s produits"
 
 #: templates/pages/category.html:38
