@@ -3,7 +3,7 @@ Checkout process utilities.
 """
 from __future__ import unicode_literals
 
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.template.loader import get_template, TemplateDoesNotExist
 from mezzanine.accounts import get_profile_for_user, ProfileNotConfigured
 
