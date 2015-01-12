@@ -409,12 +409,11 @@ def invoice_resend_email(request, order_id):
         checkout.send_order_email(request, order)
         msg = _("The order email for order ID %s has been re-sent" % order_id)
         info(request, msg)
-        # Determine the URL to return the user to.
-        redirect_to = next_url(request)
-        if redirect_to is None:
-            if request.user.is_staff:
-                redirect_to = reverse("admin:shop_order_change",
-                    args=[order_id])
-            else:
-                redirect_to = reverse("shop_order_history")
+    # Determine the URL to return the user to.
+    redirect_to = next_url(request)
+    if redirect_to is None:
+        if request.user.is_staff:
+            redirect_to = reverse("admin:shop_order_change", args=[order_id])
+        else:
+            redirect_to = reverse("shop_order_history")
     return redirect(redirect_to)
