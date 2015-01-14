@@ -11,6 +11,7 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.utils.timezone import now
+from django.utils.translation import ugettext_lazy as _
 from django.utils.unittest import skipUnless
 from mezzanine.conf import settings
 from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
@@ -312,7 +313,7 @@ class ShopTests(TestCase):
                     self._add_to_cart(invalid_variation, 1)
                     r = self.client.post(reverse("shop_cart"), post_data)
                     self.assertFormError(r, "discount_form", "discount_code",
-                                     "The discount code entered is invalid.")
+                                  _("The discount code entered is invalid."))
 
     def test_order(self):
         """
