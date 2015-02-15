@@ -167,7 +167,7 @@ To report a security issue, please send an email privately to
 create an official release prior to the issue being made
 public.
 
-For all other Mezzanine support, the primary channel is the
+For all other Cartridge support, the primary channel is the
 `mezzanine-users`_ mailing list. Questions, comments, and all related
 discussions take place here amongst knowledgeable members of the
 community.
@@ -183,8 +183,8 @@ reproducable bug, then please try the mailing list first.
 Finally, feel free to drop by the `#mezzanine IRC channel`_ on
 `Freenode`_, for a chat!
 
-Communications in all Mezzanine spaces are expected to conform
-to the `Django Code of Conduct`_.
+Communications in all Cartridge and Mezzanine spaces are expected to
+conform to the `Django Code of Conduct`_.
 
 Sites Using Cartridge
 =====================
