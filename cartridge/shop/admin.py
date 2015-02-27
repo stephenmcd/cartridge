@@ -216,8 +216,8 @@ class ProductAdmin(DisplayableAdmin):
                              if request.POST.getlist(f)])
             # Create a list of image IDs that have been marked to delete.
             deleted_images = [request.POST.get(f.replace("-DELETE", "-id"))
-                              for f in request.POST if f.startswith("images-")
-                              and f.endswith("-DELETE")]
+                for f in request.POST
+                if f.startswith("images-") and f.endswith("-DELETE")]
 
             # Create new variations for selected options.
             self._product.variations.create_from_options(options)

@@ -19,18 +19,18 @@ from mezzanine.utils.importing import import_dotted_path
 from mezzanine.utils.views import render, set_cookie, paginate
 from mezzanine.utils.urls import next_url
 
-try:
-    from xhtml2pdf import pisa
-except (ImportError, SyntaxError):
-    pisa = None
-HAS_PDF = pisa is not None
-
 from cartridge.shop import checkout
 from cartridge.shop.forms import (AddProductForm, CartItemFormSet,
                                   DiscountForm, OrderForm)
 from cartridge.shop.models import Product, ProductVariation, Order
 from cartridge.shop.models import DiscountCode
 from cartridge.shop.utils import recalculate_cart, sign
+
+try:
+    from xhtml2pdf import pisa
+except (ImportError, SyntaxError):
+    pisa = None
+HAS_PDF = pisa is not None
 
 
 # Set up checkout handlers.
@@ -226,9 +226,9 @@ def checkout_steps(request, form_class=OrderForm):
         form_class = import_dotted_path(settings.SHOP_CHECKOUT_FORM_CLASS)
 
     initial = checkout.initial_order_data(request, form_class)
-    step = int(request.POST.get("step", None)
-               or initial.get("step", None)
-               or checkout.CHECKOUT_STEP_FIRST)
+    step = int(request.POST.get("step", None) or
+               initial.get("step", None) or
+               checkout.CHECKOUT_STEP_FIRST)
     form = form_class(request, step, initial=initial)
     data = request.POST
     checkout_errors = []

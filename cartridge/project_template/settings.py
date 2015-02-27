@@ -1,4 +1,5 @@
 from __future__ import absolute_import, unicode_literals
+import os
 
 ######################
 # CARTRIDGE SETTINGS #
@@ -254,8 +255,6 @@ DATABASES = {
 #########
 # PATHS #
 #########
-
-import os
 
 # Full filesystem path to the project.
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
