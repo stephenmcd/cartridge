@@ -123,7 +123,7 @@ register_setting(
     label=_("Payment Enabled"),
     description=_("If False, there is no payment step on the checkout "
         "process."),
-    editable=True,
+    editable=False,
     default=True,
 )
 

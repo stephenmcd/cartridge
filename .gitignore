@@ -3,3 +3,4 @@
 *.db
 *.egg-info
 .idea/
+.DS_Store

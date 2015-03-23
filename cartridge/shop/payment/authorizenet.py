@@ -77,8 +77,8 @@ def process(request, order_form, order):
     trans['transactionData'] = {
         'x_amount': amount,
         'x_card_num': data['card_number'],
-        'x_exp_date': (data['card_expiry_month'] + "/" +
-                       data['card_expiry_year']),
+        'x_exp_date': '{month}/{year}'.format(month=data['card_expiry_month'],
+                                              year=data['card_expiry_year']),
         'x_card_code': data['card_ccv'],
         'x_invoice_num': str(order.id)
     }
@@ -101,10 +101,10 @@ def process(request, order_form, order):
     # Response_Reason_Codes_and_Response_Reason_Text.htm
     # not exactly sure what the reason code is
     response_code = parsed_results[0]
-    #reason_code = parsed_results[1]
-    #response_reason_code = parsed_results[2]
-    #response_text = parsed_results[3]
-    #transaction_id = parsed_results[6]
+    # reason_code = parsed_results[1]
+    # response_reason_code = parsed_results[2]
+    # response_text = parsed_results[3]
+    # transaction_id = parsed_results[6]
     success = response_code == '1'
     if not success:
         raise CheckoutError("Transaction declined: " + parsed_results[2])

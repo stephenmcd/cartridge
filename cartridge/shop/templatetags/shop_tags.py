@@ -26,7 +26,7 @@ def currency(value):
         value = locale.currency(Decimal(value), grouping=True)
         if platform.system() == 'Windows':
             try:
-                value = str(value, encoding='iso_8859_1')
+                value = str(value, encoding=locale.getpreferredencoding())
             except TypeError:
                 pass
     else:
@@ -43,25 +43,26 @@ def currency(value):
 
 def _order_totals(context):
     """
-    Add ``item_total``, ``shipping_total``, ``discount_total``, ``tax_total``,
-    and ``order_total`` to the template context. Use the order object for
-    email receipts, or the cart object for checkout.
+    Add shipping/tax/discount/order types and totals to the template
+    context. Use the context's completed order object for email
+    receipts, or the cart object for checkout.
     """
+    fields = ["shipping_type", "shipping_total", "discount_total",
+              "tax_type", "tax_total"]
     if "order" in context:
-        for f in ("item_total", "shipping_total", "discount_total",
-                  "tax_total"):
-            context[f] = getattr(context["order"], f)
+        for field in fields + ["item_total"]:
+            context[field] = getattr(context["order"], field)
     else:
         context["item_total"] = context["request"].cart.total_price()
         if context["item_total"] == 0:
             # Ignore session if cart has no items, as cart may have
             # expired sooner than the session.
-            context["tax_total"] = context["discount_total"] = \
-                context["shipping_total"] = 0
+            context["tax_total"] = 0
+            context["discount_total"] = 0
+            context["shipping_total"] = 0
         else:
-            for f in ("shipping_type", "shipping_total", "discount_total",
-                      "tax_type", "tax_total"):
-                context[f] = context["request"].session.get(f, None)
+            for field in fields:
+                context[field] = context["request"].session.get(field, None)
     context["order_total"] = context.get("item_total", None)
     if context.get("shipping_total", None) is not None:
         context["order_total"] += Decimal(str(context["shipping_total"]))

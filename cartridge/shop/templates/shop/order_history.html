@@ -16,23 +16,27 @@
 <table class="table table-striped order-history">
     <thead>
         <th class="left">ID</th>
-        <th class="left">{% trans "Date / time" %}</th>
-        <th>{% trans "Qty" %}</th>
-        <th>{% trans "Paid" %}</th>
-        <th colspan="2" class="left">{% trans "Status" %}</th>
+        <th class="left">{% trans "Date" %}</th>
+        <th class="right">{% trans "Qty" %}</th>
+        <th class="right">{% trans "Paid" %}</th>
+        <th>&nbsp;</th>
     </thead>
     <tbody>
     {% for order in orders.object_list %}
     <tr>
         <td class="left">{{ order.id }}</td>
-        <td class="left">{{ order.time }}</td>
+        <td class="left">{{ order.time|date:"SHORT_DATE_FORMAT" }}</td>
         <td class="right">{{ order.quantity_total }}</td>
         <td class="right">{{ order.total|currency }}</td>
-        <td>{{ order.get_status_display }}</td>
-        <td class="order-actions">
-            <a class="btn btn-sm btn-primary" href="{% url "shop_invoice" order.id %}?format=pdf">{% trans "Download PDF" %}</a>
-            <a class="btn btn-sm btn-default" href="{% url "shop_invoice_resend" order.id %}?next={{ request.path }}">{% trans "Re-send order email" %}</a>
-            <a class="btn btn-sm btn-default" target="_blank" href="{% url "shop_invoice" order.id %}">{% trans "View invoice" %}</a>
+        <td class="right">
+            <form class="order-history-form" method="post" action="{% url "shop_invoice_resend" order.id %}?next={{ request.path }}">
+                {% csrf_token %}
+                {% if has_pdf %}
+                <a class="btn btn-sm btn-primary" href="{% url "shop_invoice" order.id %}?format=pdf">{% trans "Download PDF" %}</a>
+                {% endif %}
+                <a class="btn btn-sm btn-default" target="_blank" href="{% url "shop_invoice" order.id %}">{% trans "View invoice" %}</a>
+                <input type="submit" class="btn btn-sm btn-default" value="{% trans "Re-send order email" %}">
+            </form>
         </td>
     </tr>
     {% endfor %}

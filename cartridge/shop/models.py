@@ -14,7 +14,8 @@ from django.db.models import CharField, Q
 from django.db.models.base import ModelBase
 from django.dispatch import receiver
 from django.utils.timezone import now
-from django.utils.translation import ugettext, ugettext_lazy as _
+from django.utils.translation import (ugettext, ugettext_lazy as _,
+                                      pgettext_lazy as __)
 
 try:
     from django.utils.encoding import force_text
@@ -25,7 +26,7 @@ except ImportError:
 from mezzanine.conf import settings
 from mezzanine.core.fields import FileField
 from mezzanine.core.managers import DisplayableManager
-from mezzanine.core.models import Displayable, RichText, Orderable
+from mezzanine.core.models import Displayable, RichText, Orderable, SiteRelated
 from mezzanine.generic.fields import RatingField
 from mezzanine.pages.models import Page
 from mezzanine.utils.models import AdminThumbMixin, upload_to
@@ -227,7 +228,7 @@ class ProductVariation(with_metaclass(ProductVariationMetaclass, Priced)):
     product = models.ForeignKey("Product", related_name="variations")
     default = models.BooleanField(_("Default"), default=False)
     image = models.ForeignKey("ProductImage", verbose_name=_("Image"),
-                              null=True, blank=True)
+                              null=True, blank=True, on_delete=models.SET_NULL)
 
     objects = managers.ProductVariationManager()
 
@@ -398,7 +399,7 @@ class Category(Page, RichText):
         return products
 
 
-class Order(models.Model):
+class Order(SiteRelated):
 
     billing_detail_first_name = CharField(_("First name"), max_length=100)
     billing_detail_last_name = CharField(_("Last name"), max_length=100)
@@ -445,8 +446,8 @@ class Order(models.Model):
                       "discount_code", "tax_type", "tax_total")
 
     class Meta:
-        verbose_name = _("Order")
-        verbose_name_plural = _("Orders")
+        verbose_name = __("commercial meaning", "Order")
+        verbose_name_plural = __("commercial meaning", "Orders")
         ordering = ("-id",)
 
     def __unicode__(self):
@@ -504,6 +505,7 @@ class Order(models.Model):
             DiscountCode.objects.active().filter(code=discount_code).update(
                 uses_remaining=models.F('uses_remaining') - 1)
         request.cart.delete()
+        del request.session['cart']
 
     def details_as_dict(self):
         """
@@ -551,6 +553,8 @@ class Cart(models.Model):
         Increase quantity of existing item if SKU matches, otherwise create
         new.
         """
+        if not self.pk:
+            self.save()
         kwargs = {"sku": variation.sku, "unit_price": variation.price()}
         item, created = self.items.get_or_create(**kwargs)
         if created:
@@ -779,19 +783,14 @@ class Sale(Discount):
                     # Work around for MySQL which does not allow update
                     # to operate on subquery where the FROM clause would
                     # have it operate on the same table, so we update
-                    # each instance individually:
-
-    # http://dev.mysql.com/doc/refman/5.0/en/subquery-errors.html
-
+                    # each instance individually: http://bit.ly/1xMOGpU
+                    #
                     # Also MySQL may raise a 'Data truncated' warning here
                     # when doing a calculation that exceeds the precision
                     # of the price column. In this case it's safe to ignore
                     # it and the calculation will still be applied, but
                     # we need to massage transaction management in order
-                    # to continue successfully:
-
-    # https://groups.google.com/forum/#!topic/django-developers/ACLQRF-71s8
-
+                    # to continue successfully: http://bit.ly/1xMOJCd
                     for priced in priced_objects.filter(**extra_filter):
                         for field, value in list(update.items()):
                             setattr(priced, field, value)

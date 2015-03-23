@@ -1,26 +1,16 @@
 language: python
 env:
-  - DJANGO_VERSION=1.4.10
-  - DJANGO_VERSION=1.5.5
-  - DJANGO_VERSION=1.6.1
+  - DJANGO_VERSION=https://github.com/django/django/archive/stable/1.6.x.zip
 python:
   - "2.6"
   - "2.7"
   - "3.3"
-matrix:
-  exclude:
-     - python: "3.3"
-       env: DJANGO_VERSION=1.4.10
 install:
-  - pip install django==$DJANGO_VERSION --use-mirrors
+  - pip install $DJANGO_VERSION --use-mirrors
   - pip install -e git://github.com/stephenmcd/mezzanine.git#egg=mezzanine
   - pip install . --allow-unverified pyPdf
-  - pip install pyflakes==0.6.1
-  - pip install pep8==1.4.1
-before_script:
-  - "cp cartridge/project_template/local_settings.py.template cartridge/project_template/local_settings.py"
 script:
-  - ./cartridge/project_template/manage.py test
+  - python setup.py test
 notifications:
   irc: "irc.freenode.org#mezzanine"
   on_success: change

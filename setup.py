@@ -1,8 +1,15 @@
 
 import os
+import sys
+from setuptools import setup, find_packages
+from shutil import rmtree
+from cartridge import __version__ as version
+
 
 exclude = ["cartridge/project_template/dev.db",
            "cartridge/project_template/local_settings.py"]
+if sys.argv == ["setup.py", "test"]:
+    exclude = []
 exclude = dict([(e, None) for e in exclude])
 for e in exclude:
     if e.endswith(".py"):
@@ -17,9 +24,16 @@ for e in exclude:
     except:
         pass
 
-from setuptools import setup, find_packages
+if sys.argv[:2] == ["setup.py", "bdist_wheel"]:
+    # Remove previous build dir when creating a wheel build,
+    # since if files have been removed from the project,
+    # they'll still be cached in the build dir and end up
+    # as part of the build, which is really neat!
+    try:
+        rmtree("build")
+    except:
+        pass
 
-from cartridge import __version__ as version
 
 try:
     setup(
@@ -29,12 +43,14 @@ try:
         author="Stephen McDonald",
         author_email="stephen.mc@gmail.com",
         description="A Django shopping cart application.",
-        long_description=open("README.rst").read(),
+        long_description=open("README.rst", 'rb').read().decode('utf-8'),
         license="BSD",
         url="http://cartridge.jupo.org/",
         zip_safe=False,
         include_package_data=True,
         packages=find_packages(),
+        test_suite="runtests.main",
+        tests_require=["pyflakes>=0.6.1", "pep8>=1.4.1"],
 
         install_requires=[
             "mezzanine >= 3.1",

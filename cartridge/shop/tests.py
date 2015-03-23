@@ -11,6 +11,7 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.utils.timezone import now
+from django.utils.translation import ugettext_lazy as _
 from django.utils.unittest import skipUnless
 from mezzanine.conf import settings
 from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
@@ -19,6 +20,7 @@ from mezzanine.utils.tests import run_pyflakes_for_package
 from mezzanine.utils.tests import run_pep8_for_package
 
 from cartridge.shop.models import Product, ProductOption, ProductVariation
+from cartridge.shop.models import ProductImage
 from cartridge.shop.models import Category, Cart, Order, DiscountCode
 from cartridge.shop.models import Sale
 from cartridge.shop.forms import OrderForm
@@ -36,7 +38,7 @@ class ShopTests(TestCase):
         """
         Set up test data - category, product and options.
         """
-        self._published = {"status": CONTENT_STATUS_PUBLISHED}
+        self._published = {"title": "test", "status": CONTENT_STATUS_PUBLISHED}
         self._category = Category.objects.create(**self._published)
         self._product = Product.objects.create(**self._published)
         for option_type in settings.SHOP_OPTION_TYPE_CHOICES:
@@ -311,7 +313,7 @@ class ShopTests(TestCase):
                     self._add_to_cart(invalid_variation, 1)
                     r = self.client.post(reverse("shop_cart"), post_data)
                     self.assertFormError(r, "discount_form", "discount_code",
-                                     "The discount code entered is invalid.")
+                                  _("The discount code entered is invalid."))
 
     def test_order(self):
         """
@@ -364,6 +366,35 @@ class ShopTests(TestCase):
         warnings.extend(run_pep8_for_package("cartridge"))
         if warnings:
             self.fail("Syntax warnings!\n\n%s" % "\n".join(warnings))
+
+    def test_product_image_deletion_does_not_delete_referenced_variation(self):
+        try:
+            from io import BytesIO
+        except ImportError:
+            from cStringIO import StringIO as BytesIO
+        stream = BytesIO()
+
+        from PIL import Image
+        im = Image.new("RGB", (50, 50), "white")
+        im.save(stream, "png")
+        del im
+        stream.seek(0)
+
+        from django.core.files import File
+
+        product = Product(title="Doodah", unit_price="2.99")
+        product.save()
+
+        image = ProductImage(product_id=product.id, file=File(stream))
+        image.save()
+
+        ProductVariation(
+            unit_price="1.99", product_id=product.id, default=True, image=image
+        ).save()
+
+        self.assertEqual(product.variations.count(), 1)
+        image.delete()
+        self.assertEqual(product.variations.count(), 1)
 
 
 class SaleTests(TestCase):

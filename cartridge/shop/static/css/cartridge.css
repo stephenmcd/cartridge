@@ -55,14 +55,20 @@
 .cart-form .left {
     text-align: left
 }
+.order-history .right,
+.cart-form .right {
+    text-align: right
+}
 .order-history .center,
 .cart-form .center,
 .cart-form .quantity {
     text-align: center
 }
-.order-history .btn {
-    float: right;
-    margin: 0 0 5px 5px;
+.order-history td {
+    padding-top: 10px !important;
+}
+.order-history-form {
+    margin-top: -5px;
 }
 .cart-form .quantity input {
     width: 40px;
@@ -122,6 +128,10 @@
     float: right;
     text-align: right;
     margin-top: 10px;
+}
+.order-totals span {
+    display: inline-block;
+    min-width: 60px;
 }
 /*================================
         Checkout forms

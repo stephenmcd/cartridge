@@ -1,4 +1,5 @@
 from __future__ import absolute_import, unicode_literals
+import os
 
 ######################
 # CARTRIDGE SETTINGS #
@@ -6,7 +7,9 @@ from __future__ import absolute_import, unicode_literals
 
 # The following settings are already defined in cartridge.shop.defaults
 # with default values, but are common enough to be put here, commented
-# out, for convenient overriding.
+# out, for conveniently overriding. Please consult the settings
+# documentation for a full list of settings Cartridge implements:
+# http://cartridge.jupo.org/configuration.html#default-settings
 
 # Sequence of available credit card types for payment.
 # SHOP_CARD_TYPES = ("Mastercard", "Visa", "Diners", "Amex")
@@ -30,20 +33,20 @@ from __future__ import absolute_import, unicode_literals
 # used, will fall back to the system's locale.
 # SHOP_CURRENCY_LOCALE = ""
 
-# Dotted package path and class name of the function that
+# Dotted package path and name of the function that
 # is called on submit of the billing/shipping checkout step. This
 # is where shipping calculation can be performed and set using the
 # function ``cartridge.shop.utils.set_shipping``.
 # SHOP_HANDLER_BILLING_SHIPPING = \
-#                           "cartridge.shop.checkout.default_billship_handler"
+#                       "cartridge.shop.checkout.default_billship_handler"
 
-# Dotted package path and class name of the function that
+# Dotted package path and name of the function that
 # is called once an order is successful and all of the order
 # object's data has been created. This is where any custom order
 # processing should be implemented.
 # SHOP_HANDLER_ORDER = "cartridge.shop.checkout.default_order_handler"
 
-# Dotted package path and class name of the function that
+# Dotted package path and name of the function that
 # is called on submit of the payment checkout step. This is where
 # integration with a payment gateway should be implemented.
 # SHOP_HANDLER_PAYMENT = "cartridge.shop.checkout.default_payment_handler"
@@ -55,7 +58,8 @@ from __future__ import absolute_import, unicode_literals
 # )
 
 # Sequence of value/name pairs for types of product options,
-# eg Size, Colour.
+# eg Size, Colour. NOTE: Increasing the number of these will
+# require database migrations!
 # SHOP_OPTION_TYPE_CHOICES = (
 #     (1, "Size"),
 #     (2, "Colour"),
@@ -72,7 +76,7 @@ from __future__ import absolute_import, unicode_literals
 
 # The following settings are already defined with default values in
 # the ``defaults.py`` module within each of Mezzanine's apps, but are
-# common enough to be put here, commented out, for convenient
+# common enough to be put here, commented out, for conveniently
 # overriding. Please consult the settings documentation for a full list
 # of settings Mezzanine implements:
 # http://mezzanine.jupo.org/docs/configuration.html#default-settings
@@ -252,8 +256,6 @@ DATABASES = {
 # PATHS #
 #########
 
-import os
-
 # Full filesystem path to the project.
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
@@ -334,6 +336,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
     "django.core.context_processors.tz",
     "mezzanine.conf.context_processors.settings",
+    "mezzanine.pages.context_processors.page",
 )
 
 # List of middleware classes to use. Order is important; in the request phase,
@@ -415,8 +418,9 @@ DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
 # defined per machine.
 try:
     from local_settings import *
-except ImportError:
-    pass
+except ImportError as e:
+    if "local_settings" not in str(e):
+        raise e
 
 
 ####################

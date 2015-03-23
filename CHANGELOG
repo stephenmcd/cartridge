@@ -1,3 +1,27 @@
+Version 0.9.5 (Aug 11, 2014)
+----------------------------
+
+  * Add tax type label to the order receipt. Closes #194 - Stephen McDonald
+  * Nicer alignment of labels for order totals in cart display - Stephen McDonald
+  * Add a comment for the str() call. Comment explains that the str() call fixes issue #195 - Emlyn Clay
+  * Bring Cartridge in line with Mezzanine's profile changes - Alex Hill
+  * Handle ``verbose_name`` as a keyword arg on SKUField. Closes #198 #200 - Stephen McDonald
+  * Fix checkout pre-population from profile model - Stephen McDonald
+  * Add support for testing via setuptools using Mezzanine's bits - Stephen McDonald
+  * Update travis config to test via setuptools - Stephen McDonald
+  * Updated development setup instructions for contributing - Stephen McDonald
+  * Fix travis config - Stephen McDonald
+  * Better explansion example in dev setup docs - Stephen McDonald
+
+Version 0.9.4 (Jun 09, 2014)
+----------------------------
+
+  * fixed paypal backend url quoting bug - slav0nic
+  * ``SHOP_PAYMENT_STEP_ENABLED`` shouldn't be editable - Stephen McDonald
+  * Update Order to inherit from SiteRelated. Add the setting ``SHOP_ORDERS_PER_SITE`` (default False) which if True updates the order Manager to inherit from the CurrentSiteManager - Josh Cartmell
+  * Orders are always site related - Stephen McDonald
+  * complete commit 30b641d17007d67f1922ab9035740d40488f43b7 with corrections for other languages - Luc MILLAND
+
 Version 0.9.3 (Apr 17, 2014)
 ----------------------------
 

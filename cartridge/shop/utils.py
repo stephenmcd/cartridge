@@ -3,53 +3,17 @@ from future.builtins import bytes, zip, str as _str
 
 import hmac
 from locale import setlocale, LC_MONETARY
+
 try:
     from hashlib import sha512 as digest
 except ImportError:
     from md5 import new as digest
 
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.timezone import now
 from django.utils.translation import ugettext as _
 
 from mezzanine.conf import settings
 from mezzanine.utils.importing import import_dotted_path
-
-
-class EmptyCart(object):
-    """
-    A dummy cart object used before any items have been added.
-    Used to avoid querying the database for cart and items on each
-    request.
-    """
-
-    id = None
-    pk = None
-    has_items = lambda *a, **k: False
-    skus = lambda *a, **k: []
-    upsell_products = lambda *a, **k: []
-    total_quantity = lambda *a, **k: 0
-    total_price = lambda *a, **k: 0
-    calculate_discount = lambda *a, **k: 0
-    __int__ = lambda *a, **k: 0
-    __iter__ = lambda *a, **k: iter([])
-
-    def __init__(self, request):
-        """
-        Store the request so we can add the real cart ID to the
-        session if any items get added.
-        """
-        self._request = request
-
-    def add_item(self, *args, **kwargs):
-        """
-        Create a real cart object, add the items to it and store
-        the cart ID in the session.
-        """
-        from cartridge.shop.models import Cart
-        cart = Cart.objects.create(last_updated=now())
-        cart.add_item(*args, **kwargs)
-        self._request.session["cart"] = cart.id
 
 
 def make_choices(choices):
@@ -81,7 +45,10 @@ def recalculate_cart(request):
     from cartridge.shop.models import Cart
 
     # Rebind the cart to request since it's been modified.
+    if request.session.get('cart') != request.cart.pk:
+        request.session['cart'] = request.cart.pk
     request.cart = Cart.objects.from_request(request)
+
     discount_code = request.session.get("discount_code", "")
     if discount_code:
         # Clear out any previously defined discount code

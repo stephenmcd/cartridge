@@ -1,7 +1,7 @@
 {% load shop_tags i18n %}
 <div class="order-totals">
     {% if discount_total or shipping_total %}
-    <div><label>{% trans "Sub total" %}:</label> {{ item_total|currency }}</div>
+    <div><label>{% trans "Sub total" %}:</label> <span>{{ item_total|currency }}</span></div>
     {% endif %}
     {% if discount_total %}
     <div>
@@ -11,7 +11,7 @@
         {% else %}
         {% trans "Discount" %}:
         {% endif %}
-        </label> {{ discount_total|currency }}
+        </label> <span>{{ discount_total|currency }}</span>
     </div>
     {% endif %}
     {% if shipping_type or shipping_total %}
@@ -22,7 +22,7 @@
         {% else %}
         {% trans "Shipping" %}:
         {% endif %}
-        </label> {{ shipping_total|currency }}
+        </label> <span>{{ shipping_total|currency }}</span>
     </div>
     {% endif %}
     {% if tax_total %}
@@ -33,8 +33,8 @@
         {% else %}
         {% trans "Tax" %}:
         {% endif %}
-        </label> {{ tax_total|currency }}
+        </label> <span>{{ tax_total|currency }}</span>
     </div>
     {% endif %}
-    <div class="total"><label>{% trans "Total" %}:</label> {{ order_total|currency }}</div>
+    <div class="total"><label>{% trans "Total" %}:</label> <span>{{ order_total|currency }}</span></div>
 </div>

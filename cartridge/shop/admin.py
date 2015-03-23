@@ -47,6 +47,7 @@ from cartridge.shop.forms import DiscountAdminForm, ImageWidget, MoneyWidget
 from cartridge.shop.models import Category, Product, ProductImage
 from cartridge.shop.models import ProductVariation, ProductOption, Order
 from cartridge.shop.models import OrderItem, Sale, DiscountCode
+from cartridge.shop.views import HAS_PDF
 
 
 # Lists of field names.
@@ -217,8 +218,8 @@ class ProductAdmin(DisplayableAdmin):
                              if request.POST.getlist(f)])
             # Create a list of image IDs that have been marked to delete.
             deleted_images = [request.POST.get(f.replace("-DELETE", "-id"))
-                              for f in request.POST if f.startswith("images-")
-                              and f.endswith("-DELETE")]
+                for f in request.POST
+                if f.startswith("images-") and f.endswith("-DELETE")]
 
             # Create new variations for selected options.
             self._product.variations.create_from_options(options)
@@ -287,14 +288,19 @@ def address_pairs(fields):
     return pairs
 
 
+order_list_display = ("id", "billing_name", "total", "time", "status",
+                      "transaction_id")
+if HAS_PDF:
+    order_list_display += ("invoice",)
+
+
 class OrderAdmin(admin.ModelAdmin):
 
     class Media:
         css = {"all": ("cartridge/css/admin/order.css",)}
 
     ordering = ("status", "-id")
-    list_display = ("id", "billing_name", "total", "time", "status",
-                    "transaction_id", "invoice")
+    list_display = order_list_display
     list_editable = ("status",)
     list_filter = ("status", "time")
     list_display_links = ("id", "billing_name",)
@@ -312,6 +318,12 @@ class OrderAdmin(admin.ModelAdmin):
              ("discount_total", "discount_code"), "item_total",
             ("total", "status"), "transaction_id")}),
     )
+
+    def change_view(self, *args, **kwargs):
+        if kwargs.get("extra_context", None) is None:
+            kwargs["extra_context"] = {}
+        kwargs["extra_context"]["has_pdf"] = HAS_PDF
+        return super(OrderAdmin, self).change_view(*args, **kwargs)
 
 
 class SaleAdmin(admin.ModelAdmin):

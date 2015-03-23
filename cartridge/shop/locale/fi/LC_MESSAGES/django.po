@@ -548,10 +548,12 @@ msgid "Status"
 msgstr "Tila"
 
 #: models.py:437
+msgctxt "commercial meaning"
 msgid "Order"
 msgstr "Tilaus"
 
 #: models.py:438
+msgctxt "commercial meaning"
 msgid "Orders"
 msgstr "Tilaukset"
 
