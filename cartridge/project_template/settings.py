@@ -151,6 +151,10 @@ import os
 # INSTALLED_APPS setting.
 USE_SOUTH = True
 
+# If True, the django-modeltranslation will be added to the
+# INSTALLED_APPS setting.
+USE_MODELTRANSLATION = False
+
 
 ########################
 # MAIN DJANGO SETTINGS #
