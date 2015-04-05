@@ -153,6 +153,22 @@ internationalization`_ methodology. Translations are managed on the
 internationalization`_ methodology for more information on creating
 translations and using them.
 
+Third-party Modules
+===================
+
+The following modules have been developed outside of Cartridge. If you
+have developed a module to integrate with Mezzanine or Cartridge, and
+would like it listed in the documentation, send an email to the
+`mezzanine-users`_ mailing list. You can also add modules to the
+`Mezzanine Grid on djangopackages.com`_.
+
+* `cartridge_braintree`_ - Payment processor for `Braintree`_.
+* `cartridge-external-payment`_ - Allows payment on an external
+  provider platform.
+* `cartridge-tax`_ - Implements a handful of sales tax models.
+* `cartridge-stripe`_ - Alternative payment backend for `Stripe`_.
+* `cartridge-pinpayments`_ - `PIN`_ payments integration.
+
 Donating
 ========
 
@@ -241,3 +257,15 @@ Sites Using Cartridge
 .. _`Freenode`: http://freenode.net
 .. _`Django's internationalization`: https://docs.djangoproject.com/en/dev/topics/i18n/translation/
 .. _`virtualenvwrapper`: http://www.doughellmann.com/projects/virtualenvwrapper
+.. _`Mezzanine Grid on djangopackages.com`: http://www.djangopackages.com/grids/g/mezzanine/
+.. _`Braintree`: https://www.braintreepayments.com/
+.. _`Stripe`: https://stripe.com
+.. _`PIN`: https://pin.net.au/
+
+.. THIRD PARTY LIBS
+
+.. _`cartridge_braintree`: https://github.com/molokov/cartridge_braintree
+.. _`cartridge-external-payment`: https://github.com/thomasWajs/cartridge-external-payment
+.. _`cartridge-tax`: https://github.com/kenbolton/cartridge-tax
+.. _`cartridge-stripe`: https://github.com/readevalprint/cartridge-stripe
+.. _`cartridge-pinpayments`: https://github.com/molokov/cartridge-pinpayments
