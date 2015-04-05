@@ -22,6 +22,7 @@ try:
 except ImportError:
     # Backward compatibility for Py2 and Django < 1.5
     from django.utils.encoding import force_unicode as force_text
+from django.utils.encoding import python_2_unicode_compatible
 
 from mezzanine.conf import settings
 from mezzanine.core.fields import FileField
@@ -158,6 +159,7 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
         self.save()
 
 
+@python_2_unicode_compatible
 class ProductImage(Orderable):
     """
     An image for a product - a relationship is also defined with the
@@ -177,7 +179,7 @@ class ProductImage(Orderable):
         verbose_name_plural = _("Images")
         order_with_respect_to = "product"
 
-    def __unicode__(self):
+    def __str__(self):
         value = self.description
         if not value:
             value = self.file.name
@@ -186,6 +188,7 @@ class ProductImage(Orderable):
         return value
 
 
+@python_2_unicode_compatible
 class ProductOption(models.Model):
     """
     A selectable option for a product such as size or colour.
@@ -196,7 +199,7 @@ class ProductOption(models.Model):
 
     objects = managers.ProductOptionManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s: %s" % (self.get_type_display(), self.name)
 
     class Meta:
@@ -219,6 +222,7 @@ class ProductVariationMetaclass(ModelBase):
         return super(ProductVariationMetaclass, cls).__new__(*args)
 
 
+@python_2_unicode_compatible
 class ProductVariation(with_metaclass(ProductVariationMetaclass, Priced)):
     """
     A combination of selected options from
@@ -235,7 +239,7 @@ class ProductVariation(with_metaclass(ProductVariationMetaclass, Priced)):
     class Meta:
         ordering = ("-default",)
 
-    def __unicode__(self):
+    def __str__(self):
         """
         Display the option names and values for the variation.
         """
@@ -399,6 +403,7 @@ class Category(Page, RichText):
         return products
 
 
+@python_2_unicode_compatible
 class Order(SiteRelated):
 
     billing_detail_first_name = CharField(_("First name"), max_length=100)
@@ -450,7 +455,7 @@ class Order(SiteRelated):
         verbose_name_plural = __("commercial meaning", "Orders")
         ordering = ("-id",)
 
-    def __unicode__(self):
+    def __str__(self):
         return "#%s %s %s" % (self.id, self.billing_name(), self.time)
 
     def billing_name(self):
@@ -626,6 +631,7 @@ class Cart(models.Model):
         return total
 
 
+@python_2_unicode_compatible
 class SelectedProduct(models.Model):
     """
     Abstract model representing a "selected" product in a cart or order.
@@ -640,7 +646,7 @@ class SelectedProduct(models.Model):
     class Meta:
         abstract = True
 
-    def __unicode__(self):
+    def __str__(self):
         return ""
 
     def save(self, *args, **kwargs):
@@ -692,6 +698,7 @@ class ProductAction(models.Model):
         unique_together = ("product", "timestamp")
 
 
+@python_2_unicode_compatible
 class Discount(models.Model):
     """
     Abstract model representing one of several types of monetary
@@ -718,7 +725,7 @@ class Discount(models.Model):
     class Meta:
         abstract = True
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     def all_products(self):
