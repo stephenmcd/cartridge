@@ -414,7 +414,7 @@ class Order(SiteRelated):
     billing_detail_postcode = CharField(_("Zip/Postcode"), max_length=10)
     billing_detail_country = CharField(_("Country"), max_length=100)
     billing_detail_phone = CharField(_("Phone"), max_length=20)
-    billing_detail_email = models.EmailField(_("Email"))
+    billing_detail_email = models.EmailField(_("Email"), max_length=254)
     shipping_detail_first_name = CharField(_("First name"), max_length=100)
     shipping_detail_last_name = CharField(_("Last name"), max_length=100)
     shipping_detail_street = CharField(_("Street"), max_length=100)
