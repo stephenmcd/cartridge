@@ -10,18 +10,14 @@ from operator import iand, ior
 from django.core.urlresolvers import reverse
 from django.db import models, connection
 from django.db.models.signals import m2m_changed
-from django.db.models import CharField, Q
+from django.db.models import CharField, Q, F
 from django.db.models.base import ModelBase
 from django.dispatch import receiver
 from django.utils.timezone import now
 from django.utils.translation import (ugettext, ugettext_lazy as _,
                                       pgettext_lazy as __)
 
-try:
-    from django.utils.encoding import force_text
-except ImportError:
-    # Backward compatibility for Py2 and Django < 1.5
-    from django.utils.encoding import force_unicode as force_text
+from django.utils.encoding import force_text
 from django.utils.encoding import python_2_unicode_compatible
 
 from mezzanine.conf import settings
@@ -34,16 +30,6 @@ from mezzanine.utils.models import AdminThumbMixin, upload_to
 
 from cartridge.shop import fields, managers
 from cartridge.shop.utils import clear_session
-
-
-class F(models.F):
-    """
-    Django 1.4's F objects don't support true division, which
-    we need for Python 3.x. This should be removed when we
-    drop support for Django 1.4.
-    """
-    def __truediv__(self, other):
-        return self._combine(other, self.DIV, False)
 
 
 class Priced(models.Model):
