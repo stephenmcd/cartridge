@@ -141,6 +141,15 @@ project::
     $ git commit -am "A message describing what you changed."
     $ git push origin your-new-branch-name
 
+.. note::
+
+    Cartridge's development branch often relies on features that exist
+    in Mezzanine's development branch, but haven't yet made it into an
+    official release. To install Mezzanine's development version in your
+    environment, run::
+
+       $ pip install --upgrade git+https://github.com/stephenmcd/mezzanine.git#egg=Mezzanine
+
 
 Language Translations
 =====================
