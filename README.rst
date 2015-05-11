@@ -188,7 +188,7 @@ Support
 =======
 
 To report a security issue, please send an email privately to
-`security@jupo.org`_. This gives us a chance to fix the issue and
+`core-team@mezzaninecms.com`_. This gives us a chance to fix the issue and
 create an official release prior to the issue being made
 public.
 
@@ -261,7 +261,7 @@ Sites Using Cartridge
 .. _`Bootstrap CSS guidelines`: https://github.com/twbs/bootstrap/blob/master/CONTRIBUTING.md#css
 .. _`Django Code of Conduct`: https://www.djangoproject.com/conduct/
 .. _`Transiflex`: https://www.transifex.com/projects/p/cartridge/
-.. _`security@jupo.org`: mailto:security@jupo.org?subject=Mezzanine+Security+Issue
+.. _`core-team@mezzaninecms.com`: mailto:core-team@mezzaninecms.com?subject=Mezzanine+Security+Issue
 .. _`#mezzanine IRC channel`: irc://freenode.net/mezzanine
 .. _`Freenode`: http://freenode.net
 .. _`Django's internationalization`: https://docs.djangoproject.com/en/dev/topics/i18n/translation/
