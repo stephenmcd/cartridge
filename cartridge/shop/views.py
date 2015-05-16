@@ -277,10 +277,14 @@ def checkout_steps(request, form_class=OrderForm):
                 # Try payment.
                 try:
                     transaction_id = payment_handler(request, form, order)
-                except checkout.CheckoutError as e:
+                except Exception as e:
                     # Error in payment handler.
                     order.delete()
-                    checkout_errors.append(e)
+                    if isinstance(e, checkout.CheckoutError):
+                        checkout_errors.append(e)
+                    else:
+                        checkout_errors.append(
+                            _("Error occurred during payment processing"))
                     if settings.SHOP_CHECKOUT_STEPS_CONFIRMATION:
                         step -= 1
                 else:
