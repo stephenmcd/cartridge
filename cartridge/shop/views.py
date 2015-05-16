@@ -324,6 +324,8 @@ def checkout_steps(request, form_class=OrderForm):
     template = "shop/%s.html" % step_vars["template"]
     context = {"CHECKOUT_STEP_FIRST": step == checkout.CHECKOUT_STEP_FIRST,
                "CHECKOUT_STEP_LAST": step == checkout.CHECKOUT_STEP_LAST,
+               "CHECKOUT_STEP_PAYMENT": (settings.SHOP_PAYMENT_STEP_ENABLED and
+                   step == checkout.CHECKOUT_STEP_PAYMENT),
                "step_title": step_vars["title"], "step_url": step_vars["url"],
                "steps": checkout.CHECKOUT_STEPS, "step": step, "form": form}
     return render(request, template, context)
