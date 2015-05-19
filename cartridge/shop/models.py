@@ -155,7 +155,7 @@ class ProductImage(Orderable):
     for the product.
     """
 
-    file = models.ImageField(_("Image"),
+    file = FileField(_("Image"), max_length=255, format="Image",
         upload_to=upload_to("shop.ProductImage.file", "product"))
     description = CharField(_("Description"), blank=True, max_length=100)
     product = models.ForeignKey("Product", related_name="images")
