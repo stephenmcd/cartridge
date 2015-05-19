@@ -2,15 +2,16 @@
 {% load i18n %}
 
 {% block before_content %}
+    {% if change %}
     <form id="resend-email" method="POST" action="{% url "shop_invoice_resend" object_id %}?next={{ request.path }}">
         {% csrf_token %}
-     </form>
-
+    </form>
+    {% endif %}
     {{ block.super }}
 {% endblock %}
 
 {% block object-tools-items %}
-    {% if has_pdf %}
+    {% if change and has_pdf %}
     <li><a href="{% url "shop_invoice" object_id %}?format=pdf">{% trans "Download PDF invoice" %}</a></li>
     {% endif %}
     <li><a href="#" onclick="document.getElementById('resend-email').submit(); return false;">{% trans "Re-send order email" %}</a></li>
