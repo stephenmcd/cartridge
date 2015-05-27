@@ -22,22 +22,12 @@ def currency(value):
     set_locale()
     if not value:
         value = 0
-    if hasattr(locale, "currency"):
-        value = locale.currency(Decimal(value), grouping=True)
-        if platform.system() == 'Windows':
-            try:
-                value = str(value, encoding=locale.getpreferredencoding())
-            except TypeError:
-                pass
-    else:
-        # based on locale.currency() in python >= 2.5
-        conv = locale.localeconv()
-        value = [conv["currency_symbol"], conv["p_sep_by_space"] and " " or "",
-            (("%%.%sf" % conv["frac_digits"]) % value).replace(".",
-            conv["mon_decimal_point"])]
-        if not conv["p_cs_precedes"]:
-            value.reverse()
-        value = "".join(value)
+    value = locale.currency(Decimal(value), grouping=True)
+    if platform.system() == 'Windows':
+        try:
+            value = str(value, encoding=locale.getpreferredencoding())
+        except TypeError:
+            pass
     return value
 
 
