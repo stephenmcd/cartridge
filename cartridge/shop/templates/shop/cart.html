@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block main %}
-{% if request.cart.has_items %}
+{% if cart_formset.forms %}
 <form method="post" class="cart-form">
 {% csrf_token %}
 {% if cart_formset.errors %}
