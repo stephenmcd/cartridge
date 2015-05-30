@@ -11,7 +11,8 @@
 {% endblock %}
 
 {% block main %}
-{% if request.cart.has_items %}
+{# Don't use request.cart.has_items to avoid extra DB dip #}
+{% if cart_formset.forms|length %}
 <form method="post" class="cart-form">
 {% csrf_token %}
 {% if cart_formset.errors %}
