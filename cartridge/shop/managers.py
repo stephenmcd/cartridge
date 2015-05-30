@@ -22,26 +22,20 @@ class CartManager(Manager):
         cart.
         """
         cart_id = request.session.get("cart", None)
-        cart = None
-        if cart_id:
+        cart = self.current().filter(id=cart_id)
+        last_updated = now()
+        # Update timestamp and clear out old carts.
+        if cart_id and cart.update(last_updated=last_updated):
+            self.expired().delete()
+        else:
             try:
-                cart = self.current().get(id=cart_id)
-            except self.model.DoesNotExist:
                 request.session["cart"] = None
-            else:
-                # Update timestamp and clear out old carts.
-                cart.last_updated = now()
-                cart.save()
-                self.expired().delete()
-        if not cart:
-            # Forget what checkout step we were up to.
-            try:
+                # Forget what checkout step we were up to.
                 del request.session["order"]["step"]
                 request.session.modified = True
             except KeyError:
                 pass
-            cart = self.model(last_updated=now())
-        return cart
+        return self.model(id=cart_id, last_updated=last_updated)
 
     def expiry_time(self):
         """
