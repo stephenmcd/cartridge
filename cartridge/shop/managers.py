@@ -27,14 +27,16 @@ class CartManager(Manager):
         # Update timestamp and clear out old carts.
         if cart_id and cart.update(last_updated=last_updated):
             self.expired().delete()
-        else:
+        elif cart_id:
             try:
                 request.session["cart"] = None
                 # Forget what checkout step we were up to.
                 del request.session["order"]["step"]
-                request.session.modified = True
             except KeyError:
                 pass
+        # Since we're being clever and hand-building the small cart
+        # model, make sure it has the number of fields as we think
+        assert len(self.model._meta.fields) == 2
         return self.model(id=cart_id, last_updated=last_updated)
 
     def expiry_time(self):
