@@ -539,3 +539,15 @@ class TaxationTests(TestCase):
         set_tax(request, tax_type, tax_total)
         self.assertEqual(request.session.get("tax_type"), str(tax_type))
         self.assertEqual(request.session.get("tax_total"), str(tax_total))
+
+    def test_cart_unchanged(self):
+        """
+        CartManager.from_request() saves a DB call by assuming Cart has only
+        two fields, ``id`` and ``last_updated``. If this test fails, Cart has
+        changed, so we need to review that code and make sure it still works.
+
+        See the comment before the return statement of
+        CartManager.from_request() for details.
+        """
+        cart_fields = [f.name for f in Cart._meta.fields]
+        self.assertListEqual(cart_fields, ['id', 'last_updated'])
