@@ -2,7 +2,7 @@ from __future__ import absolute_import, unicode_literals
 from future.builtins import bytes, zip, str as _str
 
 import hmac
-from locale import setlocale, LC_MONETARY
+from locale import setlocale, LC_MONETARY, Error as LocaleError
 
 try:
     from hashlib import sha512 as digest
@@ -104,8 +104,8 @@ def set_locale():
     try:
         if setlocale(LC_MONETARY, currency_locale) == "C":
             # C locale doesn't contain a suitable value for "frac_digits".
-            raise
-    except:
+            raise LocaleError
+    except LocaleError:
         msg = _("Invalid currency locale specified for SHOP_CURRENCY_LOCALE: "
                 "'%s'. You'll need to set the locale for your system, or "
                 "configure the SHOP_CURRENCY_LOCALE setting in your settings "
