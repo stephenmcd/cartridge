@@ -133,7 +133,7 @@ register_setting(
     description="Controls the formatting of monetary values according to "
         "the locale module in the python standard library. If an empty "
         "string is used, will fall back to the system's locale.",
-    editable=True,
+    editable=False,
     default="",
     translatable=True,
 )
