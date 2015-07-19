@@ -245,7 +245,7 @@ class ProductAdmin(DisplayableAdmin):
             # Save every translated fields from ``ProductOption`` into
             # the required ``ProductVariation``
             if settings.USE_MODELTRANSLATION:
-                from django.utils.datastructures import SortedDict
+                from collections import OrderedDict
                 from modeltranslation.utils import (build_localized_fieldname
                                                     as _loc)
                 for opt_name in options:
@@ -254,7 +254,7 @@ class ProductAdmin(DisplayableAdmin):
                                                             name=opt_value)
                         params = {opt_name: opt_value}
                         for var in self._product.variations.filter(**params):
-                            for code in SortedDict(settings.LANGUAGES):
+                            for code in OrderedDict(settings.LANGUAGES):
                                 setattr(var, _loc(opt_name, code),
                                         getattr(opt_obj, _loc('name', code)))
                             var.save()

@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 from future.builtins import filter, int, range, str, super, zip
 from future.utils import with_metaclass
 
+from collections import OrderedDict
 from copy import copy
 from datetime import date
 from itertools import dropwhile, takewhile
@@ -12,7 +13,6 @@ from re import match
 from django import forms
 from django.forms.models import BaseInlineFormSet, ModelFormMetaclass
 from django.forms.models import inlineformset_factory
-from django.utils.datastructures import SortedDict
 from django.utils.safestring import mark_safe
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
@@ -190,7 +190,7 @@ class FormsetForm(object):
             self._fields_done = []
         fieldset.non_field_errors = lambda *args: None
         names = [f for f in field_names if f not in self._fields_done]
-        fieldset.fields = SortedDict([(f, self.fields[f]) for f in names])
+        fieldset.fields = OrderedDict([(f, self.fields[f]) for f in names])
         self._fields_done.extend(names)
         return fieldset
 
