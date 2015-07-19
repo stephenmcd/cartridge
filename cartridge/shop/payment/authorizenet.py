@@ -89,13 +89,15 @@ def process(request, order_form, order):
     trans['postString'] = (part1 + urlencode(trans['transactionData']) +
                            part2 + part3)
 
-    request_args = {"url": trans['connection'], "data": trans['postString'].encode('utf-8')}
+    request_args = {"url": trans['connection'],
+                    "data": trans['postString'].encode('utf-8')}
     try:
         all_results = urlopen(Request(**request_args)).read()
     except URLError:
         raise CheckoutError("Could not talk to authorize.net payment gateway")
 
-    parsed_results = all_results.decode('utf-8').split(trans['configuration']['x_delim_char'])
+    parsed_results = all_results.decode('utf-8').split(
+        trans['configuration']['x_delim_char'])
     # response and response_reason_codes with their meaning here:
     # http://www.authorize.net/support/merchant/Transaction_Response/
     # Response_Reason_Codes_and_Response_Reason_Text.htm
