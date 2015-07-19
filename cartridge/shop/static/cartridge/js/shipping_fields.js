@@ -6,7 +6,7 @@ $(function() {
 
     // show/hide shipping fields on change of "same as" checkbox and call on load
     sameShipping.change(function() {
-        $('#shipping_fields')[sameShipping.attr('checked') ? 'hide' : 'show']();
+        $('#shipping_fields')[sameShipping.prop('checked') ? 'hide' : 'show']();
     }).change();
 
 });
