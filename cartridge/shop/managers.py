@@ -2,11 +2,10 @@ from __future__ import unicode_literals
 from future.builtins import str
 from future.builtins import zip
 
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 from datetime import datetime, timedelta
 
 from django.db.models import Manager, Q
-from django.utils.datastructures import SortedDict
 from django.utils.timezone import now
 
 from mezzanine.conf import settings
@@ -118,7 +117,7 @@ class ProductVariationManager(Manager):
         Create all unique variations from the selected options.
         """
         if options:
-            options = SortedDict(options)
+            options = OrderedDict(options)
             # Build all combinations of options.
             variations = [[]]
             for values_list in list(options.values()):
