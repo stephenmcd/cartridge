@@ -15,18 +15,25 @@
 import sys
 import os
 
-docs_path = os.path.abspath(os.path.dirname(__file__))
-parts = (docs_path, "..", "cartridge")
-sys.path.insert(0, os.path.join(*parts))
-sys.path.insert(0, os.path.join(*parts + ("project_template",)))
-os.environ["DJANGO_SETTINGS_MODULE"] = "cartridge.project_template.settings"
+if "DJANGO_SETTINGS_MODULE" not in os.environ:
+    docs_path = os.getcwd()
+    cartridge_path_parts = (docs_path, "..")
+    sys.path.insert(0, docs_path)
+    sys.path.insert(0, os.path.realpath(os.path.join(*cartridge_path_parts)))
+    os.environ["DJANGO_SETTINGS_MODULE"] = "docs_settings"
+    # Django 1.7's setup is required before touching translated strings.
+    import django
+    try:
+        django.setup()
+    except AttributeError:  # < 1.7
+        pass
 
-import cartridge
-from mezzanine.utils import docs
-
-docs.build_settings_docs(docs_path, prefix="SHOP_")
-docs.build_changelog(docs_path, package_name="cartridge")
-docs.build_modelgraph(docs_path, package_name="cartridge")
+if sys.argv[-2:] == ["docs", "docs/build"]:
+    import cartridge
+    from mezzanine.utils import docs
+    docs.build_settings_docs(docs_path, prefix="SHOP_")
+    docs.build_changelog(docs_path, package_name="cartridge")
+    #docs.build_modelgraph(docs_path, package_name="cartridge")
 
 try:
     from cartridge.shop.models import Order
