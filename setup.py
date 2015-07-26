@@ -7,7 +7,7 @@ from cartridge import __version__ as version
 
 
 exclude = ["cartridge/project_template/dev.db",
-           "cartridge/project_template/local_settings.py"]
+           "cartridge/project_template/project_name/local_settings.py"]
 if sys.argv == ["setup.py", "test"]:
     exclude = []
 exclude = dict([(e, None) for e in exclude])
