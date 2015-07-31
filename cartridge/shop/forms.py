@@ -240,12 +240,13 @@ class DiscountForm(forms.ModelForm):
         model = Order
         fields = ("discount_code",)
 
-    def __init__(self, request, data=None, initial=None):
+    def __init__(self, request, data=None, initial=None, **kwargs):
         """
         Store the request so that it can be used to retrieve the cart
         which is required to validate the discount code when entered.
         """
-        super(DiscountForm, self).__init__(data=data, initial=initial)
+        super(DiscountForm, self).__init__(
+                data=data, initial=initial, **kwargs)
         self._request = request
 
     def clean_discount_code(self):
@@ -319,7 +320,9 @@ class OrderForm(FormsetForm, DiscountForm):
                    f.name.startswith("shipping_detail")] +
                    ["additional_instructions", "discount_code"])
 
-    def __init__(self, request, step, data=None, initial=None, errors=None):
+    def __init__(
+            self, request, step, data=None, initial=None, errors=None,
+            **kwargs):
         """
         Setup for each order form step which does a few things:
 
@@ -344,7 +347,8 @@ class OrderForm(FormsetForm, DiscountForm):
         if initial is not None:
             initial["step"] = step
 
-        super(OrderForm, self).__init__(request, data=data, initial=initial)
+        super(OrderForm, self).__init__(
+                request, data=data, initial=initial, **kwargs)
         self._checkout_errors = errors
 
         # Hide discount code field if it shouldn't appear in checkout,
