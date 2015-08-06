@@ -9,7 +9,7 @@ from mezzanine.utils.views import paginate
 from cartridge.shop.models import Category, Product
 
 
-@processor_for(Category)
+@processor_for(Category, exact_page=True)
 def category_processor(request, page):
     """
     Add paging/sorting to the products for the category.
