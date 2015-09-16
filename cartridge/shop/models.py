@@ -412,7 +412,7 @@ class Order(SiteRelated):
     additional_instructions = models.TextField(_("Additional instructions"),
                                                blank=True)
     time = models.DateTimeField(_("Time"), auto_now_add=True, null=True)
-    key = CharField(max_length=40)
+    key = CharField(max_length=40, db_index=True)
     user_id = models.IntegerField(blank=True, null=True)
     shipping_type = CharField(_("Shipping type"), max_length=50, blank=True)
     shipping_total = fields.MoneyField(_("Shipping total"))
