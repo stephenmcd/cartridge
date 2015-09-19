@@ -130,7 +130,7 @@ project::
     $ git clone https://github.com/your-github-username/cartridge/
     $ cd cartridge
     $ git checkout -b your-new-branch-name
-    $ cp cartridge/project_template/local_settings.py{.template,}
+    $ cp cartridge/project_template/project_name/local_settings.py{.template,}
     $ python setup.py develop
     $ python cartridge/project_template/manage.py createdb --noinput
     $ python cartridge/project_template/manage.py runserver
