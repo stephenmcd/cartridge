@@ -7,6 +7,7 @@ from decimal import Decimal
 from functools import reduce
 from operator import iand, ior
 
+from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.db import models, connection
 from django.db.models.signals import m2m_changed
@@ -43,7 +44,7 @@ class Priced(models.Model):
     sale_price = fields.MoneyField(_("Sale price"))
     sale_from = models.DateTimeField(_("Sale start"), blank=True, null=True)
     sale_to = models.DateTimeField(_("Sale end"), blank=True, null=True)
-    sku = fields.SKUField(unique=True, blank=True, null=True)
+    sku = fields.SKUField(blank=True, null=True)
     num_in_stock = models.IntegerField(_("Number in stock"), blank=True,
                                        null=True)
 
@@ -116,6 +117,7 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
     class Meta:
         verbose_name = _("Product")
         verbose_name_plural = _("Products")
+        unique_together = ("sku", "site")
 
     def save(self, *args, **kwargs):
         """
@@ -250,6 +252,17 @@ class ProductVariation(with_metaclass(ProductVariationMetaclass, Priced)):
 
     def get_absolute_url(self):
         return self.product.get_absolute_url()
+
+    def validate_unique(self, *args, **kwargs):
+        """
+        Overridden to ensure SKU is unique per site, which can't be
+        defined by ``Meta.unique_together`` since it can't span
+        relationships.
+        """
+        super(ProductVariation, self).validate_unique(*args, **kwargs)
+        if self.__class__.objects.exclude(id=self.id).filter(
+                product__site_id=self.product.site_id, sku=self.sku).exists():
+            raise ValidationError({"sku": _("SKU is not unique")})
 
     @classmethod
     def option_fields(cls):
