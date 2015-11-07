@@ -7,6 +7,7 @@ import mezzanine.utils.models
 import mezzanine.core.fields
 import cartridge.shop.fields
 
+from mezzanine.conf import settings
 
 class Migration(migrations.Migration):
 
@@ -118,7 +119,7 @@ class Migration(migrations.Migration):
                 ('discount_total', cartridge.shop.fields.MoneyField(null=True, verbose_name='Discount total', max_digits=10, decimal_places=2, blank=True)),
                 ('total', cartridge.shop.fields.MoneyField(null=True, verbose_name='Order total', max_digits=10, decimal_places=2, blank=True)),
                 ('transaction_id', models.CharField(max_length=255, null=True, verbose_name='Transaction ID', blank=True)),
-                ('status', models.IntegerField(default=1, verbose_name='Status', choices=[(1, 'Unprocessed'), (2, 'Processed')])),
+                ('status', models.IntegerField(default=settings.SHOP_ORDER_STATUS_CHOICES[0][0], verbose_name='Status', choices=settings.SHOP_ORDER_STATUS_CHOICES)),
                 ('site', models.ForeignKey(editable=False, to='sites.Site')),
             ],
             options={
