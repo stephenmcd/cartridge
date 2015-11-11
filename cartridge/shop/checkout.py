@@ -88,7 +88,6 @@ def initial_order_data(request, form_class=None):
     - last order made by the user, via user ID or cookie
     - matching fields on an authenticated user and profile object
     """
-    from cartridge.shop.forms import OrderForm
     initial = {}
     if request.method == "POST":
         initial = dict(list(request.POST.items()))
@@ -149,8 +148,8 @@ def initial_order_data(request, form_class=None):
     # Set initial value for "same billing/shipping" based on
     # whether both sets of address fields are all equal.
     shipping = lambda f: "shipping_%s" % f[len("billing_"):]
-    if any([f for f in OrderForm._meta.fields if f.startswith("billing_") and
-        shipping(f) in OrderForm._meta.fields and
+    if any([f for f in form_class._meta.fields if f.startswith("billing_") and
+        shipping(f) in form_class._meta.fields and
         initial.get(f, "") != initial.get(shipping(f), "")]):
         initial["same_billing_shipping"] = False
     # Never prepopulate discount code.
