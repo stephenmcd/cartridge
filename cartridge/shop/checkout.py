@@ -130,7 +130,7 @@ def initial_order_data(request, form_class=None):
             user_models.insert(0, get_profile_for_user(request.user))
         except ProfileNotConfigured:
             pass
-        for order_field in OrderForm._meta.fields:
+        for order_field in form_class._meta.fields:
             check_fields = [order_field]
             for prefix in ("billing_detail_", "shipping_detail_"):
                 if order_field.startswith(prefix):
