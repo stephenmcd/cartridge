@@ -6,12 +6,15 @@ python:
   - "2.7"
   - "3.3"
   - "3.4"
+  - "3.5"
 matrix:
   exclude:
      - python: "2.7"
        env: DJANGO_VERSION=https://github.com/django/django/archive/stable/1.8.x.zip
+     - python: "3.5"
+       env: DJANGO_VERSION=https://github.com/django/django/archive/stable/1.7.x.zip
 install:
-  - pip install $DJANGO_VERSION --use-mirrors
+  - pip install $DJANGO_VERSION
   - pip install -e git://github.com/stephenmcd/mezzanine.git#egg=mezzanine
   - pip install . --allow-unverified pyPdf
 script:
