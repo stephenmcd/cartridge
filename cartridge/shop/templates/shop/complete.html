@@ -5,9 +5,9 @@
 
 {% block meta_title %}{% trans "Order Complete" %}{% endblock %}
 
-{% block extra_head %}
+{% block footer_js %}
 {{ block.super }}
-{% if settings.GOOGLE_ANALYTICS_ID %}
+{% if settings.GOOGLE_ANALYTICS_ID and not request.user.is_staff %}
 <script>
 
 var decimal = function(amount) {
@@ -17,44 +17,33 @@ var decimal = function(amount) {
     return String(amount);
 };
 
-var _gaq = [['_trackPageview'], ['_addTrans',
-    // order ID - required
-    '{{ order.id }}',
-    // affiliation or store name
-    '',
-    // total - required
-    decimal({{ order.item_total }}{% if order.discount_total %} - {{ order.discount_total }}{% endif %}),
-    // tax
-    decimal({% if order.tax_total %}{{ order.tax_total }}{% else %}0{% endif %}),
-    // shipping
-    decimal({{ order.shipping_total }}),
-    // city
-    '{{ order.billing_detail_city|escapejs }}',
-    // state or province
-    '{{ order.billing_detail_state|escapejs }}',
-    // country
-    '{{ order.billing_detail_country|escapejs }}'
-]];
+ga('require', 'ecommerce');     // Load the ecommerce plug-in.
 
+// Add transaction data.
+ga('ecommerce:addTransaction', {
+    'id': '{{ order.id }}',
+    'affiliation': '',
+    'revenue': decimal({{ order.item_total }}{% if order.discount_total %} - {{ order.discount_total }}{% endif %}),
+    'shipping': decimal({{ order.shipping_total }}),
+    'tax': decimal({% if order.tax_total %}{{ order.tax_total }}{% else %}0{% endif %})
+});
+
+// Add item data for each item.
 {% for item in items %}
-_gaq.push(['_addItem',
-    // order ID - required
-    '{{ order.id }}',
-    // SKU/code - required
-    '{{ item.sku }}',
-    // product name
-    '{{ item.name|escapejs }}',
-    // category or variation
-    '{{ item.description|escapejs }}',
-    // unit price - required
-    decimal({{ item.unit_price }}),
-    // quantity - required
-    '{{ item.quantity }}'
-]);
+ga('ecommerce:addItem', {
+    // order ID (not item)
+    'id': '{{ order.id }}',
+    'name': '{{ item.name|escapejs }}',
+    'sku': '{{ item.sku }}',
+    'category': '{{ item.description|escapejs }}',
+    // unit price (not total)
+    'price': decimal({{ item.unit_price }}),
+    'quantity': '{{ item.quantity }}'
+});
 {% endfor %}
 
 // submits transaction to the Analytics servers
-_gaq.push(['_trackTrans']);
+ga('ecommerce:send');
 
 </script>
 {% endif %}
