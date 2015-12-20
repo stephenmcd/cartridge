@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
-from future.builtins import str
-from future.builtins import zip
+from future.builtins import str, zip
 
 from collections import defaultdict, OrderedDict
 from datetime import datetime, timedelta

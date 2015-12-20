@@ -2,6 +2,7 @@ from modeltranslation.translator import translator, TranslationOptions
 from mezzanine.conf import settings
 from mezzanine.core.translation import (TranslatedDisplayable,
                                         TranslatedRichText)
+
 from cartridge.shop.models import (Category, Product, ProductOption,
                                    ProductImage, ProductVariation)
 

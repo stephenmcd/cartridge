@@ -1,4 +1,3 @@
-
 from __future__ import division, unicode_literals
 from future.builtins import str, super
 from future.utils import with_metaclass
