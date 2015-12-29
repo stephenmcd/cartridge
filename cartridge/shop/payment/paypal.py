@@ -46,7 +46,8 @@ def process(request, order_form, order):
 
     class MyOrderForm(OrderForm):
         def __init__(self, *args, **kwargs):
-            super(OrderForm, self).__init__(*args, **kwrds)
+            super(OrderForm, self).__init__(*args, **kwargss) # Python 2
+            super(MyOrderForm, self).__init__(*args, **kwargs)# Python 3
             billing_country = forms.Select(choices=COUNTRIES)
             shipping_country = forms.Select(choices=COUNTRIES)
             self.fields['billing_detail_country'].widget = billing_country
