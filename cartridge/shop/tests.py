@@ -5,13 +5,13 @@ from datetime import timedelta
 from decimal import Decimal
 from operator import mul
 from functools import reduce
+from unittest import skipUnless
 
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
-from django.utils.unittest import skipUnless
 from mezzanine.conf import settings
 from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
 from mezzanine.utils.importing import import_dotted_path
