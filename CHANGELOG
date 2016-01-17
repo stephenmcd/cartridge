@@ -1,3 +1,24 @@
+Version 0.11.0 (Jan 17, 2016)
+-----------------------------
+
+  * Update excluded files in package build - Stephen McDonald
+  * Allow propagation of additional constructor arguments. for ``cartridge.shop.forms.OrderForm`` descendants - David Unric
+  * Limit shop category page processor to exact page - David Sanders
+  * Add database indexing to ``order.key`` - David Sanders
+  * Update contributing section to reflect ``project_template`` layout - David Sanders
+  * Change SKU uniqueness constraint to be per site - Stephen McDonald
+  * Resolve css/js Media paths using static templatetag - David Sanders
+  * Change the initial migration so that ``Order.status`` references ``settings.SHOP_ORDER_STATUS_CHOICES``, rather than the literal values - Chris Trengove
+  * Changed reference in ``initial_form_data`` to ``form_class`` - ChrisKuper
+  * Fix other instances of checkout not using custom form class - Stephen McDonald
+  * Add support for Python 3.5 in trove classifiers and travis build - Sam Kingston
+  * Update checkout JS for Universal Analytics - Alex Hill
+  * Update to latest ``settings.py`` code from Mezzanine - Stephen McDonald
+  * Update from deprecated features of urlpatterns - Stephen McDonald
+  * Update Django/Python versions in travis config - Stephen McDonald
+  * Added missing context update for cart view ``extra_context`` - Kelvin Wong
+  * Run shipping/tax handlers on every checkout step, since hidden address fields could be modified on any step - Stephen McDonald
+
 Version 0.10.0 (Jul 26, 2015)
 -----------------------------
 
