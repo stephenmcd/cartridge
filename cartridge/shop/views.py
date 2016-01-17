@@ -257,19 +257,23 @@ def checkout_steps(request, form_class=OrderForm, extra_context=None):
                 if field in request.session["order"]:
                     del request.session["order"][field]
 
-            # FIRST CHECKOUT STEP - handle shipping and discount code.
+            # FIRST CHECKOUT STEP - handle discount code. This needs to
+            # be set before shipping, to allow for free shipping to be
+            # first set by a discount code.
             if step == checkout.CHECKOUT_STEP_FIRST:
-                # Discount should be set before shipping, to allow
-                # for free shipping to be first set by a discount
-                # code.
                 form.set_discount()
-                try:
-                    billship_handler(request, form)
-                    tax_handler(request, form)
-                except checkout.CheckoutError as e:
-                    checkout_errors.append(e)
 
-            # FINAL CHECKOUT STEP - handle payment and process order.
+            # ALL STEPS - run billing/tax handlers. These are run on
+            # all steps, since all fields (such as address fields) are
+            # posted on each step, even as hidden inputs when not
+            # visible in the current step.
+            try:
+                billship_handler(request, form)
+                tax_handler(request, form)
+            except checkout.CheckoutError as e:
+                checkout_errors.append(e)
+
+            # FINAL CHECKOUT STEP - run payment handler and process order.
             if step == checkout.CHECKOUT_STEP_LAST and not checkout_errors:
                 # Create and save the initial order object so that
                 # the payment handler has access to all of the order
