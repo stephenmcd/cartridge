@@ -56,6 +56,9 @@ try:
             "mezzanine >= 4.1.0",
             "xhtml2pdf",
         ],
+        extras_require={
+            'stripe': ['stripe'],
+        },
 
         classifiers=[
             "Development Status :: 4 - Beta",
