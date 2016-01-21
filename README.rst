@@ -273,7 +273,7 @@ Sites Using Cartridge
 
 .. THIRD PARTY LIBS
 
-.. _`cartridge_braintree`: https://github.com/molokov/cartridge_braintree
+.. _`cartridge_braintree`: https://github.com/henri-hulski/cartridge_braintree
 .. _`cartridge-external-payment`: https://github.com/thomasWajs/cartridge-external-payment
 .. _`cartridge-tax`: https://github.com/kenbolton/cartridge-tax
 .. _`cartridge-stripe`: https://github.com/readevalprint/cartridge-stripe
