@@ -5,7 +5,7 @@
     {% fields_for form.card_type_field %}
     {% with form.card_expiry_fields as card_expiry_fields %}
     <div class="form-group card-expiry-fields{% if card_expiry_fields.errors.card_expiry_year %} error{% endif %}">
-        <label>{% trans "Card Expiry" %}</label>
+        <label class="control-label">{% trans "Card Expiry" %}</label>
         {% fields_for card_expiry_fields %}
     </div>
     <div class="clearfix"></div>
