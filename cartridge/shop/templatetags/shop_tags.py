@@ -39,28 +39,30 @@ def _order_totals(context):
     """
     fields = ["shipping_type", "shipping_total", "discount_total",
               "tax_type", "tax_total"]
+    c = {}
+
     if "order" in context:
         for field in fields + ["item_total"]:
-            context[field] = getattr(context["order"], field)
+            c[field] = getattr(context["order"], field)
     else:
-        context["item_total"] = context["request"].cart.total_price()
-        if context["item_total"] == 0:
+        c["item_total"] = context["request"].cart.total_price()
+        if c["item_total"] == 0:
             # Ignore session if cart has no items, as cart may have
             # expired sooner than the session.
-            context["tax_total"] = 0
-            context["discount_total"] = 0
-            context["shipping_total"] = 0
+            c["tax_total"] = 0
+            c["discount_total"] = 0
+            c["shipping_total"] = 0
         else:
             for field in fields:
-                context[field] = context["request"].session.get(field, None)
-    context["order_total"] = context.get("item_total", None)
-    if context.get("shipping_total", None) is not None:
-        context["order_total"] += Decimal(str(context["shipping_total"]))
-    if context.get("discount_total", None) is not None:
-        context["order_total"] -= Decimal(str(context["discount_total"]))
-    if context.get("tax_total", None) is not None:
-        context["order_total"] += Decimal(str(context["tax_total"]))
-    return context
+                c[field] = context["request"].session.get(field, None)
+    c["order_total"] = c.get("item_total", None)
+    if c.get("shipping_total", None) is not None:
+        c["order_total"] += Decimal(str(c["shipping_total"]))
+    if c.get("discount_total", None) is not None:
+        c["order_total"] -= Decimal(str(c["discount_total"]))
+    if c.get("tax_total", None) is not None:
+        c["order_total"] += Decimal(str(c["tax_total"]))
+    return c
 
 
 @register.inclusion_tag("shop/includes/order_totals.html", takes_context=True)
