@@ -382,7 +382,7 @@ def invoice(request, order_id, template="shop/order_invoice.html",
     context.update(order.details_as_dict())
     context.update(extra_context or {})
     context = RequestContext(request, context)
-    if request.GET.get("format") == "pdf":
+    if HAS_PDF and request.GET.get("format") == "pdf":
         response = HttpResponse(content_type="application/pdf")
         name = slugify("%s-invoice-%s" % (settings.SITE_TITLE, order.id))
         response["Content-Disposition"] = "attachment; filename=%s.pdf" % name
