@@ -12,11 +12,12 @@ from django.shortcuts import get_object_or_404, redirect
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
 from django.template.loader import get_template
+from django.template.response import TemplateResponse
 from django.utils.translation import ugettext as _
 from django.views.decorators.cache import never_cache
 from mezzanine.conf import settings
 from mezzanine.utils.importing import import_dotted_path
-from mezzanine.utils.views import render, set_cookie, paginate
+from mezzanine.utils.views import set_cookie, paginate
 from mezzanine.utils.urls import next_url
 
 from cartridge.shop import checkout
@@ -93,7 +94,7 @@ def product(request, slug, template="shop/product.html",
     }
     context.update(extra_context or {})
     templates = [u"shop/%s.html" % str(product.slug), template]
-    return render(request, templates, context)
+    return TemplateResponse(request, templates, context)
 
 
 @never_cache
@@ -140,7 +141,7 @@ def wishlist(request, template="shop/wishlist.html",
     wishlist = sorted(wishlist, key=lambda v: skus.index(v.sku))
     context = {"wishlist_items": wishlist, "error": error}
     context.update(extra_context or {})
-    response = render(request, template, context)
+    response = TemplateResponse(request, template, context)
     if len(wishlist) < len(skus):
         skus = [variation.sku for variation in wishlist]
         set_cookie(response, "wishlist", ",".join(skus))
@@ -201,7 +202,7 @@ def cart(request, template="shop/cart.html",
     if (settings.SHOP_DISCOUNT_FIELD_IN_CART and
             DiscountCode.objects.active().exists()):
         context["discount_form"] = discount_form
-    return render(request, template, context)
+    return TemplateResponse(request, template, context)
 
 
 @never_cache
@@ -337,7 +338,7 @@ def checkout_steps(request, form_class=OrderForm, extra_context=None):
                "step_title": step_vars["title"], "step_url": step_vars["url"],
                "steps": checkout.CHECKOUT_STEPS, "step": step, "form": form}
     context.update(extra_context or {})
-    return render(request, template, context)
+    return TemplateResponse(request, template, context)
 
 
 @never_cache
@@ -364,7 +365,7 @@ def complete(request, template="shop/complete.html", extra_context=None):
     context = {"order": order, "items": items, "has_pdf": HAS_PDF,
                "steps": checkout.CHECKOUT_STEPS}
     context.update(extra_context or {})
-    return render(request, template, context)
+    return TemplateResponse(request, template, context)
 
 
 def invoice(request, order_id, template="shop/order_invoice.html",
@@ -389,7 +390,7 @@ def invoice(request, order_id, template="shop/order_invoice.html",
         html = get_template(template_pdf).render(context)
         pisa.CreatePDF(html, response)
         return response
-    return render(request, template, context)
+    return TemplateResponse(request, template, context)
 
 
 @login_required
@@ -407,7 +408,7 @@ def order_history(request, template="shop/order_history.html",
                       settings.MAX_PAGING_LINKS)
     context = {"orders": orders, "has_pdf": HAS_PDF}
     context.update(extra_context or {})
-    return render(request, template, context)
+    return TemplateResponse(request, template, context)
 
 
 @login_required
