@@ -234,7 +234,6 @@ Sites Using Cartridge
 * `KisanHub <http://www.kisanhub.com/>`_
 * `Kegbot <http://kegbot.org>`_
 * `Amblitec <http://www.amblitec.com>`_
-* `ZigZag Bags <http://www.zigzagbags.com.au>`_
 * `Justine & Katie's Bowtique <http://www.jnkbows.com>`_
 * `The Art Rebellion <http://www.theartrebellion.com/>`_
 * `Engineered Arts <https://www.engineeredarts.co.uk>`_
@@ -242,7 +241,7 @@ Sites Using Cartridge
 * `ZHackers <https://www.zhackers.com>`_
 * `Potrillo al Pie <http://potrilloalpie.com/>`_
 * `You Name It <http://you-name-it.net>`_
-
+* `Warwick Friendly Society Pharmacies <https://www.wfsltd.com.au>`_
 
 .. _`Django`: http://djangoproject.com/
 .. _`BSD licensed`: http://www.linfo.org/bsdlicense.html
