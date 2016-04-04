@@ -30,6 +30,7 @@ class CartManager(Manager):
             # Cart has expired. Delete the cart id and
             # forget what checkout step we were up to.
             del request.session["cart"]
+            cart_id = None
             try:
                 del request.session["order"]["step"]
             except KeyError:
