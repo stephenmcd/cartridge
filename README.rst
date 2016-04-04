@@ -242,7 +242,7 @@ Sites Using Cartridge
 * `ZHackers <https://www.zhackers.com>`_
 * `Potrillo al Pie <http://potrilloalpie.com/>`_
 * `You Name It <http://you-name-it.net>`_
-
+* `Warwick Friendly Society Pharmacies <https://www.wfsltd.com.au>`_
 
 .. _`Django`: http://djangoproject.com/
 .. _`BSD licensed`: http://www.linfo.org/bsdlicense.html
