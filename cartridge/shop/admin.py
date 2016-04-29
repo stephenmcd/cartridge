@@ -193,22 +193,17 @@ class ProductAdmin(DisplayableAdmin):
             # classes' fieldsets.
             self.fieldsets = deepcopy(self.fieldsets)
 
+            # Get editable fields defined in this subclass. Note that further
+            # subclassing is not supported.
+            subclass_fields = [
+                f for f in self.model._meta.get_fields(include_parents=False)
+                if f.editable and f.name != 'product_ptr']
+
             # Insert each field between the publishing fields and nav
             # fields. Do so in reverse order to retain the order of
             # the model's fields.
-            for field in reversed(self.model._meta.fields):
-                check_fields = [f.name for f in Product._meta.fields]
-                check_fields.append("product_ptr")
-                try:
-                    check_fields.extend(self.exclude)
-                except (AttributeError, TypeError):
-                    pass
-                try:
-                    check_fields.extend(self.form.Meta.exclude)
-                except (AttributeError, TypeError):
-                    pass
-                if field.name not in check_fields and field.editable:
-                    self.fieldsets[0][1]["fields"].insert(3, field.name)
+            for field in reversed(subclass_fields):
+                self.fieldsets[0][1]["fields"].insert(3, field.name)
 
     def save_model(self, request, obj, form, change):
         """

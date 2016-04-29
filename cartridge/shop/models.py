@@ -6,6 +6,7 @@ from decimal import Decimal
 from functools import reduce
 from operator import iand, ior
 
+from django.apps import apps
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.db import models, connection
@@ -136,10 +137,7 @@ class Product(BaseProduct, Priced, RichText, AdminThumbMixin):
         """
         Return all ``Product`` subclasses.
         """
-        is_product_subclass = lambda cls: issubclass(cls, Product)
-        cmp = lambda a, b: (int(b is Product) - int(a is Product) or
-                            a._meta.verbose_name < b._meta.verbose_name)
-        return sorted(filter(is_product_subclass, models.get_models()), cmp)
+        return [m for m in apps.get_models() if issubclass(m, Product)]
 
     def get_content_model(self):
         """
