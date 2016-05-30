@@ -212,7 +212,7 @@ class ProductAdmin(DisplayableAdmin):
         super(ProductAdmin, self).save_model(request, obj, form, change)
         self._product = obj
 
-    def in_menu(self):
+    def has_module_permission(self, request):
         """
         Hide subclasses from the admin menu.
         """
