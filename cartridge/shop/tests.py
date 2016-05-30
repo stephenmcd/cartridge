@@ -358,6 +358,7 @@ class ShopTests(TestCase):
                 "redefinition of unused 'digest'",
                 "redefinition of unused 'OperationalError'",
                 "'from mezzanine.project_template.settings import *' used",
+                "'cartridge.__version__' imported but unused",
         )
         warnings = []
         warnings.extend(run_pyflakes_for_package("cartridge",
