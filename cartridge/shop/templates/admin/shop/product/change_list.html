@@ -12,11 +12,10 @@
         <div id="addlist-primary">
             <select class="addlist">
                 <option value="">{% trans "Add" %} ...</option>
-                {% models_for_products as product_models %}
-                {% for model in product_models %}
+                {% for model in content_models %}
                     {% set_model_permissions model %}
                     {% if model.perms.add %}
-                        <option value="{{ model.add_url }}">{{ model.name }}</option>
+                        <option value="{{ model.add_url }}">{{ model.meta_verbose_name|capfirst }}</option>
                     {% endif %}
                 {% endfor %}
             </select>

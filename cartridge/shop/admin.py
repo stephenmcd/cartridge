@@ -34,16 +34,14 @@ from copy import deepcopy
 from django.contrib import admin
 from django.contrib.admin.templatetags.admin_static import static
 from django.db.models import ImageField
-from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
 from mezzanine.conf import settings
 from mezzanine.core.admin import (DisplayableAdmin,
                                   TabularDynamicInlineAdmin,
                                   BaseTranslationModelAdmin)
+from mezzanine.core.content_typed import ContentTypedAdmin
 from mezzanine.pages.admin import PageAdmin
-from mezzanine.utils.urls import admin_url
 
 from cartridge.shop.fields import MoneyField
 from cartridge.shop.forms import ProductAdminForm, ProductVariationAdminForm
@@ -157,7 +155,7 @@ else:
     product_list_editable.extend(extra_list_fields)
 
 
-class ProductAdmin(DisplayableAdmin):
+class ProductAdmin(ContentTypedAdmin, DisplayableAdmin):
 
     class Media:
         js = (static("cartridge/js/admin/product_variations.js"),)
@@ -174,49 +172,12 @@ class ProductAdmin(DisplayableAdmin):
     form = ProductAdminForm
     fieldsets = product_fieldsets
 
-    def __init__(self, *args, **kwargs):
-        """
-        For ``Product`` subclasses that are registered with an Admin class
-        that doesn't implement fieldsets, add any extra model fields
-        to this instance's fieldsets. This mimics Django's behaviour of
-        adding all model fields when no fieldsets are defined on the
-        Admin class.
-        """
-
-        super(ProductAdmin, self).__init__(*args, **kwargs)
-
-        # Test that the fieldsets don't differ from ProductAdmin's.
-        if (self.model is not Product and
-                self.fieldsets == ProductAdmin.fieldsets):
-
-            # Make a copy so that we aren't modifying other Admin
-            # classes' fieldsets.
-            self.fieldsets = deepcopy(self.fieldsets)
-
-            # Get editable fields defined in this subclass. Note that further
-            # subclassing is not supported.
-            subclass_fields = [
-                f for f in self.model._meta.get_fields(include_parents=False)
-                if f.editable and f.name != 'product_ptr']
-
-            # Insert each field between the publishing fields and nav
-            # fields. Do so in reverse order to retain the order of
-            # the model's fields.
-            for field in reversed(subclass_fields):
-                self.fieldsets[0][1]["fields"].insert(3, field.name)
-
     def save_model(self, request, obj, form, change):
         """
         Store the product object for creating variations in save_formset.
         """
         super(ProductAdmin, self).save_model(request, obj, form, change)
         self._product = obj
-
-    def has_module_permission(self, request):
-        """
-        Hide subclasses from the admin menu.
-        """
-        return self.model is Product
 
     def save_formset(self, request, form, formset, change):
         """
@@ -300,21 +261,6 @@ class ProductAdmin(DisplayableAdmin):
                                 setattr(var, _loc(opt_name, code),
                                         getattr(opt_obj, _loc('name', code)))
                             var.save()
-
-    def change_view(self, request, object_id, extra_context=None):
-        """
-        As in Mezzanine's ``Page`` model, check ``product.get_content_model()``
-        for a subclass and redirect to its admin change view.
-        """
-        if self.model is Product:
-            product = get_object_or_404(Product, pk=object_id)
-            content_model = product.get_content_model()
-            if content_model is not None:
-                change_url = admin_url(content_model.__class__, "change",
-                                       content_model.id)
-                return HttpResponseRedirect(change_url)
-        return super(ProductAdmin, self).change_view(request, object_id,
-            extra_context=extra_context)
 
 
 class ProductOptionAdmin(BaseTranslationModelAdmin):

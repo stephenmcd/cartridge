@@ -6,7 +6,6 @@ from decimal import Decimal
 from functools import reduce
 from operator import iand, ior
 
-from django.apps import apps
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.db import models, connection
@@ -22,6 +21,7 @@ from django.utils.encoding import force_text
 from django.utils.encoding import python_2_unicode_compatible
 
 from mezzanine.conf import settings
+from mezzanine.core.content_typed import ContentTyped
 from mezzanine.core.fields import FileField
 from mezzanine.core.managers import DisplayableManager
 from mezzanine.core.models import Displayable, RichText, Orderable, SiteRelated
@@ -102,13 +102,11 @@ class BaseProduct(Displayable):
         abstract = True
 
 
-class Product(BaseProduct, Priced, RichText, AdminThumbMixin):
+class Product(BaseProduct, Priced, RichText, AdminThumbMixin, ContentTyped):
     """
     Container model for a product that stores information common to
     all of its variations such as the product's title and description.
     """
-
-    content_model = models.CharField(editable=False, max_length=50, null=True)
 
     available = models.BooleanField(_("Available for purchase"),
                                     default=False)
@@ -131,20 +129,6 @@ class Product(BaseProduct, Priced, RichText, AdminThumbMixin):
         verbose_name = _("Product")
         verbose_name_plural = _("Products")
         unique_together = ("sku", "site")
-
-    @classmethod
-    def get_content_models(cls):
-        """
-        Return all ``Product`` subclasses.
-        """
-        return [m for m in apps.get_models() if issubclass(m, Product)]
-
-    def get_content_model(self):
-        """
-        Provides a generic method of retrieving the instance of the custom
-        product's model, if there is one.
-        """
-        return getattr(self, self.content_model, None)
 
     def save(self, *args, **kwargs):
         """

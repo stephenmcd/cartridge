@@ -39,7 +39,7 @@ Sometimes it is helpful to subclass ``Product`` to create your own product types
 
 
     class MyProduct(Product):
-        my_field = models.CharField()
+        my_field = models.CharField(max_length=60)
 
 Don't forget to register your subclass in the admin, or it will not be a
 selectable product type. Your simplest option is to just use ``ProductAdmin``.
