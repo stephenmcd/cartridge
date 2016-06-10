@@ -1,11 +1,5 @@
 {% extends "admin/change_list.html" %}
-{% load shop_tags staticfiles %}
-
-{% block extrahead %}
-{{ block.super }}
-
-<script src="{% static "mezzanine/js/admin/page_tree.js" %}"></script>
-{% endblock %}
+{% load shop_tags %}
 
 {% block object-tools-items %}
     <li>
