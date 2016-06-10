@@ -1,5 +1,5 @@
 {% extends "admin/change_list.html" %}
-{% load shop_tags pages_tags i18n staticfiles %}
+{% load shop_tags staticfiles %}
 
 {% block extrahead %}
 {{ block.super }}
@@ -9,16 +9,6 @@
 
 {% block object-tools-items %}
     <li>
-        <div id="addlist-primary">
-            <select class="addlist">
-                <option value="">{% trans "Add" %} ...</option>
-                {% for model in content_models %}
-                    {% set_model_permissions model %}
-                    {% if model.perms.add %}
-                        <option value="{{ model.add_url }}">{{ model.meta_verbose_name|capfirst }}</option>
-                    {% endif %}
-                {% endfor %}
-            </select>
-        </div>
+        {% include "content_typed/change_list.html" %}
     </li>
 {% endblock %}
