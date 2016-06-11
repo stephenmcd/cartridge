@@ -2,7 +2,11 @@
 {% load shop_tags %}
 
 {% block object-tools-items %}
-    <li>
-        {% include "content_typed/change_list.html" %}
-    </li>
+    {% if settings.SHOP_USE_PRODUCT_TYPES %}
+        <li>
+            {% include "content_typed/change_list.html" %}
+        </li>
+    {% else %}
+          {{ block.super }}
+    {% endif %}
 {% endblock %}

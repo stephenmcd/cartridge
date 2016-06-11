@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from future.builtins import super, zip
+from future.utils import with_metaclass
 
 """
 Admin classes for all the shop models.
@@ -155,7 +156,15 @@ else:
     product_list_editable.extend(extra_list_fields)
 
 
-class ProductAdmin(ContentTypedAdmin, DisplayableAdmin):
+class ProductAdminMetaclass(type(DisplayableAdmin)):
+    def __new__(cls, name, bases, attrs):
+        if name == 'ProductAdmin' and settings.SHOP_USE_PRODUCT_TYPES:
+            bases = (ContentTypedAdmin,) + bases
+        return super(ProductAdminMetaclass, cls).__new__(
+            cls, name, bases, attrs)
+
+
+class ProductAdmin(with_metaclass(ProductAdminMetaclass, DisplayableAdmin)):
 
     class Media:
         js = (static("cartridge/js/admin/product_variations.js"),)

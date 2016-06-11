@@ -96,7 +96,7 @@ def product(request, slug, template="shop/product.html",
 
     templates = [u"shop/%s.html" % str(product.slug), template]
     # Check for a template matching the page's content model.
-    if product.content_model is not None:
+    if getattr(product, 'content_model', None) is not None:
         templates.insert(0, u"shop/products/%s.html" % product.content_model)
 
     return TemplateResponse(request, templates, context)

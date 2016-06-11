@@ -32,6 +32,7 @@ Creating Custom Product Types
 -----------------------------
 
 Sometimes it is helpful to subclass ``Product`` to create your own product types.
+To enable this behavior, set ``SHOP_USE_PRODUCT_TYPES`` to ``True``.
 
     # models.py
     from django.db import models

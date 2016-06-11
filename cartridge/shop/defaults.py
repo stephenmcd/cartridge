@@ -62,7 +62,7 @@ register_setting(
              "SHOP_CHECKOUT_STEPS_SPLIT", "SHOP_PAYMENT_STEP_ENABLED",
              "SHOP_PRODUCT_SORT_OPTIONS", "SHOP_USE_RATINGS",
              "SHOP_USE_WISHLIST", "SHOP_USE_RELATED_PRODUCTS",
-             "SHOP_USE_UPSELL_PRODUCTS"),
+             "SHOP_USE_UPSELL_PRODUCTS", "SHOP_USE_PRODUCT_TYPES"),
     append=True,
 )
 
@@ -324,4 +324,12 @@ register_setting(
         "editing them in the admin.",
     editable=False,
     default=True,
+)
+
+register_setting(
+    name="SHOP_USE_PRODUCT_TYPES",
+    label=_("Use product types"),
+    description="Subclass the Product model to create custom product types.",
+    editable=False,
+    default=False,
 )

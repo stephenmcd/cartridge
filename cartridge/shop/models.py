@@ -102,7 +102,21 @@ class BaseProduct(Displayable):
         abstract = True
 
 
-class Product(BaseProduct, Priced, RichText, AdminThumbMixin, ContentTyped):
+class ProductMetaclass(ModelBase):
+    """
+    Metaclass for the ``Product`` model that adds ``ContentTyped`` to base
+    classes if SHOP_USE_PRODUCT_TYPES is True.
+    """
+    def __new__(cls, name, bases, attrs):
+        # This is called for subclasses too and they can't directly inherit
+        # from ContentTyped or they'll end up with duplicate fields.
+        if name == 'Product' and settings.SHOP_USE_PRODUCT_TYPES:
+            bases += (ContentTyped,)
+        return super(ProductMetaclass, cls).__new__(cls, name, bases, attrs)
+
+
+class Product(with_metaclass(
+        ProductMetaclass, BaseProduct, Priced, RichText, AdminThumbMixin)):
     """
     Container model for a product that stores information common to
     all of its variations such as the product's title and description.
@@ -141,7 +155,7 @@ class Product(BaseProduct, Priced, RichText, AdminThumbMixin, ContentTyped):
         if updating and not settings.SHOP_USE_VARIATIONS:
             default = self.variations.get(default=True)
             self.copy_price_fields_to(default)
-        else:
+        elif hasattr(self, 'content_model'):
             self.content_model = self._meta.object_name.lower()
 
     @models.permalink
