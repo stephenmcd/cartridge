@@ -151,6 +151,7 @@ Authorize.Net
 -------------
 
 ::
+
     SHOP_HANDLER_PAYMENT = 'cartridge.shop.payment.authorizenet.process'
     AUTH_NET_LOGIN = ''
     AUTH_NET_TRANS_KEY = ''
@@ -159,6 +160,7 @@ Egate
 -----
 
 ::
+
     SHOP_HANDLER_PAYMENT = 'cartridge.shop.payment.egate.process'
     EGATE_ACCESS_CODE = ''
     EGATE_MERCHANT = ''
@@ -167,6 +169,7 @@ Paypal
 ------
 
 ::
+
     SHOP_HANDLER_PAYMENT = 'cartridge.shop.payment.paypal.process'
     PAYPAL_USER = ''
     PAYPAL_SIGNATURE = ''
@@ -179,6 +182,7 @@ Stripe
     Requires the ``stripe`` library from pypi.
 
 ::
+
     SHOP_HANDLER_PAYMENT = 'cartridge.shop.payment.stripe_api.process'
     STRIPE_API_KEY = ''
 
