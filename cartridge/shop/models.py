@@ -21,10 +21,10 @@ from django.utils.encoding import force_text
 from django.utils.encoding import python_2_unicode_compatible
 
 from mezzanine.conf import settings
-from mezzanine.core.content_typed import ContentTyped
 from mezzanine.core.fields import FileField
 from mezzanine.core.managers import DisplayableManager
-from mezzanine.core.models import Displayable, RichText, Orderable, SiteRelated
+from mezzanine.core.models import (
+    ContentTyped, Displayable, Orderable, RichText, SiteRelated)
 from mezzanine.generic.fields import RatingField
 from mezzanine.pages.models import Page
 from mezzanine.utils.models import AdminThumbMixin, upload_to

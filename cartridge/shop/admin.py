@@ -38,10 +38,9 @@ from django.db.models import ImageField
 from django.utils.translation import ugettext_lazy as _
 
 from mezzanine.conf import settings
-from mezzanine.core.admin import (DisplayableAdmin,
-                                  TabularDynamicInlineAdmin,
-                                  BaseTranslationModelAdmin)
-from mezzanine.core.content_typed import ContentTypedAdmin
+from mezzanine.core.admin import (
+    BaseTranslationModelAdmin, ContentTypedAdmin, DisplayableAdmin,
+    TabularDynamicInlineAdmin)
 from mezzanine.pages.admin import PageAdmin
 
 from cartridge.shop.fields import MoneyField
