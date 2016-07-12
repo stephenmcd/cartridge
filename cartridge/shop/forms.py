@@ -131,6 +131,8 @@ class CartItemForm(forms.ModelForm):
     ``CartItemFormSet`` below which controls editing the entire cart.
     """
 
+    quantity = forms.IntegerField(label=_("Quantity"), min_value=0)
+
     class Meta:
         model = CartItem
         fields = ("quantity",)
