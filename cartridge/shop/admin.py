@@ -173,10 +173,12 @@ class ProductAdmin(DisplayableAdmin):
 
     def save_model(self, request, obj, form, change):
         """
-        Store the product object for creating variations in save_formset.
+        Store the product ID for creating variations in save_formset.
         """
         super(ProductAdmin, self).save_model(request, obj, form, change)
-        self._product = obj
+        # We store the product ID so we can retrieve a clean copy of
+        # the product in save_formset, see: GH #301.
+        self._product_id = obj.id
 
     def save_formset(self, request, form, formset, change):
         """
@@ -203,6 +205,8 @@ class ProductAdmin(DisplayableAdmin):
 
         """
 
+        product = self.model.objects.get(id=self._product_id)
+
         # Store the images formset for later saving, otherwise save the
         # formset.
         if formset.model == ProductImage:
@@ -224,13 +228,13 @@ class ProductAdmin(DisplayableAdmin):
                 if f.startswith("images-") and f.endswith("-DELETE")]
 
             # Create new variations for selected options.
-            self._product.variations.create_from_options(options)
+            product.variations.create_from_options(options)
             # Create a default variation if there are none.
-            self._product.variations.manage_empty()
+            product.variations.manage_empty()
 
             # Remove any images deleted just now from variations they're
             # assigned to, and set an image for any variations without one.
-            self._product.variations.set_default_images(deleted_images)
+            product.variations.set_default_images(deleted_images)
 
             # Save the images formset stored previously.
             super(ProductAdmin, self).save_formset(request, form,
@@ -238,11 +242,11 @@ class ProductAdmin(DisplayableAdmin):
 
             # Run again to allow for no images existing previously, with
             # new images added which can be used as defaults for variations.
-            self._product.variations.set_default_images(deleted_images)
+            product.variations.set_default_images(deleted_images)
 
             # Copy duplicate fields (``Priced`` fields) from the default
             # variation to the product.
-            self._product.copy_default_variation()
+            product.copy_default_variation()
 
             # Save every translated fields from ``ProductOption`` into
             # the required ``ProductVariation``
@@ -255,7 +259,7 @@ class ProductAdmin(DisplayableAdmin):
                         opt_obj = ProductOption.objects.get(type=opt_name[6:],
                                                             name=opt_value)
                         params = {opt_name: opt_value}
-                        for var in self._product.variations.filter(**params):
+                        for var in product.variations.filter(**params):
                             for code in OrderedDict(settings.LANGUAGES):
                                 setattr(var, _loc(opt_name, code),
                                         getattr(opt_obj, _loc('name', code)))
