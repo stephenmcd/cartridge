@@ -298,6 +298,8 @@ class OrderForm(FormsetForm, DiscountForm):
     checkout process with fields being hidden where applicable.
     """
 
+    use_required_attribute = False
+
     step = forms.IntegerField(widget=forms.HiddenInput())
     same_billing_shipping = forms.BooleanField(required=False, initial=True,
         label=_("My delivery details are the same as my billing details"))
