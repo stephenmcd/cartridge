@@ -1,3 +1,17 @@
+Version 0.12.0 (Aug 17, 2016)
+-----------------------------
+
+  * Document built-in payment handlers - ryneeverett
+  * Remove nesting of context objects. The same as ``https://github.com/stephenmcd/mezzanine/pull/1520``. Tested with custom project - Henri Hulski
+  * Wrap invoice PDF call with ``HAS_PDF`` in case pisa None - Sam Kingston
+  * Replace render() with TemplateResponse(). Replaces `mezzanine.utils.views.render` with `django.template.response.TemplateResponse` as it is deprecated in Mezzanine - Henri Hulski
+  * Fix for broken carts on expiration - David Sanders
+  * Fix payment handler docs code blocks - ryneeverett
+  * Define min value for cart item quantity field. Closes #299 - Stephen McDonald
+  * Don't override keywords string in product admin. Closes #301 - Stephen McDonald
+  * ``django.template.context_processors`` is removed in Django 1.10 - Stephen McDonald
+  * Prevent Django 1.10 from adding HTML5 required attribute to order form, which causes it to fail - Stephen McDonald
+
 Version 0.11.0 (Jan 17, 2016)
 -----------------------------
 
