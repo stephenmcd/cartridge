@@ -40,6 +40,7 @@
 
 {% if products.paginator.count != 0 %}
 
+{% if settings.SHOP_PRODUCT_SORT_OPTIONS.count > 0 %}
 <form class="product-sorting" role="form">
     <div class="form-group">
     <label class="control-label" for="sorting-select">{% trans "Sort by" %}</label>
@@ -55,6 +56,7 @@
         </select>
     </div>
 </form>
+{% endif %}
 
 <div class="row product-list">
 {% for product in products.object_list %}
