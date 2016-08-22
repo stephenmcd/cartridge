@@ -9,7 +9,6 @@ from django.core.urlresolvers import reverse
 from django.db.models import Sum
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
-from django.template import RequestContext
 from django.template.defaultfilters import slugify
 from django.template.loader import get_template
 from django.template.response import TemplateResponse
@@ -382,7 +381,6 @@ def invoice(request, order_id, template="shop/order_invoice.html",
     context = {"order": order}
     context.update(order.details_as_dict())
     context.update(extra_context or {})
-    context = RequestContext(request, context)
     if HAS_PDF and request.GET.get("format") == "pdf":
         response = HttpResponse(content_type="application/pdf")
         name = slugify("%s-invoice-%s" % (settings.SITE_TITLE, order.id))
