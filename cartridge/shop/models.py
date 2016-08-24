@@ -136,12 +136,12 @@ class Product(BaseProduct, Priced, RichText, ContentTyped, AdminThumbMixin):
         ``SHOP_USE_VARIATIONS`` is False, and the product is
         updated via the admin change list.
         """
+        self.set_content_model()
         updating = self.id is not None
         super(Product, self).save(*args, **kwargs)
         if updating and not settings.SHOP_USE_VARIATIONS:
             default = self.variations.get(default=True)
             self.copy_price_fields_to(default)
-        self.content_model = self.get_content_model_name()
 
     @models.permalink
     def get_absolute_url(self):
