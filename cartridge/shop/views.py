@@ -37,7 +37,7 @@ HAS_PDF = pisa is not None
 handler = lambda s: import_dotted_path(s) if s else lambda *args: None
 billship_handler = handler(settings.SHOP_HANDLER_BILLING_SHIPPING)
 tax_handler = handler(settings.SHOP_HANDLER_TAX)
-payment_handler = handler(settings.SHOP_HANDLER_PAYMENT)
+# payment_handler = handler(settings.SHOP_HANDLER_PAYMENT)
 order_handler = handler(settings.SHOP_HANDLER_ORDER)
 
 
@@ -237,11 +237,22 @@ def checkout_steps(request, form_class=OrderForm, extra_context=None):
     data = request.POST
     checkout_errors = []
 
+    # Process order to see if empty or not
+    order = form.save(commit=False)
+    order.setup(request)
+    order_is_zero = (order.total == 0)
+
     if request.POST.get("back") is not None:
         # Back button in the form was pressed - load the order form
         # for the previous step and maintain the field values entered.
         step -= 1
+        if (settings.SHOP_PAYMENT_STEP_ENABLED and
+                step == checkout.CHECKOUT_STEP_PAYMENT and
+                order_is_zero):
+            # Order total is zero, skip going back to payment
+            step -= 1
         form = form_class(request, step, initial=initial)
+
     elif request.method == "POST" and request.cart.has_items():
         form = form_class(request, step, initial=initial, data=data)
         if form.is_valid():
@@ -273,6 +284,12 @@ def checkout_steps(request, form_class=OrderForm, extra_context=None):
             except checkout.CheckoutError as e:
                 checkout_errors.append(e)
 
+            if step == checkout.CHECKOUT_STEP_FIRST:
+                # Before redirecting to payment, if order total is zero
+                # skip payment step
+                if (not settings.SHOP_PAYMENT_STEP_ENABLED or order_is_zero):
+                    step += 1
+
             # FINAL CHECKOUT STEP - run payment handler and process order.
             if step == checkout.CHECKOUT_STEP_LAST and not checkout_errors:
                 # Create and save the initial order object so that
@@ -282,6 +299,15 @@ def checkout_steps(request, form_class=OrderForm, extra_context=None):
                 # and send the order receipt email.
                 order = form.save(commit=False)
                 order.setup(request)
+
+                if (not settings.SHOP_PAYMENT_STEP_ENABLED or
+                        order.total == 0):
+                    # Payment step disabled or cart total is 0,
+                    # use dummy payment system
+                    payment_handler = handler(
+                        'cartridge.shop.checkout.default_order_handler')
+                else:
+                    payment_handler = handler(settings.SHOP_HANDLER_PAYMENT)
                 # Try payment.
                 try:
                     transaction_id = payment_handler(request, form, order)
@@ -316,10 +342,15 @@ def checkout_steps(request, form_class=OrderForm, extra_context=None):
             # re-run is_valid. If valid, then set form to the next step.
             form = form_class(request, step, initial=initial, data=data,
                               errors=checkout_errors)
+            if (settings.SHOP_PAYMENT_STEP_ENABLED and order_is_zero):
+                # Order total is zero and payment enabled,
+                # ignore payment fields
+                hidden_filter = lambda f: f.startswith("card_")
+                for field in filter(hidden_filter, form.fields):
+                    form.fields[field].required = False
             if form.is_valid():
                 step += 1
                 form = form_class(request, step, initial=initial)
-
     # Update the step so that we don't rely on POST data to take us back to
     # the same point in the checkout process.
     try:
