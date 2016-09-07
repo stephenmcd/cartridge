@@ -305,7 +305,7 @@ def checkout_steps(request, form_class=OrderForm, extra_context=None):
                     # Payment step disabled or cart total is 0,
                     # use dummy payment system
                     payment_handler = handler(
-                        'cartridge.shop.checkout.default_order_handler')
+                        'cartridge.shop.checkout.default_payment_handler')
                 else:
                     payment_handler = handler(settings.SHOP_HANDLER_PAYMENT)
                 # Try payment.
