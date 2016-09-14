@@ -1,40 +1,46 @@
 {% load shop_tags i18n %}
 <div class="order-totals">
-    {% if discount_total or shipping_total %}
     <div><label>{% trans "Sub total" %}:</label> <span>{{ item_total|currency }}</span></div>
-    {% endif %}
-    {% if discount_total %}
-    <div>
-        <label>
-        {% if discount_type %}
-        {{ discount_type }}:
-        {% else %}
-        {% trans "Discount" %}:
-        {% endif %}
-        </label> <span>{{ discount_total|currency }}</span>
-    </div>
+    {% if tax_total %}
+        <div>
+            <label>
+                {% if tax_type %}
+                    {{ tax_type }}:
+                {% else %}
+                    {% trans "Tax" %}:
+                {% endif %}
+            </label> <span>{{ tax_total|currency }}</span>
+        </div>
     {% endif %}
     {% if shipping_type or shipping_total %}
-    <div>
-        <label>
-        {% if shipping_type %}
-        {{ shipping_type }}:
-        {% else %}
-        {% trans "Shipping" %}:
-        {% endif %}
-        </label> <span>{{ shipping_total|currency }}</span>
-    </div>
+        <div>
+            <label>
+                {% if shipping_type %}
+                    {{ shipping_type }}:
+                {% else %}
+                    {% trans "Shipping" %}:
+                {% endif %}
+            </label> <span>{{ shipping_total|currency }}</span>
+        </div>
     {% endif %}
-    {% if tax_total %}
-    <div>
-        <label>
-        {% if tax_type %}
-        {{ tax_type }}:
-        {% else %}
-        {% trans "Tax" %}:
-        {% endif %}
-        </label> <span>{{ tax_total|currency }}</span>
-    </div>
+    <hr>
+    {% if order_total_before_discount %}
+        <div class="total"><label>{% trans "Total" %}:</label> <span>{{ order_total_before_discount|currency }}</span>
+        </div>
+    {% else %}
+        <div class="total"><label>{% trans "Total" %}:</label> <span>{{ order_total|currency }}</span></div>
     {% endif %}
-    <div class="total"><label>{% trans "Total" %}:</label> <span>{{ order_total|currency }}</span></div>
+    {% if discount_total %}
+        <div>
+            <label>
+                {% if discount_type %}
+                    {{ discount_type }}:
+                {% else %}
+                    {% trans "Discount" %}:
+                {% endif %}
+            </label> <span>-{{ discount_total|currency }}</span>
+        </div>
+        <hr>
+        <div class="total"><label>{% trans "Total" %}:</label> <span>{{ order_total|currency }}</span></div>
+    {% endif %}
 </div>

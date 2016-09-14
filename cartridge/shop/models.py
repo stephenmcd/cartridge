@@ -334,8 +334,8 @@ class Category(Page, RichText):
         upload_to=upload_to("shop.Category.featured_image", "shop"),
         format="Image", max_length=255, null=True, blank=True)
     products = models.ManyToManyField("Product", blank=True,
-                                     verbose_name=_("Products"),
-                                     through=Product.categories.through)
+                                      verbose_name=_("Products"),
+                                      through=Product.categories.through)
     options = models.ManyToManyField("ProductOption", blank=True,
                                      verbose_name=_("Product options"),
                                      related_name="product_options")
@@ -403,7 +403,6 @@ class Category(Page, RichText):
 
 @python_2_unicode_compatible
 class Order(SiteRelated):
-
     billing_detail_first_name = CharField(_("First name"), max_length=100)
     billing_detail_last_name = CharField(_("Last name"), max_length=100)
     billing_detail_street = CharField(_("Street"), max_length=100)
@@ -473,13 +472,19 @@ class Order(SiteRelated):
             if field in request.session:
                 setattr(self, field, request.session[field])
         self.total = self.item_total = request.cart.total_price()
+        if self.tax_total is not None:
+            if "%" in self.tax_total:
+                self.tax_type += "(" + self.tax_total + ")"
+                self.tax_total = self.total * Decimal(self.tax_total.replace("%", "")) / 100
+            if not settings.SHOP_HANDLER_TAX_INCLUDE_IN_PRICE:
+                self.total += Decimal(self.tax_total)
+            else:
+                self.item_total -= self.tax_total
         if self.shipping_total is not None:
             self.shipping_total = Decimal(str(self.shipping_total))
             self.total += self.shipping_total
         if self.discount_total is not None:
             self.total -= Decimal(self.discount_total)
-        if self.tax_total is not None:
-            self.total += Decimal(self.tax_total)
         self.save()  # We need an ID before we can add related items.
         for item in request.cart:
             product_fields = [f.name for f in SelectedProduct._meta.fields]
@@ -661,7 +666,6 @@ class SelectedProduct(models.Model):
 
 
 class CartItem(SelectedProduct):
-
     cart = models.ForeignKey("Cart", related_name="items")
     url = CharField(max_length=2000)
     image = CharField(max_length=200, null=True)
