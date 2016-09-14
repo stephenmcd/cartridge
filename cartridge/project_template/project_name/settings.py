@@ -22,9 +22,6 @@ from django.utils.translation import ugettext_lazy as _
 # Setting to turn on featured images for shop categories. Defaults to False.
 # SHOP_CATEGORY_USE_FEATURED_IMAGE = True
 
-# Set an alternative OrderForm class for the checkout process.
-# SHOP_CHECKOUT_FORM_CLASS = 'cartridge.shop.forms.OrderForm'
-
 # If True, the checkout process is split into separate
 # billing/shipping and payment steps.
 # SHOP_CHECKOUT_STEPS_SPLIT = True
