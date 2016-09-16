@@ -939,7 +939,7 @@ msgid "Order Complete"
 msgstr "Tilaus on valmis"
 
 #: templates/shop/complete.html:75
-msgid "Thank you for shopping with us, your order is complete."
+msgid "Thank you for shopping with us! Your order is complete."
 msgstr "Kiitos kun ostitte meiltä, tilauksesi on valmis."
 
 #: templates/shop/complete.html:76
