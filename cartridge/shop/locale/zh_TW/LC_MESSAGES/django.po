@@ -896,7 +896,7 @@ msgid "Order Complete"
 msgstr "訂單完成"
 
 #: templates/shop/complete.html:75
-msgid "Thank you for shopping with us, your order is complete."
+msgid "Thank you for shopping with us! Your order is complete."
 msgstr "感謝您的購買，您的訂單已完成。"
 
 #: templates/shop/complete.html:76

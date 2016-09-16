@@ -906,7 +906,7 @@ msgid "Order Complete"
 msgstr "Zamówienie zakończone"
 
 #: templates/shop/complete.html:75
-msgid "Thank you for shopping with us, your order is complete."
+msgid "Thank you for shopping with us! Your order is complete."
 msgstr "Dziękujemy za zakupy u nas, Twoje zamówienie jest zakończone."
 
 #: templates/shop/complete.html:76

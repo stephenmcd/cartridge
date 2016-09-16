@@ -901,7 +901,7 @@ msgid "Order Complete"
 msgstr "주문 완료"
 
 #: templates/shop/complete.html:75
-msgid "Thank you for shopping with us, your order is complete."
+msgid "Thank you for shopping with us! Your order is complete."
 msgstr "주문해주셔서 감사합니다."
 
 #: templates/shop/complete.html:76
