@@ -197,7 +197,7 @@ def cart(request, template="shop/cart.html",
             return redirect("shop_cart")
     context = {"cart_formset": cart_formset}
     context.update(extra_context or {})
-    settings.use_editable()
+    settings.clear_cache()
     if (settings.SHOP_DISCOUNT_FIELD_IN_CART and
             DiscountCode.objects.active().exists()):
         context["discount_form"] = discount_form

@@ -357,7 +357,7 @@ class OrderForm(FormsetForm, DiscountForm):
 
         # Hide discount code field if it shouldn't appear in checkout,
         # or if no discount codes are active.
-        settings.use_editable()
+        settings.clear_cache()
         if not (settings.SHOP_DISCOUNT_FIELD_IN_CHECKOUT and
                 DiscountCode.objects.active().exists()):
             self.fields["discount_code"].widget = forms.HiddenInput()

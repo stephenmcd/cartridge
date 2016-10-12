@@ -35,7 +35,7 @@ def default_billship_handler(request, order_form):
     accessible via ``request.cart``
     """
     if not request.session.get("free_shipping"):
-        settings.use_editable()
+        settings.clear_cache()
         set_shipping(request, _("Flat rate shipping"),
                      settings.SHOP_DEFAULT_SHIPPING_VALUE)
 
@@ -50,7 +50,6 @@ def default_tax_handler(request, order_form):
     ``cartridge.shop.utils.set_tax``. The Cart object is also
     accessible via ``request.cart``
     """
-    settings.use_editable()
     set_tax(request, _("Tax"), 0)
 
 
@@ -164,7 +163,7 @@ def send_order_email(request, order):
     """
     Send order receipt email on successful order.
     """
-    settings.use_editable()
+    settings.clear_cache()
     order_context = {"order": order, "request": request,
                      "order_items": order.items.all()}
     order_context.update(order.details_as_dict())
