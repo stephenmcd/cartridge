@@ -409,7 +409,6 @@ def order_history(request, template="shop/order_history.html",
     return TemplateResponse(request, template, context)
 
 
-@login_required
 def invoice_resend_email(request, order_id):
     """
     Re-sends the order complete email for the given order and redirects
