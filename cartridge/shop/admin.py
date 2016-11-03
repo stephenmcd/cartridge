@@ -37,9 +37,9 @@ from django.db.models import ImageField
 from django.utils.translation import ugettext_lazy as _
 
 from mezzanine.conf import settings
-from mezzanine.core.admin import (DisplayableAdmin,
-                                  TabularDynamicInlineAdmin,
-                                  BaseTranslationModelAdmin)
+from mezzanine.core.admin import (
+    BaseTranslationModelAdmin, ContentTypedAdmin, DisplayableAdmin,
+    TabularDynamicInlineAdmin)
 from mezzanine.pages.admin import PageAdmin
 
 from cartridge.shop.fields import MoneyField
@@ -154,7 +154,7 @@ else:
     product_list_editable.extend(extra_list_fields)
 
 
-class ProductAdmin(DisplayableAdmin):
+class ProductAdmin(ContentTypedAdmin, DisplayableAdmin):
 
     class Media:
         js = (static("cartridge/js/admin/product_variations.js"),)

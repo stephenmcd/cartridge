@@ -28,6 +28,38 @@ abstract model ``Displayable``, which provides the model with features such as a
 model are not editable via the admin. The rationale for this is discussed
 later in :ref:`ref-denormalized-fields`.
 
+Creating Custom Product Types
+-----------------------------
+
+Sometimes it is helpful to subclass ``Product`` to create your own product types.
+
+    # models.py
+    from django.db import models
+    from cartridge.shop.models import Product
+
+
+    class MyProduct(Product):
+        my_field = models.CharField(max_length=60)
+
+Don't forget to register your subclass in the admin, or it will not be a
+selectable product type. Your simplest option is to just use ``ProductAdmin``.
+
+    # admin.py
+    from django.contrib import admin
+    from cartridge.shop.admin import ProductAdmin
+    from .models import MyProduct
+
+    admin.site.register(MyProduct, ProductAdmin)
+
+One additional feature of note is optional custom product templates. You may
+create a template ``shop/products/myproduct.html`` to override
+``shop/product.html`` for each particular custom product.
+
+For further details, see the `Mezzanine documentation
+<http://mezzanine.jupo.org/docs/content-architecture.html#the-page-model>`_ on
+subclassing ``Page``, the mechanics of which are very similar.
+
+
 .. _ref-priced-items:
 
 Priced Items
