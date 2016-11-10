@@ -891,6 +891,6 @@ msgid "Dear"
 msgstr "Estimat"
 
 #: templates/shop/email/order_receipt.html:5
-msgid "Your order has been successful, details are below."
+msgid "Your order has been successful. Details are below."
 msgstr "S'ha creat la seva ordre correctament. En podeu trobar els detalls a continuació:"
 

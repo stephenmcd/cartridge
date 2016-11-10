@@ -750,7 +750,7 @@ msgstr "Estimat"
 
 #: templates/email/order_receipt.txt:7 templates/email/receipt.html:4
 #: templates/email/receipt_rtl.html:4
-msgid "Your order has been successful, details are below."
+msgid "Your order has been successful. Details are below."
 msgstr ""
 "S'ha creat la seva ordre correctament. En podeu trobar els detalls a "
 "continuació:"

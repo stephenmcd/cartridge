@@ -4,7 +4,7 @@
 {% block main %}
 {% trans "Dear" %} {{ order.billing_detail_first_name }},
 
-{% trans "Your order has been successful, details are below." %}
+{% trans "Your order has been successful. Details are below." %}
 
 {% trans "Order ID:" %} #{{ order.id }}
 
