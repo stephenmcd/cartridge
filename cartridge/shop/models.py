@@ -682,6 +682,13 @@ class CartItem(SelectedProduct):
     def get_absolute_url(self):
         return self.url
 
+    def save(self, *args, **kwargs):
+        super(CartItem, self).save(*args, **kwargs)
+
+        # Check if this is the last cart item being removed
+        if self.quantity == 0 and not self.cart.items.exists():
+            self.cart.delete()
+
 
 class OrderItem(SelectedProduct):
     """
