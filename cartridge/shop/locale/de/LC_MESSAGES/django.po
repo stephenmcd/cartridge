@@ -735,7 +735,7 @@ msgstr "Sehr geehrte(r)"
 
 #: templates/email/order_receipt.txt:7 templates/email/receipt.html:4
 #: templates/email/receipt_rtl.html:4
-msgid "Your order has been successful, details are below."
+msgid "Your order has been successful. Details are below."
 msgstr "Ihre Bestellung war erfolgreich, weitere Informationen untenstehend."
 
 #: templates/email/order_receipt.txt:9
@@ -915,7 +915,7 @@ msgid "Order Complete"
 msgstr "Bestellung abgeschlossen"
 
 #: templates/shop/complete.html:75
-msgid "Thank you for shopping with us, your order is complete."
+msgid "Thank you for shopping with us! Your order is complete."
 msgstr "Vielen Dank für Ihren Einkauf bei uns. Ihre Bestellung ist abgeschlossen."
 
 #: templates/shop/complete.html:76

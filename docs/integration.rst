@@ -213,14 +213,13 @@ billing / shipping checkout step.
 Checkout Form
 =============
 
-It's possible to override the checkout form class used via the setting
-``SHOP_CHECKOUT_FORM_CLASS``, which contains the Python dotted path to
-the form class that will be used. This defaults to
-``cartridge.shop.forms.OrderForm``, which for the most part, is a Django
-ModelForm for the ``Order`` model, along with all of the methods for
-handling the different checkout steps. When defining your own custom
-form class, subclassing ``cartridge.shop.forms.OrderForm`` is certainly
-recommended.
+The default checkout form is ``cartridge.shop.forms.OrderForm``, which for the
+most part, is a Django ModelForm for the ``Order`` model, along with all of the
+methods for handling the different checkout steps. It's possible to override
+the checkout form class used by defining your own urlpattern for the
+``checkout_steps`` view and passing in your own ``form_class`` argument. When
+defining your own custom form class, subclassing
+``cartridge.shop.forms.OrderForm`` is certainly recommended.
 
 The following list contains the fields for the
 ``cartridge.shop.forms.OrderForm`` instance, that is passed to each of

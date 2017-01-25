@@ -32,15 +32,15 @@ are then pushed back onto the one variation for the product.
 from copy import deepcopy
 
 from django.contrib import admin
-from django.contrib.admin.templatetags.admin_static import static
 from django.db.models import ImageField
 from django.utils.translation import ugettext_lazy as _
 
 from mezzanine.conf import settings
-from mezzanine.core.admin import (DisplayableAdmin,
-                                  TabularDynamicInlineAdmin,
-                                  BaseTranslationModelAdmin)
+from mezzanine.core.admin import (
+    BaseTranslationModelAdmin, ContentTypedAdmin, DisplayableAdmin,
+    TabularDynamicInlineAdmin)
 from mezzanine.pages.admin import PageAdmin
+from mezzanine.utils.static import static_lazy as static
 
 from cartridge.shop.fields import MoneyField
 from cartridge.shop.forms import ProductAdminForm, ProductVariationAdminForm
@@ -154,7 +154,7 @@ else:
     product_list_editable.extend(extra_list_fields)
 
 
-class ProductAdmin(DisplayableAdmin):
+class ProductAdmin(ContentTypedAdmin, DisplayableAdmin):
 
     class Media:
         js = (static("cartridge/js/admin/product_variations.js"),)

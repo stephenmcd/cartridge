@@ -14,7 +14,7 @@ def category_processor(request, page):
     """
     Add paging/sorting to the products for the category.
     """
-    settings.use_editable()
+    settings.clear_cache()
     products = Product.objects.published(for_user=request.user
                                 ).filter(page.category.filters()).distinct()
     sort_options = [(slugify(option[0]), option[1])

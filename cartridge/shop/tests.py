@@ -519,7 +519,7 @@ class TaxationTests(TestCase):
         Ensure that the handler specified in default settings exists as well as
         the default setting itself.
         """
-        settings.use_editable()
+        settings.clear_cache()
         handler = lambda s: import_dotted_path(s) if s else lambda *args: None
         self.assertTrue(handler(settings.SHOP_HANDLER_TAX) is not None)
 

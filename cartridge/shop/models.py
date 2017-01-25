@@ -23,7 +23,8 @@ from django.utils.encoding import python_2_unicode_compatible
 from mezzanine.conf import settings
 from mezzanine.core.fields import FileField
 from mezzanine.core.managers import DisplayableManager
-from mezzanine.core.models import Displayable, RichText, Orderable, SiteRelated
+from mezzanine.core.models import (
+    ContentTyped, Displayable, Orderable, RichText, SiteRelated)
 from mezzanine.generic.fields import RatingField
 from mezzanine.pages.models import Page
 from mezzanine.utils.models import AdminThumbMixin, upload_to
@@ -88,7 +89,20 @@ class Priced(models.Model):
         obj_to.save()
 
 
-class Product(Displayable, Priced, RichText, AdminThumbMixin):
+class BaseProduct(Displayable):
+    """
+    Exists solely to store ``DisplayableManager`` as the main manager.
+    If it's defined on ``Product``, a concrete model, then each
+    ``Product`` subclass loses the custom manager.
+    """
+
+    objects = DisplayableManager()
+
+    class Meta:
+        abstract = True
+
+
+class Product(BaseProduct, Priced, RichText, ContentTyped, AdminThumbMixin):
     """
     Container model for a product that stores information common to
     all of its variations such as the product's title and description.
@@ -107,8 +121,6 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
                              verbose_name=_("Upsell products"), blank=True)
     rating = RatingField(verbose_name=_("Rating"))
 
-    objects = DisplayableManager()
-
     admin_thumb_field = "image"
 
     search_fields = {"variations__sku": 100}
@@ -124,6 +136,7 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
         ``SHOP_USE_VARIATIONS`` is False, and the product is
         updated via the admin change list.
         """
+        self.set_content_model()
         updating = self.id is not None
         super(Product, self).save(*args, **kwargs)
         if updating and not settings.SHOP_USE_VARIATIONS:
@@ -668,6 +681,13 @@ class CartItem(SelectedProduct):
 
     def get_absolute_url(self):
         return self.url
+
+    def save(self, *args, **kwargs):
+        super(CartItem, self).save(*args, **kwargs)
+
+        # Check if this is the last cart item being removed
+        if self.quantity == 0 and not self.cart.items.exists():
+            self.cart.delete()
 
 
 class OrderItem(SelectedProduct):

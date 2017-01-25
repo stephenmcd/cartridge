@@ -92,7 +92,12 @@ def product(request, slug, template="shop/product.html",
         "add_product_form": add_product_form
     }
     context.update(extra_context or {})
+
     templates = [u"shop/%s.html" % str(product.slug), template]
+    # Check for a template matching the page's content model.
+    if getattr(product, 'content_model', None) is not None:
+        templates.insert(0, u"shop/products/%s.html" % product.content_model)
+
     return TemplateResponse(request, templates, context)
 
 
@@ -197,7 +202,7 @@ def cart(request, template="shop/cart.html",
             return redirect("shop_cart")
     context = {"cart_formset": cart_formset}
     context.update(extra_context or {})
-    settings.use_editable()
+    settings.clear_cache()
     if (settings.SHOP_DISCOUNT_FIELD_IN_CART and
             DiscountCode.objects.active().exists()):
         context["discount_form"] = discount_form
@@ -440,7 +445,6 @@ def order_history(request, template="shop/order_history.html",
     return TemplateResponse(request, template, context)
 
 
-@login_required
 def invoice_resend_email(request, order_id):
     """
     Re-sends the order complete email for the given order and redirects
