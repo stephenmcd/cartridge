@@ -243,9 +243,7 @@ def checkout_steps(request, form_class=OrderForm, extra_context=None):
     checkout_errors = []
 
     # Process order to see if empty or not
-    order = form.save(commit=False)
-    order.setup(request)
-    order_is_zero = (order.total == 0)
+    order_is_zero = (request.cart.total_price() == 0)
 
     if request.POST.get("back") is not None:
         # Back button in the form was pressed - load the order form
