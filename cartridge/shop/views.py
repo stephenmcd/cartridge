@@ -328,8 +328,9 @@ def checkout_steps(request, form_class=OrderForm, extra_context=None):
                     # Then send the order email to the customer.
                     order.transaction_id = transaction_id
                     order.complete(request)
-                    order_handler(request, form, order)
-                    checkout.send_order_email(request, order)
+                    order_type = order_handler(request, form, order)
+                    if order_type == 'indie':
+                        checkout.send_order_email(request, order)
                     # Set the cookie for remembering address details
                     # if the "remember" checkbox was checked.
                     response = redirect("shop_complete")
