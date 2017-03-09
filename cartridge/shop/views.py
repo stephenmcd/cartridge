@@ -425,7 +425,7 @@ def invoice_resend_email(request, order_id):
         raise Http404
     if request.method == "POST":
         checkout.send_order_email(request, order)
-        msg = _("The order email for order ID %s has been re-sent" % order_id)
+        msg = _("The order email for order ID %s has been re-sent") % order_id
         info(request, msg)
     # Determine the URL to return the user to.
     redirect_to = next_url(request)
