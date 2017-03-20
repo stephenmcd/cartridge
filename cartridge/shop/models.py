@@ -28,6 +28,7 @@ from mezzanine.core.models import (
 from mezzanine.generic.fields import RatingField
 from mezzanine.pages.models import Page
 from mezzanine.utils.models import AdminThumbMixin, upload_to
+from mezzanine.utils.importing import import_dotted_path
 
 from cartridge.shop import fields, managers
 from cartridge.shop.utils import clear_session
@@ -667,7 +668,8 @@ class SelectedProduct(models.Model):
         delete it.
         """
         if not self.id or self.quantity > 0:
-            self.total_price = self.unit_price * self.quantity
+            total_price_handler = import_dotted_path(settings.SHOP_HANDLER_ITEM_TOTAL)
+            self.total_price = total_price_handler(self)
             super(SelectedProduct, self).save(*args, **kwargs)
         else:
             self.delete()
