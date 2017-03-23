@@ -64,18 +64,22 @@ class Command(BaseCommand):
     args = '--import/--export <csv_file>'
     help = _('Import/Export products from a csv file.')
 
-    option_list = BaseCommand.option_list + (
-        make_option('--import',
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--import',
             action='store_true',
             dest='import',
             default=False,
-            help=_('Import products from csv file.')),
-        make_option('--export',
+            help=_('Import products from csv file.')
+        )
+
+        parser.add_argument(
+            '--export',
             action='store_true',
             dest='export',
             default=False,
-            help=_('Export products from csv file.')),
-    )
+            help=_('Export products from csv file.')
+        )
 
     def handle(self, *args, **options):
         if sys.version_info[0] == 3:
