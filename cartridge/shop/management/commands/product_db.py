@@ -1,9 +1,7 @@
 import csv
 import os
 import shutil
-import sys
 import datetime
-from optparse import make_option
 
 from django.core.management.base import BaseCommand
 from django.core.management.base import CommandError
@@ -22,7 +20,8 @@ from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
 # images get copied from thie directory
 LOCAL_IMAGE_DIR = "/tmp/orig"
 # images get copied to this directory under STATIC_ROOT
-IMAGE_SUFFIXES = [".jpg", ".JPG", ".jpeg", ".JPEG", ".tif", ".gif", ".GIF", ".png", ".PNG"]
+IMAGE_SUFFIXES = [".jpg", ".JPG", ".jpeg", ".JPEG", ".tif", ".gif", ".GIF",
+                  ".png", ".PNG"]
 EMPTY_IMAGE_ENTRIES = ["Please add", "N/A", ""]
 DATE_FORMAT = "%Y-%m-%d"
 TIME_FORMAT = "%H:%M"
