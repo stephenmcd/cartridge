@@ -3,9 +3,7 @@ from __future__ import print_function
 import csv
 import os
 import shutil
-import sys
 import datetime
-from optparse import make_option
 
 from django.core.management.base import BaseCommand
 from django.core.management.base import CommandError
@@ -24,7 +22,8 @@ from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
 # images get copied from thie directory
 LOCAL_IMAGE_DIR = "/tmp/orig"
 # images get copied to this directory under STATIC_ROOT
-IMAGE_SUFFIXES = [".jpg", ".JPG", ".jpeg", ".JPEG", ".tif", ".gif", ".GIF"]
+IMAGE_SUFFIXES = [".jpg", ".JPG", ".jpeg", ".JPEG", ".tif", ".gif", ".GIF",
+                  ".png", ".PNG"]
 EMPTY_IMAGE_ENTRIES = ["Please add", "N/A", ""]
 DATE_FORMAT = "%Y-%m-%d"
 TIME_FORMAT = "%H:%M"
@@ -57,33 +56,32 @@ fieldnames = [TITLE, CONTENT, DESCRIPTION, CATEGORY, SUB_CATEGORY,
     SKU, IMAGE, NUM_IN_STOCK, UNIT_PRICE,
     SALE_PRICE, SALE_START_DATE, SALE_START_TIME, SALE_END_DATE, SALE_END_TIME]
 # TODO: Make sure no options conflict with other fieldnames.
-fieldnames += TYPE_CHOICES.keys()
+fieldnames += list(TYPE_CHOICES.keys())
 
 
 class Command(BaseCommand):
-    args = '--import/--export <csv_file>'
     help = _('Import/Export products from a csv file.')
 
-    option_list = BaseCommand.option_list + (
-        make_option('--import',
+    def add_arguments(self, parser):
+        parser.add_argument("csv_file")
+        parser.add_argument(
+            '--import',
             action='store_true',
             dest='import',
             default=False,
-            help=_('Import products from csv file.')),
-        make_option('--export',
+            help=_('Import products from csv file.')
+        )
+
+        parser.add_argument(
+            '--export',
             action='store_true',
             dest='export',
             default=False,
-            help=_('Export products from csv file.')),
-    )
+            help=_('Export products from csv file.')
+        )
 
     def handle(self, *args, **options):
-        if sys.version_info[0] == 3:
-            raise CommandError("Python 3 not supported")
-        try:
-            csv_file = args[0]
-        except IndexError:
-            raise CommandError(_("Please provide csv file to import"))
+        csv_file = options.get('csv_file')
         if options["import"] and options["export"]:
             raise CommandError("can't both import and export")
         if not options["import"] and not options["export"]:
