@@ -56,8 +56,8 @@ class Priced(models.Model):
         Returns True if the sale price is applicable.
         """
         n = now()
-        valid_from = self.sale_from is None or self.sale_from < n
-        valid_to = self.sale_to is None or self.sale_to > n
+        valid_from = self.sale_from is not None and self.sale_from < n
+        valid_to = self.sale_to is not None and self.sale_to > n
         return self.sale_price is not None and valid_from and valid_to
 
     def has_price(self):
