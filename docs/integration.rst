@@ -171,6 +171,7 @@ Paypal
 ::
 
     SHOP_HANDLER_PAYMENT = 'cartridge.shop.payment.paypal.process'
+    PAYPAL_PASSWORD = ''
     PAYPAL_USER = ''
     PAYPAL_SIGNATURE = ''
 
