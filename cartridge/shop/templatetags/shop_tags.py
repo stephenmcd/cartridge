@@ -1,4 +1,3 @@
-
 from __future__ import unicode_literals
 from future.builtins import str
 
@@ -9,7 +8,7 @@ import platform
 from django import template
 
 from cartridge.shop.utils import set_locale
-
+from mezzanine.conf import settings
 
 register = template.Library()
 
@@ -42,8 +41,13 @@ def _order_totals(context):
     template_vars = {}
 
     if "order" in context:
-        for field in fields + ["item_total"]:
+        for field in fields + ["item_total", "total"]:
             template_vars[field] = getattr(context["order"], field)
+        template_vars["order_total"] = template_vars.get("total", None)
+        if template_vars.get("discount_total", None) is not None:
+            template_vars["order_total_before_discount"] = template_vars["order_total"] + Decimal(
+                str(template_vars["discount_total"]))
+        return template_vars
     else:
         template_vars["item_total"] = context["request"].cart.total_price()
         if template_vars["item_total"] == 0:
@@ -56,16 +60,33 @@ def _order_totals(context):
             for field in fields:
                 template_vars[field] = context["request"].session.get(
                     field, None)
+
     template_vars["order_total"] = template_vars.get("item_total", None)
+    # checking tax total
+    if template_vars.get("tax_total", None) is not None:
+        try:
+            if "%" in template_vars["tax_total"]:
+                template_vars["tax_type"] += " (" + template_vars["tax_total"] + ") "
+                template_vars["tax_total"] = template_vars["tax_total"].replace("%", "")
+                template_vars["tax_total"] = Decimal(str(template_vars["order_total"])) * Decimal(
+                    str(template_vars["tax_total"])) / 100
+        except TypeError:
+            pass
+
+        if not settings.SHOP_HANDLER_TAX_INCLUDE_IN_PRICE:
+            template_vars["order_total"] += Decimal(
+                str(template_vars["tax_total"]))
+        else:
+            template_vars["item_total"] -= Decimal(
+                str(template_vars["tax_total"]))
+
     if template_vars.get("shipping_total", None) is not None:
         template_vars["order_total"] += Decimal(
             str(template_vars["shipping_total"]))
+
     if template_vars.get("discount_total", None) is not None:
         template_vars["order_total"] -= Decimal(
             str(template_vars["discount_total"]))
-    if template_vars.get("tax_total", None) is not None:
-        template_vars["order_total"] += Decimal(
-            str(template_vars["tax_total"]))
     return template_vars
 
 
