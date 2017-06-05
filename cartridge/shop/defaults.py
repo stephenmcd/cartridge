@@ -62,7 +62,7 @@ register_setting(
              "SHOP_CHECKOUT_STEPS_SPLIT", "SHOP_PAYMENT_STEP_ENABLED",
              "SHOP_PRODUCT_SORT_OPTIONS", "SHOP_USE_RATINGS",
              "SHOP_USE_WISHLIST", "SHOP_USE_RELATED_PRODUCTS",
-             "SHOP_USE_UPSELL_PRODUCTS"),
+             "SHOP_USE_UPSELL_PRODUCTS", "SHOP_PER_PAGE_CATEGORY"),
     append=True,
 )
 
