@@ -59,6 +59,7 @@ class SKUField(CharField):
             args = (_("SKU"),)
         defaults = {"max_length": 20}
         defaults.update(kwargs)
+        defaults.pop('verbose_name', None)
         super(SKUField, self).__init__(*args, **defaults)
 
 
