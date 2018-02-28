@@ -384,8 +384,12 @@ def invoice(request, order_id, template="shop/order_invoice.html",
     except Order.DoesNotExist:
         raise Http404
     context = {"order": order}
-    context.update(order.details_as_dict())
-    context.update(extra_context or {})
+    detail_dict = order.details_as_dict()
+    for key in detail_dict:
+        context[key] = detail_dict[key]
+    extra_context = extra_context or {}
+    for key in extra_context:
+        context[key] = extra_context[key]
     if HAS_PDF and request.GET.get("format") == "pdf":
         response = HttpResponse(content_type="application/pdf")
         name = slugify("%s-invoice-%s" % (settings.SITE_TITLE, order.id))
