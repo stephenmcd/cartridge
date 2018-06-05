@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
 
-from mezzanine.conf import settings
 from mezzanine.utils.deprecation import MiddlewareMixin
 
 from cartridge.shop.models import Cart
