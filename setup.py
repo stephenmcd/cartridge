@@ -53,7 +53,7 @@ try:
         tests_require=["pyflakes>=0.6.1", "pep8>=1.4.1"],
 
         install_requires=[
-            "mezzanine >= 4.2.0",
+            "mezzanine >= 4.3.0",
             "xhtml2pdf",
         ],
         extras_require={
