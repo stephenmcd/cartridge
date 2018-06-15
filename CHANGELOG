@@ -1,3 +1,25 @@
+Version 0.13.0 (Jun 15, 2018)
+-----------------------------
+
+  * Support setting ``SHOP_PRODUCT_SORT_OPTIONS`` = (). - If empty, sort category pages by the current default ``'-date_added'`` by. default. - If empty, don't display the product sorting form - ryneeverett
+  * Use dict for context. Fix invoices in ``django-1.10``. The invoice view raises a TypeError in ``django-1.10``. The following lines. in the release notes explain the change: > - Django template objects returned by ``get_template()`` and. > ``select_template()`` no longer accept a Context in their render() method. > - Template response APIs enforce the use of dict and backend-dependent. > template objects instead of Context and Template respectively - ryneeverett
+  * Purge ``SHOP_USE_PRODUCT_TYPES`` settings. As @AlexHill pointed out, it's risky, complex, and not useful - ryneeverett
+  * Use new ``ContentTyped.set_content_model`` method - ryneeverett
+  * Update ``project_template`` media library setting. See. ``https://github.com/ryneeverett/mezzanine/commit/7370cb2854fdbc2f45d7533a02218bf49cff619f`` - ryneeverett
+  * Remove deprecated ``SHOP_CHECKOUT_FORM_CLASS`` docs - ryneeverett
+  * Update travis to test against ``django-1.10``. (#310). See discussion at ``https://github.com/stephenmcd/cartridge/pull/306`` - ryneeverett
+  * Fix "Resend Order Email" button on complete view. It currently 404's because the user isn't logged in. Surely I'm missing. something here. Both the `login_required` decorator and the button on. the completion page were present in the initial commit of this view - ryneeverett
+  * Remove usages of deprecated ``settings.use_editable``. I removed the instance in `default_tax_handler` because it doesn't seem. to serve any purpose. In every other instance I switched to `settings.clear_cache`. I don't. know if this is actually necessary in every case but caution suggests. not changing things one doesn't understand - ryneeverett
+  * Fix another comma splice - ryneeverett
+  * Delete cart on last cart item removed - David Sanders
+  * #317 : use ``static_lazy`` instead of static (#318) - Julien Lirochon
+  * update ``product_db.py`` to django 1.10. in Django 1.10, ``BaseCommand.option_list`` was removed in favor of. overriding the ``add_arguments`` method - rjewing
+  * import ``print_function`` from future in ``product_db`` - rjewing
+  * Also document ``PAYPAL_PASSWORD`` required setting - jpic
+  * Set ``on_delete`` in migrations - steve@jupo.org
+  * Update to latest settings - steve@jupo.org
+  * Don't cache order complete views - steve@jupo.org
+
 Version 0.12.0 (Aug 17, 2016)
 -----------------------------
 
@@ -6,7 +28,13 @@ Version 0.12.0 (Aug 17, 2016)
   * Wrap invoice PDF call with ``HAS_PDF`` in case pisa None - Sam Kingston
   * Replace render() with TemplateResponse(). Replaces `mezzanine.utils.views.render` with `django.template.response.TemplateResponse` as it is deprecated in Mezzanine - Henri Hulski
   * Fix for broken carts on expiration - David Sanders
+  * Compatibility with modern django. - The new ``_meta`` API doesn't include subclass fields in the "fields". attribute, but it provides a `get_fields` method which makes this much. simpler. - Upgraded ``get_content_models`` to mezzanine `Page`'s much simpler. version. Note that unlike `Page`, uncustomized `Product`'s are still. valid. - Switch from adminmedia to staticfiles. - The first template found in the list gets rendered, so we need to. prepend the optional custom product template - ryneeverett
+  * ``ModelAdmin.in_menu`` -> ``has_module_permission``. This makes the branch compatible with Mezzanine master, now that. ``[mezzanine#1596](https://github.com/stephenmcd/mezzanine/pull/1596)`` is merged - ryneeverett
+  * Remove unneeded ``jquery_ui`` from ``change_list.html`` - ryneeverett
+  * Use Mezzanine's custom content types mixins - ryneeverett
+  * Type dropdown js is now in ``content_typed.html`` - ryneeverett
   * Fix payment handler docs code blocks - ryneeverett
+  * ``Content_typed`` namespace was removed from mezzanine - ryneeverett
   * Define min value for cart item quantity field. Closes #299 - Stephen McDonald
   * Don't override keywords string in product admin. Closes #301 - Stephen McDonald
   * ``django.template.context_processors`` is removed in Django 1.10 - Stephen McDonald
@@ -263,6 +291,7 @@ Version 0.8.0 (Feb 17, 2013)
   * Fix AttributeError with empty cart in Django 1.5. Django 1.5 looks for a pk in BaseInlineFormSet's ``__init__``, which it couldn't find on EmptyCart. The fix adds the attribute with value None - Alex Hill
   * Only run stripe tests if its used, since it breaks Python 2.5 support (stripe package doesn't work in 2.5) - Stephen McDonald
   * Fix class decorator for stripe tests for Python 2.5 - Stephen McDonald
+  * Added abstract base class for Product. Defining the manager on an abstract base class means subclasses will. inherit it instead of having to explicitly define their own - Alex Hill
   * Fix ``jquery.tools`` references for product image overlay. Closes #83 - Stephen McDonald
   * Added fields ``'tax_type'`` and ``'tax_total'`` and processors that mimic the functionality of ``'shipping_type'`` and ``'shipping_total'`` - Evan Leis
   * By default, ``tax_total`` is 0 - Evan Leis
@@ -287,8 +316,13 @@ Version 0.7.0 (Dec 26, 2012)
 ----------------------------
 
   * Specify the product object in the product view to be the editable object to link to from the admin toolbar - Stephen McDonald
+  * First steps toward extensible Product model - Alex Hill
+  * Look for a custom template for subclassed Products - Alex Hill
   * add featured image for category - Dmitry Falk
   * Update url templatetags for Django 1.5. See ``https://docs.djangoproject.com/en/1.4/releases/1.3/#changes-to-url-and-ssi``. "{% load url from future %}" is omitted in favour of a global import in. mezzanine's ``boot/__init__.py`` - Alex Hill
+  * ProductAdmin automatically adds custom Product fields. Thanks to Josh Cartmell - Alex Hill
+  * Add method and templatetag to get custom Product classes - Alex Hill
+  * Replace "Add Product" button with a select box of Product subclasses - Alex Hill
   * Load future tag lib explicitly in templates - Stephen McDonald
   * get ``child_categories`` via ``page_processor`` - Dmitry Falk
   * fix child categories css - Dmitry Falk
