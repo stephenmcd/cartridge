@@ -2,7 +2,7 @@
 {% load shop_tags %}
 
 {% block object-tools-items %}
-    {% if content_models.count > 1 %}
+    {% if content_models|length >= 1 %}
         <li>
             {% include "admin/includes/content_typed_change_list.html" %}
         </li>
