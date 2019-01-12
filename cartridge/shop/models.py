@@ -172,7 +172,8 @@ class ProductImage(Orderable):
     file = FileField(_("Image"), max_length=255, format="Image",
         upload_to=upload_to("shop.ProductImage.file", "product"))
     description = CharField(_("Description"), blank=True, max_length=100)
-    product = models.ForeignKey("Product", related_name="images")
+    product = models.ForeignKey("Product", related_name="images",
+                                on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = _("Image")
@@ -229,7 +230,8 @@ class ProductVariation(with_metaclass(ProductVariationMetaclass, Priced)):
     ``SHOP_OPTION_TYPE_CHOICES`` for a ``Product`` instance.
     """
 
-    product = models.ForeignKey("Product", related_name="variations")
+    product = models.ForeignKey("Product", related_name="variations",
+                                on_delete=models.CASCADE)
     default = models.BooleanField(_("Default"), default=False)
     image = models.ForeignKey("ProductImage", verbose_name=_("Image"),
                               null=True, blank=True, on_delete=models.SET_NULL)
@@ -353,7 +355,7 @@ class Category(Page, RichText):
                                      verbose_name=_("Product options"),
                                      related_name="product_options")
     sale = models.ForeignKey("Sale", verbose_name=_("Sale"),
-                             blank=True, null=True)
+                             blank=True, null=True, on_delete=models.CASCADE)
     price_min = fields.MoneyField(_("Minimum price"), blank=True, null=True)
     price_max = fields.MoneyField(_("Maximum price"), blank=True, null=True)
     combined = models.BooleanField(_("Combined"), default=True,
@@ -675,7 +677,8 @@ class SelectedProduct(models.Model):
 
 class CartItem(SelectedProduct):
 
-    cart = models.ForeignKey("Cart", related_name="items")
+    cart = models.ForeignKey("Cart", related_name="items",
+                             on_delete=models.CASCADE)
     url = CharField(max_length=2000)
     image = CharField(max_length=200, null=True)
 
@@ -694,7 +697,8 @@ class OrderItem(SelectedProduct):
     """
     A selected product in a completed order.
     """
-    order = models.ForeignKey("Order", related_name="items")
+    order = models.ForeignKey("Order", related_name="items",
+                              on_delete=models.CASCADE)
 
 
 class ProductAction(models.Model):
@@ -705,7 +709,8 @@ class ProductAction(models.Model):
     popularity and sales reporting.
     """
 
-    product = models.ForeignKey("Product", related_name="actions")
+    product = models.ForeignKey("Product", related_name="actions",
+                                on_delete=models.CASCADE)
     timestamp = models.IntegerField()
     total_cart = models.IntegerField(default=0)
     total_purchase = models.IntegerField(default=0)
