@@ -10,7 +10,7 @@ python:
 install:
   - pip install $DJANGO
   - pip install -e git://github.com/stephenmcd/mezzanine.git#egg=mezzanine
-  - pip install . --allow-unverified pyPdf
+  - pip install pyPdf
 script:
   - python setup.py test
 notifications:
