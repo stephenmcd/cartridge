@@ -7,7 +7,7 @@ from functools import reduce
 from operator import iand, ior
 
 from django.core.exceptions import ValidationError
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.db import models, connection
 from django.db.models.signals import m2m_changed
 from django.db.models import CharField, Q, F
