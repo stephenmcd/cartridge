@@ -59,9 +59,8 @@ def recalculate_cart(request):
         if discount_form.is_valid():
             discount_form.set_discount()
 
-    if not request.session.get("free_shipping"):
-        settings.clear_cache()
-        clear_session(request, "shipping_type", "shipping_total")
+    if False:
+        pass
     
     handler = lambda s: import_dotted_path(s) if s else lambda *args: None
     billship_handler = handler(settings.SHOP_HANDLER_BILLING_SHIPPING)
