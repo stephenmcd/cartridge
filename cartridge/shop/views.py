@@ -218,7 +218,7 @@ def checkout_steps(request, form_class=OrderForm, extra_context=None):
     # Do the authentication check here rather than using standard
     # login_required decorator. This means we can check for a custom
     # LOGIN_URL and fall back to our own login view.
-    authenticated = request.user.is_authenticated()
+    authenticated = request.user.is_authenticated
     if settings.SHOP_CHECKOUT_ACCOUNT_REQUIRED and not authenticated:
         url = "%s?next=%s" % (settings.LOGIN_URL, reverse("shop_checkout"))
         return redirect(url)

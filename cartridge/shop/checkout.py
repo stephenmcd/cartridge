@@ -106,7 +106,7 @@ def initial_order_data(request, form_class=None):
     # Look for order in previous session.
     if not initial:
         lookup = {}
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             lookup["user_id"] = request.user.id
         remembered = request.COOKIES.get("remember", "").split(":")
         if len(remembered) == 2 and remembered[0] == sign(remembered[1]):
@@ -115,7 +115,7 @@ def initial_order_data(request, form_class=None):
             previous = list(Order.objects.filter(**lookup).values())[:1]
             if len(previous) > 0:
                 initial.update(previous[0])
-    if not initial and request.user.is_authenticated():
+    if not initial and request.user.is_authenticated:
         # No previous order data - try and get field values from the
         # logged in user. Check the profile model before the user model
         # if it's configured. If the order field name uses one of the
