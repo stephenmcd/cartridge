@@ -53,8 +53,7 @@ try:
         tests_require=["pyflakes>=0.6.1", "pep8>=1.4.1"],
 
         install_requires=[
-            "filebrowser_safe @ git+git://github.com/fermorltd/filebrowser-safe@2.2-fix",
-            "Mezzanine @ git+git://github.com/fermorltd/mezzanine@2.2-compat",
+            "mezzanine >= 4.3.0",
             "xhtml2pdf",
         ],
         extras_require={
