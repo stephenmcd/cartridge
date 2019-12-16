@@ -155,7 +155,7 @@ CartItemFormSet = inlineformset_factory(Cart, CartItem, form=CartItemForm,
 class FormsetForm(object):
     """
     Form mixin that provides template methods for iterating through
-    sets of fields by prefix, single fields and finally remaning
+    sets of fields by prefix, single fields and finally remaining
     fields that haven't been, iterated with each fieldset made up from
     a copy of the original form, giving access to as_* methods.
 
