@@ -438,7 +438,7 @@ class ImageWidget(forms.FileInput):
     """
     Render a visible thumbnail for image fields.
     """
-    def render(self, name, value, attrs):
+    def render(self, name, value, attrs, renderer=None):
         rendered = super(ImageWidget, self).render(name, value, attrs)
         if value:
             orig = u"%s%s" % (settings.MEDIA_URL, value)
@@ -453,7 +453,7 @@ class MoneyWidget(forms.TextInput):
     """
     Render missing decimal places for money fields.
     """
-    def render(self, name, value, attrs):
+    def render(self, name, value, attrs, renderer=None):
         try:
             value = float(value)
         except (TypeError, ValueError):
