@@ -2,7 +2,7 @@ from json import dumps
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages import info
-from django.urls import reverse
+from django.core.urlresolvers import reverse
 from django.db.models import Sum
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
@@ -65,14 +65,14 @@ def product(request, slug, template="shop/product.html",
                 request.cart.add_item(add_product_form.variation, quantity)
                 recalculate_cart(request)
                 info(request, _("Item added to cart"))
-                return redirect(reverse("shop_cart"))
+                return redirect("shop:shop_cart")
             else:
                 skus = request.wishlist
                 sku = add_product_form.variation.sku
                 if sku not in skus:
                     skus.append(sku)
                 info(request, _("Item added to wishlist"))
-                response = redirect(reverse("shop_wishlist"))
+                response = redirect("shop:shop_wishlist")
                 set_cookie(response, "wishlist", ",".join(skus))
                 return response
     related = []
@@ -120,18 +120,18 @@ def wishlist(request, template="shop/wishlist.html",
                 request.cart.add_item(add_product_form.variation, 1)
                 recalculate_cart(request)
                 message = _("Item added to cart")
-                url = "shop_cart"
+                url = "shop:shop_cart"
             else:
                 error = list(add_product_form.errors.values())[0]
         else:
             message = _("Item removed from wishlist")
-            url = "shop_wishlist"
+            url = "shop:shop_wishlist"
         sku = request.POST.get("sku")
         if sku in skus:
             skus.remove(sku)
         if not error:
             info(request, message)
-            response = redirect(reverse(url))
+            response = redirect(url)
             set_cookie(response, "wishlist", ",".join(skus))
             return response
 
@@ -196,7 +196,7 @@ def cart(request, template="shop/cart.html",
             # shipping details step where shipping is normally set.
             recalculate_cart(request)
         if valid:
-            return redirect(reverse("shop_cart"))
+            return redirect("shop:shop_cart")
     context = {"cart_formset": cart_formset}
     context.update(extra_context or {})
     settings.clear_cache()
@@ -215,10 +215,10 @@ def checkout_steps(request, form_class=OrderForm, extra_context=None):
     # Do the authentication check here rather than using standard
     # login_required decorator. This means we can check for a custom
     # LOGIN_URL and fall back to our own login view.
-    authenticated = request.user.is_authenticated
+    authenticated = request.user.is_authenticated()
     if settings.SHOP_CHECKOUT_ACCOUNT_REQUIRED and not authenticated:
         url = "%s?next=%s" % (settings.LOGIN_URL, reverse("shop_checkout"))
-        return redirect(reverse(url))
+        return redirect(url)
 
     try:
         settings.SHOP_CHECKOUT_FORM_CLASS
@@ -305,7 +305,7 @@ def checkout_steps(request, form_class=OrderForm, extra_context=None):
                     checkout.send_order_email(request, order)
                     # Set the cookie for remembering address details
                     # if the "remember" checkbox was checked.
-                    response = redirect(reverse("shop_complete"))
+                    response = redirect("shop:shop_complete")
                     if form.cleaned_data.get("remember"):
                         remembered = "%s:%s" % (sign(order.key), order.key)
                         set_cookie(response, "remember", remembered,
@@ -432,5 +432,5 @@ def invoice_resend_email(request, order_id):
         if request.user.is_staff:
             redirect_to = reverse("admin:shop_order_change", args=[order_id])
         else:
-            redirect_to = reverse("shop_order_history")
+            redirect_to = reverse("shop:shop_order_history")
     return redirect(redirect_to)
