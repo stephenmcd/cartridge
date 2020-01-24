@@ -1,10 +1,11 @@
 language: python
 env:
-  - DJANGO="22"
+  - DJANGO="Django>=2.2,<=3.0"
 python:
   - "3.5"
   - "3.6"
   - "3.7"
+  - "3.8"
 install:
   - pip install $DJANGO
   - pip install -e git://github.com/fermorltd/mezzanine.git@2.2-compat#egg=mezzanine
