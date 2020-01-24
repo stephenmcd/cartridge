@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-from future.builtins import int, str
-
 from json import dumps
 
 from django.contrib.auth.decorators import login_required
@@ -68,14 +65,14 @@ def product(request, slug, template="shop/product.html",
                 request.cart.add_item(add_product_form.variation, quantity)
                 recalculate_cart(request)
                 info(request, _("Item added to cart"))
-                return redirect("shop_cart")
+                return redirect(reverse("shop_cart"))
             else:
                 skus = request.wishlist
                 sku = add_product_form.variation.sku
                 if sku not in skus:
                     skus.append(sku)
                 info(request, _("Item added to wishlist"))
-                response = redirect("shop_wishlist")
+                response = redirect(reverse("shop_wishlist"))
                 set_cookie(response, "wishlist", ",".join(skus))
                 return response
     related = []
@@ -134,7 +131,7 @@ def wishlist(request, template="shop/wishlist.html",
             skus.remove(sku)
         if not error:
             info(request, message)
-            response = redirect(url)
+            response = redirect(reverse(url))
             set_cookie(response, "wishlist", ",".join(skus))
             return response
 
@@ -199,7 +196,7 @@ def cart(request, template="shop/cart.html",
             # shipping details step where shipping is normally set.
             recalculate_cart(request)
         if valid:
-            return redirect("shop_cart")
+            return redirect(reverse("shop_cart"))
     context = {"cart_formset": cart_formset}
     context.update(extra_context or {})
     settings.clear_cache()
@@ -221,7 +218,7 @@ def checkout_steps(request, form_class=OrderForm, extra_context=None):
     authenticated = request.user.is_authenticated
     if settings.SHOP_CHECKOUT_ACCOUNT_REQUIRED and not authenticated:
         url = "%s?next=%s" % (settings.LOGIN_URL, reverse("shop_checkout"))
-        return redirect(url)
+        return redirect(reverse(url))
 
     try:
         settings.SHOP_CHECKOUT_FORM_CLASS
@@ -308,7 +305,7 @@ def checkout_steps(request, form_class=OrderForm, extra_context=None):
                     checkout.send_order_email(request, order)
                     # Set the cookie for remembering address details
                     # if the "remember" checkbox was checked.
-                    response = redirect("shop_complete")
+                    response = redirect(reverse("shop_complete"))
                     if form.cleaned_data.get("remember"):
                         remembered = "%s:%s" % (sign(order.key), order.key)
                         set_cookie(response, "remember", remembered,
