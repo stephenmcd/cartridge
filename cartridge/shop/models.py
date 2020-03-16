@@ -1,4 +1,6 @@
 from __future__ import division, unicode_literals
+
+from django.utils.safestring import mark_safe
 from future.builtins import str, super
 from future.utils import with_metaclass
 
@@ -543,9 +545,9 @@ class Order(SiteRelated):
         Returns the HTML for a link to the PDF invoice for use in the
         order listing view of the admin.
         """
-        url = reverse("shop_invoice", args=(self.id,))
+        url = reverse("shop:shop_invoice", args=(self.id,))
         text = ugettext("Download PDF invoice")
-        return "<a href='%s?format=pdf'>%s</a>" % (url, text)
+        return mark_safe("<a href='%s?format=pdf'>%s</a>" % (url, text))
     invoice.allow_tags = True
     invoice.short_description = ""
 

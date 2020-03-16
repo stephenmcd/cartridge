@@ -79,7 +79,7 @@ class OrderManager(CurrentSiteManager):
         the given request object can access it.
         """
         lookup = {"id": order_id}
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             lookup["key"] = request.session.session_key
         elif not request.user.is_staff:
             lookup["user_id"] = request.user.id
