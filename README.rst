@@ -6,7 +6,7 @@ Created by `Stephen McDonald <http://twitter.com/stephen_mcd>`_
 ========
 Overview
 ========
-
+Cartridge - An amazing project
 Cartridge is a shopping cart application built using the `Django`_
 framework. It is `BSD licensed`_, and designed to provide a clean and
 simple base for developing e-commerce websites. It purposely does not
