@@ -297,7 +297,7 @@ def address_pairs(fields):
 order_list_display = ("id", "billing_name", "total", "time", "status",
                       "transaction_id")
 if HAS_PDF:
-    order_list_display += ("invoice",)
+    order_list_display += ("invoice_url",)
 
 
 class OrderAdmin(admin.ModelAdmin):
@@ -324,6 +324,11 @@ class OrderAdmin(admin.ModelAdmin):
              ("discount_total", "discount_code"), "item_total",
             ("total", "status"), "transaction_id")}),
     )
+
+    def invoice_url(self, obj):
+        return format_html(obj.invoice())
+
+    invoice_url.short_description = 'Invoice'
 
     def change_view(self, *args, **kwargs):
         if kwargs.get("extra_context", None) is None:
