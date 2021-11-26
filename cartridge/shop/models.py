@@ -143,7 +143,6 @@ class Product(BaseProduct, Priced, RichText, ContentTyped, AdminThumbMixin):
             default = self.variations.get(default=True)
             self.copy_price_fields_to(default)
 
-    @models.permalink
     def get_absolute_url(self):
         return reverse("shop_product", kwargs={"slug": self.slug})
 
