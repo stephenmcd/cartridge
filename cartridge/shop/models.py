@@ -145,7 +145,7 @@ class Product(BaseProduct, Priced, RichText, ContentTyped, AdminThumbMixin):
 
     @models.permalink
     def get_absolute_url(self):
-        return ("shop_product", (), {"slug": self.slug})
+        return reverse("shop_product", kwargs={"slug": self.slug})
 
     def copy_default_variation(self):
         """
