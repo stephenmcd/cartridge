@@ -139,7 +139,7 @@ class Product(BaseProduct, Priced, RichText, ContentTyped, AdminThumbMixin):
         self.set_content_model()
         updating = self.id is not None
         super(Product, self).save(*args, **kwargs)
-        if updating and not settings.SHOP_USE_VARIATIONS:
+        if updating and not settings.SHOP_USE_VARIATIONS and self.variations.all():
             default = self.variations.get(default=True)
             self.copy_price_fields_to(default)
 
