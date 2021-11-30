@@ -206,6 +206,18 @@ register_setting(
     default="cartridge.shop.checkout.default_payment_handler",
 )
 
+
+
+register_setting(
+    name="SHOP_HANDLER_ITEM_TOTAL",
+    label=_("Item Total Handler"),
+    description="Dotted package path and class name of the function that "
+        "is called to calculate the total price of selected product based "
+        "on the quantity and unit price(s)",
+    editable=False,
+    default="cartridge.shop.checkout.default_item_total_handler",
+)
+
 register_setting(
     name="SHOP_OPTION_TYPE_CHOICES",
     description="Sequence of value/name pairs for types of product options "

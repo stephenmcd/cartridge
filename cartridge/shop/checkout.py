@@ -75,6 +75,10 @@ def default_order_handler(request, order_form, order):
     pass
 
 
+def default_item_total_handler(item):
+    return item.unit_price * item.quantity
+
+
 def initial_order_data(request, form_class=None):
     """
     Return the initial data for the order form, trying the following in
