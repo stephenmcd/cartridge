@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-from future.builtins import str, zip
-
 from collections import defaultdict, OrderedDict
 from datetime import datetime, timedelta
 
@@ -109,8 +106,8 @@ class ProductVariationManager(Manager):
         """
         if not exclude:
             exclude = {}
-        return dict([("%s__isnull" % f.name, True)
-            for f in self.model.option_fields() if f.name not in exclude])
+        return {"%s__isnull" % f.name: True
+            for f in self.model.option_fields() if f.name not in exclude}
 
     def create_from_options(self, options):
         """

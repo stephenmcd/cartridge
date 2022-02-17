@@ -1,4 +1,3 @@
-
 import os
 import sys
 from setuptools import setup, find_packages
@@ -10,7 +9,7 @@ exclude = ["cartridge/project_template/dev.db",
            "cartridge/project_template/project_name/local_settings.py"]
 if sys.argv == ["setup.py", "test"]:
     exclude = []
-exclude = dict([(e, None) for e in exclude])
+exclude = {e: None for e in exclude}
 for e in exclude:
     if e.endswith(".py"):
         try:
@@ -18,7 +17,7 @@ for e in exclude:
         except:
             pass
     try:
-        with open(e, "r") as f:
+        with open(e) as f:
             exclude[e] = (f.read(), os.stat(e))
         os.remove(e)
     except:
@@ -53,7 +52,7 @@ try:
         tests_require=["pyflakes>=0.6.1", "pep8>=1.4.1"],
 
         install_requires=[
-            "mezzanine >= 4.3.0",
+            "mezzanine >= 5.1.1",
             "xhtml2pdf",
         ],
         extras_require={

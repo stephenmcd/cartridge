@@ -1,11 +1,5 @@
-from __future__ import unicode_literals
-from future.builtins import str
-
-try:
-    from urllib.request import Request, urlopen
-    from urllib.error import URLError
-except ImportError:
-    from urllib2 import Request, urlopen, URLError
+from urllib.request import Request, urlopen
+from urllib.error import URLError
 
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.http import urlencode

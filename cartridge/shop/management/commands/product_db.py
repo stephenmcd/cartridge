@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 import csv
 import os
 import shutil
@@ -7,7 +5,7 @@ import datetime
 
 from django.core.management.base import BaseCommand
 from django.core.management.base import CommandError
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.db.utils import IntegrityError
 from mezzanine.conf import settings
 
@@ -45,7 +43,7 @@ SALE_START_TIME = _("Sale Start Time")
 SALE_END_DATE = _("Sale End Date")
 SALE_END_TIME = _("Sale End Time")
 
-DATETIME_FORMAT = "%s %s" % (DATE_FORMAT, TIME_FORMAT)
+DATETIME_FORMAT = f"{DATE_FORMAT} {TIME_FORMAT}"
 SITE_MEDIA_IMAGE_DIR = _("product")
 PRODUCT_IMAGE_DIR = os.path.join(settings.STATIC_ROOT, SITE_MEDIA_IMAGE_DIR)
 TYPE_CHOICES = dict()
@@ -130,7 +128,7 @@ def _make_image(image_str, product):
 
 
 def _make_date(date_str, time_str):
-    date_string = '%s %s' % (date_str, time_str)
+    date_string = f'{date_str} {time_str}'
     date = datetime.datetime.strptime(date_string, DATETIME_FORMAT)
     return date
 

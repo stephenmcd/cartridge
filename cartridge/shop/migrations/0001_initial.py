@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.db import models, migrations
 from decimal import Decimal
 import mezzanine.utils.models
@@ -273,7 +270,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='productaction',
-            unique_together=set([('product', 'timestamp')]),
+            unique_together={('product', 'timestamp')},
         ),
         migrations.AddField(
             model_name='discountcode',

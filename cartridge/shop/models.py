@@ -1,7 +1,3 @@
-from __future__ import division, unicode_literals
-from future.builtins import str, super
-from future.utils import with_metaclass
-
 from decimal import Decimal
 from functools import reduce
 from operator import iand, ior
@@ -14,7 +10,7 @@ from django.db.models import CharField, Q, F
 from django.db.models.base import ModelBase
 from django.dispatch import receiver
 from django.utils.timezone import now
-from django.utils.translation import (ugettext, ugettext_lazy as _,
+from django.utils.translation import (gettext, gettext_lazy as _,
                                       pgettext_lazy as __)
 
 from django.utils.encoding import force_text
@@ -138,7 +134,7 @@ class Product(BaseProduct, Priced, RichText, ContentTyped, AdminThumbMixin):
         """
         self.set_content_model()
         updating = self.id is not None
-        super(Product, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         if updating and not settings.SHOP_USE_VARIATIONS:
             default = self.variations.get(default=True)
             self.copy_price_fields_to(default)
@@ -200,7 +196,7 @@ class ProductOption(models.Model):
     objects = managers.ProductOptionManager()
 
     def __str__(self):
-        return "%s: %s" % (self.get_type_display(), self.name)
+        return f"{self.get_type_display()}: {self.name}"
 
     class Meta:
         verbose_name = _("Product option")
@@ -219,11 +215,11 @@ class ProductVariationMetaclass(ModelBase):
             for option in settings.SHOP_OPTION_TYPE_CHOICES:
                 attrs["option%s" % option[0]] = fields.OptionField(option[1])
         args = (cls, name, bases, attrs)
-        return super(ProductVariationMetaclass, cls).__new__(*args)
+        return super().__new__(*args)
 
 
 @python_2_unicode_compatible
-class ProductVariation(with_metaclass(ProductVariationMetaclass, Priced)):
+class ProductVariation(Priced, metaclass=ProductVariationMetaclass):
     """
     A combination of selected options from
     ``SHOP_OPTION_TYPE_CHOICES`` for a ``Product`` instance.
@@ -248,9 +244,9 @@ class ProductVariation(with_metaclass(ProductVariationMetaclass, Priced)):
         for field in self.option_fields():
             name = getattr(self, field.name)
             if name is not None:
-                option = u"%s: %s" % (field.verbose_name, name)
+                option = f"{field.verbose_name}: {name}"
                 options.append(option)
-        result = u"%s %s" % (str(self.product), u", ".join(options))
+        result = "{} {}".format(str(self.product), ", ".join(options))
         return result.strip()
 
     def save(self, *args, **kwargs):
@@ -258,7 +254,7 @@ class ProductVariation(with_metaclass(ProductVariationMetaclass, Priced)):
         Use the variation's ID as the SKU when the variation is first
         created.
         """
-        super(ProductVariation, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         if not self.sku:
             self.sku = self.id
             self.save()
@@ -272,7 +268,7 @@ class ProductVariation(with_metaclass(ProductVariationMetaclass, Priced)):
         defined by ``Meta.unique_together`` since it can't span
         relationships.
         """
-        super(ProductVariation, self).validate_unique(*args, **kwargs)
+        super().validate_unique(*args, **kwargs)
         if self.__class__.objects.exclude(id=self.id).filter(
                 product__site_id=self.product.site_id, sku=self.sku).exists():
             raise ValidationError({"sku": _("SKU is not unique")})
@@ -375,7 +371,7 @@ class Category(Page, RichText):
         # Build a lookup dict of selected options for variations.
         options = self.options.as_fields()
         if options:
-            lookup = dict([("%s__in" % k, v) for k, v in options.items()])
+            lookup = {"%s__in" % k: v for k, v in options.items()}
             filters.append(Q(**lookup))
         # Q objects used against variations to ensure sale date is
         # valid when filtering by sale, or sale price.
@@ -468,10 +464,10 @@ class Order(SiteRelated):
         ordering = ("-id",)
 
     def __str__(self):
-        return "#%s %s %s" % (self.id, self.billing_name(), self.time)
+        return f"#{self.id} {self.billing_name()} {self.time}"
 
     def billing_name(self):
-        return "%s %s" % (self.billing_detail_first_name,
+        return "{} {}".format(self.billing_detail_first_name,
                           self.billing_detail_last_name)
 
     def setup(self, request):
@@ -497,7 +493,7 @@ class Order(SiteRelated):
         self.save()  # We need an ID before we can add related items.
         for item in request.cart:
             product_fields = [f.name for f in SelectedProduct._meta.fields]
-            item = dict([(f, getattr(item, f)) for f in product_fields])
+            item = {f: getattr(item, f) for f in product_fields}
             self.items.create(**item)
 
     def complete(self, request):
@@ -544,8 +540,8 @@ class Order(SiteRelated):
         order listing view of the admin.
         """
         url = reverse("shop_invoice", args=(self.id,))
-        text = ugettext("Download PDF invoice")
-        return "<a href='%s?format=pdf'>%s</a>" % (url, text)
+        text = gettext("Download PDF invoice")
+        return f"<a href='{url}?format=pdf'>{text}</a>"
     invoice.allow_tags = True
     invoice.short_description = ""
 
@@ -595,13 +591,13 @@ class Cart(models.Model):
         """
         Template helper function - sum of all item quantities.
         """
-        return sum([item.quantity for item in self])
+        return sum(item.quantity for item in self)
 
     def total_price(self):
         """
         Template helper function - sum of all costs of item quantities.
         """
-        return sum([item.total_price for item in self])
+        return sum(item.total_price for item in self)
 
     def skus(self):
         """
@@ -669,7 +665,7 @@ class SelectedProduct(models.Model):
         """
         if not self.id or self.quantity > 0:
             self.total_price = self.unit_price * self.quantity
-            super(SelectedProduct, self).save(*args, **kwargs)
+            super().save(*args, **kwargs)
         else:
             self.delete()
 
@@ -685,7 +681,7 @@ class CartItem(SelectedProduct):
         return self.url
 
     def save(self, *args, **kwargs):
-        super(CartItem, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
         # Check if this is the last cart item being removed
         if self.quantity == 0 and not self.cart.items.exists():
@@ -772,7 +768,7 @@ class Sale(Discount):
         verbose_name_plural = _("Sales")
 
     def save(self, *args, **kwargs):
-        super(Sale, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         self.update_products()
 
     def update_products(self):
@@ -833,7 +829,7 @@ class Sale(Discount):
         Clear this sale from products when deleting the sale.
         """
         self._clear()
-        super(Sale, self).delete(*args, **kwargs)
+        super().delete(*args, **kwargs)
 
     def _clear(self):
         """

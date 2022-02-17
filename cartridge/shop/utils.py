@@ -1,16 +1,10 @@
-from __future__ import absolute_import, unicode_literals
-from future.builtins import bytes, zip, str as _str
-
 import hmac
 from locale import setlocale, LC_MONETARY, Error as LocaleError
 
-try:
-    from hashlib import sha512 as digest
-except ImportError:
-    from md5 import new as digest
+from hashlib import sha512 as digest
 
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from mezzanine.conf import settings
 from mezzanine.utils.importing import import_dotted_path
@@ -74,16 +68,16 @@ def set_shipping(request, shipping_type, shipping_total):
     """
     Stores the shipping type and total in the session.
     """
-    request.session["shipping_type"] = _str(shipping_type)
-    request.session["shipping_total"] = _str(shipping_total)
+    request.session["shipping_type"] = str(shipping_type)
+    request.session["shipping_total"] = str(shipping_total)
 
 
 def set_tax(request, tax_type, tax_total):
     """
     Stores the tax type and total in the session.
     """
-    request.session["tax_type"] = _str(tax_type)
-    request.session["tax_total"] = _str(tax_total)
+    request.session["tax_type"] = str(tax_type)
+    request.session["tax_total"] = str(tax_total)
 
 
 def sign(value):

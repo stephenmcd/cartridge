@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-from future.builtins import int, str
-
 from json import dumps
 
 from django.contrib.auth.decorators import login_required
@@ -12,7 +9,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.template.defaultfilters import slugify
 from django.template.loader import get_template
 from django.template.response import TemplateResponse
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.views.decorators.cache import never_cache
 from mezzanine.conf import settings
 from mezzanine.utils.importing import import_dotted_path
@@ -51,13 +48,13 @@ def product(request, slug, template="shop/product.html",
     product = get_object_or_404(published_products, slug=slug)
     fields = [f.name for f in ProductVariation.option_fields()]
     variations = product.variations.all()
-    variations_json = dumps([dict([(f, getattr(v, f))
-        for f in fields + ["sku", "image_id"]]) for v in variations])
+    variations_json = dumps([{f: getattr(v, f)
+        for f in fields + ["sku", "image_id"]} for v in variations])
     to_cart = (request.method == "POST" and
                request.POST.get("add_wishlist") is None)
     initial_data = {}
     if variations:
-        initial_data = dict([(f, getattr(variations[0], f)) for f in fields])
+        initial_data = {f: getattr(variations[0], f) for f in fields}
     initial_data["quantity"] = 1
     add_product_form = form_class(request.POST or None, product=product,
                                   initial=initial_data, to_cart=to_cart)
@@ -93,10 +90,10 @@ def product(request, slug, template="shop/product.html",
     }
     context.update(extra_context or {})
 
-    templates = [u"shop/%s.html" % str(product.slug), template]
+    templates = ["shop/%s.html" % str(product.slug), template]
     # Check for a template matching the page's content model.
     if getattr(product, 'content_model', None) is not None:
-        templates.insert(0, u"shop/products/%s.html" % product.content_model)
+        templates.insert(0, "shop/products/%s.html" % product.content_model)
 
     return TemplateResponse(request, templates, context)
 
@@ -220,7 +217,7 @@ def checkout_steps(request, form_class=OrderForm, extra_context=None):
     # LOGIN_URL and fall back to our own login view.
     authenticated = request.user.is_authenticated
     if settings.SHOP_CHECKOUT_ACCOUNT_REQUIRED and not authenticated:
-        url = "%s?next=%s" % (settings.LOGIN_URL, reverse("shop_checkout"))
+        url = "{}?next={}".format(settings.LOGIN_URL, reverse("shop_checkout"))
         return redirect(url)
 
     try:
@@ -310,7 +307,7 @@ def checkout_steps(request, form_class=OrderForm, extra_context=None):
                     # if the "remember" checkbox was checked.
                     response = redirect("shop_complete")
                     if form.cleaned_data.get("remember"):
-                        remembered = "%s:%s" % (sign(order.key), order.key)
+                        remembered = f"{sign(order.key)}:{order.key}"
                         set_cookie(response, "remember", remembered,
                                    secure=request.is_secure())
                     else:
@@ -389,7 +386,7 @@ def invoice(request, order_id, template="shop/order_invoice.html",
     context.update(extra_context or {})
     if HAS_PDF and request.GET.get("format") == "pdf":
         response = HttpResponse(content_type="application/pdf")
-        name = slugify("%s-invoice-%s" % (settings.SITE_TITLE, order.id))
+        name = slugify(f"{settings.SITE_TITLE}-invoice-{order.id}")
         response["Content-Disposition"] = "attachment; filename=%s.pdf" % name
         html = get_template(template_pdf).render(context)
         pisa.CreatePDF(html, response)

@@ -1,6 +1,4 @@
-from __future__ import unicode_literals
-
-from django.conf.urls import include, url
+from django.urls import include, path
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 from django.views.i18n import set_language
@@ -19,19 +17,19 @@ admin.autodiscover()
 urlpatterns = i18n_patterns(
     # Change the admin prefix here to use an alternate URL for the
     # admin interface, which would be marginally more secure.
-    url("^admin/", include(admin.site.urls)),
+    path("admin/", include(admin.site.urls)),
 )
 
 if settings.USE_MODELTRANSLATION:
     urlpatterns += [
-        url('^i18n/$', set_language, name='set_language'),
+        path('i18n/', set_language, name='set_language'),
     ]
 
 urlpatterns += [
 
     # Cartridge URLs.
-    url("^shop/", include("cartridge.shop.urls")),
-    url("^account/orders/$", order_history, name="shop_order_history"),
+    path("shop/", include("cartridge.shop.urls")),
+    path("account/orders/", order_history, name="shop_order_history"),
 
     # We don't want to presume how your homepage works, so here are a
     # few patterns you can use to set it up.
@@ -43,7 +41,7 @@ urlpatterns += [
     # one homepage pattern, so if you use a different one, comment this
     # one out.
 
-    url("^$", direct_to_template, {"template": "index.html"}, name="home"),
+    path("", direct_to_template, {"template": "index.html"}, name="home"),
 
     # HOMEPAGE AS AN EDITABLE PAGE IN THE PAGE TREE
     # ---------------------------------------------
@@ -59,7 +57,7 @@ urlpatterns += [
     # should be used if you want to customize the homepage's template.
     # NOTE: Don't forget to import the view function too!
 
-    # url("^$", mezzanine.pages.views.page, {"slug": "/"}, name="home"),
+    # path("", mezzanine.pages.views.page, {"slug": "/"}, name="home"),
 
     # HOMEPAGE FOR A BLOG-ONLY SITE
     # -----------------------------
@@ -70,7 +68,7 @@ urlpatterns += [
     # page tree in the admin if it was installed.
     # NOTE: Don't forget to import the view function too!
 
-    # url("^$", mezzanine.blog.views.blog_post_list, name="home"),
+    # path("", mezzanine.blog.views.blog_post_list, name="home"),
 
     # MEZZANINE'S URLS
     # ----------------
@@ -83,7 +81,7 @@ urlpatterns += [
     # ``mezzanine.urls``, go right ahead and take the parts you want
     # from it, and use them directly below instead of using
     # ``mezzanine.urls``.
-    url("^", include("mezzanine.urls")),
+    path("", include("mezzanine.urls")),
 
     # MOUNTING MEZZANINE UNDER A PREFIX
     # ---------------------------------
@@ -99,7 +97,7 @@ urlpatterns += [
     # Note that for any of the various homepage patterns above, you'll
     # need to use the ``SITE_PREFIX`` setting as well.
 
-    # url("^%s/" % settings.SITE_PREFIX, include("mezzanine.urls"))
+    # path("%s/" % settings.SITE_PREFIX, include("mezzanine.urls"))
 
 ]
 

@@ -1,10 +1,5 @@
-from __future__ import unicode_literals
-
-try:
-    from urllib.request import Request, urlopen
-    from urllib.error import URLError
-except ImportError:
-    from urllib2 import Request, urlopen, URLError
+from urllib.request import Request, urlopen
+from urllib.error import URLError
 
 import locale
 

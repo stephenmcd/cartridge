@@ -1,8 +1,5 @@
-from __future__ import unicode_literals
-from future.builtins import int
-from future.builtins import str
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from mezzanine.conf import settings
 
 from cartridge.shop.checkout import CheckoutError

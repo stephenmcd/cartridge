@@ -3,13 +3,10 @@ Various model fields that mostly provide default field sizes to ensure
 these are consistant when used across multiple models.
 """
 
-from __future__ import absolute_import, unicode_literals
-from future.builtins import super
-
 from locale import localeconv
 
 from django.db.models import CharField, DecimalField
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from cartridge.shop.utils import set_locale
 
@@ -23,7 +20,7 @@ class OptionField(CharField):
         kwargs["null"] = True
         defaults = {"max_length": 50}
         defaults.update(kwargs)
-        super(OptionField, self).__init__(*args, **defaults)
+        super().__init__(*args, **defaults)
 
 
 class PercentageField(DecimalField):
@@ -34,7 +31,7 @@ class PercentageField(DecimalField):
     def formfield(self, *args, **kwargs):
         defaults = {'min_value': 0, 'max_value': 100}
         kwargs.update(**defaults)
-        return super(PercentageField, self).formfield(*args, **kwargs)
+        return super().formfield(*args, **kwargs)
 
 
 class MoneyField(DecimalField):
@@ -47,7 +44,7 @@ class MoneyField(DecimalField):
         defaults = {"null": True, "blank": True, "max_digits": 10,
                     "decimal_places": localeconv()["frac_digits"]}
         defaults.update(kwargs)
-        super(MoneyField, self).__init__(*args, **defaults)
+        super().__init__(*args, **defaults)
 
 
 class SKUField(CharField):
@@ -59,7 +56,7 @@ class SKUField(CharField):
             args = (_("SKU"),)
         defaults = {"max_length": 20}
         defaults.update(kwargs)
-        super(SKUField, self).__init__(*args, **defaults)
+        super().__init__(*args, **defaults)
 
 
 class DiscountCodeField(CharField):
@@ -69,4 +66,4 @@ class DiscountCodeField(CharField):
     def __init__(self, *args, **kwargs):
         defaults = {"max_length": 20}
         defaults.update(kwargs)
-        super(DiscountCodeField, self).__init__(*args, **defaults)
+        super().__init__(*args, **defaults)

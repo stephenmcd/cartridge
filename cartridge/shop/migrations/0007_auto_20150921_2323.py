@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.db import models, migrations
 import cartridge.shop.fields
 
@@ -24,6 +21,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='product',
-            unique_together=set([('sku', 'site')]),
+            unique_together={('sku', 'site')},
         ),
     ]

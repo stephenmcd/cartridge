@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-from future.builtins import super, zip
-
 """
 Admin classes for all the shop models.
 
@@ -34,7 +31,7 @@ from copy import deepcopy
 from django.contrib import admin
 from django.db.models import ImageField
 from django.utils.html import format_html
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from mezzanine.conf import settings
 from mezzanine.core.admin import (
@@ -176,7 +173,7 @@ class ProductAdmin(ContentTypedAdmin, DisplayableAdmin):
         """
         Store the product ID for creating variations in save_formset.
         """
-        super(ProductAdmin, self).save_model(request, obj, form, change)
+        super().save_model(request, obj, form, change)
         # We store the product ID so we can retrieve a clean copy of
         # the product in save_formset, see: GH #301.
         self._product_id = obj.id
@@ -213,7 +210,7 @@ class ProductAdmin(ContentTypedAdmin, DisplayableAdmin):
         if formset.model == ProductImage:
             self._images_formset = formset
         else:
-            super(ProductAdmin, self).save_formset(request, form, formset,
+            super().save_formset(request, form, formset,
                                                    change)
 
         # Run each of the variation manager methods if we're saving
@@ -221,8 +218,8 @@ class ProductAdmin(ContentTypedAdmin, DisplayableAdmin):
         if formset.model == ProductVariation:
 
             # Build up selected options for new variations.
-            options = dict([(f, request.POST.getlist(f)) for f in option_fields
-                             if request.POST.getlist(f)])
+            options = {f: request.POST.getlist(f) for f in option_fields
+                             if request.POST.getlist(f)}
             # Create a list of image IDs that have been marked to delete.
             deleted_images = [request.POST.get(f.replace("-DELETE", "-id"))
                 for f in request.POST
@@ -238,7 +235,7 @@ class ProductAdmin(ContentTypedAdmin, DisplayableAdmin):
             product.variations.set_default_images(deleted_images)
 
             # Save the images formset stored previously.
-            super(ProductAdmin, self).save_formset(request, form,
+            super().save_formset(request, form,
                                                  self._images_formset, change)
 
             # Run again to allow for no images existing previously, with
@@ -335,7 +332,7 @@ class OrderAdmin(admin.ModelAdmin):
         if kwargs.get("extra_context", None) is None:
             kwargs["extra_context"] = {}
         kwargs["extra_context"]["has_pdf"] = HAS_PDF
-        return super(OrderAdmin, self).change_view(*args, **kwargs)
+        return super().change_view(*args, **kwargs)
 
 
 class SaleAdmin(admin.ModelAdmin):

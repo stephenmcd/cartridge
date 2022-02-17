@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from django.template.defaultfilters import slugify
 
 from mezzanine.conf import settings

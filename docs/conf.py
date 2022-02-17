@@ -1,6 +1,3 @@
-
-# -*- coding: utf-8 -*-
-#
 # Cartridge documentation build configuration file, created by
 # sphinx-quickstart on Wed Mar 10 07:20:42 2010.
 #
@@ -46,8 +43,8 @@ try:
         file_name = "order_%s_fields.rst" % name
         with open(os.path.join(docs_path, file_name), "w") as f:
             f.write("  * ``" + "``\n  * ``".join(names) + "``")
-except Exception, e:
-    print "Error generating docs for fields: %s" % e
+except Exception as e:
+    print("Error generating docs for fields: %s" % e)
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -73,9 +70,9 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Cartridge'
+project = 'Cartridge'
 from datetime import datetime
-copyright = u'2009 - %s, Stephen McDonald' % datetime.now().year
+copyright = '2009 - %s, Stephen McDonald' % datetime.now().year
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -209,8 +206,8 @@ htmlhelp_basename = 'Cartridgedoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'Cartridge.tex', u'Cartridge Documentation',
-   u'Stephen McDonald', 'manual'),
+  ('index', 'Cartridge.tex', 'Cartridge Documentation',
+   'Stephen McDonald', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

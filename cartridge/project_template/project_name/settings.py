@@ -1,9 +1,6 @@
-
-from __future__ import absolute_import, unicode_literals
 import os
 
-from django import VERSION as DJANGO_VERSION
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 ######################
@@ -294,9 +291,6 @@ TEMPLATES = [
     },
 ]
 
-if DJANGO_VERSION < (1, 9):
-    del TEMPLATES[0]["OPTIONS"]["builtins"]
-
 
 ################
 # APPLICATIONS #
@@ -349,10 +343,6 @@ MIDDLEWARE = (
     "mezzanine.pages.middleware.PageMiddleware",
     "mezzanine.core.middleware.FetchFromCacheMiddleware",
 )
-
-if DJANGO_VERSION < (1, 10):
-    MIDDLEWARE_CLASSES = MIDDLEWARE
-    del MIDDLEWARE
 
 
 # Store these package names here as they may change in the future since

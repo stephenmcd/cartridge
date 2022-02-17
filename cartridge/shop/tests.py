@@ -1,6 +1,3 @@
-from __future__ import division, unicode_literals
-from future.builtins import range, zip
-
 from datetime import timedelta
 from decimal import Decimal
 from operator import mul
@@ -11,7 +8,7 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django.utils.timezone import now
 from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from mezzanine.conf import settings
 from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
 from mezzanine.utils.importing import import_dotted_path
@@ -280,7 +277,7 @@ class ShopTests(TestCase):
         # each type of discount.
         for discount_target in ("cart", "item"):
             for discount_type in ("percent", "deduct"):
-                code = "%s_%s" % (discount_target, discount_type)
+                code = f"{discount_target}_{discount_type}"
                 kwargs = {
                     "code": code,
                     "discount_%s" % discount_type: discount_value,
@@ -367,10 +364,7 @@ class ShopTests(TestCase):
             self.fail("Syntax warnings!\n\n%s" % "\n".join(warnings))
 
     def test_product_image_deletion_does_not_delete_referenced_variation(self):
-        try:
-            from io import BytesIO
-        except ImportError:
-            from cStringIO import StringIO as BytesIO
+        from io import BytesIO
         stream = BytesIO()
 
         from PIL import Image
@@ -450,7 +444,7 @@ class SaleTests(TestCase):
 
 try:
     __import__("stripe")
-    import mock
+    from unittest import mock
 except ImportError:
     stripe_used = False
 else:

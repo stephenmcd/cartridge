@@ -20,8 +20,8 @@ class TranslatedProductOption(TranslationOptions):
 
 
 class TranslatedProductVariation(TranslationOptions):
-    fields = tuple(('option%s' % opt[0] for opt in
-                    settings.SHOP_OPTION_TYPE_CHOICES))
+    fields = tuple('option%s' % opt[0] for opt in
+                    settings.SHOP_OPTION_TYPE_CHOICES)
 
 
 class TranslatedCategory(TranslatedRichText):

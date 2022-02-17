@@ -1,11 +1,9 @@
-from __future__ import unicode_literals
-from future.builtins import str
 from urllib.parse import urlencode
 from urllib.request import urlopen
 
 from django.core.exceptions import ImproperlyConfigured
 from django.http import QueryDict
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from mezzanine.conf import settings
 
 from cartridge.shop.checkout import CheckoutError
@@ -41,8 +39,8 @@ def process(request, order_form, order):
         "vpc_CardExp": (request.POST["card_expiry_year"][2:].strip() +
                         request.POST["card_expiry_month"].strip()),
         "vpc_CardSecurityCode": request.POST["card_ccv"].strip(),
-        "vpc_OrderInfo": u"Order: %s " % order.id,
-        "vpc_MerchTxnRef": u"Order: %s " % order.id,
+        "vpc_OrderInfo": "Order: %s " % order.id,
+        "vpc_MerchTxnRef": "Order: %s " % order.id,
     }
 
     # Post the data and retrieve the response code. If any exception is

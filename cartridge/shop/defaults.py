@@ -1,8 +1,6 @@
-from __future__ import unicode_literals
-
 from socket import gethostname
 
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from mezzanine.conf import register_setting
 
