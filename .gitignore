@@ -13,6 +13,7 @@
 junit/
 local_settings.py
 .eggs/
+*.egg-info/
 .tox/
 Mezzanine.egg-info/
 build/
