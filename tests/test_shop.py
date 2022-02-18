@@ -34,7 +34,6 @@ TEST_PRICE = Decimal("20")
 
 
 class ShopTests(TestCase):
-
     def setUp(self):
         """
         Set up test data - category, product and options.
@@ -63,8 +62,10 @@ class ShopTests(TestCase):
         self.assertEqual(response.status_code, 200)
         # Checkout.
         response = self.client.get(reverse("shop_checkout"))
-        self.assertEqual(response.status_code, 200 if not
-            settings.SHOP_CHECKOUT_ACCOUNT_REQUIRED else 302)
+        self.assertEqual(
+            response.status_code,
+            200 if not settings.SHOP_CHECKOUT_ACCOUNT_REQUIRED else 302,
+        )
 
     def test_variations(self):
         """
@@ -149,9 +150,9 @@ class ShopTests(TestCase):
         self.assertCategoryFilteredProducts(1)
         n, d = now(), timedelta(days=1)
         tomorrow, yesterday = n + d, n - d
-        self._product.variations.all().update(unit_price=0,
-                                              sale_price=TEST_PRICE,
-                                              sale_from=tomorrow)
+        self._product.variations.all().update(
+            unit_price=0, sale_price=TEST_PRICE, sale_from=tomorrow
+        )
         self.assertCategoryFilteredProducts(0)
         self._product.variations.all().update(sale_from=yesterday)
         self.assertCategoryFilteredProducts(1)
@@ -171,8 +172,7 @@ class ShopTests(TestCase):
         # have no results when ``combined`` is set, and that the
         # product matches when ``combined`` is disabled.
         self._product.variations.all().delete()
-        self._product.variations.create_from_options({option_field:
-                                                     [option1, option2]})
+        self._product.variations.create_from_options({option_field: [option1, option2]})
         # Price variation and filter.
         variation = self._product.variations.get(**{option_field: option1})
         variation.unit_price = TEST_PRICE
@@ -202,8 +202,7 @@ class ShopTests(TestCase):
         Given a cart, creates the dict for posting to the cart form
         to remove all items from the cart, and posts it.
         """
-        data = {"items-INITIAL_FORMS": 0, "items-TOTAL_FORMS": 0,
-                "update_cart": 1}
+        data = {"items-INITIAL_FORMS": 0, "items-TOTAL_FORMS": 0, "update_cart": 1}
         for i, item in enumerate(cart):
             data["items-INITIAL_FORMS"] += 1
             data["items-TOTAL_FORMS"] += 1
@@ -313,8 +312,12 @@ class ShopTests(TestCase):
                     self._empty_cart(cart)
                     self._add_to_cart(invalid_variation, 1)
                     r = self.client.post(reverse("shop_cart"), post_data)
-                    self.assertFormError(r, "discount_form", "discount_code",
-                                  _("The discount code entered is invalid."))
+                    self.assertFormError(
+                        r,
+                        "discount_form",
+                        "discount_code",
+                        _("The discount code entered is invalid."),
+                    )
 
     def test_order(self):
         """
@@ -357,22 +360,25 @@ class ShopTests(TestCase):
         Run pyflakes/pep8 across the code base to check for potential errors.
         """
         extra_ignore = (
-                "redefinition of unused 'digest'",
-                "redefinition of unused 'OperationalError'",
-                "'from mezzanine.project_template.settings import *' used",
+            "redefinition of unused 'digest'",
+            "redefinition of unused 'OperationalError'",
+            "'from mezzanine.project_template.settings import *' used",
         )
         warnings = []
-        warnings.extend(run_pyflakes_for_package("cartridge",
-                                                 extra_ignore=extra_ignore))
+        warnings.extend(
+            run_pyflakes_for_package("cartridge", extra_ignore=extra_ignore)
+        )
         warnings.extend(run_pep8_for_package("cartridge"))
         if warnings:
             self.fail("Syntax warnings!\n\n%s" % "\n".join(warnings))
 
     def test_product_image_deletion_does_not_delete_referenced_variation(self):
         from io import BytesIO
+
         stream = BytesIO()
 
         from PIL import Image
+
         im = Image.new("RGB", (50, 50), "white")
         im.save(stream, "png")
         del im
@@ -396,7 +402,6 @@ class ShopTests(TestCase):
 
 
 class SaleTests(TestCase):
-
     def setUp(self):
         product1 = Product(unit_price="1.27")
         product1.save()
@@ -410,10 +415,7 @@ class SaleTests(TestCase):
         ProductVariation(unit_price="1.27", product_id=product2.id).save()
         ProductVariation(unit_price="1.27", product_id=product2.id).save()
 
-        sale = Sale(
-            title="30% OFF - Ken Bruce has gone mad!",
-            discount_percent="30"
-            )
+        sale = Sale(title="30% OFF - Ken Bruce has gone mad!", discount_percent="30")
         sale.save()
 
         sale.products.add(product1)
@@ -495,14 +497,17 @@ class StripeTests(TestCase):
         mock_charge.create.assert_called_with(
             amount=2237,
             currency="usd",
-            card={'number': "4242424242424242",
-                  'exp_month': "06",
-                  'exp_year': "14",
-                  'address_line1': "123 Evergreen Terrace",
-                  'address_city': "Springfield",
-                  'address_state': "WA",
-                  'address_zip': "01234",
-                  'country': "USA"})
+            card={
+                "number": "4242424242424242",
+                "exp_month": "06",
+                "exp_year": "14",
+                "address_line1": "123 Evergreen Terrace",
+                "address_city": "Springfield",
+                "address_state": "WA",
+                "address_zip": "01234",
+                "country": "USA",
+            },
+        )
 
 
 StripeTests = skipUnless(stripe_used, "Stripe not used")(StripeTests)
@@ -512,7 +517,6 @@ if stripe_used:
 
 
 class TaxationTests(TestCase):
-
     def test_default_handler_exists(self):
         """
         Ensure that the handler specified in default settings exists as well as
@@ -528,7 +532,7 @@ class TaxationTests(TestCase):
         session variables.
         """
 
-        tax_type = 'Tax for Testing'
+        tax_type = "Tax for Testing"
         tax_total = 56.65
 
         class request:
@@ -548,4 +552,4 @@ class TaxationTests(TestCase):
         CartManager.from_request() for details.
         """
         cart_fields = [f.name for f in Cart._meta.fields]
-        self.assertListEqual(cart_fields, ['id', 'last_updated'])
+        self.assertListEqual(cart_fields, ["id", "last_updated"])

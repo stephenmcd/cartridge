@@ -20,8 +20,17 @@ from cartridge.shop.models import (
 # images get copied from thie directory
 LOCAL_IMAGE_DIR = "/tmp/orig"
 # images get copied to this directory under STATIC_ROOT
-IMAGE_SUFFIXES = [".jpg", ".JPG", ".jpeg", ".JPEG", ".tif", ".gif", ".GIF",
-                  ".png", ".PNG"]
+IMAGE_SUFFIXES = [
+    ".jpg",
+    ".JPG",
+    ".jpeg",
+    ".JPEG",
+    ".tif",
+    ".gif",
+    ".GIF",
+    ".png",
+    ".PNG",
+]
 EMPTY_IMAGE_ENTRIES = ["Please add", "N/A", ""]
 DATE_FORMAT = "%Y-%m-%d"
 TIME_FORMAT = "%H:%M"
@@ -50,43 +59,56 @@ TYPE_CHOICES = dict()
 for id, choice in settings.SHOP_OPTION_TYPE_CHOICES:
     TYPE_CHOICES[choice] = id
 
-fieldnames = [TITLE, CONTENT, DESCRIPTION, CATEGORY, SUB_CATEGORY,
-    SKU, IMAGE, NUM_IN_STOCK, UNIT_PRICE,
-    SALE_PRICE, SALE_START_DATE, SALE_START_TIME, SALE_END_DATE, SALE_END_TIME]
+fieldnames = [
+    TITLE,
+    CONTENT,
+    DESCRIPTION,
+    CATEGORY,
+    SUB_CATEGORY,
+    SKU,
+    IMAGE,
+    NUM_IN_STOCK,
+    UNIT_PRICE,
+    SALE_PRICE,
+    SALE_START_DATE,
+    SALE_START_TIME,
+    SALE_END_DATE,
+    SALE_END_TIME,
+]
 # TODO: Make sure no options conflict with other fieldnames.
 fieldnames += list(TYPE_CHOICES.keys())
 
 
 class Command(BaseCommand):
-    help = _('Import/Export products from a csv file.')
+    help = _("Import/Export products from a csv file.")
 
     def add_arguments(self, parser):
         parser.add_argument("csv_file")
         parser.add_argument(
-            '--import',
-            action='store_true',
-            dest='import',
+            "--import",
+            action="store_true",
+            dest="import",
             default=False,
-            help=_('Import products from csv file.')
+            help=_("Import products from csv file."),
         )
 
         parser.add_argument(
-            '--export',
-            action='store_true',
-            dest='export',
+            "--export",
+            action="store_true",
+            dest="export",
             default=False,
-            help=_('Export products from csv file.')
+            help=_("Export products from csv file."),
         )
 
     def handle(self, *args, **options):
-        csv_file = options.get('csv_file')
+        csv_file = options.get("csv_file")
         if options["import"] and options["export"]:
             raise CommandError("can't both import and export")
         if not options["import"] and not options["export"]:
             raise CommandError(_("need to import or export"))
-        if options['import']:
+        if options["import"]:
             import_products(csv_file)
-        elif options['export']:
+        elif options["export"]:
             export_products(csv_file)
 
 
@@ -100,8 +122,8 @@ def _product_from_row(row):
     # TODO: allow arbitrary level/number of categories.
     base_cat, created = Category.objects.get_or_create(title=row[CATEGORY])
     sub_cat, created = Category.objects.get_or_create(
-        title=row[SUB_CATEGORY],
-        parent=base_cat)
+        title=row[SUB_CATEGORY], parent=base_cat
+    )
     product.categories.add(sub_cat)
     shop_cat, created = Category.objects.get_or_create(title="Shop")
     product.categories.add(shop_cat)
@@ -123,12 +145,13 @@ def _make_image(image_str, product):
     image, created = ProductImage.objects.get_or_create(
         file="%s" % (os.path.join(SITE_MEDIA_IMAGE_DIR, image_str)),
         description=image_str,  # TODO: handle column for this.
-        product=product)
+        product=product,
+    )
     return image
 
 
 def _make_date(date_str, time_str):
-    date_string = f'{date_str} {time_str}'
+    date_string = f"{date_str} {time_str}"
     date = datetime.datetime.strptime(date_string, DATETIME_FORMAT)
     return date
 
@@ -137,7 +160,7 @@ def import_products(csv_file):
     print(_("Importing .."))
     # More appropriate for testing.
     # Product.objects.all().delete()
-    reader = csv.DictReader(open(csv_file), delimiter=',')
+    reader = csv.DictReader(open(csv_file), delimiter=",")
     for row in reader:
         print(row)
         product = _product_from_row(row)
@@ -156,18 +179,16 @@ def import_products(csv_file):
         if row[SALE_PRICE]:
             variation.sale_price = row[SALE_PRICE]
         if row[SALE_START_DATE] and row[SALE_START_TIME]:
-            variation.sale_from = _make_date(row[SALE_START_DATE],
-                                                row[SALE_START_TIME])
+            variation.sale_from = _make_date(row[SALE_START_DATE], row[SALE_START_TIME])
         if row[SALE_END_DATE] and row[SALE_END_TIME]:
-            variation.sale_to = _make_date(row[SALE_END_DATE],
-                                                row[SALE_END_TIME])
+            variation.sale_to = _make_date(row[SALE_END_DATE], row[SALE_END_TIME])
         for option in TYPE_CHOICES:
             if row[option]:
                 name = "option%s" % TYPE_CHOICES[option]
                 setattr(variation, name, row[option])
                 new_option, created = ProductOption.objects.get_or_create(
-                    type=TYPE_CHOICES[option],  # TODO: set dynamically
-                    name=row[option])
+                    type=TYPE_CHOICES[option], name=row[option]  # TODO: set dynamically
+                )
         variation.save()
         image = _make_image(row[IMAGE], product)
         if image:
@@ -183,8 +204,8 @@ def import_products(csv_file):
 
 def export_products(csv_file):
     print(_("Exporting .."))
-    filehandle = open(csv_file, 'w')
-    writer = csv.DictWriter(filehandle, delimiter=',', fieldnames=fieldnames)
+    filehandle = open(csv_file, "w")
+    writer = csv.DictWriter(filehandle, delimiter=",", fieldnames=fieldnames)
     headers = dict()
     for field in fieldnames:
         headers[field] = field

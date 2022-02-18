@@ -39,8 +39,8 @@ def recalculate_cart(request):
     from cartridge.shop.models import Cart
 
     # Rebind the cart to request since it's been modified.
-    if request.session.get('cart') != request.cart.pk:
-        request.session['cart'] = request.cart.pk
+    if request.session.get("cart") != request.cart.pk:
+        request.session["cart"] = request.cart.pk
     request.cart = Cart.objects.from_request(request)
 
     discount_code = request.session.get("discount_code", "")
@@ -100,8 +100,10 @@ def set_locale():
             # C locale doesn't contain a suitable value for "frac_digits".
             raise LocaleError
     except LocaleError:
-        msg = _("Invalid currency locale specified for SHOP_CURRENCY_LOCALE: "
-                "'%s'. You'll need to set the locale for your system, or "
-                "configure the SHOP_CURRENCY_LOCALE setting in your settings "
-                "module.")
+        msg = _(
+            "Invalid currency locale specified for SHOP_CURRENCY_LOCALE: "
+            "'%s'. You'll need to set the locale for your system, or "
+            "configure the SHOP_CURRENCY_LOCALE setting in your settings "
+            "module."
+        )
         raise ImproperlyConfigured(msg % currency_locale)

@@ -44,8 +44,7 @@ class Priced(models.Model):
     sale_from = models.DateTimeField(_("Sale start"), blank=True, null=True)
     sale_to = models.DateTimeField(_("Sale end"), blank=True, null=True)
     sku = fields.SKUField(blank=True, null=True)
-    num_in_stock = models.IntegerField(_("Number in stock"), blank=True,
-                                       null=True)
+    num_in_stock = models.IntegerField(_("Number in stock"), blank=True, null=True)
 
     class Meta:
         abstract = True
@@ -107,17 +106,18 @@ class Product(BaseProduct, Priced, RichText, ContentTyped, AdminThumbMixin):
     all of its variations such as the product's title and description.
     """
 
-    available = models.BooleanField(_("Available for purchase"),
-                                    default=False)
+    available = models.BooleanField(_("Available for purchase"), default=False)
     image = CharField(_("Image"), max_length=100, blank=True, null=True)
-    categories = models.ManyToManyField("Category", blank=True,
-                                        verbose_name=_("Product categories"))
-    date_added = models.DateTimeField(_("Date added"), auto_now_add=True,
-                                      null=True)
-    related_products = models.ManyToManyField("self",
-                             verbose_name=_("Related products"), blank=True)
-    upsell_products = models.ManyToManyField("self",
-                             verbose_name=_("Upsell products"), blank=True)
+    categories = models.ManyToManyField(
+        "Category", blank=True, verbose_name=_("Product categories")
+    )
+    date_added = models.DateTimeField(_("Date added"), auto_now_add=True, null=True)
+    related_products = models.ManyToManyField(
+        "self", verbose_name=_("Related products"), blank=True
+    )
+    upsell_products = models.ManyToManyField(
+        "self", verbose_name=_("Upsell products"), blank=True
+    )
     rating = RatingField(verbose_name=_("Rating"))
 
     admin_thumb_field = "image"
@@ -166,11 +166,16 @@ class ProductImage(Orderable):
     for the product.
     """
 
-    file = FileField(_("Image"), max_length=255, format="Image",
-        upload_to=upload_to("shop.ProductImage.file", "product"))
+    file = FileField(
+        _("Image"),
+        max_length=255,
+        format="Image",
+        upload_to=upload_to("shop.ProductImage.file", "product"),
+    )
     description = CharField(_("Description"), blank=True, max_length=100)
-    product = models.ForeignKey("Product", related_name="images",
-                                on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        "Product", related_name="images", on_delete=models.CASCADE
+    )
 
     class Meta:
         verbose_name = _("Image")
@@ -190,8 +195,8 @@ class ProductOption(models.Model):
     """
     A selectable option for a product such as size or colour.
     """
-    type = models.IntegerField(_("Type"),
-                               choices=settings.SHOP_OPTION_TYPE_CHOICES)
+
+    type = models.IntegerField(_("Type"), choices=settings.SHOP_OPTION_TYPE_CHOICES)
     name = fields.OptionField(_("Name"))
 
     objects = managers.ProductOptionManager()
@@ -210,6 +215,7 @@ class ProductVariationMetaclass(ModelBase):
     assigns an ``fields.OptionField`` for each option in the
     ``SHOP_PRODUCT_OPTIONS`` setting.
     """
+
     def __new__(cls, name, bases, attrs):
         # Only assign new attrs if not a proxy model.
         if not ("Meta" in attrs and getattr(attrs["Meta"], "proxy", False)):
@@ -225,11 +231,17 @@ class ProductVariation(Priced, metaclass=ProductVariationMetaclass):
     ``SHOP_OPTION_TYPE_CHOICES`` for a ``Product`` instance.
     """
 
-    product = models.ForeignKey("Product", related_name="variations",
-                                on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        "Product", related_name="variations", on_delete=models.CASCADE
+    )
     default = models.BooleanField(_("Default"), default=False)
-    image = models.ForeignKey("ProductImage", verbose_name=_("Image"),
-                              null=True, blank=True, on_delete=models.SET_NULL)
+    image = models.ForeignKey(
+        "ProductImage",
+        verbose_name=_("Image"),
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
 
     objects = managers.ProductVariationManager()
 
@@ -269,8 +281,11 @@ class ProductVariation(Priced, metaclass=ProductVariationMetaclass):
         relationships.
         """
         super().validate_unique(*args, **kwargs)
-        if self.__class__.objects.exclude(id=self.id).filter(
-                product__site_id=self.product.site_id, sku=self.sku).exists():
+        if (
+            self.__class__.objects.exclude(id=self.id)
+            .filter(product__site_id=self.product.site_id, sku=self.sku)
+            .exists()
+        ):
             raise ValidationError({"sku": _("SKU is not unique")})
 
     @classmethod
@@ -281,8 +296,11 @@ class ProductVariation(Priced, metaclass=ProductVariationMetaclass):
         ``ProductVariationMetaclass``.
         """
         all_fields = cls._meta.fields
-        return [f for f in all_fields if isinstance(f, fields.OptionField) and
-                not hasattr(f, "translated_field")]
+        return [
+            f
+            for f in all_fields
+            if isinstance(f, fields.OptionField) and not hasattr(f, "translated_field")
+        ]
 
     def options(self):
         """
@@ -340,23 +358,40 @@ class Category(Page, RichText):
     A category of products on the website.
     """
 
-    featured_image = FileField(verbose_name=_("Featured Image"),
+    featured_image = FileField(
+        verbose_name=_("Featured Image"),
         upload_to=upload_to("shop.Category.featured_image", "shop"),
-        format="Image", max_length=255, null=True, blank=True)
-    products = models.ManyToManyField("Product", blank=True,
-                                     verbose_name=_("Products"),
-                                     through=Product.categories.through)
-    options = models.ManyToManyField("ProductOption", blank=True,
-                                     verbose_name=_("Product options"),
-                                     related_name="product_options")
-    sale = models.ForeignKey("Sale", verbose_name=_("Sale"),
-                             blank=True, null=True, on_delete=models.CASCADE)
+        format="Image",
+        max_length=255,
+        null=True,
+        blank=True,
+    )
+    products = models.ManyToManyField(
+        "Product",
+        blank=True,
+        verbose_name=_("Products"),
+        through=Product.categories.through,
+    )
+    options = models.ManyToManyField(
+        "ProductOption",
+        blank=True,
+        verbose_name=_("Product options"),
+        related_name="product_options",
+    )
+    sale = models.ForeignKey(
+        "Sale", verbose_name=_("Sale"), blank=True, null=True, on_delete=models.CASCADE
+    )
     price_min = fields.MoneyField(_("Minimum price"), blank=True, null=True)
     price_max = fields.MoneyField(_("Maximum price"), blank=True, null=True)
-    combined = models.BooleanField(_("Combined"), default=True,
-        help_text=_("If checked, "
-        "products must match all specified filters, otherwise products "
-        "can match any specified filter."))
+    combined = models.BooleanField(
+        _("Combined"),
+        default=True,
+        help_text=_(
+            "If checked, "
+            "products must match all specified filters, otherwise products "
+            "can match any specified filter."
+        ),
+    )
 
     class Meta:
         verbose_name = _("Product category")
@@ -430,8 +465,7 @@ class Order(SiteRelated):
     shipping_detail_postcode = CharField(_("Zip/Postcode"), max_length=10)
     shipping_detail_country = CharField(_("Country"), max_length=100)
     shipping_detail_phone = CharField(_("Phone"), max_length=20)
-    additional_instructions = models.TextField(_("Additional instructions"),
-                                               blank=True)
+    additional_instructions = models.TextField(_("Additional instructions"), blank=True)
     time = models.DateTimeField(_("Time"), auto_now_add=True, null=True)
     key = CharField(max_length=40, db_index=True)
     user_id = models.IntegerField(blank=True, null=True)
@@ -443,19 +477,28 @@ class Order(SiteRelated):
     discount_code = fields.DiscountCodeField(_("Discount code"), blank=True)
     discount_total = fields.MoneyField(_("Discount total"))
     total = fields.MoneyField(_("Order total"))
-    transaction_id = CharField(_("Transaction ID"), max_length=255, null=True,
-                               blank=True)
+    transaction_id = CharField(
+        _("Transaction ID"), max_length=255, null=True, blank=True
+    )
 
-    status = models.IntegerField(_("Status"),
-                            choices=settings.SHOP_ORDER_STATUS_CHOICES,
-                            default=settings.SHOP_ORDER_STATUS_CHOICES[0][0])
+    status = models.IntegerField(
+        _("Status"),
+        choices=settings.SHOP_ORDER_STATUS_CHOICES,
+        default=settings.SHOP_ORDER_STATUS_CHOICES[0][0],
+    )
 
     objects = managers.OrderManager()
 
     # These are fields that are stored in the session. They're copied to
     # the order in setup() and removed from the session in complete().
-    session_fields = ("shipping_type", "shipping_total", "discount_total",
-                      "discount_code", "tax_type", "tax_total")
+    session_fields = (
+        "shipping_type",
+        "shipping_total",
+        "discount_total",
+        "discount_code",
+        "tax_type",
+        "tax_total",
+    )
 
     class Meta:
         verbose_name = __("commercial meaning", "Order")
@@ -466,8 +509,9 @@ class Order(SiteRelated):
         return f"#{self.id} {self.billing_name()} {self.time}"
 
     def billing_name(self):
-        return "{} {}".format(self.billing_detail_first_name,
-                          self.billing_detail_last_name)
+        return "{} {}".format(
+            self.billing_detail_first_name, self.billing_detail_last_name
+        )
 
     def setup(self, request):
         """
@@ -503,7 +547,7 @@ class Order(SiteRelated):
         delete the cart.
         """
         self.save()  # Save the transaction ID.
-        discount_code = request.session.get('discount_code')
+        discount_code = request.session.get("discount_code")
         clear_session(request, "order", *self.session_fields)
         for item in request.cart:
             try:
@@ -515,9 +559,10 @@ class Order(SiteRelated):
                 variation.product.actions.purchased()
         if discount_code:
             DiscountCode.objects.active().filter(code=discount_code).update(
-                uses_remaining=models.F('uses_remaining') - 1)
+                uses_remaining=models.F("uses_remaining") - 1
+            )
         request.cart.delete()
-        del request.session['cart']
+        del request.session["cart"]
 
     def details_as_dict(self):
         """
@@ -528,8 +573,11 @@ class Order(SiteRelated):
         """
         context = {}
         for fieldset in ("billing_detail", "shipping_detail"):
-            fields = [(f.verbose_name, getattr(self, f.name)) for f in
-                self._meta.fields if f.name.startswith(fieldset)]
+            fields = [
+                (f.verbose_name, getattr(self, f.name))
+                for f in self._meta.fields
+                if f.name.startswith(fieldset)
+            ]
             context["order_%s_fields" % fieldset] = fields
         return context
 
@@ -541,6 +589,7 @@ class Order(SiteRelated):
         url = reverse("shop_invoice", args=(self.id,))
         text = gettext("Download PDF invoice")
         return f"<a href='{url}?format=pdf'>{text}</a>"
+
     invoice.allow_tags = True
     invoice.short_description = ""
 
@@ -670,8 +719,7 @@ class SelectedProduct(models.Model):
 
 class CartItem(SelectedProduct):
 
-    cart = models.ForeignKey("Cart", related_name="items",
-                             on_delete=models.CASCADE)
+    cart = models.ForeignKey("Cart", related_name="items", on_delete=models.CASCADE)
     url = CharField(max_length=2000)
     image = CharField(max_length=200, null=True)
 
@@ -690,8 +738,8 @@ class OrderItem(SelectedProduct):
     """
     A selected product in a completed order.
     """
-    order = models.ForeignKey("Order", related_name="items",
-                              on_delete=models.CASCADE)
+
+    order = models.ForeignKey("Order", related_name="items", on_delete=models.CASCADE)
 
 
 class ProductAction(models.Model):
@@ -702,8 +750,9 @@ class ProductAction(models.Model):
     popularity and sales reporting.
     """
 
-    product = models.ForeignKey("Product", related_name="actions",
-                                on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        "Product", related_name="actions", on_delete=models.CASCADE
+    )
     timestamp = models.IntegerField()
     total_cart = models.IntegerField(default=0)
     total_purchase = models.IntegerField(default=0)
@@ -724,15 +773,17 @@ class Discount(models.Model):
 
     title = CharField(_("Title"), max_length=100)
     active = models.BooleanField(_("Active"), default=False)
-    products = models.ManyToManyField("Product", blank=True,
-                                      verbose_name=_("Products"))
-    categories = models.ManyToManyField("Category", blank=True,
-                                        related_name="%(class)s_related",
-                                        verbose_name=_("Categories"))
+    products = models.ManyToManyField("Product", blank=True, verbose_name=_("Products"))
+    categories = models.ManyToManyField(
+        "Category",
+        blank=True,
+        related_name="%(class)s_related",
+        verbose_name=_("Categories"),
+    )
     discount_deduct = fields.MoneyField(_("Reduce by amount"))
-    discount_percent = fields.PercentageField(_("Reduce by percent"),
-                                           max_digits=5, decimal_places=2,
-                                           blank=True, null=True)
+    discount_percent = fields.PercentageField(
+        _("Reduce by percent"), max_digits=5, decimal_places=2, blank=True, null=True
+    )
     discount_exact = fields.MoneyField(_("Reduce to amount"))
     valid_from = models.DateTimeField(_("Valid from"), blank=True, null=True)
     valid_to = models.DateTimeField(_("Valid to"), blank=True, null=True)
@@ -783,7 +834,8 @@ class Sale(Discount):
                 sale_price = models.F("unit_price") - self.discount_deduct
             elif self.discount_percent is not None:
                 sale_price = models.F("unit_price") - (
-                    F("unit_price") / "100.0" * self.discount_percent)
+                    F("unit_price") / "100.0" * self.discount_percent
+                )
             elif self.discount_exact is not None:
                 # Don't apply to prices that are cheaper than the sale
                 # amount.
@@ -794,10 +846,12 @@ class Sale(Discount):
             products = self.all_products()
             variations = ProductVariation.objects.filter(product__in=products)
             for priced_objects in (products, variations):
-                update = {"sale_id": self.id,
-                          "sale_price": sale_price,
-                          "sale_to": self.valid_to,
-                          "sale_from": self.valid_from}
+                update = {
+                    "sale_id": self.id,
+                    "sale_price": sale_price,
+                    "sale_to": self.valid_to,
+                    "sale_from": self.valid_from,
+                }
                 using = priced_objects.db
                 if "mysql" not in settings.DATABASES[using]["ENGINE"]:
                     priced_objects.filter(**extra_filter).update(**update)
@@ -833,8 +887,12 @@ class Sale(Discount):
         Clears previously applied sale field values from products prior
         to updating the sale, when deactivating it or deleting it.
         """
-        update = {"sale_id": None, "sale_price": None,
-                  "sale_from": None, "sale_to": None}
+        update = {
+            "sale_id": None,
+            "sale_price": None,
+            "sale_from": None,
+            "sale_to": None,
+        }
         for priced_model in (Product, ProductVariation):
             priced_model.objects.filter(sale_id=self.id).update(**update)
 
@@ -858,10 +916,16 @@ class DiscountCode(Discount):
     code = fields.DiscountCodeField(_("Code"), unique=True)
     min_purchase = fields.MoneyField(_("Minimum total purchase"))
     free_shipping = models.BooleanField(_("Free shipping"), default=False)
-    uses_remaining = models.IntegerField(_("Uses remaining"), blank=True,
-        null=True, help_text=_("If you wish to limit the number of times a "
+    uses_remaining = models.IntegerField(
+        _("Uses remaining"),
+        blank=True,
+        null=True,
+        help_text=_(
+            "If you wish to limit the number of times a "
             "code may be used, set this value. It will be decremented upon "
-            "each use."))
+            "each use."
+        ),
+    )
 
     objects = managers.DiscountCodeManager()
 

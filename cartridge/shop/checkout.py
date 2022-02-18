@@ -17,6 +17,7 @@ class CheckoutError(Exception):
     cases such as an invalid shipping address or an unsuccessful
     payment.
     """
+
     pass
 
 
@@ -33,8 +34,9 @@ def default_billship_handler(request, order_form):
     """
     if not request.session.get("free_shipping"):
         settings.clear_cache()
-        set_shipping(request, _("Flat rate shipping"),
-                     settings.SHOP_DEFAULT_SHIPPING_VALUE)
+        set_shipping(
+            request, _("Flat rate shipping"), settings.SHOP_DEFAULT_SHIPPING_VALUE
+        )
 
 
 def default_tax_handler(request, order_form):
@@ -143,10 +145,16 @@ def initial_order_data(request, form_class=None):
                             initial[order_field] = user_value
     # Set initial value for "same billing/shipping" based on
     # whether both sets of address fields are all equal.
-    shipping = lambda f: "shipping_%s" % f[len("billing_"):]
-    if any([f for f in form_class._meta.fields if f.startswith("billing_") and
-        shipping(f) in form_class._meta.fields and
-        initial.get(f, "") != initial.get(shipping(f), "")]):
+    shipping = lambda f: "shipping_%s" % f[len("billing_") :]
+    if any(
+        [
+            f
+            for f in form_class._meta.fields
+            if f.startswith("billing_")
+            and shipping(f) in form_class._meta.fields
+            and initial.get(f, "") != initial.get(shipping(f), "")
+        ]
+    ):
         initial["same_billing_shipping"] = False
     # Never prepopulate discount code.
     try:
@@ -161,8 +169,11 @@ def send_order_email(request, order):
     Send order receipt email on successful order.
     """
     settings.clear_cache()
-    order_context = {"order": order, "request": request,
-                     "order_items": order.items.all()}
+    order_context = {
+        "order": order,
+        "request": request,
+        "order_items": order.items.all(),
+    }
     order_context.update(order.details_as_dict())
     try:
         get_template("shop/email/order_receipt.html")
@@ -171,27 +182,36 @@ def send_order_email(request, order):
     else:
         receipt_template = "shop/email/order_receipt"
         from warnings import warn
-        warn("Shop email receipt templates have moved from "
-             "templates/shop/email/ to templates/email/")
-    send_mail_template(settings.SHOP_ORDER_EMAIL_SUBJECT,
-                       receipt_template, settings.SHOP_ORDER_FROM_EMAIL,
-                       order.billing_detail_email, context=order_context,
-                       addr_bcc=settings.SHOP_ORDER_EMAIL_BCC or None)
+
+        warn(
+            "Shop email receipt templates have moved from "
+            "templates/shop/email/ to templates/email/"
+        )
+    send_mail_template(
+        settings.SHOP_ORDER_EMAIL_SUBJECT,
+        receipt_template,
+        settings.SHOP_ORDER_FROM_EMAIL,
+        order.billing_detail_email,
+        context=order_context,
+        addr_bcc=settings.SHOP_ORDER_EMAIL_BCC or None,
+    )
 
 
 # Set up some constants for identifying each checkout step.
 
-CHECKOUT_STEPS = [{"template": "billing_shipping", "url": "details",
-                   "title": _("Details")}]
+CHECKOUT_STEPS = [
+    {"template": "billing_shipping", "url": "details", "title": _("Details")}
+]
 CHECKOUT_STEP_FIRST = CHECKOUT_STEP_PAYMENT = CHECKOUT_STEP_LAST = 1
 if settings.SHOP_CHECKOUT_STEPS_SPLIT:
-    CHECKOUT_STEPS[0].update({"url": "billing-shipping",
-                              "title": _("Address")})
+    CHECKOUT_STEPS[0].update({"url": "billing-shipping", "title": _("Address")})
     if settings.SHOP_PAYMENT_STEP_ENABLED:
-        CHECKOUT_STEPS.append({"template": "payment", "url": "payment",
-                                "title": _("Payment")})
+        CHECKOUT_STEPS.append(
+            {"template": "payment", "url": "payment", "title": _("Payment")}
+        )
         CHECKOUT_STEP_PAYMENT = CHECKOUT_STEP_LAST = 2
 if settings.SHOP_CHECKOUT_STEPS_CONFIRMATION:
-    CHECKOUT_STEPS.append({"template": "confirmation", "url": "confirmation",
-                           "title": _("Confirmation")})
+    CHECKOUT_STEPS.append(
+        {"template": "confirmation", "url": "confirmation", "title": _("Confirmation")}
+    )
     CHECKOUT_STEP_LAST += 1

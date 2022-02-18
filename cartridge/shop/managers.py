@@ -8,7 +8,6 @@ from mezzanine.core.managers import CurrentSiteManager
 
 
 class CartManager(Manager):
-
     def from_request(self, request):
         """
         Return a cart by ID stored in the session, updating its last_updated
@@ -57,7 +56,6 @@ class CartManager(Manager):
 
 
 class OrderManager(CurrentSiteManager):
-
     def from_request(self, request):
         """
         Returns the last order made by session key. Used for
@@ -83,7 +81,6 @@ class OrderManager(CurrentSiteManager):
 
 
 class ProductOptionManager(Manager):
-
     def as_fields(self):
         """
         Return a dict of product options as their field names and
@@ -105,8 +102,11 @@ class ProductVariationManager(Manager):
         """
         if not exclude:
             exclude = {}
-        return {"%s__isnull" % f.name: True
-            for f in self.model.option_fields() if f.name not in exclude}
+        return {
+            "%s__isnull" % f.name: True
+            for f in self.model.option_fields()
+            if f.name not in exclude
+        }
 
     def create_from_options(self, options):
         """
@@ -201,7 +201,6 @@ class ProductActionManager(Manager):
 
 
 class DiscountCodeManager(Manager):
-
     def active(self, *args, **kwargs):
         """
         Items flagged as active and in valid date range if date(s) are
@@ -218,8 +217,9 @@ class DiscountCodeManager(Manager):
         Items flagged as active and within date range as well checking
         that the given cart contains items that the code is valid for.
         """
-        total_price_valid = (Q(min_purchase__isnull=True) |
-                             Q(min_purchase__lte=cart.total_price()))
+        total_price_valid = Q(min_purchase__isnull=True) | Q(
+            min_purchase__lte=cart.total_price()
+        )
         discount = self.active().get(total_price_valid, code=code)
         products = discount.all_products()
         if products.exists():

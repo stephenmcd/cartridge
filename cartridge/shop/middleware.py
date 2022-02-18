@@ -7,6 +7,7 @@ class ShopMiddleware(MiddlewareMixin):
     """
     Adds cart and wishlist attributes to the current request.
     """
+
     def process_request(self, request):
         request.cart = Cart.objects.from_request(request)
         wishlist = request.COOKIES.get("wishlist", "").split(",")

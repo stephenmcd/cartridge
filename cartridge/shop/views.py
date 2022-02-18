@@ -41,8 +41,13 @@ payment_handler = handler(settings.SHOP_HANDLER_PAYMENT)
 order_handler = handler(settings.SHOP_HANDLER_ORDER)
 
 
-def product(request, slug, template="shop/product.html",
-            form_class=AddProductForm, extra_context=None):
+def product(
+    request,
+    slug,
+    template="shop/product.html",
+    form_class=AddProductForm,
+    extra_context=None,
+):
     """
     Display a product - convert the product variations to JSON as well as
     handling adding the product to either the cart or the wishlist.
@@ -51,16 +56,17 @@ def product(request, slug, template="shop/product.html",
     product = get_object_or_404(published_products, slug=slug)
     fields = [f.name for f in ProductVariation.option_fields()]
     variations = product.variations.all()
-    variations_json = dumps([{f: getattr(v, f)
-        for f in fields + ["sku", "image_id"]} for v in variations])
-    to_cart = (request.method == "POST" and
-               request.POST.get("add_wishlist") is None)
+    variations_json = dumps(
+        [{f: getattr(v, f) for f in fields + ["sku", "image_id"]} for v in variations]
+    )
+    to_cart = request.method == "POST" and request.POST.get("add_wishlist") is None
     initial_data = {}
     if variations:
         initial_data = {f: getattr(variations[0], f) for f in fields}
     initial_data["quantity"] = 1
-    add_product_form = form_class(request.POST or None, product=product,
-                                  initial=initial_data, to_cart=to_cart)
+    add_product_form = form_class(
+        request.POST or None, product=product, initial=initial_data, to_cart=to_cart
+    )
     if request.method == "POST":
         if add_product_form.is_valid():
             if to_cart:
@@ -89,21 +95,25 @@ def product(request, slug, template="shop/product.html",
         "variations_json": variations_json,
         "has_available_variations": any([v.has_price() for v in variations]),
         "related_products": related,
-        "add_product_form": add_product_form
+        "add_product_form": add_product_form,
     }
     context.update(extra_context or {})
 
     templates = ["shop/%s.html" % str(product.slug), template]
     # Check for a template matching the page's content model.
-    if getattr(product, 'content_model', None) is not None:
+    if getattr(product, "content_model", None) is not None:
         templates.insert(0, "shop/products/%s.html" % product.content_model)
 
     return TemplateResponse(request, templates, context)
 
 
 @never_cache
-def wishlist(request, template="shop/wishlist.html",
-             form_class=AddProductForm, extra_context=None):
+def wishlist(
+    request,
+    template="shop/wishlist.html",
+    form_class=AddProductForm,
+    extra_context=None,
+):
     """
     Display the wishlist and handle removing items from the wishlist and
     adding them to the cart.
@@ -116,8 +126,7 @@ def wishlist(request, template="shop/wishlist.html",
     error = None
     if request.method == "POST":
         to_cart = request.POST.get("add_cart")
-        add_product_form = form_class(request.POST or None,
-                                      to_cart=to_cart)
+        add_product_form = form_class(request.POST or None, to_cart=to_cart)
         if to_cart:
             if add_product_form.is_valid():
                 request.cart.add_item(add_product_form.variation, 1)
@@ -153,10 +162,13 @@ def wishlist(request, template="shop/wishlist.html",
 
 
 @never_cache
-def cart(request, template="shop/cart.html",
-         cart_formset_class=CartItemFormSet,
-         discount_form_class=DiscountForm,
-         extra_context=None):
+def cart(
+    request,
+    template="shop/cart.html",
+    cart_formset_class=CartItemFormSet,
+    discount_form_class=DiscountForm,
+    extra_context=None,
+):
     """
     Display cart and handle removing items from the cart.
     """
@@ -170,8 +182,7 @@ def cart(request, template="shop/cart.html",
                 # Session timed out.
                 info(request, _("Your cart has expired"))
             else:
-                cart_formset = cart_formset_class(request.POST,
-                                                  instance=request.cart)
+                cart_formset = cart_formset_class(request.POST, instance=request.cart)
                 valid = cart_formset.is_valid()
                 if valid:
                     cart_formset.save()
@@ -203,8 +214,7 @@ def cart(request, template="shop/cart.html",
     context = {"cart_formset": cart_formset}
     context.update(extra_context or {})
     settings.clear_cache()
-    if (settings.SHOP_DISCOUNT_FIELD_IN_CART and
-            DiscountCode.objects.active().exists()):
+    if settings.SHOP_DISCOUNT_FIELD_IN_CART and DiscountCode.objects.active().exists():
         context["discount_form"] = discount_form
     return TemplateResponse(request, template, context)
 
@@ -229,15 +239,20 @@ def checkout_steps(request, form_class=OrderForm, extra_context=None):
         pass
     else:
         from warnings import warn
-        warn("The SHOP_CHECKOUT_FORM_CLASS setting is deprecated - please "
-             "define your own urlpattern for the checkout_steps view, "
-             "passing in your own form_class argument.")
+
+        warn(
+            "The SHOP_CHECKOUT_FORM_CLASS setting is deprecated - please "
+            "define your own urlpattern for the checkout_steps view, "
+            "passing in your own form_class argument."
+        )
         form_class = import_dotted_path(settings.SHOP_CHECKOUT_FORM_CLASS)
 
     initial = checkout.initial_order_data(request, form_class)
-    step = int(request.POST.get("step", None) or
-               initial.get("step", None) or
-               checkout.CHECKOUT_STEP_FIRST)
+    step = int(
+        request.POST.get("step", None)
+        or initial.get("step", None)
+        or checkout.CHECKOUT_STEP_FIRST
+    )
     form = form_class(request, step, initial=initial)
     data = request.POST
     checkout_errors = []
@@ -256,8 +271,12 @@ def checkout_steps(request, form_class=OrderForm, extra_context=None):
             # such as the credit card fields so that they're never
             # stored anywhere.
             request.session["order"] = dict(form.cleaned_data)
-            sensitive_card_fields = ("card_number", "card_expiry_month",
-                                     "card_expiry_year", "card_ccv")
+            sensitive_card_fields = (
+                "card_number",
+                "card_expiry_month",
+                "card_expiry_year",
+                "card_ccv",
+            )
             for field in sensitive_card_fields:
                 if field in request.session["order"]:
                     del request.session["order"][field]
@@ -311,16 +330,18 @@ def checkout_steps(request, form_class=OrderForm, extra_context=None):
                     response = redirect("shop_complete")
                     if form.cleaned_data.get("remember"):
                         remembered = f"{sign(order.key)}:{order.key}"
-                        set_cookie(response, "remember", remembered,
-                                   secure=request.is_secure())
+                        set_cookie(
+                            response, "remember", remembered, secure=request.is_secure()
+                        )
                     else:
                         response.delete_cookie("remember")
                     return response
 
             # If any checkout errors, assign them to a new form and
             # re-run is_valid. If valid, then set form to the next step.
-            form = form_class(request, step, initial=initial, data=data,
-                              errors=checkout_errors)
+            form = form_class(
+                request, step, initial=initial, data=data, errors=checkout_errors
+            )
             if form.is_valid():
                 step += 1
                 form = form_class(request, step, initial=initial)
@@ -335,12 +356,19 @@ def checkout_steps(request, form_class=OrderForm, extra_context=None):
 
     step_vars = checkout.CHECKOUT_STEPS[step - 1]
     template = "shop/%s.html" % step_vars["template"]
-    context = {"CHECKOUT_STEP_FIRST": step == checkout.CHECKOUT_STEP_FIRST,
-               "CHECKOUT_STEP_LAST": step == checkout.CHECKOUT_STEP_LAST,
-               "CHECKOUT_STEP_PAYMENT": (settings.SHOP_PAYMENT_STEP_ENABLED and
-                   step == checkout.CHECKOUT_STEP_PAYMENT),
-               "step_title": step_vars["title"], "step_url": step_vars["url"],
-               "steps": checkout.CHECKOUT_STEPS, "step": step, "form": form}
+    context = {
+        "CHECKOUT_STEP_FIRST": step == checkout.CHECKOUT_STEP_FIRST,
+        "CHECKOUT_STEP_LAST": step == checkout.CHECKOUT_STEP_LAST,
+        "CHECKOUT_STEP_PAYMENT": (
+            settings.SHOP_PAYMENT_STEP_ENABLED
+            and step == checkout.CHECKOUT_STEP_PAYMENT
+        ),
+        "step_title": step_vars["title"],
+        "step_url": step_vars["url"],
+        "steps": checkout.CHECKOUT_STEPS,
+        "step": step,
+        "form": form,
+    }
     context.update(extra_context or {})
     return TemplateResponse(request, template, context)
 
@@ -366,15 +394,24 @@ def complete(request, template="shop/complete.html", extra_context=None):
         names[variation.sku] = variation.product.title
     for i, item in enumerate(items):
         setattr(items[i], "name", names[item.sku])
-    context = {"order": order, "items": items, "has_pdf": HAS_PDF,
-               "steps": checkout.CHECKOUT_STEPS}
+    context = {
+        "order": order,
+        "items": items,
+        "has_pdf": HAS_PDF,
+        "steps": checkout.CHECKOUT_STEPS,
+    }
     context.update(extra_context or {})
     return TemplateResponse(request, template, context)
 
 
 @never_cache
-def invoice(request, order_id, template="shop/order_invoice.html",
-            template_pdf="shop/order_invoice_pdf.html", extra_context=None):
+def invoice(
+    request,
+    order_id,
+    template="shop/order_invoice.html",
+    template_pdf="shop/order_invoice_pdf.html",
+    extra_context=None,
+):
     """
     Display a plain text invoice for the given order. The order must
     belong to the user which is checked via session or ID if
@@ -398,18 +435,19 @@ def invoice(request, order_id, template="shop/order_invoice.html",
 
 
 @login_required
-def order_history(request, template="shop/order_history.html",
-                  extra_context=None):
+def order_history(request, template="shop/order_history.html", extra_context=None):
     """
     Display a list of the currently logged-in user's past orders.
     """
-    all_orders = (Order.objects
-                  .filter(user_id=request.user.id)
-                  .annotate(quantity_total=Sum('items__quantity')))
-    orders = paginate(all_orders.order_by('-time'),
-                      request.GET.get("page", 1),
-                      settings.SHOP_PER_PAGE_CATEGORY,
-                      settings.MAX_PAGING_LINKS)
+    all_orders = Order.objects.filter(user_id=request.user.id).annotate(
+        quantity_total=Sum("items__quantity")
+    )
+    orders = paginate(
+        all_orders.order_by("-time"),
+        request.GET.get("page", 1),
+        settings.SHOP_PER_PAGE_CATEGORY,
+        settings.MAX_PAGING_LINKS,
+    )
     context = {"orders": orders, "has_pdf": HAS_PDF}
     context.update(extra_context or {})
     return TemplateResponse(request, template, context)

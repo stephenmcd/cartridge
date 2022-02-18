@@ -76,16 +76,23 @@ class AddProductForm(forms.Form):
         option_fields = ProductVariation.option_fields()
         if not option_fields:
             return
-        option_names, option_labels = list(zip(*[(f.name, f.verbose_name)
-            for f in option_fields]))
-        option_values = list(zip(*self._product.variations.filter(
-            unit_price__isnull=False).values_list(*option_names)))
+        option_names, option_labels = list(
+            zip(*[(f.name, f.verbose_name) for f in option_fields])
+        )
+        option_values = list(
+            zip(
+                *self._product.variations.filter(unit_price__isnull=False).values_list(
+                    *option_names
+                )
+            )
+        )
         if option_values:
             for i, name in enumerate(option_names):
                 values = [_f for _f in set(option_values[i]) if _f]
                 if values:
-                    field = forms.ChoiceField(label=option_labels[i],
-                                              choices=make_choices(values))
+                    field = forms.ChoiceField(
+                        label=option_labels[i], choices=make_choices(values)
+                    )
                     self.fields[name] = field
 
     def clean(self):
@@ -150,8 +157,10 @@ class CartItemForm(forms.ModelForm):
             raise forms.ValidationError(f"{error}: {quantity}")
         return quantity
 
-CartItemFormSet = inlineformset_factory(Cart, CartItem, form=CartItemForm,
-                                        can_delete=True, extra=0)
+
+CartItemFormSet = inlineformset_factory(
+    Cart, CartItem, form=CartItemForm, can_delete=True, extra=0
+)
 
 
 class FormsetForm:
@@ -217,19 +226,31 @@ class FormsetForm:
         if name == "errors":
             return None
         filters = (
-            ("^other_fields$", lambda:
-                self.fields.keys()),
-            ("^hidden_fields$", lambda:
-                [n for n, f in self.fields.items()
-                 if isinstance(f.widget, forms.HiddenInput)]),
-            (r"^(\w*)_fields$", lambda name:
-                [f for f in self.fields.keys() if f.startswith(name)]),
-            (r"^(\w*)_field$", lambda name:
-                [f for f in self.fields.keys() if f == name]),
-            (r"^fields_before_(\w*)$", lambda name:
-                takewhile(lambda f: f != name, self.fields.keys())),
-            (r"^fields_after_(\w*)$", lambda name:
-                dropwhile(lambda f: f != name, self.fields.keys())[1:]),
+            ("^other_fields$", lambda: self.fields.keys()),
+            (
+                "^hidden_fields$",
+                lambda: [
+                    n
+                    for n, f in self.fields.items()
+                    if isinstance(f.widget, forms.HiddenInput)
+                ],
+            ),
+            (
+                r"^(\w*)_fields$",
+                lambda name: [f for f in self.fields.keys() if f.startswith(name)],
+            ),
+            (
+                r"^(\w*)_field$",
+                lambda name: [f for f in self.fields.keys() if f == name],
+            ),
+            (
+                r"^fields_before_(\w*)$",
+                lambda name: takewhile(lambda f: f != name, self.fields.keys()),
+            ),
+            (
+                r"^fields_after_(\w*)$",
+                lambda name: dropwhile(lambda f: f != name, self.fields.keys())[1:],
+            ),
         )
         for filter_exp, filter_func in filters:
             filter_args = match(filter_exp, name)
@@ -239,7 +260,6 @@ class FormsetForm:
 
 
 class DiscountForm(forms.ModelForm):
-
     class Meta:
         model = Order
         fields = ("discount_code",)
@@ -249,8 +269,7 @@ class DiscountForm(forms.ModelForm):
         Store the request so that it can be used to retrieve the cart
         which is required to validate the discount code when entered.
         """
-        super().__init__(
-                data=data, initial=initial, **kwargs)
+        super().__init__(data=data, initial=initial, **kwargs)
         self._request = request
 
     def clean_discount_code(self):
@@ -303,32 +322,45 @@ class OrderForm(FormsetForm, DiscountForm):
     use_required_attribute = False
 
     step = forms.IntegerField(widget=forms.HiddenInput())
-    same_billing_shipping = forms.BooleanField(required=False, initial=True,
-        label=_("My delivery details are the same as my billing details"))
-    remember = forms.BooleanField(required=False, initial=True,
-        label=_("Remember my address for next time"))
+    same_billing_shipping = forms.BooleanField(
+        required=False,
+        initial=True,
+        label=_("My delivery details are the same as my billing details"),
+    )
+    remember = forms.BooleanField(
+        required=False, initial=True, label=_("Remember my address for next time")
+    )
     card_name = forms.CharField(label=_("Cardholder name"))
-    card_type = forms.ChoiceField(label=_("Card type"),
+    card_type = forms.ChoiceField(
+        label=_("Card type"),
         widget=forms.RadioSelect,
-        choices=make_choices(settings.SHOP_CARD_TYPES))
+        choices=make_choices(settings.SHOP_CARD_TYPES),
+    )
     card_number = forms.CharField(label=_("Card number"))
-    card_expiry_month = forms.ChoiceField(label=_("Card expiry month"),
+    card_expiry_month = forms.ChoiceField(
+        label=_("Card expiry month"),
         initial="%02d" % date.today().month,
-        choices=make_choices(["%02d" % i for i in range(1, 13)]))
+        choices=make_choices(["%02d" % i for i in range(1, 13)]),
+    )
     card_expiry_year = forms.ChoiceField(label=_("Card expiry year"))
-    card_ccv = forms.CharField(label=_("CCV"), help_text=_("A security code, "
-        "usually the last 3 digits found on the back of your card."))
+    card_ccv = forms.CharField(
+        label=_("CCV"),
+        help_text=_(
+            "A security code, "
+            "usually the last 3 digits found on the back of your card."
+        ),
+    )
 
     class Meta:
         model = Order
-        fields = ([f.name for f in Order._meta.fields if
-                   f.name.startswith("billing_detail") or
-                   f.name.startswith("shipping_detail")] +
-                   ["additional_instructions", "discount_code"])
+        fields = [
+            f.name
+            for f in Order._meta.fields
+            if f.name.startswith("billing_detail")
+            or f.name.startswith("shipping_detail")
+        ] + ["additional_instructions", "discount_code"]
 
-    def __init__(
-            self, request, step, data=None, initial=None, errors=None,
-            **kwargs):
+    def __init__(self, request, step, data=None, initial=None, errors=None, **kwargs):
         """
         Setup for each order form step which does a few things:
 
@@ -353,15 +385,16 @@ class OrderForm(FormsetForm, DiscountForm):
         if initial is not None:
             initial["step"] = step
 
-        super().__init__(
-                request, data=data, initial=initial, **kwargs)
+        super().__init__(request, data=data, initial=initial, **kwargs)
         self._checkout_errors = errors
 
         # Hide discount code field if it shouldn't appear in checkout,
         # or if no discount codes are active.
         settings.clear_cache()
-        if not (settings.SHOP_DISCOUNT_FIELD_IN_CHECKOUT and
-                DiscountCode.objects.active().exists()):
+        if not (
+            settings.SHOP_DISCOUNT_FIELD_IN_CHECKOUT
+            and DiscountCode.objects.active().exists()
+        ):
             self.fields["discount_code"].widget = forms.HiddenInput()
 
         # Determine which sets of fields to hide for each checkout step.
@@ -436,18 +469,22 @@ class OrderForm(FormsetForm, DiscountForm):
 #    ADMIN WIDGETS    #
 #######################
 
+
 class ImageWidget(forms.FileInput):
     """
     Render a visible thumbnail for image fields.
     """
+
     def render(self, name, value, attrs, renderer=None):
         rendered = super().render(name, value, attrs)
         if value:
             orig = f"{settings.MEDIA_URL}{value}"
             thumb = f"{settings.MEDIA_URL}{thumbnail(value, 48, 48)}"
-            rendered = ("<a target='_blank' href='%s'>"
-                        "<img style='margin-right:6px;' src='%s'>"
-                        "</a>%s" % (orig, thumb, rendered))
+            rendered = (
+                "<a target='_blank' href='%s'>"
+                "<img style='margin-right:6px;' src='%s'>"
+                "</a>%s" % (orig, thumb, rendered)
+            )
         return mark_safe(rendered)
 
 
@@ -455,6 +492,7 @@ class MoneyWidget(forms.TextInput):
     """
     Render missing decimal places for money fields.
     """
+
     def render(self, name, value, attrs, renderer=None):
         try:
             value = float(value)
@@ -473,16 +511,18 @@ class ProductAdminFormMetaclass(ModelFormMetaclass):
     of the types of product options as sets of checkboxes for selecting
     which options to use when creating new product variations.
     """
+
     def __new__(cls, name, bases, attrs):
         for option in settings.SHOP_OPTION_TYPE_CHOICES:
-            field = forms.MultipleChoiceField(label=option[1],
-                required=False, widget=forms.CheckboxSelectMultiple)
+            field = forms.MultipleChoiceField(
+                label=option[1], required=False, widget=forms.CheckboxSelectMultiple
+            )
             attrs["option%s" % option[0]] = field
         args = (cls, name, bases, attrs)
         return super().__new__(*args)
 
 
-class ProductAdminForm(forms.ModelForm,  metaclass=ProductAdminFormMetaclass):
+class ProductAdminForm(forms.ModelForm, metaclass=ProductAdminFormMetaclass):
     """
     Admin form for the Product model.
     """
@@ -514,6 +554,7 @@ class ProductVariationAdminForm(forms.ModelForm):
     Ensure the list of images for the variation are specific to the
     variation's product.
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if "instance" in kwargs:
@@ -526,10 +567,20 @@ class ProductVariationAdminFormset(BaseInlineFormSet):
     """
     Ensure no more than one variation is checked as default.
     """
+
     def clean(self):
         super().clean()
-        if len([f for f in self.forms if hasattr(f, "cleaned_data") and
-            f.cleaned_data.get("default", False)]) > 1:
+        if (
+            len(
+                [
+                    f
+                    for f in self.forms
+                    if hasattr(f, "cleaned_data")
+                    and f.cleaned_data.get("default", False)
+                ]
+            )
+            > 1
+        ):
             error = _("Only one variation can be checked as the default.")
             raise forms.ValidationError(error)
 
@@ -539,10 +590,12 @@ class DiscountAdminForm(forms.ModelForm):
     Ensure only one discount field is given a value and if not, assign
     the error to the first discount field so that it displays correctly.
     """
+
     def clean(self):
         fields = [f for f in self.fields if f.startswith("discount_")]
-        reductions = [self.cleaned_data.get(f) for f in fields
-                      if self.cleaned_data.get(f)]
+        reductions = [
+            self.cleaned_data.get(f) for f in fields if self.cleaned_data.get(f)
+        ]
         if len(reductions) > 1:
             error = _("Please enter a value for only one type of reduction.")
             self._errors[fields[0]] = self.error_class([error])

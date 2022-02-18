@@ -79,23 +79,34 @@ shipping_fields = _flds("shipping_detail")
 # categories are a Mezzanine Page type.
 category_fieldsets = deepcopy(PageAdmin.fieldsets)
 category_fieldsets[0][1]["fields"][3:3] = ["content", "products"]
-category_fieldsets += ((_("Product filters"), {
-    "fields": ("sale", ("price_min", "price_max"), "combined"),
-    "classes": ("collapse-closed",)},),)
+category_fieldsets += (
+    (
+        _("Product filters"),
+        {
+            "fields": ("sale", ("price_min", "price_max"), "combined"),
+            "classes": ("collapse-closed",),
+        },
+    ),
+)
 if settings.SHOP_CATEGORY_USE_FEATURED_IMAGE:
     category_fieldsets[0][1]["fields"].insert(3, "featured_image")
 
 # Options are only used when variations are in use, so only provide
 # them as filters for dynamic categories when this is the case.
 if settings.SHOP_USE_VARIATIONS:
-    category_fieldsets[-1][1]["fields"] = (("options",) +
-                                        category_fieldsets[-1][1]["fields"])
+    category_fieldsets[-1][1]["fields"] = ("options",) + category_fieldsets[-1][1][
+        "fields"
+    ]
 
 
 class CategoryAdmin(PageAdmin):
     fieldsets = category_fieldsets
     formfield_overrides = {ImageField: {"widget": ImageWidget}}
-    filter_horizontal = ("options", "products",)
+    filter_horizontal = (
+        "options",
+        "products",
+    )
+
 
 ################
 #  VARIATIONS  #
@@ -104,8 +115,15 @@ class CategoryAdmin(PageAdmin):
 # If variations aren't used, the variation inline should always
 # provide a single inline for managing the single variation per
 # product.
-variation_fields = ["sku", "num_in_stock", "unit_price",
-                    "sale_price", "sale_from", "sale_to", "image"]
+variation_fields = [
+    "sku",
+    "num_in_stock",
+    "unit_price",
+    "sale_price",
+    "sale_from",
+    "sale_to",
+    "image",
+]
 if settings.SHOP_USE_VARIATIONS:
     variation_fields.insert(1, "default")
     variations_max_num = None
@@ -131,6 +149,7 @@ class ProductImageAdmin(TabularDynamicInlineAdmin):
     model = ProductImage
     formfield_overrides = {ImageField: {"widget": ImageWidget}}
 
+
 ##############
 #  PRODUCTS  #
 ##############
@@ -146,20 +165,27 @@ if settings.SHOP_USE_RELATED_PRODUCTS:
 if settings.SHOP_USE_UPSELL_PRODUCTS:
     other_product_fields.append("upsell_products")
 if len(other_product_fields) > 0:
-    product_fieldsets.append((_("Other products"), {
-        "classes": ("collapse-closed",),
-        "fields": tuple(other_product_fields)}))
+    product_fieldsets.append(
+        (
+            _("Other products"),
+            {"classes": ("collapse-closed",), "fields": tuple(other_product_fields)},
+        )
+    )
 
-product_list_display = ["admin_thumb", "title", "status", "available",
-                        "admin_link"]
+product_list_display = ["admin_thumb", "title", "status", "available", "admin_link"]
 product_list_editable = ["status", "available"]
 
 # If variations are used, set up the product option fields for managing
 # variations. If not, expose the denormalised price fields for a product
 # in the change list view.
 if settings.SHOP_USE_VARIATIONS:
-    product_fieldsets.insert(1, (_("Create new variations"),
-        {"classes": ("create-variations",), "fields": option_fields}))
+    product_fieldsets.insert(
+        1,
+        (
+            _("Create new variations"),
+            {"classes": ("create-variations",), "fields": option_fields},
+        ),
+    )
 else:
     extra_list_fields = ["sku", "unit_price", "sale_price", "num_in_stock"]
     product_list_display[4:4] = extra_list_fields
@@ -167,7 +193,6 @@ else:
 
 
 class ProductAdmin(ContentTypedAdmin, DisplayableAdmin):
-
     class Media:
         js = (static("cartridge/js/admin/product_variations.js"),)
         css = {"all": (static("cartridge/css/admin/product.css"),)}
@@ -177,8 +202,7 @@ class ProductAdmin(ContentTypedAdmin, DisplayableAdmin):
     list_editable = product_list_editable
     list_filter = ("status", "available", "categories")
     filter_horizontal = ("categories",) + tuple(other_product_fields)
-    search_fields = ("title", "content", "categories__title",
-                     "variations__sku")
+    search_fields = ("title", "content", "categories__title", "variations__sku")
     inlines = (ProductImageAdmin, ProductVariationAdmin)
     form = ProductAdminForm
     fieldsets = product_fieldsets
@@ -224,20 +248,24 @@ class ProductAdmin(ContentTypedAdmin, DisplayableAdmin):
         if formset.model == ProductImage:
             self._images_formset = formset
         else:
-            super().save_formset(request, form, formset,
-                                                   change)
+            super().save_formset(request, form, formset, change)
 
         # Run each of the variation manager methods if we're saving
         # the variations formset.
         if formset.model == ProductVariation:
 
             # Build up selected options for new variations.
-            options = {f: request.POST.getlist(f) for f in option_fields
-                             if request.POST.getlist(f)}
+            options = {
+                f: request.POST.getlist(f)
+                for f in option_fields
+                if request.POST.getlist(f)
+            }
             # Create a list of image IDs that have been marked to delete.
-            deleted_images = [request.POST.get(f.replace("-DELETE", "-id"))
+            deleted_images = [
+                request.POST.get(f.replace("-DELETE", "-id"))
                 for f in request.POST
-                if f.startswith("images-") and f.endswith("-DELETE")]
+                if f.startswith("images-") and f.endswith("-DELETE")
+            ]
 
             # Create new variations for selected options.
             product.variations.create_from_options(options)
@@ -249,8 +277,7 @@ class ProductAdmin(ContentTypedAdmin, DisplayableAdmin):
             product.variations.set_default_images(deleted_images)
 
             # Save the images formset stored previously.
-            super().save_formset(request, form,
-                                                 self._images_formset, change)
+            super().save_formset(request, form, self._images_formset, change)
 
             # Run again to allow for no images existing previously, with
             # new images added which can be used as defaults for variations.
@@ -266,15 +293,20 @@ class ProductAdmin(ContentTypedAdmin, DisplayableAdmin):
                 from collections import OrderedDict
 
                 from modeltranslation.utils import build_localized_fieldname as _loc
+
                 for opt_name in options:
                     for opt_value in options[opt_name]:
-                        opt_obj = ProductOption.objects.get(type=opt_name[6:],
-                                                            name=opt_value)
+                        opt_obj = ProductOption.objects.get(
+                            type=opt_name[6:], name=opt_value
+                        )
                         params = {opt_name: opt_value}
                         for var in product.variations.filter(**params):
                             for code in OrderedDict(settings.LANGUAGES):
-                                setattr(var, _loc(opt_name, code),
-                                        getattr(opt_obj, _loc('name', code)))
+                                setattr(
+                                    var,
+                                    _loc(opt_name, code),
+                                    getattr(opt_obj, _loc("name", code)),
+                                )
                             var.save()
 
 
@@ -306,14 +338,12 @@ def address_pairs(fields):
     return pairs
 
 
-order_list_display = ("id", "billing_name", "total", "time", "status",
-                      "transaction_id")
+order_list_display = ("id", "billing_name", "total", "time", "status", "transaction_id")
 if HAS_PDF:
     order_list_display += ("invoice_url",)
 
 
 class OrderAdmin(admin.ModelAdmin):
-
     class Media:
         css = {"all": (static("cartridge/css/admin/order.css"),)}
 
@@ -321,26 +351,40 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = order_list_display
     list_editable = ("status",)
     list_filter = ("status", "time")
-    list_display_links = ("id", "billing_name",)
-    search_fields = (["id", "status", "transaction_id"] +
-                     billing_fields + shipping_fields)
+    list_display_links = (
+        "id",
+        "billing_name",
+    )
+    search_fields = (
+        ["id", "status", "transaction_id"] + billing_fields + shipping_fields
+    )
     date_hierarchy = "time"
     radio_fields = {"status": admin.HORIZONTAL}
     inlines = (OrderItemInline,)
     formfield_overrides = {MoneyField: {"widget": MoneyWidget}}
     fieldsets = (
         (_("Billing details"), {"fields": address_pairs(billing_fields)}),
-         (_("Shipping details"), {"fields": address_pairs(shipping_fields)}),
-        (None, {"fields": ("additional_instructions", ("shipping_total",
-            "shipping_type"), ('tax_total', 'tax_type'),
-             ("discount_total", "discount_code"), "item_total",
-            ("total", "status"), "transaction_id")}),
+        (_("Shipping details"), {"fields": address_pairs(shipping_fields)}),
+        (
+            None,
+            {
+                "fields": (
+                    "additional_instructions",
+                    ("shipping_total", "shipping_type"),
+                    ("tax_total", "tax_type"),
+                    ("discount_total", "discount_code"),
+                    "item_total",
+                    ("total", "status"),
+                    "transaction_id",
+                )
+            },
+        ),
     )
 
     def invoice_url(self, obj):
         return format_html(obj.invoice())
 
-    invoice_url.short_description = 'Invoice'
+    invoice_url.short_description = "Invoice"
 
     def change_view(self, *args, **kwargs):
         if kwargs.get("extra_context", None) is None:
@@ -350,42 +394,77 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 class SaleAdmin(admin.ModelAdmin):
-    list_display = ("title", "active", "discount_deduct", "discount_percent",
-        "discount_exact", "valid_from", "valid_to")
-    list_editable = ("active", "discount_deduct", "discount_percent",
-        "discount_exact", "valid_from", "valid_to")
+    list_display = (
+        "title",
+        "active",
+        "discount_deduct",
+        "discount_percent",
+        "discount_exact",
+        "valid_from",
+        "valid_to",
+    )
+    list_editable = (
+        "active",
+        "discount_deduct",
+        "discount_percent",
+        "discount_exact",
+        "valid_from",
+        "valid_to",
+    )
     filter_horizontal = ("categories", "products")
     formfield_overrides = {MoneyField: {"widget": MoneyWidget}}
     form = DiscountAdminForm
     fieldsets = (
         (None, {"fields": ("title", "active")}),
-        (_("Apply to product and/or products in categories"),
-            {"fields": ("products", "categories")}),
-        (_("Reduce unit price by"),
-            {"fields": (("discount_deduct", "discount_percent",
-            "discount_exact"),)}),
+        (
+            _("Apply to product and/or products in categories"),
+            {"fields": ("products", "categories")},
+        ),
+        (
+            _("Reduce unit price by"),
+            {"fields": (("discount_deduct", "discount_percent", "discount_exact"),)},
+        ),
         (_("Sale period"), {"fields": (("valid_from", "valid_to"),)}),
     )
 
 
 class DiscountCodeAdmin(admin.ModelAdmin):
-    list_display = ("title", "active", "code", "discount_deduct",
-        "discount_percent", "min_purchase", "free_shipping", "valid_from",
-        "valid_to")
-    list_editable = ("active", "code", "discount_deduct", "discount_percent",
-        "min_purchase", "free_shipping", "valid_from", "valid_to")
+    list_display = (
+        "title",
+        "active",
+        "code",
+        "discount_deduct",
+        "discount_percent",
+        "min_purchase",
+        "free_shipping",
+        "valid_from",
+        "valid_to",
+    )
+    list_editable = (
+        "active",
+        "code",
+        "discount_deduct",
+        "discount_percent",
+        "min_purchase",
+        "free_shipping",
+        "valid_from",
+        "valid_to",
+    )
     filter_horizontal = ("categories", "products")
     formfield_overrides = {MoneyField: {"widget": MoneyWidget}}
     form = DiscountAdminForm
     fieldsets = (
         (None, {"fields": ("title", "active", "code")}),
-        (_("Apply to product and/or products in categories"),
-            {"fields": ("products", "categories")}),
-        (_("Reduce unit price by"),
-            {"fields": (("discount_deduct", "discount_percent"),)}),
+        (
+            _("Apply to product and/or products in categories"),
+            {"fields": ("products", "categories")},
+        ),
+        (
+            _("Reduce unit price by"),
+            {"fields": (("discount_deduct", "discount_percent"),)},
+        ),
         (None, {"fields": (("min_purchase", "free_shipping"),)}),
-        (_("Valid for"),
-            {"fields": (("valid_from", "valid_to", "uses_remaining"),)}),
+        (_("Valid for"), {"fields": (("valid_from", "valid_to", "uses_remaining"),)}),
     )
 
 

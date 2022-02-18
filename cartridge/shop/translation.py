@@ -16,20 +16,20 @@ class TranslatedProduct(TranslatedDisplayable, TranslatedRichText):
 
 
 class TranslatedProductImage(TranslationOptions):
-    fields = ('description',)
+    fields = ("description",)
 
 
 class TranslatedProductOption(TranslationOptions):
-    fields = ('name',)
+    fields = ("name",)
 
 
 class TranslatedProductVariation(TranslationOptions):
-    fields = tuple('option%s' % opt[0] for opt in
-                    settings.SHOP_OPTION_TYPE_CHOICES)
+    fields = tuple("option%s" % opt[0] for opt in settings.SHOP_OPTION_TYPE_CHOICES)
 
 
 class TranslatedCategory(TranslatedRichText):
     fields = ()
+
 
 translator.register(Product, TranslatedProduct)
 translator.register(ProductImage, TranslatedProductImage)

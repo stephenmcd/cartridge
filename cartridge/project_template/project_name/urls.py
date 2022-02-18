@@ -21,27 +21,22 @@ urlpatterns = i18n_patterns(
 
 if settings.USE_MODELTRANSLATION:
     urlpatterns += [
-        path('i18n/', set_language, name='set_language'),
+        path("i18n/", set_language, name="set_language"),
     ]
 
 urlpatterns += [
-
     # Cartridge URLs.
     path("shop/", include("cartridge.shop.urls")),
     path("account/orders/", order_history, name="shop_order_history"),
-
     # We don't want to presume how your homepage works, so here are a
     # few patterns you can use to set it up.
-
     # HOMEPAGE AS STATIC TEMPLATE
     # ---------------------------
     # This pattern simply loads the index.html template. It isn't
     # commented out like the others, so it's the default. You only need
     # one homepage pattern, so if you use a different one, comment this
     # one out.
-
     path("", direct_to_template, {"template": "index.html"}, name="home"),
-
     # HOMEPAGE AS AN EDITABLE PAGE IN THE PAGE TREE
     # ---------------------------------------------
     # This pattern gives us a normal ``Page`` object, so that your
@@ -55,9 +50,7 @@ urlpatterns += [
     # "/.html" - so for this case, the template "pages/index.html"
     # should be used if you want to customize the homepage's template.
     # NOTE: Don't forget to import the view function too!
-
     # path("", mezzanine.pages.views.page, {"slug": "/"}, name="home"),
-
     # HOMEPAGE FOR A BLOG-ONLY SITE
     # -----------------------------
     # This pattern points the homepage to the blog post listing page,
@@ -66,22 +59,18 @@ urlpatterns += [
     # ``settings.py`` module, and delete the blog page object from the
     # page tree in the admin if it was installed.
     # NOTE: Don't forget to import the view function too!
-
     # path("", mezzanine.blog.views.blog_post_list, name="home"),
-
     # MEZZANINE'S URLS
     # ----------------
     # ADD YOUR OWN URLPATTERNS *ABOVE* THE LINE BELOW.
     # ``mezzanine.urls`` INCLUDES A *CATCH ALL* PATTERN
     # FOR PAGES, SO URLPATTERNS ADDED BELOW ``mezzanine.urls``
     # WILL NEVER BE MATCHED!
-
     # If you'd like more granular control over the patterns in
     # ``mezzanine.urls``, go right ahead and take the parts you want
     # from it, and use them directly below instead of using
     # ``mezzanine.urls``.
     path("", include("mezzanine.urls")),
-
     # MOUNTING MEZZANINE UNDER A PREFIX
     # ---------------------------------
     # You can also mount all of Mezzanine's urlpatterns under a
@@ -95,9 +84,7 @@ urlpatterns += [
     # of this file as well.
     # Note that for any of the various homepage patterns above, you'll
     # need to use the ``SITE_PREFIX`` setting as well.
-
     # path("%s/" % settings.SITE_PREFIX, include("mezzanine.urls"))
-
 ]
 
 # Adds ``STATIC_URL`` to the context of error pages, so that error

@@ -18,7 +18,7 @@ def currency(value):
     if not value:
         value = 0
     value = locale.currency(Decimal(value), grouping=True)
-    if platform.system() == 'Windows':
+    if platform.system() == "Windows":
         try:
             value = str(value, encoding=locale.getpreferredencoding())
         except TypeError:
@@ -32,8 +32,13 @@ def _order_totals(context):
     context. Use the context's completed order object for email
     receipts, or the cart object for checkout.
     """
-    fields = ["shipping_type", "shipping_total", "discount_total",
-              "tax_type", "tax_total"]
+    fields = [
+        "shipping_type",
+        "shipping_total",
+        "discount_total",
+        "tax_type",
+        "tax_total",
+    ]
     template_vars = {}
 
     if "order" in context:
@@ -49,18 +54,14 @@ def _order_totals(context):
             template_vars["shipping_total"] = 0
         else:
             for field in fields:
-                template_vars[field] = context["request"].session.get(
-                    field, None)
+                template_vars[field] = context["request"].session.get(field, None)
     template_vars["order_total"] = template_vars.get("item_total", None)
     if template_vars.get("shipping_total", None) is not None:
-        template_vars["order_total"] += Decimal(
-            str(template_vars["shipping_total"]))
+        template_vars["order_total"] += Decimal(str(template_vars["shipping_total"]))
     if template_vars.get("discount_total", None) is not None:
-        template_vars["order_total"] -= Decimal(
-            str(template_vars["discount_total"]))
+        template_vars["order_total"] -= Decimal(str(template_vars["discount_total"]))
     if template_vars.get("tax_total", None) is not None:
-        template_vars["order_total"] += Decimal(
-            str(template_vars["tax_total"]))
+        template_vars["order_total"] += Decimal(str(template_vars["tax_total"]))
     return template_vars
 
 
