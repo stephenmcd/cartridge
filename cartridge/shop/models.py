@@ -14,7 +14,6 @@ from django.utils.translation import (gettext, gettext_lazy as _,
                                       pgettext_lazy as __)
 
 from django.utils.encoding import force_str
-from django.utils.encoding import python_2_unicode_compatible
 
 from mezzanine.conf import settings
 from mezzanine.core.fields import FileField
@@ -154,7 +153,6 @@ class Product(BaseProduct, Priced, RichText, ContentTyped, AdminThumbMixin):
         self.save()
 
 
-@python_2_unicode_compatible
 class ProductImage(Orderable):
     """
     An image for a product - a relationship is also defined with the
@@ -184,7 +182,6 @@ class ProductImage(Orderable):
         return value
 
 
-@python_2_unicode_compatible
 class ProductOption(models.Model):
     """
     A selectable option for a product such as size or colour.
@@ -218,7 +215,6 @@ class ProductVariationMetaclass(ModelBase):
         return super().__new__(*args)
 
 
-@python_2_unicode_compatible
 class ProductVariation(Priced, metaclass=ProductVariationMetaclass):
     """
     A combination of selected options from
@@ -411,7 +407,6 @@ class Category(Page, RichText):
         return products
 
 
-@python_2_unicode_compatible
 class Order(SiteRelated):
 
     billing_detail_first_name = CharField(_("First name"), max_length=100)
@@ -639,7 +634,6 @@ class Cart(models.Model):
         return total
 
 
-@python_2_unicode_compatible
 class SelectedProduct(models.Model):
     """
     Abstract model representing a "selected" product in a cart or order.
@@ -716,7 +710,6 @@ class ProductAction(models.Model):
         unique_together = ("product", "timestamp")
 
 
-@python_2_unicode_compatible
 class Discount(models.Model):
     """
     Abstract model representing one of several types of monetary
