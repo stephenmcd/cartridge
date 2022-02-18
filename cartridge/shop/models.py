@@ -13,7 +13,7 @@ from django.utils.timezone import now
 from django.utils.translation import (gettext, gettext_lazy as _,
                                       pgettext_lazy as __)
 
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.encoding import python_2_unicode_compatible
 
 from mezzanine.conf import settings
@@ -571,12 +571,12 @@ class Cart(models.Model):
         kwargs = {"sku": variation.sku, "unit_price": variation.price()}
         item, created = self.items.get_or_create(**kwargs)
         if created:
-            item.description = force_text(variation)
+            item.description = force_str(variation)
             item.unit_price = variation.price()
             item.url = variation.product.get_absolute_url()
             image = variation.image
             if image is not None:
-                item.image = force_text(image.file)
+                item.image = force_str(image.file)
             variation.product.actions.added_to_cart()
         item.quantity += quantity
         item.save()
