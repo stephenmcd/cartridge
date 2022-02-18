@@ -18,9 +18,6 @@ globals().update(i for i in settings.__dict__.items() if i[0].isupper())
 INSTALLED_APPS = list(INSTALLED_APPS)
 INSTALLED_APPS.append("tests")
 
-if "cartridge.accounts" not in INSTALLED_APPS:
-    INSTALLED_APPS.append("cartridge.accounts")
-
 # Use the MD5 password hasher by default for quicker test runs.
 PASSWORD_HASHERS = ('django.contrib.auth.hashers.MD5PasswordHasher',)
 """
