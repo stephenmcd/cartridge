@@ -12,7 +12,6 @@ from django.utils.translation import gettext_lazy as _
 from mezzanine.conf import settings
 from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
 from mezzanine.utils.importing import import_dotted_path
-from mezzanine.utils.tests import run_pep8_for_package, run_pyflakes_for_package
 
 from cartridge.shop.checkout import CHECKOUT_STEPS
 from cartridge.shop.forms import OrderForm
@@ -354,23 +353,6 @@ class ShopTests(TestCase):
         self.assertEqual(items[0].quantity, TEST_STOCK)
         self.assertEqual(variation.num_in_stock, TEST_STOCK)
         self.assertEqual(order.item_total, TEST_PRICE * TEST_STOCK)
-
-    def test_syntax(self):
-        """
-        Run pyflakes/pep8 across the code base to check for potential errors.
-        """
-        extra_ignore = (
-            "redefinition of unused 'digest'",
-            "redefinition of unused 'OperationalError'",
-            "'from mezzanine.project_template.settings import *' used",
-        )
-        warnings = []
-        warnings.extend(
-            run_pyflakes_for_package("cartridge", extra_ignore=extra_ignore)
-        )
-        warnings.extend(run_pep8_for_package("cartridge"))
-        if warnings:
-            self.fail("Syntax warnings!\n\n%s" % "\n".join(warnings))
 
     def test_product_image_deletion_does_not_delete_referenced_variation(self):
         from io import BytesIO
