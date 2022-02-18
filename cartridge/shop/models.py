@@ -405,7 +405,7 @@ class Category(Page, RichText):
             # selected is neccessary as combining the variations
             # with an empty ID list lookup and ``AND`` will always
             # result in an empty result.
-            if self.products.count() > 0:
+            if self.products.exists():
                 filters.append(products)
             return reduce(operator, filters)
         return products
