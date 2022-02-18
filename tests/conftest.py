@@ -20,6 +20,12 @@ INSTALLED_APPS.append("tests")
 
 # Use the MD5 password hasher by default for quicker test runs.
 PASSWORD_HASHERS = ('django.contrib.auth.hashers.MD5PasswordHasher',)
+
+# Add a currency locale
+SHOP_CURRENCY_LOCALE = "en_US.UTF-8"
+
+# Allowed development hosts
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "::1"]
 """
 
 
