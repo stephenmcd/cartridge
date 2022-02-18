@@ -11,6 +11,7 @@
 
 import os
 import sys
+from datetime import datetime
 
 if "DJANGO_SETTINGS_MODULE" not in os.environ:
     docs_path = os.getcwd()
@@ -75,7 +76,6 @@ master_doc = "index"
 
 # General information about the project.
 project = "Cartridge"
-from datetime import datetime
 
 copyright = "2009 - %s, Stephen McDonald" % datetime.now().year
 

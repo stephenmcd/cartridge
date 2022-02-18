@@ -1,1 +1,1 @@
-from cartridge import __version__
+from cartridge import __version__  # noqa: F401

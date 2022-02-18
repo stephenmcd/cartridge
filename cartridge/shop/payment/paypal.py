@@ -58,7 +58,7 @@ def process(request, order_form, order):
     currency = locale.localeconv()
     try:
         ipaddress = request.META["HTTP_X_FORWARDED_FOR"]
-    except:
+    except Exception:
         ipaddress = request.META["REMOTE_ADDR"]
 
     if settings.DEBUG:
