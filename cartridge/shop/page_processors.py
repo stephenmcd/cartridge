@@ -1,5 +1,4 @@
 from django.template.defaultfilters import slugify
-
 from mezzanine.conf import settings
 from mezzanine.pages.page_processors import processor_for
 from mezzanine.utils.views import paginate

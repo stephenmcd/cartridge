@@ -6,21 +6,28 @@ from locale import localeconv
 from re import match
 
 from django import forms
-from django.forms.models import BaseInlineFormSet, ModelFormMetaclass
-from django.forms.models import inlineformset_factory
+from django.forms.models import (
+    BaseInlineFormSet,
+    ModelFormMetaclass,
+    inlineformset_factory,
+)
 from django.utils.safestring import mark_safe
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
-
 from mezzanine.conf import settings
 from mezzanine.core.templatetags.mezzanine_tags import thumbnail
 
 from cartridge.shop import checkout
-from cartridge.shop.models import Product, ProductOption, ProductVariation
-from cartridge.shop.models import Cart, CartItem, Order, DiscountCode
-from cartridge.shop.utils import (make_choices, set_locale, set_shipping,
-                                  clear_session)
-
+from cartridge.shop.models import (
+    Cart,
+    CartItem,
+    DiscountCode,
+    Order,
+    Product,
+    ProductOption,
+    ProductVariation,
+)
+from cartridge.shop.utils import clear_session, make_choices, set_locale, set_shipping
 
 ADD_PRODUCT_ERRORS = {
     "invalid_options": _("The selected options are currently unavailable."),

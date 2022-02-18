@@ -1,28 +1,33 @@
 from datetime import timedelta
 from decimal import Decimal
-from operator import mul
 from functools import reduce
+from operator import mul
 from unittest import skipUnless
 
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django.utils.timezone import now
 from django.urls import reverse
+from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 from mezzanine.conf import settings
 from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
 from mezzanine.utils.importing import import_dotted_path
-from mezzanine.utils.tests import run_pyflakes_for_package
-from mezzanine.utils.tests import run_pep8_for_package
+from mezzanine.utils.tests import run_pep8_for_package, run_pyflakes_for_package
 
-from cartridge.shop.models import Product, ProductOption, ProductVariation
-from cartridge.shop.models import ProductImage
-from cartridge.shop.models import Category, Cart, Order, DiscountCode
-from cartridge.shop.models import Sale
-from cartridge.shop.forms import OrderForm
 from cartridge.shop.checkout import CHECKOUT_STEPS
+from cartridge.shop.forms import OrderForm
+from cartridge.shop.models import (
+    Cart,
+    Category,
+    DiscountCode,
+    Order,
+    Product,
+    ProductImage,
+    ProductOption,
+    ProductVariation,
+    Sale,
+)
 from cartridge.shop.utils import set_tax
-
 
 TEST_STOCK = 5
 TEST_PRICE = Decimal("20")

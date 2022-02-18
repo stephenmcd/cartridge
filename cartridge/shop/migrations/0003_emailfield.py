@@ -1,6 +1,7 @@
-from django.db import models, migrations
-import mezzanine.pages.managers
 import mezzanine.core.managers
+import mezzanine.pages.managers
+from django.db import migrations, models
+
 import cartridge.shop.managers
 
 

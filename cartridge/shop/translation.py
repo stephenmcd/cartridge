@@ -1,10 +1,14 @@
-from modeltranslation.translator import translator, TranslationOptions
 from mezzanine.conf import settings
-from mezzanine.core.translation import (TranslatedDisplayable,
-                                        TranslatedRichText)
+from mezzanine.core.translation import TranslatedDisplayable, TranslatedRichText
+from modeltranslation.translator import TranslationOptions, translator
 
-from cartridge.shop.models import (Category, Product, ProductOption,
-                                   ProductImage, ProductVariation)
+from cartridge.shop.models import (
+    Category,
+    Product,
+    ProductImage,
+    ProductOption,
+    ProductVariation,
+)
 
 
 class TranslatedProduct(TranslatedDisplayable, TranslatedRichText):

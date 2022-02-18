@@ -1,10 +1,12 @@
-from django.db import models, migrations
 from decimal import Decimal
-import mezzanine.utils.models
+
 import mezzanine.core.fields
+import mezzanine.utils.models
+from django.db import migrations, models
+from mezzanine.conf import settings
+
 import cartridge.shop.fields
 
-from mezzanine.conf import settings
 
 class Migration(migrations.Migration):
 

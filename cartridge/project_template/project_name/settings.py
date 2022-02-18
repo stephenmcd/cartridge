@@ -2,7 +2,6 @@ import os
 
 from django.utils.translation import gettext_lazy as _
 
-
 ######################
 # CARTRIDGE SETTINGS #
 ######################
@@ -374,8 +373,8 @@ OPTIONAL_APPS = (
 
 f = os.path.join(PROJECT_APP_PATH, "local_settings.py")
 if os.path.exists(f):
-    import sys
     import imp
+    import sys
     module_name = "%s.local_settings" % PROJECT_APP
     module = imp.new_module(module_name)
     module.__file__ = f

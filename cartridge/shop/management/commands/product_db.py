@@ -1,21 +1,21 @@
 import csv
+import datetime
 import os
 import shutil
-import datetime
 
-from django.core.management.base import BaseCommand
-from django.core.management.base import CommandError
-from django.utils.translation import gettext as _
+from django.core.management.base import BaseCommand, CommandError
 from django.db.utils import IntegrityError
+from django.utils.translation import gettext as _
 from mezzanine.conf import settings
-
-from cartridge.shop.models import Product
-from cartridge.shop.models import ProductOption
-from cartridge.shop.models import ProductImage
-from cartridge.shop.models import ProductVariation
-from cartridge.shop.models import Category
 from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
 
+from cartridge.shop.models import (
+    Category,
+    Product,
+    ProductImage,
+    ProductOption,
+    ProductVariation,
+)
 
 # images get copied from thie directory
 LOCAL_IMAGE_DIR = "/tmp/orig"

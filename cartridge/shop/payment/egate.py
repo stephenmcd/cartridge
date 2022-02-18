@@ -8,7 +8,6 @@ from mezzanine.conf import settings
 
 from cartridge.shop.checkout import CheckoutError
 
-
 GATEWAY_COMMAND = getattr(settings, "EGATE_GATEWAY_COMMAND", "pay")
 GATEWAY_VERSION = getattr(settings, "EGATE_GATEWAY_VERSION", "1")
 GATEWAY_URL = getattr(settings, "EGATE_GATEWAY_URL",

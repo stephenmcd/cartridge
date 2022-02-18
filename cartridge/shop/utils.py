@@ -1,11 +1,11 @@
 import hmac
-from locale import setlocale, LC_MONETARY, Error as LocaleError
-
 from hashlib import sha512 as digest
+from locale import LC_MONETARY
+from locale import Error as LocaleError
+from locale import setlocale
 
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import gettext as _
-
 from mezzanine.conf import settings
 from mezzanine.utils.importing import import_dotted_path
 

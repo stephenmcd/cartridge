@@ -9,8 +9,8 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys
 import os
+import sys
 
 if "DJANGO_SETTINGS_MODULE" not in os.environ:
     docs_path = os.getcwd()
@@ -26,15 +26,16 @@ if "DJANGO_SETTINGS_MODULE" not in os.environ:
         pass
 
 if sys.argv[-2:] == ["docs", "docs/build"]:
-    import cartridge
     from mezzanine.utils import docs
+
+    import cartridge
     docs.build_settings_docs(docs_path, prefix="SHOP_")
     docs.build_changelog(docs_path, package_name="cartridge")
     #docs.build_modelgraph(docs_path, package_name="cartridge")
 
 try:
-    from cartridge.shop.models import Order
     from cartridge.shop.forms import OrderForm
+    from cartridge.shop.models import Order
     fields = {
         "form": OrderForm(None, None).fields.keys(),
         "model": [f.name for f in Order._meta.fields],
@@ -72,6 +73,7 @@ master_doc = 'index'
 # General information about the project.
 project = 'Cartridge'
 from datetime import datetime
+
 copyright = '2009 - %s, Stephen McDonald' % datetime.now().year
 
 # The version info for the project you're documenting, acts as replacement for

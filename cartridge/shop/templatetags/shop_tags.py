@@ -1,11 +1,10 @@
-from decimal import Decimal
 import locale
 import platform
+from decimal import Decimal
 
 from django import template
 
 from cartridge.shop.utils import set_locale
-
 
 register = template.Library()
 

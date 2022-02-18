@@ -1,12 +1,11 @@
-from django.urls import include, path
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
+from django.urls import include, path
 from django.views.i18n import set_language
-from mezzanine.core.views import direct_to_template
 from mezzanine.conf import settings
+from mezzanine.core.views import direct_to_template
 
 from cartridge.shop.views import order_history
-
 
 admin.autodiscover()
 

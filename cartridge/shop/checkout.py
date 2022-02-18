@@ -1,10 +1,9 @@
 """
 Checkout process utilities.
 """
+from django.template.loader import TemplateDoesNotExist, get_template
 from django.utils.translation import gettext_lazy as _
-from django.template.loader import get_template, TemplateDoesNotExist
-from mezzanine.accounts import get_profile_for_user, ProfileNotConfigured
-
+from mezzanine.accounts import ProfileNotConfigured, get_profile_for_user
 from mezzanine.conf import settings
 from mezzanine.utils.email import send_mail_template
 

@@ -1,9 +1,8 @@
-from collections import defaultdict, OrderedDict
+from collections import OrderedDict, defaultdict
 from datetime import datetime, timedelta
 
 from django.db.models import Manager, Q
 from django.utils.timezone import now
-
 from mezzanine.conf import settings
 from mezzanine.core.managers import CurrentSiteManager
 

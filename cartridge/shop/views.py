@@ -2,25 +2,28 @@ from json import dumps
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages import info
-from django.urls import reverse
 from django.db.models import Sum
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.template.defaultfilters import slugify
 from django.template.loader import get_template
 from django.template.response import TemplateResponse
+from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.decorators.cache import never_cache
 from mezzanine.conf import settings
 from mezzanine.utils.importing import import_dotted_path
-from mezzanine.utils.views import set_cookie, paginate
 from mezzanine.utils.urls import next_url
+from mezzanine.utils.views import paginate, set_cookie
 
 from cartridge.shop import checkout
-from cartridge.shop.forms import (AddProductForm, CartItemFormSet,
-                                  DiscountForm, OrderForm)
-from cartridge.shop.models import Product, ProductVariation, Order
-from cartridge.shop.models import DiscountCode
+from cartridge.shop.forms import (
+    AddProductForm,
+    CartItemFormSet,
+    DiscountForm,
+    OrderForm,
+)
+from cartridge.shop.models import DiscountCode, Order, Product, ProductVariation
 from cartridge.shop.utils import recalculate_cart, sign
 
 try:

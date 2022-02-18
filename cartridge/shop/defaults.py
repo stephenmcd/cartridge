@@ -1,9 +1,7 @@
 from socket import gethostname
 
 from django.utils.translation import gettext_lazy as _
-
 from mezzanine.conf import register_setting
-
 
 ####################################################################
 #  This first set of settings already exists in Mezzanine but can  #

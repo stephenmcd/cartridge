@@ -3,23 +3,27 @@ from functools import reduce
 from operator import iand, ior
 
 from django.core.exceptions import ValidationError
-from django.urls import reverse
-from django.db import models, connection
-from django.db.models.signals import m2m_changed
-from django.db.models import CharField, Q, F
+from django.db import connection, models
+from django.db.models import CharField, F, Q
 from django.db.models.base import ModelBase
+from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
-from django.utils.timezone import now
-from django.utils.translation import (gettext, gettext_lazy as _,
-                                      pgettext_lazy as __)
-
+from django.urls import reverse
 from django.utils.encoding import force_str
-
+from django.utils.timezone import now
+from django.utils.translation import gettext
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy as __
 from mezzanine.conf import settings
 from mezzanine.core.fields import FileField
 from mezzanine.core.managers import DisplayableManager
 from mezzanine.core.models import (
-    ContentTyped, Displayable, Orderable, RichText, SiteRelated)
+    ContentTyped,
+    Displayable,
+    Orderable,
+    RichText,
+    SiteRelated,
+)
 from mezzanine.generic.fields import RatingField
 from mezzanine.pages.models import Page
 from mezzanine.utils.models import AdminThumbMixin, upload_to

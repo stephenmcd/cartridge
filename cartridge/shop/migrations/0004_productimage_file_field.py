@@ -1,5 +1,5 @@
-from django.db import models, migrations
 import mezzanine.core.fields
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):

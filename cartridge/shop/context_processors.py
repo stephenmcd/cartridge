@@ -1,6 +1,5 @@
 from mezzanine.conf import settings
 
-
 name = "cartridge.shop.context_processors.shop_globals"
 if name in settings.TEMPLATE_CONTEXT_PROCESSORS:
     from warnings import warn

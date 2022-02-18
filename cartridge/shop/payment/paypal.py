@@ -1,7 +1,6 @@
-from urllib.request import Request, urlopen
-from urllib.error import URLError
-
 import locale
+from urllib.error import URLError
+from urllib.request import Request, urlopen
 
 from django.core.exceptions import ImproperlyConfigured
 from django.http import QueryDict
@@ -9,7 +8,6 @@ from django.utils.http import urlencode
 from mezzanine.conf import settings
 
 from cartridge.shop.checkout import CheckoutError
-
 
 PAYPAL_NVP_API_ENDPOINT_SANDBOX = 'https://api-3t.sandbox.paypal.com/nvp'
 PAYPAL_NVP_API_ENDPOINT = 'https://api-3t.paypal.com/nvp'

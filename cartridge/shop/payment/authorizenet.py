@@ -1,12 +1,11 @@
-from urllib.request import Request, urlopen
 from urllib.error import URLError
+from urllib.request import Request, urlopen
 
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.http import urlencode
 from mezzanine.conf import settings
 
 from cartridge.shop.checkout import CheckoutError
-
 
 AUTH_NET_LIVE = 'https://secure.authorize.net/gateway/transact.dll'
 AUTH_NET_TEST = 'https://test.authorize.net/gateway/transact.dll'

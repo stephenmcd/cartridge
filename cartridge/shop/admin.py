@@ -32,23 +32,37 @@ from django.contrib import admin
 from django.db.models import ImageField
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
-
 from mezzanine.conf import settings
 from mezzanine.core.admin import (
-    BaseTranslationModelAdmin, ContentTypedAdmin, DisplayableAdmin,
-    TabularDynamicInlineAdmin)
+    BaseTranslationModelAdmin,
+    ContentTypedAdmin,
+    DisplayableAdmin,
+    TabularDynamicInlineAdmin,
+)
 from mezzanine.pages.admin import PageAdmin
 from mezzanine.utils.static import static_lazy as static
 
 from cartridge.shop.fields import MoneyField
-from cartridge.shop.forms import ProductAdminForm, ProductVariationAdminForm
-from cartridge.shop.forms import ProductVariationAdminFormset
-from cartridge.shop.forms import DiscountAdminForm, ImageWidget, MoneyWidget
-from cartridge.shop.models import Category, Product, ProductImage
-from cartridge.shop.models import ProductVariation, ProductOption, Order
-from cartridge.shop.models import OrderItem, Sale, DiscountCode
+from cartridge.shop.forms import (
+    DiscountAdminForm,
+    ImageWidget,
+    MoneyWidget,
+    ProductAdminForm,
+    ProductVariationAdminForm,
+    ProductVariationAdminFormset,
+)
+from cartridge.shop.models import (
+    Category,
+    DiscountCode,
+    Order,
+    OrderItem,
+    Product,
+    ProductImage,
+    ProductOption,
+    ProductVariation,
+    Sale,
+)
 from cartridge.shop.views import HAS_PDF
-
 
 # Lists of field names.
 option_fields = [f.name for f in ProductVariation.option_fields()]
@@ -250,8 +264,8 @@ class ProductAdmin(ContentTypedAdmin, DisplayableAdmin):
             # the required ``ProductVariation``
             if settings.USE_MODELTRANSLATION:
                 from collections import OrderedDict
-                from modeltranslation.utils import (build_localized_fieldname
-                                                    as _loc)
+
+                from modeltranslation.utils import build_localized_fieldname as _loc
                 for opt_name in options:
                     for opt_value in options[opt_name]:
                         opt_obj = ProductOption.objects.get(type=opt_name[6:],
