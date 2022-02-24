@@ -13,7 +13,7 @@ jQuery(function($) {
     // Hide empty option fields.
     $('.create-variations .form-row').each(function(i, row) {
         row = $(row);
-        if (row.find('li').length == 0) {
+        if (row.find('input').length == 0) {
             row.hide();
         }
     });
