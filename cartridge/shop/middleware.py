@@ -1,4 +1,4 @@
-from mezzanine.utils.deprecation import MiddlewareMixin
+from django.utils.deprecation import MiddlewareMixin
 
 from cartridge.shop.models import Cart
 
