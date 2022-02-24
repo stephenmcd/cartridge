@@ -257,6 +257,7 @@ register_setting(
     description=_("Subject to be used when sending the order receipt email."),
     editable=True,
     default=_("Order Receipt"),
+    translatable=True,
 )
 
 register_setting(
