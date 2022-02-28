@@ -17,12 +17,16 @@
 
 {% block extra_css %}
 {{ block.super }}
-<link rel="stylesheet" href="{% static "mezzanine/css/magnific-popup.css" %}">
+{% ifinstalled mezzanine.galleries %}
+    <link rel="stylesheet" href="{% static "mezzanine/css/magnific-popup.css" %}">
+{% endifinstalled %}
 {% endblock %}
 
 {% block extra_js %}
 {{ block.super }}
-<script src="{% static "mezzanine/js/magnific-popup.js" %}"></script>
+{% ifinstalled mezzanine.galleries %}
+    <script src="{% static "mezzanine/js/magnific-popup.js" %}"></script>
+{% endifinstalled %}
 <script>
 $(document).ready(function() {
     $('#product-images-large').magnificPopup({
