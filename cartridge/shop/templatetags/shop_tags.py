@@ -3,6 +3,7 @@ import platform
 from decimal import Decimal
 
 from django import template
+from mezzanine.conf import settings
 
 from cartridge.shop.utils import set_locale
 
@@ -60,7 +61,10 @@ def _order_totals(context):
         template_vars["order_total"] += Decimal(str(template_vars["shipping_total"]))
     if template_vars.get("discount_total", None) is not None:
         template_vars["order_total"] -= Decimal(str(template_vars["discount_total"]))
-    if template_vars.get("tax_total", None) is not None:
+    if (
+        template_vars.get("tax_total", None) is not None
+        and not settings.SHOP_TAX_INCLUDED
+    ):
         template_vars["order_total"] += Decimal(str(template_vars["tax_total"]))
     return template_vars
 

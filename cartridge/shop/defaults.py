@@ -346,3 +346,11 @@ register_setting(
     editable=False,
     default=True,
 )
+
+register_setting(
+    name="SHOP_TAX_INCLUDED",
+    label=_("Tax included"),
+    description="The product prices are already including tax (boolean).",
+    editable=False,
+    default=False,
+)
