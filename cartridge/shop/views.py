@@ -233,20 +233,6 @@ def checkout_steps(request, form_class=OrderForm, extra_context=None):
         url = "{}?next={}".format(settings.LOGIN_URL, reverse("shop_checkout"))
         return redirect(url)
 
-    try:
-        settings.SHOP_CHECKOUT_FORM_CLASS
-    except AttributeError:
-        pass
-    else:
-        from warnings import warn
-
-        warn(
-            "The SHOP_CHECKOUT_FORM_CLASS setting is deprecated - please "
-            "define your own urlpattern for the checkout_steps view, "
-            "passing in your own form_class argument."
-        )
-        form_class = import_dotted_path(settings.SHOP_CHECKOUT_FORM_CLASS)
-
     initial = checkout.initial_order_data(request, form_class)
     step = int(
         request.POST.get("step", None)
