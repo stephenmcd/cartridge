@@ -532,7 +532,7 @@ class Order(SiteRelated):
             self.total += self.shipping_total
         if self.discount_total is not None:
             self.total -= Decimal(self.discount_total)
-        if self.tax_total is not None:
+        if self.tax_total is not None and not settings.SHOP_TAX_INCLUDED:
             self.total += Decimal(self.tax_total)
         self.save()  # We need an ID before we can add related items.
         for item in request.cart:
