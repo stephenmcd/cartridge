@@ -14,17 +14,6 @@
         </label> <span>{{ discount_total|currency }}</span>
     </div>
     {% endif %}
-    {% if shipping_type or shipping_total %}
-    <div>
-        <label>
-        {% if shipping_type %}
-        {{ shipping_type }}:
-        {% else %}
-        {% trans "Shipping" %}:
-        {% endif %}
-        </label> <span>{{ shipping_total|currency }}</span>
-    </div>
-    {% endif %}
     {% if tax_total %}
     <div>
         <label>
@@ -34,6 +23,17 @@
         {% trans "Tax" %}:
         {% endif %}
         </label> <span>{{ tax_total|currency }}</span>
+    </div>
+    {% endif %}
+    {% if shipping_type or shipping_total %}
+    <div>
+        <label>
+        {% if shipping_type %}
+        {{ shipping_type }}:
+        {% else %}
+        {% trans "Shipping" %}:
+        {% endif %}
+        </label> <span>{{ shipping_total|currency }}</span>
     </div>
     {% endif %}
     <div class="total"><label>{% trans "Total" %}:</label> <span>{{ order_total|currency }}</span></div>
