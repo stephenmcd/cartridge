@@ -1,7 +1,6 @@
 """
 Checkout process utilities.
 """
-from django.template.loader import TemplateDoesNotExist, get_template
 from django.utils.translation import gettext_lazy as _
 from mezzanine.accounts import ProfileNotConfigured, get_profile_for_user
 from mezzanine.conf import settings
@@ -175,18 +174,7 @@ def send_order_email(request, order):
         "order_items": order.items.all(),
     }
     order_context.update(order.details_as_dict())
-    try:
-        get_template("shop/email/order_receipt.html")
-    except TemplateDoesNotExist:
-        receipt_template = "email/order_receipt"
-    else:
-        receipt_template = "shop/email/order_receipt"
-        from warnings import warn
-
-        warn(
-            "Shop email receipt templates have moved from "
-            "templates/shop/email/ to templates/email/"
-        )
+    receipt_template = "email/order_receipt"
     send_mail_template(
         settings.SHOP_ORDER_EMAIL_SUBJECT,
         receipt_template,
