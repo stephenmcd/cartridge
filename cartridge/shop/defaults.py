@@ -121,7 +121,7 @@ register_setting(
 register_setting(
     name="SHOP_CHECKOUT_ACCOUNT_REQUIRED",
     label=_("Checkout account required"),
-    description=_("If True, users must create a login for the checkout " "process."),
+    description=_("If True, users must create a login for the checkout process."),
     editable=True,
     default=False,
 )
@@ -145,7 +145,7 @@ register_setting(
 register_setting(
     name="SHOP_PAYMENT_STEP_ENABLED",
     label=_("Payment Enabled"),
-    description=_("If False, there is no payment step on the checkout " "process."),
+    description=_("If False, there is no payment step on the checkout process."),
     editable=False,
     default=True,
 )
@@ -164,9 +164,7 @@ register_setting(
 register_setting(
     name="SHOP_DEFAULT_SHIPPING_VALUE",
     label=_("Default Shipping Cost"),
-    description=_(
-        "Default cost of shipping when no custom shipping is " "implemented."
-    ),
+    description=_("Default cost of shipping when no custom shipping is implemented."),
     editable=True,
     default=10.0,
 )
@@ -263,7 +261,7 @@ register_setting(
 register_setting(
     name="SHOP_ORDER_FROM_EMAIL",
     label=_("From Email"),
-    description=_("Email address from which order receipts should be " "emailed."),
+    description=_("Email address from which order receipts should be emailed."),
     editable=True,
     default="do_not_reply@%s" % gethostname(),
 )
@@ -326,7 +324,7 @@ register_setting(
 register_setting(
     name="SHOP_USE_WISHLIST",
     label=_("Use product wishlist"),
-    description="Show the links to the wishlist, and allow adding " "products to it.",
+    description="Show the links to the wishlist, and allow adding products to it.",
     editable=False,
     default=True,
 )
