@@ -10,6 +10,7 @@ from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
 from django.urls import reverse
 from django.utils.encoding import force_str
+from django.utils.safestring import mark_safe
 from django.utils.timezone import now
 from django.utils.translation import gettext
 from django.utils.translation import gettext_lazy as _
@@ -586,9 +587,9 @@ class Order(SiteRelated):
         Returns the HTML for a link to the PDF invoice for use in the
         order listing view of the admin.
         """
-        url = reverse("shop_invoice", args=(self.id,))
+        url = reverse("shop:shop_invoice", args=(self.id,))
         text = gettext("Download PDF invoice")
-        return f"<a href='{url}?format=pdf'>{text}</a>"
+        return mark_safe(f"<a href='{url}?format=pdf'>{text}</a>")
 
     invoice.allow_tags = True
     invoice.short_description = ""
