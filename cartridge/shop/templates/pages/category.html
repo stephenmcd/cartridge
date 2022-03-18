@@ -16,7 +16,7 @@
     <div class="col-xs-6 col-sm-4 col-lg-3">
     <a href="{{ category.get_absolute_url }}" class="thumbnail">
         {% if category.featured_image %}
-        <img src="{{ MEDIA_URL }}{% thumbnail category.featured_image 148 148 %}" />
+        <img src="{{ MEDIA_URL }}{% thumbnail category.featured_image 148 148 %}">
         {% else %}
         <div class="placeholder"></div>
         {% endif %}
