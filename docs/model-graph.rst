@@ -8,4 +8,4 @@ models in Mezzanine and Cartridge. Click it to view a full version.
 .. image:: img/graph-small.png
    :align: center
    :width: 800 px
-   :target: _images/graph.png
+   :target: img/graph.png
