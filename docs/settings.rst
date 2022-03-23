@@ -251,3 +251,12 @@ Default: ``True``
 Show the links to the wishlist, and allow adding products to it.
 
 Default: ``True``
+
+.. _SHOP_TAX_INCLUDED:
+
+``SHOP_TAX_INCLUDED``
+---------------------
+
+The product prices are already including tax (boolean).
+
+Default: ``False``

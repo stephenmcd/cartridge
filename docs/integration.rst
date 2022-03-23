@@ -96,26 +96,9 @@ will then appear in the totals for the order::
 Just as with shipping, the ``tax_type`` variable is simply a string
 label, so using a value such as "Tax" here will usually suffice.
 
-.. note::
-
-    This tax implementation is geared towards countries where tax is
-    not included in a product's price, and therefore should be added
-    separately to the overall order total.
-
-    Some countries however generally include tax in a product's price.
-    In this case you may still need to display the tax amount in the
-    order totals, purely for informational purposes without it having
-    any bearing on the overall order total (which will already include
-    the tax amount, given its a sum of all products ordered).
-
-    In the latter case, the easiest approach to displaying tax without
-    it affecting the order total is to simply override the templates
-    ``shop/includes/order_totals.html`` and
-    ``shop/includes/order_totals.txt``, and include in these a template
-    tag that calculates the tax amount for display purposes. These
-    templates are responsible for displaying the order totals in all
-    cases, such as the cart, checkout, and the order receipt emails and
-    PDF downloads.
+If you live in a country, where tax is already included in a product's
+price set the ``SHOP_TAX_INCLUDED`` setting to true.
+In this case the tax will not be added to the overall order total.
 
 Payment
 =======
