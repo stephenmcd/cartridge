@@ -1,3 +1,32 @@
+Version 1.0.0b1 (2022-03-23)
+----------------------------
+
+Breaking changes:
+  * Refactor codebase to Python 3.7+.
+    Python 2 and Python 3 before 3.7 are not supported anymore.
+  * Refactor to Django 2.2+.
+    Supported Django versions are 2.2, 3.2 and 4.0.
+  * Refactor to Mezzanine 5.1.3+.
+  * Remove deprecated ``shop_globals`` context processor.
+  * Remove deprecated ``SHOP_CHECKOUT_FORM_CLASS`` setting check.
+  * Remove check for obsolete ``shop/email/`` directory.
+
+Fixes:
+  * Make ``SHOP_ORDER_EMAIL_SUBJECT`` translatable.
+  * Fix invoice links in admin (from ``https://github.com/fermorltd/cartridge/pull/2``).
+  * Fix image link to model-graph in the docs.
+  * Load magnific-popup only if ``mezzanine.galleries`` is installed.
+
+Other:
+  * Refactor the build chain similar to Mezzanine 5 to use setup.cfg instead of setup.py.
+  * Use black, isort, pyupgrade and flake8 for styling and linting.
+  * Use GitHub Actions instead of Travis as Ci.
+  * Use Pytest for testing and coverage.
+  * Use semantic-release-action for releases.
+  * Remove ``requirements.txt`` from template folder.
+  * Improve ORM check for existence of product.
+  * Fix styling.
+
 Version 0.13.0 (Jun 15, 2018)
 -----------------------------
 
