@@ -85,6 +85,10 @@ order. Like the billing / shipping handler, it's called at the billing
 and shipping step of the checkout, as this is the first point at
 which we can be certain we know the customer's address.
 
+It defaults to the value ``cartridge.shop.checkout.default_tax_handler``,
+which simply sets a flat tax rate for all products, as defined by the
+setting ``SHOP_DEFAULT_TAX_RATE``.
+
 The interface for tax handling mimics the one described above for
 specifying shipping, where the function
 ``cartridge.shop.utils.set_tax`` is provided for the tax handler
@@ -94,11 +98,13 @@ will then appear in the totals for the order::
     set_tax(request, tax_type, tax_value)
 
 Just as with shipping, the ``tax_type`` variable is simply a string
-label, so using a value such as "Tax" here will usually suffice.
+label, so using a value such as "Tax" or "VAT" here will usually suffice.
 
-If you live in a country, where tax is already included in a product's
+If the shop is used in a country, where tax is already included in a product's
 price set the ``SHOP_TAX_INCLUDED`` setting to true.
 In this case the tax will not be added to the overall order total.
+``cartridge.shop.checkout.default_tax_handler`` works for both, tax included
+and tax excluded depending on the ``SHOP_TAX_INCLUDED`` setting.
 
 Payment
 =======

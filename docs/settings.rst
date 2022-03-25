@@ -72,6 +72,15 @@ Default cost of shipping when no custom shipping is implemented.
 
 Default: ``10.0``
 
+.. _SHOP_DEFAULT_TAX_RATE:
+
+``SHOP_DEFAULT_TAX_RATE``
+-------------------------
+
+Default tax rate in % when no custom tax handling is implemented.
+
+Default: ``0``
+
 .. _SHOP_DISCOUNT_FIELD_IN_CART:
 
 ``SHOP_DISCOUNT_FIELD_IN_CART``
@@ -207,6 +216,15 @@ Sequence of description/field+direction pairs defining the options available for
 
 Default: ``(('Recently added', '-date_added'), ('Highest rated', '-rating_average'), ('Least expensive', 'unit_price'), ('Most expensive', '-unit_price'))``
 
+.. _SHOP_TAX_INCLUDED:
+
+``SHOP_TAX_INCLUDED``
+---------------------
+
+If True, tax is already included in a product's price.
+
+Default: ``False``
+
 .. _SHOP_USE_RATINGS:
 
 ``SHOP_USE_RATINGS``
@@ -251,12 +269,3 @@ Default: ``True``
 Show the links to the wishlist, and allow adding products to it.
 
 Default: ``True``
-
-.. _SHOP_TAX_INCLUDED:
-
-``SHOP_TAX_INCLUDED``
----------------------
-
-The product prices are already including tax (boolean).
-
-Default: ``False``
