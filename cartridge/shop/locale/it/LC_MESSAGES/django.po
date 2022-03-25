@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Cartridge\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-30 10:40-0430\n"
+"POT-Creation-Date: 2022-03-25 12:54+0100\n"
 "PO-Revision-Date: 2013-02-14 10:20+0000\n"
 "Last-Translator: Nicola Larosa <transifex@teknico.net>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/cartridge/"
@@ -19,430 +19,562 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: admin.py:63
+#: admin.py:84
 msgid "Product filters"
 msgstr "Filtri prodotto"
 
-#: admin.py:100
+#: admin.py:137
 msgid "Current variations"
 msgstr "Variazioni attuali"
 
-#: admin.py:122
+#: admin.py:170
 msgid "Other products"
 msgstr "Altri prodotti"
 
-#: admin.py:134
+#: admin.py:185
 msgid "Create new variations"
 msgstr "Crea nuove variazioni"
 
-#: admin.py:244
+#: admin.py:324
 msgid "Items"
 msgstr "Oggetti"
 
-#: admin.py:264
+#: admin.py:366
 msgid "Billing details"
 msgstr "Dettagli di addebito"
 
-#: admin.py:265
+#: admin.py:367
 msgid "Shipping details"
 msgstr "Dettagli di spedizione"
 
-#: admin.py:283 admin.py:303
+#: admin.py:420 admin.py:459
 msgid "Apply to product and/or products in categories"
 msgstr "Applica al prodotto e/o prodotti in categorie"
 
-#: admin.py:285 admin.py:305
+#: admin.py:424 admin.py:463
 msgid "Reduce unit price by"
 msgstr "Riduci il prezzo unitario di"
 
-#: admin.py:288
+#: admin.py:427
 msgid "Sale period"
 msgstr "Periodo di offerta"
 
-#: admin.py:308
+#: admin.py:467
 msgid "Valid for"
 msgstr "Valido per"
 
-#: checkout.py:40
+#: checkout.py:39
 msgid "Flat rate shipping"
 msgstr "Spedizione a prezzo fisso"
 
-#: checkout.py:55 templates/shop/includes/order_totals.html:34
-#: templates/shop/includes/order_totals.txt:8
-msgid "Tax"
+#: checkout.py:60
+msgid "Incl."
 msgstr ""
 
-#: checkout.py:184
+#: checkout.py:60 checkout.py:63
+msgid "VAT"
+msgstr ""
+
+#: checkout.py:204
 msgid "Details"
 msgstr "Dettagli"
 
-#: checkout.py:188
+#: checkout.py:208
 msgid "Address"
 msgstr "Indirizzo"
 
-#: checkout.py:191
+#: checkout.py:211
 msgid "Payment"
 msgstr "Pagamento"
 
-#: checkout.py:195
+#: checkout.py:216
 msgid "Confirmation"
 msgstr "Conferma"
 
-#: defaults.py:17
+#: defaults.py:14
 msgid "Controls the ordering and grouping of the admin menu."
 msgstr "Controlla ordine e raggruppamento del menu di amministrazione."
 
-#: defaults.py:20 management/commands/product_db.py:31
+#: defaults.py:18 management/commands/product_db.py:40
 msgid "Content"
 msgstr "Contenuto"
 
-#: defaults.py:21
+#: defaults.py:23
 msgid "Media Library"
 msgstr "Catalogo Media"
 
-#: defaults.py:22
+#: defaults.py:27
 msgid "Shop"
 msgstr "Negozio"
 
-#: defaults.py:24
+#: defaults.py:36
 msgid "Site"
 msgstr "Sito"
 
-#: defaults.py:25
+#: defaults.py:38
 msgid "Users"
 msgstr "Utenti"
 
-#: defaults.py:32
+#: defaults.py:51
 msgid ""
 "Sequence of models that will be provided by default as choices in the search "
 "form. Each model should be in the format ``app_label.model_name``. Only "
 "models that subclass ``mezzanine.core.models.Displayable`` should be used."
 msgstr ""
 
-#: defaults.py:58
+#: defaults.py:78
 msgid "Sequence of setting names available within templates."
 msgstr ""
 "Sequence dei nomi di configurazione disponibili all'interno dei template."
 
-#: defaults.py:88
+#: defaults.py:116
 msgid "Enable featured images in shop categories"
 msgstr "Abilita le immagini in evidenza nelle categorie del negozio"
 
-#: defaults.py:95
+#: defaults.py:123
 msgid "Checkout account required"
 msgstr "E` richiesto un account per il completamento dell'ordine."
 
-#: defaults.py:96
+#: defaults.py:124
 msgid "If True, users must create a login for the checkout process."
 msgstr ""
 "Se True, gli utenti devono creare un account per il completamento "
 "dell'ordine."
 
-#: defaults.py:127
+#: defaults.py:147
 msgid "Payment Enabled"
 msgstr "Pagamento abilitato"
 
-#: defaults.py:128
+#: defaults.py:148
 msgid "If False, there is no payment step on the checkout process."
 msgstr ""
 "Se False, il completamento dell'ordine non comprenderà la fase di pagamento."
 
-#: defaults.py:136
+#: defaults.py:155
 msgid "Currency Locale"
 msgstr "Formato locale valuta"
 
-#: defaults.py:146
+#: defaults.py:166
 msgid "Default Shipping Cost"
 msgstr "Costo di spedizione di default"
 
-#: defaults.py:147
+#: defaults.py:167
 msgid "Default cost of shipping when no custom shipping is implemented."
 msgstr ""
 "Costo di spedizione predefinito quando non se ne implementa uno specifico."
 
-#: defaults.py:155
+#: defaults.py:174
+#, fuzzy
+#| msgid "Default"
+msgid "Default Tax Rate"
+msgstr "Default"
+
+#: defaults.py:175
+#, fuzzy
+#| msgid "Default cost of shipping when no custom shipping is implemented."
+msgid "Default tax rate in % when no custom tax handling is implemented."
+msgstr ""
+"Costo di spedizione predefinito quando non se ne implementa uno specifico."
+
+#: defaults.py:182
 msgid "Discount in Cart"
 msgstr "Sconto nel carrello"
 
-#: defaults.py:156
+#: defaults.py:183
 msgid "Discount codes can be entered on the cart page."
 msgstr "I codici di sconto possono essere inseriti nella pagina del carrello."
 
-#: defaults.py:163
+#: defaults.py:190
 msgid "Discount in Checkout"
 msgstr "Sconto nel checkout"
 
-#: defaults.py:164
+#: defaults.py:191
 msgid "Discount codes can be entered on the first checkout step."
 msgstr ""
 "I codici di sconto possono essere inseriti nella prima parte di "
 "completamento dell'ordine."
 
-#: defaults.py:171
+#: defaults.py:198
 msgid "Billing & Shipping Handler"
 msgstr "Gestore di addebito & spedizione"
 
-#: defaults.py:182
+#: defaults.py:209
 #, fuzzy
 msgid "Tax Handler"
 msgstr "Gestore dei pagamenti"
 
-#: defaults.py:193
+#: defaults.py:220
 msgid "Order Handler"
 msgstr "Gestore degli ordini"
 
-#: defaults.py:204
+#: defaults.py:231
 msgid "Payment Handler"
 msgstr "Gestore dei pagamenti"
 
-#: defaults.py:218
+#: defaults.py:245
 msgid "Size"
 msgstr "Misura"
 
-#: defaults.py:219
+#: defaults.py:246
 msgid "Colour"
 msgstr "Colore"
 
-#: defaults.py:225
+#: defaults.py:262
 msgid "Order Email Subject"
 msgstr "Oggetto delle email degli ordini"
 
-#: defaults.py:226
+#: defaults.py:263
 msgid "Subject to be used when sending the order receipt email."
 msgstr "Oggetto da usare per l'invio di email di ricevuta ordine."
 
-#: defaults.py:228
+#: defaults.py:265
 msgid "Order Receipt"
 msgstr "Ricevuta dell'ordine"
 
-#: defaults.py:233
+#: defaults.py:271
 msgid "From Email"
 msgstr "Email mittente"
 
-#: defaults.py:234
+#: defaults.py:272
 msgid "Email address from which order receipts should be emailed."
 msgstr "Indirizzo email da cui vanno inviate le ricevute degli ordini."
 
-#: defaults.py:245
+#: defaults.py:279
+msgid "BCC receipts to"
+msgstr ""
+
+#: defaults.py:280
+msgid "All order receipts will be BCCd to this address."
+msgstr ""
+
+#: defaults.py:290
 msgid "Unprocessed"
 msgstr "Non elaborato"
 
-#: defaults.py:246
+#: defaults.py:291
 msgid "Processed"
 msgstr "Elaborato"
 
-#: defaults.py:252
+#: defaults.py:297
 msgid "Products Per Category Page"
 msgstr "Prodotti per pagina di categoria"
 
-#: defaults.py:253
+#: defaults.py:298
 msgid "Number of products to display per category page."
 msgstr "Numero di prodotti da mostrare in ciascuna pagina di categoria."
 
-#: defaults.py:264
+#: defaults.py:309
 msgid "Recently added"
 msgstr "Aggiunto di recente"
 
-#: defaults.py:265
+#: defaults.py:310
 msgid "Highest rated"
 msgstr "Meglio valutati"
 
-#: defaults.py:266
+#: defaults.py:311
 msgid "Least expensive"
 msgstr "Meno costosi"
 
-#: defaults.py:267
+#: defaults.py:312
 msgid "Most expensive"
 msgstr "Più costosi"
 
-#: defaults.py:273
+#: defaults.py:318
+#, fuzzy
+msgid "Tax included"
+msgstr "Gestore dei pagamenti"
+
+#: defaults.py:326
 msgid "Use product variations"
 msgstr "Usa le variazioni di prodotto"
 
-#: defaults.py:281
+#: defaults.py:334
 #, fuzzy
 msgid "Use product ratings"
 msgstr "Usa le variazioni di prodotto"
 
-#: fields.py:56 management/commands/product_db.py:33
+#: defaults.py:342
+#, fuzzy
+msgid "Use product wishlist"
+msgstr "Usa le variazioni di prodotto"
+
+#: defaults.py:350
+#, fuzzy
+#| msgid "Related products"
+msgid "Use related products"
+msgstr "Prodotti rilevanti"
+
+#: defaults.py:359
+#, fuzzy
+#| msgid "Upsell products"
+msgid "Use upsell products"
+msgstr "Prodotti di fascia superiore"
+
+#: fields.py:64 management/commands/product_db.py:42
 msgid "SKU"
 msgstr "Codice prodotto"
 
-#: forms.py:26 templates/shop/product.html:83
+#: forms.py:33 templates/shop/product.html:105
 msgid "The selected options are currently unavailable."
 msgstr "Le opzioni selezionate non sono attualmente disponibili."
 
-#: forms.py:27
+#: forms.py:34
 msgid "The selected options are currently not in stock."
 msgstr "Le opzioni selezionate non sono attualmente in magazzino."
 
-#: forms.py:28
+#: forms.py:35
 msgid "The selected quantity is currently unavailable."
 msgstr "La quantità selezionata non è attualmente disponibile."
 
-#: forms.py:38 models.py:619 templates/shop/order_history.html:20
+#: forms.py:45 forms.py:143 models.py:698
 msgid "Quantity"
 msgstr "Quantità"
 
-#: forms.py:258
+#: forms.py:287
 msgid "The discount code entered is invalid."
 msgstr "Il codice di sconto inserito non è valido."
 
-#: forms.py:270 models.py:822
+#: forms.py:303 models.py:919
 msgid "Free shipping"
 msgstr "Spedizione gratuita"
 
-#: forms.py:285
+#: forms.py:328
 msgid "My delivery details are the same as my billing details"
 msgstr "I miei dati di spedizione sono uguali a quelli di addebito."
 
-#: forms.py:287
+#: forms.py:331
 msgid "Remember my address for next time"
 msgstr "Ricorda il mio indirizzo per la prossima volta."
 
-#: forms.py:288
+#: forms.py:333
 msgid "Cardholder name"
 msgstr "Nome dell'intestatario della carta"
 
-#: forms.py:289
+#: forms.py:335
 #, fuzzy
 msgid "Card type"
 msgstr "Scadenza della carta"
 
-#: forms.py:292
+#: forms.py:339
 #, fuzzy
 msgid "Card number"
 msgstr "Nome dell'intestatario della carta"
 
-#: forms.py:297
+#: forms.py:341
+#, fuzzy
+#| msgid "Card Expiry"
+msgid "Card expiry month"
+msgstr "Scadenza della carta"
+
+#: forms.py:345
+#, fuzzy
+#| msgid "Card Expiry"
+msgid "Card expiry year"
+msgstr "Scadenza della carta"
+
+#: forms.py:347
 msgid "CCV"
 msgstr ""
 
-#: forms.py:297
+#: forms.py:349
 msgid ""
 "A security code, usually the last 3 digits found on the back of your card."
 msgstr ""
 "Un codice di sicurezza, tipicamente le ultime 3 cifre sul retro della tua "
 "carta."
 
-#: forms.py:396
+#: forms.py:455
 msgid "A valid expiry date is required."
 msgstr "Una data di scadenza valida è obbligatoria."
 
-#: forms.py:504
+#: forms.py:584
 msgid "Only one variation can be checked as the default."
 msgstr "Una sola variazione può essere selezionata come default."
 
-#: forms.py:517
+#: forms.py:600
 msgid "Please enter a value for only one type of reduction."
 msgstr "Inserire un valore per un solo tipo di riduzione."
 
-#: models.py:40 models.py:620
-msgid "Unit price"
-msgstr "Prezzo unitario"
+#: management/commands/product_db.py:39 models.py:775
+msgid "Title"
+msgstr "Titolo"
 
-#: models.py:42
-msgid "Sale price"
-msgstr "Prezzo di vendita"
-
-#: models.py:43
-msgid "Sale start"
-msgstr "Inizio svendita"
-
-#: models.py:44
-msgid "Sale end"
-msgstr "Fine svendita"
-
-#: models.py:46
-msgid "Number in stock"
-msgstr "Quantità disponibile"
-
-#: models.py:96
-msgid "Available for purchase"
-msgstr "Disponibile per l'acquisto"
-
-#: models.py:98 models.py:154 models.py:160 models.py:214
-#: management/commands/product_db.py:34
-msgid "Image"
-msgstr "Immagine"
-
-#: models.py:100 models.py:333
-msgid "Product categories"
-msgstr "Categorie di prodotto"
-
-#: models.py:101
-msgid "Date added"
-msgstr "Aggiunto in data"
-
-#: models.py:104
-msgid "Related products"
-msgstr "Prodotti rilevanti"
-
-#: models.py:106
-msgid "Upsell products"
-msgstr "Prodotti di fascia superiore"
-
-#: models.py:107
-msgid "Rating"
-msgstr "Valutazione"
-
-#: models.py:114
-msgid "Product"
-msgstr "Prodotto"
-
-#: models.py:115 models.py:317 models.py:689
-msgid "Products"
-msgstr "Prodotti"
-
-#: models.py:156 models.py:618 management/commands/product_db.py:32
+#: management/commands/product_db.py:41 models.py:176 models.py:697
 msgid "Description"
 msgstr "Descrizione"
 
-#: models.py:161
+#: management/commands/product_db.py:43 models.py:111 models.py:171
+#: models.py:182 models.py:241
+msgid "Image"
+msgstr "Immagine"
+
+#: management/commands/product_db.py:44
+msgid "Category"
+msgstr "Categoria"
+
+#: management/commands/product_db.py:45
+msgid "Sub-Category"
+msgstr "Sottocategoria"
+
+#: management/commands/product_db.py:47
+msgid "Number in Stock"
+msgstr "Numero in magazzino"
+
+#: management/commands/product_db.py:48 templates/shop/cart.html:27
+#: templates/shop/includes/order_details.html:40
+#: templates/shop/includes/order_details_rtl.html:44
+msgid "Unit Price"
+msgstr "Prezzo unitario"
+
+#: management/commands/product_db.py:49
+msgid "Sale Price"
+msgstr "Prezzo in svendita"
+
+#: management/commands/product_db.py:50
+msgid "Sale Start Date"
+msgstr "Data d'inizio svendita"
+
+#: management/commands/product_db.py:51
+msgid "Sale Start Time"
+msgstr "Ora d'inizio svendita"
+
+#: management/commands/product_db.py:52
+msgid "Sale End Date"
+msgstr "Data di fine svendita"
+
+#: management/commands/product_db.py:53
+msgid "Sale End Time"
+msgstr "Ora di fine svendita"
+
+#: management/commands/product_db.py:56
+msgid "product"
+msgstr "prodotto"
+
+#: management/commands/product_db.py:83
+msgid "Import/Export products from a csv file."
+msgstr "Importa/esporta prodotti da un file csv."
+
+#: management/commands/product_db.py:92
+msgid "Import products from csv file."
+msgstr "Importa prodotti da un file csv."
+
+#: management/commands/product_db.py:100
+msgid "Export products from csv file."
+msgstr "Esporta prodotti da un file csv."
+
+#: management/commands/product_db.py:108
+msgid "need to import or export"
+msgstr "occorre importare o esportare"
+
+#: management/commands/product_db.py:160
+msgid "Importing .."
+msgstr "Importazione in corso..."
+
+#: management/commands/product_db.py:206
+msgid "Exporting .."
+msgstr "Esportazione in corso..."
+
+#: models.py:42 models.py:699
+msgid "Unit price"
+msgstr "Prezzo unitario"
+
+#: models.py:44
+msgid "Sale price"
+msgstr "Prezzo di vendita"
+
+#: models.py:45
+msgid "Sale start"
+msgstr "Inizio svendita"
+
+#: models.py:46
+msgid "Sale end"
+msgstr "Fine svendita"
+
+#: models.py:48
+msgid "Number in stock"
+msgstr "Quantità disponibile"
+
+#: models.py:110
+msgid "Available for purchase"
+msgstr "Disponibile per l'acquisto"
+
+#: models.py:113 models.py:399
+msgid "Product categories"
+msgstr "Categorie di prodotto"
+
+#: models.py:115
+msgid "Date added"
+msgstr "Aggiunto in data"
+
+#: models.py:117
+msgid "Related products"
+msgstr "Prodotti rilevanti"
+
+#: models.py:120
+msgid "Upsell products"
+msgstr "Prodotti di fascia superiore"
+
+#: models.py:122
+msgid "Rating"
+msgstr "Valutazione"
+
+#: models.py:129
+msgid "Product"
+msgstr "Prodotto"
+
+#: models.py:130 models.py:373 models.py:777
+msgid "Products"
+msgstr "Prodotti"
+
+#: models.py:183
 msgid "Images"
 msgstr "Immagini"
 
-#: models.py:177
+#: models.py:200
 msgid "Type"
 msgstr "Tipo"
 
-#: models.py:179
+#: models.py:201
 msgid "Name"
 msgstr "Nome"
 
-#: models.py:187
+#: models.py:209
 msgid "Product option"
 msgstr "Opzione di prodotto"
 
-#: models.py:188 models.py:320
+#: models.py:210 models.py:379
 msgid "Product options"
 msgstr "Opzioni di prodotto"
 
-#: models.py:213
+#: models.py:238
 msgid "Default"
 msgstr "Default"
 
-#: models.py:313
+#: models.py:290
+msgid "SKU is not unique"
+msgstr ""
+
+#: models.py:363
 msgid "Featured Image"
 msgstr "Immagine in evidenza"
 
-#: models.py:322 models.py:725
+#: models.py:383 models.py:816
 msgid "Sale"
 msgstr "Svendita"
 
-#: models.py:324
+#: models.py:385
 msgid "Minimum price"
 msgstr "Prezzo minimo"
 
-#: models.py:325
+#: models.py:386
 msgid "Maximum price"
 msgstr "Prezzo massimo"
 
-#: models.py:326
+#: models.py:388
 msgid "Combined"
 msgstr "Combinato"
 
-#: models.py:327
+#: models.py:391
 msgid ""
 "If checked, products must match all specified filters, otherwise products "
 "can match any specified filter."
@@ -450,167 +582,153 @@ msgstr ""
 "Se barrato, i prodotti devono soddisfare tutti i filtri indicati, altrimenti "
 "i prodotti possono soddisfare un qualsiasi filtro specificato."
 
-#: models.py:332
+#: models.py:398
 msgid "Product category"
 msgstr "Categoria di prodotto"
 
-#: models.py:386 models.py:395
+#: models.py:452 models.py:461
 msgid "First name"
 msgstr "Nome"
 
-#: models.py:387 models.py:396
+#: models.py:453 models.py:462
 msgid "Last name"
 msgstr "Cognome"
 
-#: models.py:388 models.py:397
+#: models.py:454 models.py:463
 msgid "Street"
 msgstr "Indirizzo"
 
-#: models.py:389 models.py:398
+#: models.py:455 models.py:464
 msgid "City/Suburb"
 msgstr "Città/quartiere"
 
-#: models.py:390 models.py:399
+#: models.py:456 models.py:465
 msgid "State/Region"
 msgstr "Stato/regione"
 
-#: models.py:391 models.py:400
+#: models.py:457 models.py:466
 msgid "Zip/Postcode"
 msgstr "Codice postale"
 
-#: models.py:392 models.py:401
+#: models.py:458 models.py:467
 msgid "Country"
 msgstr "Nazione"
 
-#: models.py:393 models.py:402
+#: models.py:459 models.py:468
 msgid "Phone"
 msgstr "Telefono"
 
-#: models.py:394
+#: models.py:460
 msgid "Email"
 msgstr "Email"
 
-#: models.py:403
+#: models.py:469
 msgid "Additional instructions"
 msgstr "Ulteriori istruzioni"
 
-#: models.py:405
+#: models.py:470
 msgid "Time"
 msgstr "Ora"
 
-#: models.py:408
+#: models.py:473
 msgid "Shipping type"
 msgstr "Tipo di spedizione"
 
-#: models.py:409
+#: models.py:474
 msgid "Shipping total"
 msgstr "Totale spedizione"
 
-#: models.py:410
+#: models.py:475
 msgid "Tax type"
 msgstr ""
 
-#: models.py:411
+#: models.py:476
 #, fuzzy
 msgid "Tax total"
 msgstr "Totale"
 
-#: models.py:412
+#: models.py:477
 msgid "Item total"
 msgstr "Totale oggetti"
 
-#: models.py:413 models.py:844
+#: models.py:478 models.py:947
 msgid "Discount code"
 msgstr "Codice di sconto"
 
-#: models.py:414
+#: models.py:479
 msgid "Discount total"
 msgstr "Totale sconto"
 
-#: models.py:415
+#: models.py:480
 msgid "Order total"
 msgstr "Totale ordine"
 
-#: models.py:416
+#: models.py:482
 msgid "Transaction ID"
 msgstr "ID di transazione"
 
-#: models.py:419 templates/shop/order_history.html:22
+#: models.py:486
 msgid "Status"
 msgstr "Stato"
 
-#: models.py:431
-msgctxt "commercial meaning"
-msgid "Order"
-msgstr "Ordine"
-
-#: models.py:432
-msgctxt "commercial meaning"
-msgid "Orders"
-msgstr "Ordini"
-
-#: models.py:517 templates/admin/shop/order/change_form.html:7
-#: templates/shop/complete.html:80
+#: models.py:591 templates/admin/shop/order/change_form.html:15
+#: templates/shop/complete.html:70
 msgid "Download PDF invoice"
 msgstr "Scarica la ricevuta come PDF"
 
-#: models.py:525
+#: models.py:600
 msgid "Last updated"
 msgstr "Ultimo aggiornamento"
 
-#: models.py:621
+#: models.py:700
 msgid "Total price"
 msgstr "Prezzo totale"
 
-#: models.py:686 management/commands/product_db.py:30
-msgid "Title"
-msgstr "Titolo"
-
-#: models.py:687
+#: models.py:776
 msgid "Active"
 msgstr "Attivo"
 
-#: models.py:692
+#: models.py:782
 msgid "Categories"
 msgstr "Categorie"
 
-#: models.py:693
+#: models.py:784
 msgid "Reduce by amount"
 msgstr "Riduci dell'ammontare"
 
-#: models.py:694
+#: models.py:786
 msgid "Reduce by percent"
 msgstr "Riduci di percentuale"
 
-#: models.py:697
+#: models.py:788
 msgid "Reduce to amount"
 msgstr "Riduci all'ammontare"
 
-#: models.py:698
+#: models.py:789
 msgid "Valid from"
 msgstr "Valido da"
 
-#: models.py:699
+#: models.py:790
 msgid "Valid to"
 msgstr "Valido a"
 
-#: models.py:726
+#: models.py:817
 msgid "Sales"
 msgstr "Svendita"
 
-#: models.py:820
+#: models.py:917
 msgid "Code"
 msgstr "Codice"
 
-#: models.py:821
+#: models.py:918
 msgid "Minimum total purchase"
 msgstr "Acquisto minimo totale"
 
-#: models.py:823
+#: models.py:921
 msgid "Uses remaining"
 msgstr "Usa i rimanenti"
 
-#: models.py:824
+#: models.py:925
 msgid ""
 "If you wish to limit the number of times a code may be used, set this value. "
 "It will be decremented upon each use."
@@ -618,121 +736,19 @@ msgstr ""
 "Imposta questo valore per limitare il numero di volte in cui ciascun codice "
 "può essere usato. Esso verrà decrementato per ciascun uso."
 
-#: models.py:845
+#: models.py:948
 msgid "Discount codes"
 msgstr "Codici di sconto"
 
-#: utils.py:111
-#, python-format
-msgid ""
-"Invalid currency locale specified for SHOP_CURRENCY_LOCALE: '%s'. You'll "
-"need to set the locale for your system, or configure the "
-"SHOP_CURRENCY_LOCALE setting in your settings module."
-msgstr ""
-"Specificato un formato locale di valuta non valido per SHOP_CURRENCY_LOCALE: "
-"'%s'. Occorre impostare il formato locale per il proprio sistema, oppure "
-"configurare l'impostazione SHOP_CURRENCY_LOCALE nel proprio modulo delle "
-"impostazioni."
-
-#: views.py:60 views.py:102
-msgid "Item added to cart"
-msgstr "Oggetto aggiunto al carrello"
-
-#: views.py:67
-msgid "Item added to wishlist"
-msgstr "Oggetto aggiunto alla lista dei desideri"
-
-#: views.py:107
-msgid "Item removed from wishlist"
-msgstr "Oggetto tolto dalla lista dei desideri"
-
-#: views.py:144
-msgid "Your cart has expired"
-msgstr "Il tuo carrello è scaduto"
-
-#: views.py:152
-msgid "Cart updated"
-msgstr "Carrello aggiornato"
-
-#: management/commands/product_db.py:35
-msgid "Category"
-msgstr "Categoria"
-
-#: management/commands/product_db.py:36
-msgid "Sub-Category"
-msgstr "Sottocategoria"
-
-#: management/commands/product_db.py:38
-msgid "Number in Stock"
-msgstr "Numero in magazzino"
-
-#: management/commands/product_db.py:39 templates/shop/cart.html:23
-#: templates/shop/includes/order_details.html:40
-#: templates/shop/includes/order_details_rtl.html:44
-msgid "Unit Price"
-msgstr "Prezzo unitario"
-
-#: management/commands/product_db.py:40
-msgid "Sale Price"
-msgstr "Prezzo in svendita"
-
-#: management/commands/product_db.py:41
-msgid "Sale Start Date"
-msgstr "Data d'inizio svendita"
-
-#: management/commands/product_db.py:42
-msgid "Sale Start Time"
-msgstr "Ora d'inizio svendita"
-
-#: management/commands/product_db.py:43
-msgid "Sale End Date"
-msgstr "Data di fine svendita"
-
-#: management/commands/product_db.py:44
-msgid "Sale End Time"
-msgstr "Ora di fine svendita"
-
-#: management/commands/product_db.py:47
-msgid "product"
-msgstr "prodotto"
-
-#: management/commands/product_db.py:64
-msgid "Import/Export products from a csv file."
-msgstr "Importa/esporta prodotti da un file csv."
-
-#: management/commands/product_db.py:71
-msgid "Import products from csv file."
-msgstr "Importa prodotti da un file csv."
-
-#: management/commands/product_db.py:76
-msgid "Export products from csv file."
-msgstr "Esporta prodotti da un file csv."
-
-#: management/commands/product_db.py:83
-msgid "Please provide csv file to import"
-msgstr "Indicare un file csv da importare"
-
-#: management/commands/product_db.py:87
-msgid "need to import or export"
-msgstr "occorre importare o esportare"
-
-#: management/commands/product_db.py:138
-msgid "Importing .."
-msgstr "Importazione in corso..."
-
-#: management/commands/product_db.py:186
-msgid "Exporting .."
-msgstr "Esportazione in corso..."
-
-#: payment/egate.py:52 payment/stripe_api.py:45
+#: payment/egate.py:56 payment/stripe_api.py:47
 msgid "A general error occured: "
 msgstr "Si è verificato un errore generico: "
 
-#: payment/egate.py:55
+#: payment/egate.py:59
 msgid "Transaction declined: "
 msgstr "Transazione rifiutata: "
 
-#: payment/stripe_api.py:43
+#: payment/stripe_api.py:45
 msgid "Transaction declined"
 msgstr "Transazione rifiutata"
 
@@ -740,9 +756,17 @@ msgstr "Transazione rifiutata"
 msgid "View past orders"
 msgstr "Vedi gli ordini precedenti"
 
-#: templates/admin/shop/order/change_form.html:8
-msgid "History"
-msgstr "Storico"
+#: templates/admin/shop/order/change_form.html:17
+#: templates/shop/complete.html:73 templates/shop/order_history.html:38
+msgid "Re-send order email"
+msgstr ""
+
+#: templates/admin/shop/product/change_form.html:7
+msgid ""
+"Select all of the required variation options and then click 'Save and "
+"continue editing' below. You'll then be able to edit the price and other "
+"attributes for each variation individually."
+msgstr ""
 
 #: templates/email/order_receipt.txt:5 templates/email/receipt.html:3
 #: templates/email/receipt_rtl.html:3
@@ -776,42 +800,17 @@ msgstr "Elementi ordinati:"
 msgid "each"
 msgstr "ciascuno"
 
-#: templates/includes/user_panel.html:5
-#, python-format
-msgid "1 item"
-msgid_plural "%(cart_quantity)s items"
-msgstr[0] "1 elemento"
-msgstr[1] "%(cart_quantity)s elementi"
-
-#: templates/includes/user_panel.html:6
-msgid "in cart"
-msgstr "nel carrello"
-
-#: templates/includes/user_panel.html:10 templates/shop/cart.html:57
-#, fuzzy
-msgid "Return to Checkout"
-msgstr "Completa l'acquisto"
-
-#: templates/includes/user_panel.html:10 templates/shop/cart.html:57
-msgid "Go to Checkout"
-msgstr "Completa l'acquisto"
-
-#: templates/includes/user_panel.html:14
-#, python-format
-msgid "Wishlist contains 1 item"
-msgid_plural " Wishlist contains %(wishlist_count)s items"
-msgstr[0] "La lista dei desideri contiene 1 elemento"
-msgstr[1] "La lista dei desideri contiene %(wishlist_count)s elementi"
-
-#: templates/pages/category.html:38
+#: templates/pages/category.html:46
 msgid "Sort by"
 msgstr "Ordina per"
 
-#: templates/pages/category.html:64 templates/shop/product.html:78
+#: templates/pages/category.html:76 templates/shop/cart.html:94
+#: templates/shop/product.html:99 templates/shop/product.html:149
 msgid "On sale:"
 msgstr "In svendita:"
 
-#: templates/pages/category.html:68
+#: templates/pages/category.html:80 templates/shop/cart.html:98
+#: templates/shop/product.html:153
 msgid "Coming soon"
 msgstr "In arrivo"
 
@@ -828,57 +827,67 @@ msgstr ""
 "<a href=\"%(login_url)s?next=%(next)s\">accedi</a> o\n"
 "<a href=\"%(signup_url)s?next=%(next)s\">iscriviti</a>.\n"
 
-#: templates/shop/billing_shipping.html:28 templates/shop/confirmation.html:8
+#: templates/shop/billing_shipping.html:30 templates/shop/confirmation.html:10
 #: templates/shop/includes/order_details.html:15
 #: templates/shop/includes/order_details_rtl.html:15
 msgid "Billing Details"
 msgstr "Dettagli di addebito"
 
-#: templates/shop/billing_shipping.html:33
+#: templates/shop/billing_shipping.html:35
 msgid "Delivery Details"
 msgstr "Dettagli di consegna"
 
-#: templates/shop/cart.html:4 templates/shop/cart.html.py:5
-#: templates/shop/cart.html:9
+#: templates/shop/cart.html:4 templates/shop/cart.html:5
+#: templates/shop/cart.html:10
 msgid "Your Cart"
 msgstr "Il tuo carrello"
 
-#: templates/shop/cart.html:22 templates/shop/includes/order_details.html:39
+#: templates/shop/cart.html:26 templates/shop/includes/order_details.html:39
 #: templates/shop/includes/order_details_rtl.html:45
 msgid "Item"
 msgstr "Oggetto"
 
-#: templates/shop/cart.html:24 templates/shop/includes/order_details.html:41
+#: templates/shop/cart.html:28 templates/shop/includes/order_details.html:41
 #: templates/shop/includes/order_details_rtl.html:43
+#: templates/shop/order_history.html:20
 msgid "Qty"
 msgstr "Quant."
 
-#: templates/shop/cart.html:25 templates/shop/includes/order_details.html:42
+#: templates/shop/cart.html:29 templates/shop/includes/order_details.html:42
 #: templates/shop/includes/order_details_rtl.html:42
 msgid "Price"
 msgstr "Prezzo"
 
-#: templates/shop/cart.html:26
+#: templates/shop/cart.html:30
 msgid "Remove?"
 msgstr "Rimuovere?"
 
-#: templates/shop/cart.html:59
+#: templates/shop/cart.html:64 templates/shop/includes/user_panel.html:10
+#, fuzzy
+msgid "Return to Checkout"
+msgstr "Completa l'acquisto"
+
+#: templates/shop/cart.html:64 templates/shop/includes/user_panel.html:10
+msgid "Go to Checkout"
+msgstr "Completa l'acquisto"
+
+#: templates/shop/cart.html:66
 msgid "Update Cart"
 msgstr "Aggiorna il carrello"
 
-#: templates/shop/cart.html:67
+#: templates/shop/cart.html:73
 msgid "Apply"
 msgstr "Applica"
 
-#: templates/shop/cart.html:73
+#: templates/shop/cart.html:80
 msgid "You may also like:"
 msgstr "Potresti gradire anche:"
 
-#: templates/shop/cart.html:98
+#: templates/shop/cart.html:111
 msgid "Your Cart is empty."
 msgstr "Il tuo carrello è vuoto."
 
-#: templates/shop/checkout.html:4 templates/shop/checkout.html.py:5
+#: templates/shop/checkout.html:4 templates/shop/checkout.html:5
 msgid "Checkout"
 msgstr "Completamento ordine"
 
@@ -890,125 +899,67 @@ msgstr "Passo"
 msgid "of"
 msgstr "di"
 
-#: templates/shop/checkout.html:26 templates/shop/complete.html:70
+#: templates/shop/checkout.html:25 templates/shop/complete.html:58
 msgid "Complete"
 msgstr "Completo"
 
-#: templates/shop/checkout.html:48
-msgid "Edit Cart"
-msgstr "Modifica il carrello"
-
-#: templates/shop/checkout.html:61
-msgid "Please correct the errors below."
-msgstr "Correggi gli errori seguenti."
-
-#: templates/shop/checkout.html:73
+#: templates/shop/checkout.html:40
 msgid "Next"
 msgstr "Prossimo"
 
-#: templates/shop/checkout.html:75
+#: templates/shop/checkout.html:42
 msgid "Back"
 msgstr "Indietro"
 
-#: templates/shop/checkout.html:80
+#: templates/shop/checkout.html:46
 msgid "Your cart is empty."
 msgstr "Il tuo carrello è vuoto."
 
-#: templates/shop/checkout.html:81
+#: templates/shop/checkout.html:47
 msgid ""
 "This may be due to your session timing out after a period of inactivity."
 msgstr ""
 "Ciò potrebbe esser causato dalla tua sessione scaduta dopo un periodo di "
 "inattività."
 
-#: templates/shop/checkout.html:82
+#: templates/shop/checkout.html:48
 msgid "We apologize for the inconvenience."
 msgstr "Ci scusiamo per il disturbo."
 
-#: templates/shop/checkout.html:84 templates/shop/wishlist.html:40
+#: templates/shop/checkout.html:50 templates/shop/wishlist.html:44
 msgid "Continue Shopping"
 msgstr "Continua gli acquisti"
 
-#: templates/shop/complete.html:4 templates/shop/complete.html.py:61
+#: templates/shop/checkout.html:75
+msgid "Edit Cart"
+msgstr "Modifica il carrello"
+
+#: templates/shop/complete.html:6 templates/shop/complete.html:52
 msgid "Order Complete"
 msgstr "Ordine completo"
 
-#: templates/shop/complete.html:75
+#: templates/shop/complete.html:63
 msgid "Thank you for shopping with us! Your order is complete."
 msgstr "Grazie per aver comprato da noi, il tuo ordine è completo."
 
-#: templates/shop/complete.html:76
+#: templates/shop/complete.html:64
 msgid "We've sent you a receipt via email."
 msgstr "Ti abbiamo inviato la ricevuta per email."
 
-#: templates/shop/complete.html:77
+#: templates/shop/complete.html:65
 msgid "You can also view your invoice using one of the links below."
 msgstr ""
 "Puoi anche vedere la tua fattura tramite uno dei collegamenti in basso."
 
-#: templates/shop/complete.html:81
+#: templates/shop/complete.html:72
 msgid "View invoice in your browser"
 msgstr "Vedi la fattura nel tuo browser"
 
-#: templates/shop/confirmation.html:17
+#: templates/shop/confirmation.html:25
 #: templates/shop/includes/order_details.html:16
 #: templates/shop/includes/order_details_rtl.html:16
 msgid "Shipping Details"
 msgstr "Dettagli di spedizione"
-
-#: templates/shop/order_history.html:4 templates/shop/order_history.html:5
-#: templates/shop/order_history.html:9
-msgid "Order History"
-msgstr "Storico degli ordini"
-
-#: templates/shop/order_history.html:19
-msgid "Date / time"
-msgstr "Data / ora"
-
-#: templates/shop/order_history.html:21
-msgid "Paid"
-msgstr "Pagato"
-
-#: templates/shop/order_history.html:32
-msgid "Download PDF"
-msgstr "Scarica PDF"
-
-#: templates/shop/order_history.html:33
-msgid "View invoice"
-msgstr "Vedi la fattura"
-
-#: templates/shop/order_history.html:41
-msgid "You have not ordered anything from us yet."
-msgstr "Non hai ancora ordinato nulla da noi."
-
-#: templates/shop/product.html:94 templates/shop/wishlist.html:30
-msgid "Buy"
-msgstr "Compra"
-
-#: templates/shop/product.html:95
-msgid "Save for later"
-msgstr "Salva per dopo"
-
-#: templates/shop/product.html:100
-msgid "This product is currently unavailable."
-msgstr "Questo prodotto non è attualmente disponibile."
-
-#: templates/shop/product.html:108
-msgid "Related Products"
-msgstr "Prodotti rilevanti"
-
-#: templates/shop/wishlist.html:4 templates/shop/wishlist.html.py:5
-#: templates/shop/wishlist.html:9
-msgid "Your Wishlist"
-msgstr "La tua lista dei desideri"
-
-#: templates/shop/wishlist.html:31
-msgid "Remove"
-msgstr "Rimuovi"
-
-#: templates/shop/wishlist.html:38
-msgid "Your wishlist is empty."
-msgstr "La tua lista dei desideri è vuota."
 
 #: templates/shop/includes/order_details.html:12
 #: templates/shop/includes/order_details_rtl.html:12
@@ -1031,6 +982,11 @@ msgid "Discount"
 msgstr "Sconto"
 
 #: templates/shop/includes/order_totals.html:23
+#: templates/shop/includes/order_totals.txt:8
+msgid "Tax"
+msgstr ""
+
+#: templates/shop/includes/order_totals.html:34
 #: templates/shop/includes/order_totals.txt:6
 msgid "Shipping"
 msgstr "Spedizione"
@@ -1047,3 +1003,132 @@ msgstr "Dettagli di pagamento"
 #: templates/shop/includes/payment_fields.html:8
 msgid "Card Expiry"
 msgstr "Scadenza della carta"
+
+#: templates/shop/includes/user_panel.html:5
+#, python-format
+msgid "1 item"
+msgid_plural "%(cart_quantity)s items"
+msgstr[0] "1 elemento"
+msgstr[1] "%(cart_quantity)s elementi"
+
+#: templates/shop/includes/user_panel.html:6
+msgid "in cart"
+msgstr "nel carrello"
+
+#: templates/shop/includes/user_panel.html:16
+#, python-format
+msgid "Wishlist contains 1 item"
+msgid_plural " Wishlist contains %(wishlist_count)s items"
+msgstr[0] "La lista dei desideri contiene 1 elemento"
+msgstr[1] "La lista dei desideri contiene %(wishlist_count)s elementi"
+
+#: templates/shop/order_history.html:4 templates/shop/order_history.html:5
+#: templates/shop/order_history.html:9
+msgid "Order History"
+msgstr "Storico degli ordini"
+
+#: templates/shop/order_history.html:19
+msgid "Date"
+msgstr ""
+
+#: templates/shop/order_history.html:21
+msgid "Paid"
+msgstr "Pagato"
+
+#: templates/shop/order_history.html:35
+msgid "Download PDF"
+msgstr "Scarica PDF"
+
+#: templates/shop/order_history.html:37
+msgid "View invoice"
+msgstr "Vedi la fattura"
+
+#: templates/shop/order_history.html:48
+msgid "You have not ordered anything from us yet."
+msgstr "Non hai ancora ordinato nulla da noi."
+
+#: templates/shop/product.html:118 templates/shop/wishlist.html:34
+msgid "Buy"
+msgstr "Compra"
+
+#: templates/shop/product.html:120
+msgid "Save for later"
+msgstr "Salva per dopo"
+
+#: templates/shop/product.html:125
+msgid "This product is currently unavailable."
+msgstr "Questo prodotto non è attualmente disponibile."
+
+#: templates/shop/product.html:135
+msgid "Related Products"
+msgstr "Prodotti rilevanti"
+
+#: templates/shop/wishlist.html:4 templates/shop/wishlist.html:5
+#: templates/shop/wishlist.html:9
+msgid "Your Wishlist"
+msgstr "La tua lista dei desideri"
+
+#: templates/shop/wishlist.html:35
+msgid "Remove"
+msgstr "Rimuovi"
+
+#: templates/shop/wishlist.html:42
+msgid "Your wishlist is empty."
+msgstr "La tua lista dei desideri è vuota."
+
+#: utils.py:104
+#, python-format
+msgid ""
+"Invalid currency locale specified for SHOP_CURRENCY_LOCALE: '%s'. You'll "
+"need to set the locale for your system, or configure the "
+"SHOP_CURRENCY_LOCALE setting in your settings module."
+msgstr ""
+"Specificato un formato locale di valuta non valido per SHOP_CURRENCY_LOCALE: "
+"'%s'. Occorre impostare il formato locale per il proprio sistema, oppure "
+"configurare l'impostazione SHOP_CURRENCY_LOCALE nel proprio modulo delle "
+"impostazioni."
+
+#: views.py:76 views.py:134
+msgid "Item added to cart"
+msgstr "Oggetto aggiunto al carrello"
+
+#: views.py:83
+msgid "Item added to wishlist"
+msgstr "Oggetto aggiunto alla lista dei desideri"
+
+#: views.py:139
+msgid "Item removed from wishlist"
+msgstr "Oggetto tolto dalla lista dei desideri"
+
+#: views.py:183
+msgid "Your cart has expired"
+msgstr "Il tuo carrello è scaduto"
+
+#: views.py:190
+msgid "Cart updated"
+msgstr "Carrello aggiornato"
+
+#: views.py:454
+#, python-format
+msgid "The order email for order ID %s has been re-sent"
+msgstr ""
+
+#~ msgctxt "commercial meaning"
+#~ msgid "Order"
+#~ msgstr "Ordine"
+
+#~ msgctxt "commercial meaning"
+#~ msgid "Orders"
+#~ msgstr "Ordini"
+
+#~ msgid "Please provide csv file to import"
+#~ msgstr "Indicare un file csv da importare"
+
+#~ msgid "History"
+#~ msgstr "Storico"
+
+#~ msgid "Please correct the errors below."
+#~ msgstr "Correggi gli errori seguenti."
+
+#~ msgid "Date / time"
+#~ msgstr "Data / ora"
