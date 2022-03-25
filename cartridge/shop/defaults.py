@@ -170,6 +170,14 @@ register_setting(
 )
 
 register_setting(
+    name="SHOP_DEFAULT_TAX_RATE",
+    label=_("Default Tax Rate"),
+    description=_("Default tax rate in % when no custom tax handling is implemented."),
+    editable=True,
+    default=0,
+)
+
+register_setting(
     name="SHOP_DISCOUNT_FIELD_IN_CART",
     label=_("Discount in Cart"),
     description=_("Discount codes can be entered on the cart page."),
@@ -306,6 +314,14 @@ register_setting(
 )
 
 register_setting(
+    name="SHOP_TAX_INCLUDED",
+    label=_("Tax included"),
+    description="If True, tax is already included in a product's price.",
+    editable=False,
+    default=False,
+)
+
+register_setting(
     name="SHOP_USE_VARIATIONS",
     label=_("Use product variations"),
     description="Use product variations.",
@@ -345,12 +361,4 @@ register_setting(
     "editing them in the admin.",
     editable=False,
     default=True,
-)
-
-register_setting(
-    name="SHOP_TAX_INCLUDED",
-    label=_("Tax included"),
-    description="The product prices are already including tax (boolean).",
-    editable=False,
-    default=False,
 )
