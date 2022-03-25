@@ -1,6 +1,8 @@
 """
 Checkout process utilities.
 """
+import decimal
+
 from django.utils.translation import gettext_lazy as _
 from mezzanine.accounts import ProfileNotConfigured, get_profile_for_user
 from mezzanine.conf import settings
@@ -48,7 +50,18 @@ def default_tax_handler(request, order_form):
     ``cartridge.shop.utils.set_tax``. The Cart object is also
     accessible via ``request.cart``
     """
-    set_tax(request, _("Tax"), 0)
+    settings.clear_cache()
+    if settings.SHOP_DEFAULT_TAX_RATE:
+        tax_rate = settings.SHOP_DEFAULT_TAX_RATE.strip("%")
+        if settings.SHOP_TAX_INCLUDED:
+            tax = request.cart.total_price() - (
+                request.cart.total_price() / decimal.Decimal(1 + float(tax_rate) / 100)
+            )
+            tax_type = _("Incl.") + " " + tax_rate + "% " + _("VAT")
+        else:
+            tax = request.cart.total_price() * decimal.Decimal(float(tax_rate) / 100)
+            tax_type = _("VAT") + " (" + tax_rate + "%)"
+        set_tax(request, tax_type, f"{tax:.2f}")
 
 
 def default_payment_handler(request, order_form, order):
