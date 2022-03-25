@@ -52,15 +52,15 @@ def default_tax_handler(request, order_form):
     """
     settings.clear_cache()
     if settings.SHOP_DEFAULT_TAX_RATE:
-        tax_rate = settings.SHOP_DEFAULT_TAX_RATE.strip("%")
+        tax_rate = settings.SHOP_DEFAULT_TAX_RATE
         if settings.SHOP_TAX_INCLUDED:
             tax = request.cart.total_price() - (
-                request.cart.total_price() / decimal.Decimal(1 + float(tax_rate) / 100)
+                request.cart.total_price() / decimal.Decimal(1 + tax_rate / 100)
             )
-            tax_type = _("Incl.") + " " + tax_rate + "% " + _("VAT")
+            tax_type = _("Incl.") + " " + str(tax_rate) + "% " + _("VAT")
         else:
-            tax = request.cart.total_price() * decimal.Decimal(float(tax_rate) / 100)
-            tax_type = _("VAT") + " (" + tax_rate + "%)"
+            tax = request.cart.total_price() * decimal.Decimal(tax_rate / 100)
+            tax_type = _("VAT") + " (" + str(tax_rate) + "%)"
         set_tax(request, tax_type, f"{tax:.2f}")
 
 
