@@ -174,7 +174,7 @@ register_setting(
     label=_("Default Tax Rate"),
     description=_("Default tax rate in % when no custom tax handling is implemented."),
     editable=True,
-    default=0,
+    default=0.0,
 )
 
 register_setting(

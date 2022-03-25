@@ -2,6 +2,7 @@
 Checkout process utilities.
 """
 import decimal
+import locale
 
 from django.utils.translation import gettext_lazy as _
 from mezzanine.accounts import ProfileNotConfigured, get_profile_for_user
@@ -52,15 +53,16 @@ def default_tax_handler(request, order_form):
     """
     settings.clear_cache()
     if settings.SHOP_DEFAULT_TAX_RATE:
+        locale.setlocale(locale.LC_NUMERIC, str(settings.SHOP_CURRENCY_LOCALE))
         tax_rate = settings.SHOP_DEFAULT_TAX_RATE
         if settings.SHOP_TAX_INCLUDED:
             tax = request.cart.total_price() - (
                 request.cart.total_price() / decimal.Decimal(1 + tax_rate / 100)
             )
-            tax_type = _("Incl.") + " " + str(tax_rate) + "% " + _("VAT")
+            tax_type = _("Incl.") + " " + f"{tax_rate:n}" + "% " + _("VAT")
         else:
             tax = request.cart.total_price() * decimal.Decimal(tax_rate / 100)
-            tax_type = _("VAT") + " (" + str(tax_rate) + "%)"
+            tax_type = _("VAT") + " (" + f"{tax_rate:n}" + "%)"
         set_tax(request, tax_type, f"{tax:.2f}")
 
 
