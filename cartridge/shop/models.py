@@ -587,7 +587,7 @@ class Order(SiteRelated):
         Returns the HTML for a link to the PDF invoice for use in the
         order listing view of the admin.
         """
-        url = reverse("shop:shop_invoice", args=(self.id,))
+        url = reverse("shop_invoice", args=(self.id,))
         text = gettext("Download PDF invoice")
         return mark_safe(f"<a href='{url}?format=pdf'>{text}</a>")
 
