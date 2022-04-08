@@ -79,7 +79,7 @@ Default: ``10.0``
 
 Default tax rate in % when no custom tax handling is implemented.
 
-Default: ``0``
+Default: ``0.0``
 
 .. _SHOP_DISCOUNT_FIELD_IN_CART:
 

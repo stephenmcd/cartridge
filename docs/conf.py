@@ -13,27 +13,24 @@ import os
 import sys
 from datetime import datetime
 
+import cartridge
+
 if "DJANGO_SETTINGS_MODULE" not in os.environ:
     docs_path = os.getcwd()
     cartridge_path_parts = (docs_path, "..")
     sys.path.insert(0, docs_path)
     sys.path.insert(0, os.path.realpath(os.path.join(*cartridge_path_parts)))
     os.environ["DJANGO_SETTINGS_MODULE"] = "docs_settings"
-    # Django 1.7's setup is required before touching translated strings.
     import django
 
-    try:
-        django.setup()
-    except AttributeError:  # < 1.7
-        pass
+    django.setup()
 
+# When a full build is run (eg from the root of the repo), we
+# run all the Mezzanine utils for dynamically generated docs.
 if sys.argv[-2:] == ["docs", "docs/build"]:
     from mezzanine.utils import docs
 
-    import cartridge
-
     docs.build_settings_docs(docs_path, prefix="SHOP_")
-    docs.build_changelog(docs_path, package_name="cartridge")
     # docs.build_modelgraph(docs_path, package_name="cartridge")
 
 try:
@@ -76,7 +73,6 @@ master_doc = "index"
 
 # General information about the project.
 project = "Cartridge"
-
 copyright = "2009 - %s, Stephen McDonald" % datetime.now().year
 
 # The version info for the project you're documenting, acts as replacement for
@@ -104,6 +100,11 @@ release = cartridge.__version__
 # List of directories, relative to source directory, that shouldn't be searched
 # for source files.
 exclude_trees = ["_build"]
+
+# List of files to be excluded when looking for source files.
+#  Added settings.rst its still will be included in configuration.rst
+#  only that prevents error of duplicate reference labels.
+exclude_patterns = ["settings.rst"]
 
 # The reST default role (used for this markup: `text`) to use for all documents.
 # default_role = None
@@ -159,7 +160,7 @@ pygments_style = "sphinx"
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ["_static"]
+# html_static_path = ["_static"]
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
@@ -232,6 +233,5 @@ latex_documents = [
 # latex_use_modindex = True
 
 
-html_use_index = False
 html_theme_path = ["."]
 html_theme = "mezzanine_theme"
