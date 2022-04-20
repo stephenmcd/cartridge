@@ -65,9 +65,9 @@ jobs:
       - name: Lint
         run: tox -e package -e lint -e pyupgrade
 
-  # Build docs
+  # Build and deploy docs  
   docs:
-    name: Build docs
+    name: Build and deploy docs
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -77,7 +77,14 @@ jobs:
       - name: Install deps
         run: pip install -e . && pip install sphinx
       - name: Build docs
-        run: sphinx-build -b html docs docs/build
+        run: sphinx-build -b html docs docs/build && touch docs/build/.nojekyll
+      - name: Deploy docs
+        uses: JacksonMaxfield/github-pages-deploy-action-python@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BASE_BRANCH: master
+          BRANCH: gh-pages
+          FOLDER: docs/build
 
   # Create a new semantic release
   # Only runs on the original repo, not forks
