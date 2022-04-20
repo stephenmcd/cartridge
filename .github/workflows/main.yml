@@ -70,7 +70,8 @@ jobs:
     name: Build and deploy docs
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout 
+        uses: actions/checkout@v3
       - uses: actions/setup-python@v2
         with:
           python-version: 3.9
@@ -79,12 +80,10 @@ jobs:
       - name: Build docs
         run: sphinx-build -b html docs docs/build && touch docs/build/.nojekyll
       - name: Deploy docs
-        uses: JacksonMaxfield/github-pages-deploy-action-python@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BASE_BRANCH: master
-          BRANCH: gh-pages
-          FOLDER: docs/build
+        uses: JamesIves/github-pages-deploy-action@v4.3.0
+        with:
+          branch: gh-pages
+          folder: docs/build
 
   # Create a new semantic release
   # Only runs on the original repo, not forks
