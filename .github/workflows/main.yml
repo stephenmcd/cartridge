@@ -67,6 +67,7 @@ jobs:
 
   # Build and deploy docs  
   docs:
+    if: github.ref == 'refs/heads/stable'
     name: Build and deploy docs
     runs-on: ubuntu-latest
     steps:
