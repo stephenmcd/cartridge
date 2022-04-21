@@ -24,3 +24,4 @@ htmlcov/
 mezzanine/project_template/static/
 /mezzanine/.project
 /mezzanine/.pydevproject
+db.sqlite3
