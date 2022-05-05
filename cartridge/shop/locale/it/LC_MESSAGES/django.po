@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Cartridge\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-25 12:54+0100\n"
+"POT-Creation-Date: 2022-05-06 01:44+0200\n"
 "PO-Revision-Date: 2013-02-14 10:20+0000\n"
 "Last-Translator: Nicola Larosa <transifex@teknico.net>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/cartridge/"
@@ -63,31 +63,31 @@ msgstr "Periodo di offerta"
 msgid "Valid for"
 msgstr "Valido per"
 
-#: checkout.py:39
+#: checkout.py:40
 msgid "Flat rate shipping"
 msgstr "Spedizione a prezzo fisso"
 
-#: checkout.py:60
+#: checkout.py:62
 msgid "Incl."
 msgstr ""
 
-#: checkout.py:60 checkout.py:63
+#: checkout.py:62 checkout.py:65
 msgid "VAT"
 msgstr ""
 
-#: checkout.py:204
+#: checkout.py:206
 msgid "Details"
 msgstr "Dettagli"
 
-#: checkout.py:208
+#: checkout.py:210
 msgid "Address"
 msgstr "Indirizzo"
 
-#: checkout.py:211
+#: checkout.py:213
 msgid "Payment"
 msgstr "Pagamento"
 
-#: checkout.py:216
+#: checkout.py:218
 msgid "Confirmation"
 msgstr "Conferma"
 
@@ -672,7 +672,7 @@ msgid "Status"
 msgstr "Stato"
 
 #: models.py:591 templates/admin/shop/order/change_form.html:15
-#: templates/shop/complete.html:70
+#: templates/shop/complete.html:69
 msgid "Download PDF invoice"
 msgstr "Scarica la ricevuta come PDF"
 
@@ -757,7 +757,7 @@ msgid "View past orders"
 msgstr "Vedi gli ordini precedenti"
 
 #: templates/admin/shop/order/change_form.html:17
-#: templates/shop/complete.html:73 templates/shop/order_history.html:38
+#: templates/shop/complete.html:72 templates/shop/order_history.html:38
 msgid "Re-send order email"
 msgstr ""
 
@@ -938,20 +938,20 @@ msgstr "Modifica il carrello"
 msgid "Order Complete"
 msgstr "Ordine completo"
 
-#: templates/shop/complete.html:63
+#: templates/shop/complete.html:62
 msgid "Thank you for shopping with us! Your order is complete."
 msgstr "Grazie per aver comprato da noi, il tuo ordine è completo."
 
-#: templates/shop/complete.html:64
+#: templates/shop/complete.html:63
 msgid "We've sent you a receipt via email."
 msgstr "Ti abbiamo inviato la ricevuta per email."
 
-#: templates/shop/complete.html:65
+#: templates/shop/complete.html:64
 msgid "You can also view your invoice using one of the links below."
 msgstr ""
 "Puoi anche vedere la tua fattura tramite uno dei collegamenti in basso."
 
-#: templates/shop/complete.html:72
+#: templates/shop/complete.html:71
 msgid "View invoice in your browser"
 msgstr "Vedi la fattura nel tuo browser"
 

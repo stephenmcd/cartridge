@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Cartridge\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-25 12:54+0100\n"
+"POT-Creation-Date: 2022-05-06 01:44+0200\n"
 "PO-Revision-Date: 2013-03-30 15:07+0000\n"
 "Last-Translator: Sebastián Ramírez Magrí <sebasmagri@gmail.com>\n"
 "Language-Team: Korean (http://www.transifex.com/projects/p/cartridge/"
@@ -62,31 +62,31 @@ msgstr "세일 기간"
 msgid "Valid for"
 msgstr "유효기간"
 
-#: checkout.py:39
+#: checkout.py:40
 msgid "Flat rate shipping"
 msgstr "기본 배송비"
 
-#: checkout.py:60
+#: checkout.py:62
 msgid "Incl."
 msgstr ""
 
-#: checkout.py:60 checkout.py:63
+#: checkout.py:62 checkout.py:65
 msgid "VAT"
 msgstr ""
 
-#: checkout.py:204
+#: checkout.py:206
 msgid "Details"
 msgstr "상세"
 
-#: checkout.py:208
+#: checkout.py:210
 msgid "Address"
 msgstr "주소"
 
-#: checkout.py:211
+#: checkout.py:213
 msgid "Payment"
 msgstr "지불"
 
-#: checkout.py:216
+#: checkout.py:218
 msgid "Confirmation"
 msgstr "확인"
 
@@ -654,7 +654,7 @@ msgid "Status"
 msgstr "상태"
 
 #: models.py:591 templates/admin/shop/order/change_form.html:15
-#: templates/shop/complete.html:70
+#: templates/shop/complete.html:69
 msgid "Download PDF invoice"
 msgstr "PDF 주문서 다운로드"
 
@@ -737,7 +737,7 @@ msgid "View past orders"
 msgstr "과거 주문 보기"
 
 #: templates/admin/shop/order/change_form.html:17
-#: templates/shop/complete.html:73 templates/shop/order_history.html:38
+#: templates/shop/complete.html:72 templates/shop/order_history.html:38
 msgid "Re-send order email"
 msgstr ""
 
@@ -911,19 +911,19 @@ msgstr "카트 수정"
 msgid "Order Complete"
 msgstr "주문 완료"
 
-#: templates/shop/complete.html:63
+#: templates/shop/complete.html:62
 msgid "Thank you for shopping with us! Your order is complete."
 msgstr "주문해주셔서 감사합니다."
 
-#: templates/shop/complete.html:64
+#: templates/shop/complete.html:63
 msgid "We've sent you a receipt via email."
 msgstr "영수증을 이메일로 발송하였습니다."
 
-#: templates/shop/complete.html:65
+#: templates/shop/complete.html:64
 msgid "You can also view your invoice using one of the links below."
 msgstr "아래의 링크를 통해 주문서를 확인하실 수 있습니다."
 
-#: templates/shop/complete.html:72
+#: templates/shop/complete.html:71
 msgid "View invoice in your browser"
 msgstr "브라우저에서 주문서 보기"
 

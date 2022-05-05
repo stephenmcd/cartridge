@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Cartridge\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-25 12:54+0100\n"
+"POT-Creation-Date: 2022-05-06 01:44+0200\n"
 "PO-Revision-Date: 2013-03-30 15:07+0000\n"
 "Last-Translator: Sebastián Ramírez Magrí <sebasmagri@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/projects/p/cartridge/"
@@ -64,31 +64,31 @@ msgstr "Okres wyprzedaży"
 msgid "Valid for"
 msgstr "Ważne do"
 
-#: checkout.py:39
+#: checkout.py:40
 msgid "Flat rate shipping"
 msgstr "Wysyłka standardowa"
 
-#: checkout.py:60
+#: checkout.py:62
 msgid "Incl."
 msgstr "W tym"
 
-#: checkout.py:60 checkout.py:63
+#: checkout.py:62 checkout.py:65
 msgid "VAT"
 msgstr "VAT"
 
-#: checkout.py:204
+#: checkout.py:206
 msgid "Details"
 msgstr "Szczegóły"
 
-#: checkout.py:208
+#: checkout.py:210
 msgid "Address"
 msgstr "Adres"
 
-#: checkout.py:211
+#: checkout.py:213
 msgid "Payment"
 msgstr "Płatność"
 
-#: checkout.py:216
+#: checkout.py:218
 msgid "Confirmation"
 msgstr "Potwierdzenie"
 
@@ -658,7 +658,7 @@ msgid "Status"
 msgstr "Status"
 
 #: models.py:591 templates/admin/shop/order/change_form.html:15
-#: templates/shop/complete.html:70
+#: templates/shop/complete.html:69
 msgid "Download PDF invoice"
 msgstr "Sciągnij fakturę w formacie PDF"
 
@@ -743,7 +743,7 @@ msgid "View past orders"
 msgstr "Zobacz poprzednie zamówienia"
 
 #: templates/admin/shop/order/change_form.html:17
-#: templates/shop/complete.html:73 templates/shop/order_history.html:38
+#: templates/shop/complete.html:72 templates/shop/order_history.html:38
 msgid "Re-send order email"
 msgstr "Wyślij ponownie potwierdzenie"
 
@@ -814,10 +814,7 @@ msgstr ""
 "\n"
 "Jeśli masz konto lub chciałbys je stworzyć, proszę\n"
 "<a href=\"%(login_url)s?next=%(next)s\">log in</a> lub\n"
-" <a href=\"%(signup_url)s?next=%(next)s\">sign up</a>.\n"
-"\n"
-"\n"
-"\n"
+"<a href=\"%(signup_url)s?next=%(next)s\">sign up</a>.\n"
 
 #: templates/shop/billing_shipping.html:30 templates/shop/confirmation.html:10
 #: templates/shop/includes/order_details.html:15
@@ -928,20 +925,20 @@ msgstr "Edytuj koszyk"
 msgid "Order Complete"
 msgstr "Zamówienie zakończone"
 
-#: templates/shop/complete.html:63
+#: templates/shop/complete.html:62
 msgid "Thank you for shopping with us! Your order is complete."
 msgstr "Dziękujemy za zakupy u nas, Twoje zamówienie jest zakończone."
 
-#: templates/shop/complete.html:64
+#: templates/shop/complete.html:63
 msgid "We've sent you a receipt via email."
 msgstr "Wysłaliśmy Ci pokwitowanie drogą mailową."
 
-#: templates/shop/complete.html:65
+#: templates/shop/complete.html:64
 msgid "You can also view your invoice using one of the links below."
 msgstr ""
 "Możesz również zobaczyć swoja fakturę klikając na jeden z poniższych linków."
 
-#: templates/shop/complete.html:72
+#: templates/shop/complete.html:71
 msgid "View invoice in your browser"
 msgstr "Zobacz fakturę w swojej przeglądarce"
 

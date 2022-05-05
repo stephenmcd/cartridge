@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Cartridge\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-25 12:54+0100\n"
+"POT-Creation-Date: 2022-05-06 01:44+0200\n"
 "PO-Revision-Date: 2012-11-17 22:31+0000\n"
 "Last-Translator: Sebastián Ramírez Magrí <sebasmagri@gmail.com>\n"
 "Language-Team: Catalan (http://www.transifex.com/projects/p/cartridge/"
@@ -64,31 +64,31 @@ msgstr "Periode de ventes"
 msgid "Valid for"
 msgstr "Vàlid per"
 
-#: checkout.py:39
+#: checkout.py:40
 msgid "Flat rate shipping"
 msgstr "Enviament amb tarifa plana"
 
-#: checkout.py:60
+#: checkout.py:62
 msgid "Incl."
 msgstr ""
 
-#: checkout.py:60 checkout.py:63
+#: checkout.py:62 checkout.py:65
 msgid "VAT"
 msgstr ""
 
-#: checkout.py:204
+#: checkout.py:206
 msgid "Details"
 msgstr "Detalls"
 
-#: checkout.py:208
+#: checkout.py:210
 msgid "Address"
 msgstr "Direcció"
 
-#: checkout.py:211
+#: checkout.py:213
 msgid "Payment"
 msgstr "Pagament"
 
-#: checkout.py:216
+#: checkout.py:218
 msgid "Confirmation"
 msgstr "Confirmació"
 
@@ -673,7 +673,7 @@ msgid "Status"
 msgstr "Estat"
 
 #: models.py:591 templates/admin/shop/order/change_form.html:15
-#: templates/shop/complete.html:70
+#: templates/shop/complete.html:69
 msgid "Download PDF invoice"
 msgstr "Descarregar la factura en PDF"
 
@@ -758,7 +758,7 @@ msgid "View past orders"
 msgstr "Veure ordres pasades"
 
 #: templates/admin/shop/order/change_form.html:17
-#: templates/shop/complete.html:73 templates/shop/order_history.html:38
+#: templates/shop/complete.html:72 templates/shop/order_history.html:38
 msgid "Re-send order email"
 msgstr ""
 
@@ -939,19 +939,19 @@ msgstr "Editar carrito"
 msgid "Order Complete"
 msgstr "Ordre finalitzada"
 
-#: templates/shop/complete.html:63
+#: templates/shop/complete.html:62
 msgid "Thank you for shopping with us! Your order is complete."
 msgstr "Gràcies per confiar en nosaltres, la teva ordre ha estat finalitzada"
 
-#: templates/shop/complete.html:64
+#: templates/shop/complete.html:63
 msgid "We've sent you a receipt via email."
 msgstr "Li hem enviat una còpia de l'ordre per correu electrònic."
 
-#: templates/shop/complete.html:65
+#: templates/shop/complete.html:64
 msgid "You can also view your invoice using one of the links below."
 msgstr "També podeu veure la vostra factura utilitzant els enllaços següents:"
 
-#: templates/shop/complete.html:72
+#: templates/shop/complete.html:71
 msgid "View invoice in your browser"
 msgstr "Veure la factura al navegador"
 

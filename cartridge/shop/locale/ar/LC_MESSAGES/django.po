@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Cartridge\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-25 12:54+0100\n"
+"POT-Creation-Date: 2022-05-06 01:44+0200\n"
 "PO-Revision-Date: 2013-03-30 15:07+0000\n"
 "Last-Translator: Sebastián Ramírez Magrí <sebasmagri@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -62,31 +62,31 @@ msgstr ""
 msgid "Valid for"
 msgstr ""
 
-#: checkout.py:39
+#: checkout.py:40
 msgid "Flat rate shipping"
 msgstr ""
 
-#: checkout.py:60
+#: checkout.py:62
 msgid "Incl."
 msgstr ""
 
-#: checkout.py:60 checkout.py:63
+#: checkout.py:62 checkout.py:65
 msgid "VAT"
 msgstr ""
 
-#: checkout.py:204
+#: checkout.py:206
 msgid "Details"
 msgstr ""
 
-#: checkout.py:208
+#: checkout.py:210
 msgid "Address"
 msgstr ""
 
-#: checkout.py:211
+#: checkout.py:213
 msgid "Payment"
 msgstr ""
 
-#: checkout.py:216
+#: checkout.py:218
 msgid "Confirmation"
 msgstr ""
 
@@ -640,7 +640,7 @@ msgid "Status"
 msgstr "الحالة"
 
 #: models.py:591 templates/admin/shop/order/change_form.html:15
-#: templates/shop/complete.html:70
+#: templates/shop/complete.html:69
 msgid "Download PDF invoice"
 msgstr ""
 
@@ -723,7 +723,7 @@ msgid "View past orders"
 msgstr ""
 
 #: templates/admin/shop/order/change_form.html:17
-#: templates/shop/complete.html:73 templates/shop/order_history.html:38
+#: templates/shop/complete.html:72 templates/shop/order_history.html:38
 msgid "Re-send order email"
 msgstr ""
 
@@ -897,19 +897,19 @@ msgstr ""
 msgid "Order Complete"
 msgstr ""
 
-#: templates/shop/complete.html:63
+#: templates/shop/complete.html:62
 msgid "Thank you for shopping with us! Your order is complete."
 msgstr ""
 
-#: templates/shop/complete.html:64
+#: templates/shop/complete.html:63
 msgid "We've sent you a receipt via email."
 msgstr ""
 
-#: templates/shop/complete.html:65
+#: templates/shop/complete.html:64
 msgid "You can also view your invoice using one of the links below."
 msgstr ""
 
-#: templates/shop/complete.html:72
+#: templates/shop/complete.html:71
 msgid "View invoice in your browser"
 msgstr ""
 

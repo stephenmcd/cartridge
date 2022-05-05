@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-25 12:54+0100\n"
+"POT-Creation-Date: 2022-05-06 01:44+0200\n"
 "PO-Revision-Date: 2013-04-18 16:25+0800\n"
 "Last-Translator: Tzu-ping Chung <uranusjr@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -62,31 +62,31 @@ msgstr "促銷期間"
 msgid "Valid for"
 msgstr "有效期間"
 
-#: checkout.py:39
+#: checkout.py:40
 msgid "Flat rate shipping"
 msgstr "固定運費"
 
-#: checkout.py:60
+#: checkout.py:62
 msgid "Incl."
 msgstr ""
 
-#: checkout.py:60 checkout.py:63
+#: checkout.py:62 checkout.py:65
 msgid "VAT"
 msgstr ""
 
-#: checkout.py:204
+#: checkout.py:206
 msgid "Details"
 msgstr "詳細資訊"
 
-#: checkout.py:208
+#: checkout.py:210
 msgid "Address"
 msgstr "地址"
 
-#: checkout.py:211
+#: checkout.py:213
 msgid "Payment"
 msgstr "付款方式"
 
-#: checkout.py:216
+#: checkout.py:218
 msgid "Confirmation"
 msgstr "確認"
 
@@ -652,7 +652,7 @@ msgid "Status"
 msgstr "狀態"
 
 #: models.py:591 templates/admin/shop/order/change_form.html:15
-#: templates/shop/complete.html:70
+#: templates/shop/complete.html:69
 msgid "Download PDF invoice"
 msgstr "下載 PDF 訂購資訊"
 
@@ -735,7 +735,7 @@ msgid "View past orders"
 msgstr "顯示過去的訂單"
 
 #: templates/admin/shop/order/change_form.html:17
-#: templates/shop/complete.html:73 templates/shop/order_history.html:38
+#: templates/shop/complete.html:72 templates/shop/order_history.html:38
 msgid "Re-send order email"
 msgstr ""
 
@@ -913,19 +913,19 @@ msgstr "編輯購物車"
 msgid "Order Complete"
 msgstr "訂單完成"
 
-#: templates/shop/complete.html:63
+#: templates/shop/complete.html:62
 msgid "Thank you for shopping with us! Your order is complete."
 msgstr "感謝您的購買，您的訂單已完成。"
 
-#: templates/shop/complete.html:64
+#: templates/shop/complete.html:63
 msgid "We've sent you a receipt via email."
 msgstr "我們已經由 email 將收據送給您。"
 
-#: templates/shop/complete.html:65
+#: templates/shop/complete.html:64
 msgid "You can also view your invoice using one of the links below."
 msgstr "您也可以使用下列連結之一檢視您的訂購收據。"
 
-#: templates/shop/complete.html:72
+#: templates/shop/complete.html:71
 msgid "View invoice in your browser"
 msgstr "在瀏覽器中檢視訂購資訊"
 
