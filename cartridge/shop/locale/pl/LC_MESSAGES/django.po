@@ -42,7 +42,7 @@ msgstr "Pozycja"
 
 #: admin.py:366
 msgid "Billing details"
-msgstr "Dane do fakturacji"
+msgstr "Dane do zamówienia"
 
 #: admin.py:367
 msgid "Shipping details"
@@ -334,7 +334,7 @@ msgstr "Darmowa wysyłka"
 
 #: forms.py:328
 msgid "My delivery details are the same as my billing details"
-msgstr "Moje dane do wysyłki są identyczne z danymi do fakturacji"
+msgstr "Moje dane do wysyłki są identyczne z danymi do faktury"
 
 #: forms.py:331
 msgid "Remember my address for next time"
@@ -775,7 +775,7 @@ msgstr "ID zamówienia"
 
 #: templates/email/order_receipt.txt:11
 msgid "Billing Details:"
-msgstr "Dane do fakturacji"
+msgstr "Dane do zamówienia:"
 
 #: templates/email/order_receipt.txt:16
 msgid "Shipping Details:"
@@ -820,7 +820,7 @@ msgstr ""
 #: templates/shop/includes/order_details.html:15
 #: templates/shop/includes/order_details_rtl.html:15
 msgid "Billing Details"
-msgstr "Dane do fakturacji"
+msgstr "Dane do zamówienia"
 
 #: templates/shop/billing_shipping.html:35
 msgid "Delivery Details"
@@ -857,7 +857,7 @@ msgstr "Wróć do kasy"
 
 #: templates/shop/cart.html:64 templates/shop/includes/user_panel.html:10
 msgid "Go to Checkout"
-msgstr "Zatwierdź zamówienie"
+msgstr " Przejdż do kasy"
 
 #: templates/shop/cart.html:66
 msgid "Update Cart"
