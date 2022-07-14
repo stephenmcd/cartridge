@@ -41,7 +41,7 @@ Features
 * Smart categories (by price range, colour, etc)
 * Registered or anonymous checkout
 * Configurable number of checkout steps
-* Denormalised data for accessiblilty and performance
+* Denormalised data for accessibility and performance
 * Authenticated customer accounts with transaction history
 
 Dependencies

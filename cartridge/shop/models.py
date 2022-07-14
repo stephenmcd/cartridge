@@ -212,7 +212,7 @@ class ProductOption(models.Model):
 
 class ProductVariationMetaclass(ModelBase):
     """
-    Metaclass for the ``ProductVariation`` model that dynamcally
+    Metaclass for the ``ProductVariation`` model that dynamically
     assigns an ``fields.OptionField`` for each option in the
     ``SHOP_PRODUCT_OPTIONS`` setting.
     """
@@ -678,7 +678,7 @@ class Cart(models.Model):
             return discount.calculate(self.total_price())
         total = Decimal("0")
         # Create a list of skus in the cart that are applicable to
-        # the discount, and total the discount for appllicable items.
+        # the discount, and total the discount for applicable items.
         lookup = {"product__in": products, "sku__in": self.skus()}
         discount_variations = ProductVariation.objects.filter(**lookup)
         discount_skus = discount_variations.values_list("sku", flat=True)

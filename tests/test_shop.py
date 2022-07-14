@@ -408,7 +408,7 @@ class SaleTests(TestCase):
         """
         Regression test for GitHub issue #24. Incorrect exception handle meant
         that in some cases (usually percentage discount) sale_prices were not
-        being applied to all products and their varitations.
+        being applied to all products and their variations.
 
         Note: This issues was only relevant using MySQL and with exceptions
         turned on (which is the default when DEBUG=True).
