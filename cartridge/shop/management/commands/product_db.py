@@ -17,7 +17,7 @@ from cartridge.shop.models import (
     ProductVariation,
 )
 
-# images get copied from thie directory
+# images get copied from this directory
 LOCAL_IMAGE_DIR = "/tmp/orig"
 # images get copied to this directory under STATIC_ROOT
 IMAGE_SUFFIXES = [
