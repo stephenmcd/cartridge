@@ -4,6 +4,7 @@ from functools import reduce
 from operator import mul
 from unittest import skipUnless
 
+import django
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.urls import reverse
@@ -311,12 +312,19 @@ class ShopTests(TestCase):
                     self._empty_cart(cart)
                     self._add_to_cart(invalid_variation, 1)
                     r = self.client.post(reverse("shop_cart"), post_data)
-                    self.assertFormError(
-                        r,
-                        "discount_form",
-                        "discount_code",
-                        _("The discount code entered is invalid."),
-                    )
+                    if django.VERSION >= (4, 1):
+                        self.assertFormError(
+                            r.context["discount_form"],
+                            "discount_code",
+                            _("The discount code entered is invalid."),
+                        )
+                    else:
+                        self.assertFormError(
+                            r,
+                            "discount_form",
+                            "discount_code",
+                            _("The discount code entered is invalid."),
+                        )
 
     def test_order(self):
         """
@@ -408,7 +416,7 @@ class SaleTests(TestCase):
         """
         Regression test for GitHub issue #24. Incorrect exception handle meant
         that in some cases (usually percentage discount) sale_prices were not
-        being applied to all products and their variations.
+        being applied to all products and their varitations.
 
         Note: This issues was only relevant using MySQL and with exceptions
         turned on (which is the default when DEBUG=True).
