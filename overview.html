@@ -1,0 +1,362 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Overview &#8212; Cartridge 1.3.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mezzanine.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Components" href="components.html" />
+    <link rel="prev" title="Cartridge" href="index.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="components.html" title="Components"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Cartridge"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Cartridge 1.3.4 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Overview</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <a class="reference external image-reference" href="http://travis-ci.org/#!/stephenmcd/cartridge"><img alt="https://secure.travis-ci.org/stephenmcd/cartridge.png?branch=master" src="https://secure.travis-ci.org/stephenmcd/cartridge.png?branch=master" /></a>
+<p>Created by <a class="reference external" href="http://twitter.com/stephen_mcd">Stephen McDonald</a></p>
+<section id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h1>
+<p>Cartridge is a shopping cart application built using the <a class="reference external" href="http://djangoproject.com/">Django</a>
+framework. It is <a class="reference external" href="http://www.linfo.org/bsdlicense.html">BSD licensed</a>, and designed to provide a clean and
+simple base for developing e-commerce websites. It purposely does not
+include every conceivable feature of an e-commerce website; instead,
+Cartridge focuses on providing core features common to most e-commerce
+websites.</p>
+<p>This specific focus stems from the idea that every e-commerce website
+is different, is tailored to the particular business and products at
+hand, and should therefore be as easy to customize as possible.
+Cartridge achieves this goal with a code-base that is as simple as
+possible and implements only the core features of an e-commerce
+website.</p>
+<p>Cartridge extends the <a class="reference external" href="http://mezzanine.jupo.org/">Mezzanine</a> content management platform. A live
+demo of Cartridge can be found by visiting the <a class="reference external" href="http://mezzanine.jupo.org/">Mezzanine live demo</a>.</p>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Hierarchical categories</p></li>
+<li><p>Easily configurable product options (colours, sizes, etc.)</p></li>
+<li><p>Hooks for tax/shipping calculations and payment gateways</p></li>
+<li><p>Sale pricing</p></li>
+<li><p>Promotional discount codes</p></li>
+<li><p>PDF invoice generation (for packing slips)</p></li>
+<li><p>Stock control</p></li>
+<li><p>Product popularity</p></li>
+<li><p>Thumbnail generation</p></li>
+<li><p>Built-in test suite</p></li>
+<li><p>Separation of presentation (no embedded markup)</p></li>
+<li><p>Smart categories (by price range, colour, etc)</p></li>
+<li><p>Registered or anonymous checkout</p></li>
+<li><p>Configurable number of checkout steps</p></li>
+<li><p>Denormalised data for accessibility and performance</p></li>
+<li><p>Authenticated customer accounts with transaction history</p></li>
+</ul>
+</section>
+<section id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this heading">¶</a></h2>
+<p>Cartridge is designed as a plugin for the <a class="reference external" href="http://mezzanine.jupo.org/">Mezzanine</a> content
+management platform, and therefore requires <a class="reference external" href="http://mezzanine.jupo.org/">Mezzanine</a> to be
+installed. The integration of the two applications should occur
+automatically by following the installation instructions below.</p>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h2>
+<p>The easiest method is to install directly from PyPI using <a class="reference external" href="http://www.pip-installer.org/">pip</a> by
+running the command below, which will also install the required
+dependencies mentioned above:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install -U cartridge
+</pre></div>
+</div>
+<p>Otherwise, you can download Cartridge and install it directly from source:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python setup.py install
+</pre></div>
+</div>
+<p>Once installed, the command <code class="docutils literal notranslate"><span class="pre">mezzanine-project</span></code> can be used to
+create a new Mezzanine project, with Cartridge installed, in similar
+fashion to <code class="docutils literal notranslate"><span class="pre">django-admin.py</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mezzanine-project -a cartridge project_name
+$ cd project_name
+$ python manage.py createdb --noinput
+$ python manage.py runserver
+</pre></div>
+</div>
+<p>Here we specify the <code class="docutils literal notranslate"><span class="pre">-a</span></code> switch for the <code class="docutils literal notranslate"><span class="pre">mezzanine-project</span></code> command,
+which tells it to use an alternative package (cartridge) for the project
+template to use. Both Mezzanine and Cartridge contain a project template
+package containing the <code class="docutils literal notranslate"><span class="pre">settings.py</span></code> and <code class="docutils literal notranslate"><span class="pre">urls.py</span></code> modules for an
+initial project. If you’d like to add Cartridge to an existing Mezzanine
+or Django project, you’ll need to manually configure these yourself. See
+the <a class="reference external" href="http://mezzanine.jupo.org/docs/frequently-asked-questions.html#how-can-i-add-mezzanine-to-an-existing-django-project">FAQ section of the Mezzanine documentation</a> for more information.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">createdb</span></code> command is a shortcut for using Django’s
+<code class="docutils literal notranslate"><span class="pre">migrate</span></code> command, which will also install some demo content,
+such as a contact form, image gallery, and more. If you’d like to
+omit this step, use the <code class="docutils literal notranslate"><span class="pre">--nodata</span></code> option with <code class="docutils literal notranslate"><span class="pre">createdb</span></code>.</p>
+</div>
+<p>You should then be able to browse to <a class="reference external" href="http://127.0.0.1:8000/admin/">http://127.0.0.1:8000/admin/</a> and
+log in using the default account (<code class="docutils literal notranslate"><span class="pre">username:</span> <span class="pre">admin,</span> <span class="pre">password:</span>
+<span class="pre">default</span></code>). If you’d like to specify a different username and password
+during set up, simply exclude the <code class="docutils literal notranslate"><span class="pre">--noinput</span></code> option included above
+when running <code class="docutils literal notranslate"><span class="pre">createdb</span></code>.</p>
+</section>
+<section id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Permalink to this heading">¶</a></h2>
+<p>Cartridge is an open source project managed using both the Git and
+Mercurial version control systems. These repositories are hosted on
+both <a class="reference external" href="http://github.com/stephenmcd/cartridge/">GitHub</a> and <a class="reference external" href="http://bitbucket.org/stephenmcd/cartridge/">Bitbucket</a> respectively, so contributing is as
+easy as forking the project on either of these sites and committing
+back your enhancements.</p>
+<p>Please note the following guidelines for contributing:</p>
+<ul class="simple">
+<li><p>Contributed code must be written in the existing style. For Python
+(and to a decent extent, JavaScript as well), this is as simple as
+following the <a class="reference external" href="http://docs.djangoproject.com/en/dev/internals/contributing/#coding-style">Django coding style</a> and (most importantly)
+<a class="reference external" href="http://www.python.org/dev/peps/pep-0008/">PEP 8</a>. Front-end CSS should adhere to the
+<a class="reference external" href="https://github.com/twbs/bootstrap/blob/master/CONTRIBUTING.md#css">Bootstrap CSS guidelines</a>.</p></li>
+<li><p>Contributions must be available on a separately named branch
+based on the latest version of the main branch.</p></li>
+<li><p>Run the tests before committing your changes. If your changes
+cause the tests to break, they won’t be accepted.</p></li>
+<li><p>If you are adding new functionality, you must include basic tests
+and documentation.</p></li>
+</ul>
+<p>Here’s a quick start to hacking on Cartridge after forking it on
+GitHub, by using the internal “project_template” as your current
+project:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/your-github-username/cartridge/
+$ cd cartridge
+$ git checkout -b your-new-branch-name
+$ cp cartridge/project_template/project_name/local_settings.py{.template,}
+$ python setup.py develop
+$ python cartridge/project_template/manage.py createdb --noinput
+$ python cartridge/project_template/manage.py runserver
+
+&quot;hack hack hack&quot;
+
+$ python setup.py test
+$ git commit -am &quot;A message describing what you changed.&quot;
+$ git push origin your-new-branch-name
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Cartridge’s development branch often relies on features that exist
+in Mezzanine’s development branch, but haven’t yet made it into an
+official release. To install Mezzanine’s development version in your
+environment, run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install --upgrade git+https://github.com/stephenmcd/mezzanine.git#egg=Mezzanine
+</pre></div>
+</div>
+</div>
+</section>
+<section id="language-translations">
+<h2>Language Translations<a class="headerlink" href="#language-translations" title="Permalink to this heading">¶</a></h2>
+<p>Cartridge makes full use of translation strings, which allow Cartridge
+to be translated into multiple languages using <a class="reference external" href="https://docs.djangoproject.com/en/dev/topics/i18n/translation/">Django’s
+internationalization</a> methodology. Translations are managed on the
+<a class="reference external" href="https://www.transifex.com/projects/p/cartridge/">Transiflex</a> website but can also be submitted via <a class="reference external" href="http://github.com/stephenmcd/cartridge/">GitHub</a> or
+<a class="reference external" href="http://bitbucket.org/stephenmcd/cartridge/">Bitbucket</a>. Consult the documentation for <a class="reference external" href="https://docs.djangoproject.com/en/dev/topics/i18n/translation/">Django’s
+internationalization</a> methodology for more information on creating
+translations and using them.</p>
+</section>
+<section id="third-party-modules">
+<h2>Third-party Modules<a class="headerlink" href="#third-party-modules" title="Permalink to this heading">¶</a></h2>
+<p>The following modules have been developed outside of Cartridge. If you
+have developed a module to integrate with Mezzanine or Cartridge, and
+would like it listed in the documentation, send an email to the
+<a class="reference external" href="http://groups.google.com/group/mezzanine-users">mezzanine-users</a> mailing list. You can also add modules to the
+<a class="reference external" href="http://www.djangopackages.com/grids/g/mezzanine/">Mezzanine Grid on djangopackages.com</a>.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/henri-hulski/cartridge_braintree">cartridge_braintree</a> - Payment processor for <a class="reference external" href="https://www.braintreepayments.com/">Braintree</a>.</p></li>
+<li><p><a class="reference external" href="https://github.com/thomasWajs/cartridge-external-payment">cartridge-external-payment</a> - Allows payment on an external
+provider platform.</p></li>
+<li><p><a class="reference external" href="https://github.com/kenbolton/cartridge-tax">cartridge-tax</a> - Implements a handful of sales tax models.</p></li>
+<li><p><a class="reference external" href="https://github.com/readevalprint/cartridge-stripe">cartridge-stripe</a> - Alternative payment backend for <a class="reference external" href="https://stripe.com">Stripe</a>.</p></li>
+<li><p><a class="reference external" href="https://github.com/molokov/cartridge-pinpayments">cartridge-pinpayments</a> - <a class="reference external" href="https://pin.net.au/">PIN</a> payments integration.</p></li>
+</ul>
+</section>
+<section id="donating">
+<h2>Donating<a class="headerlink" href="#donating" title="Permalink to this heading">¶</a></h2>
+<p>If you would like to make a donation to continue development of
+Cartridge, you can do so via the <a class="reference external" href="http://mezzanine.jupo.org/">Mezzanine Project</a> website.</p>
+</section>
+<section id="support">
+<h2>Support<a class="headerlink" href="#support" title="Permalink to this heading">¶</a></h2>
+<p>To report a security issue, please send an email privately to
+<a class="reference external" href="mailto:core-team&#37;&#52;&#48;mezzaninecms&#46;com?subject=Mezzanine+Security+Issue">core-team<span>&#64;</span>mezzaninecms<span>&#46;</span>com</a>. This gives us a chance to fix the issue and
+create an official release prior to the issue being made
+public.</p>
+<p>For all other Cartridge support, the primary channel is the
+<a class="reference external" href="http://groups.google.com/group/mezzanine-users">mezzanine-users</a> mailing list. Questions, comments, and all related
+discussions take place here amongst knowledgeable members of the
+community.</p>
+<p>If you’re certain you’ve come across a bug, then please use the
+<a class="reference external" href="http://github.com/stephenmcd/cartridge/issues">GitHub issue tracker</a>. It’s crucial that enough information is
+provided to reproduce the bug. This includes things such as the
+Python stack trace generated by error pages, as well as other aspects
+of the development environment used, such as operating system,
+database, Python version, etc. If you’re not sure you’ve found a
+reproducable bug, then please try the mailing list first.</p>
+<p>Finally, feel free to drop by the <a class="reference external" href="irc://freenode.net/mezzanine">#mezzanine IRC channel</a> on
+<a class="reference external" href="http://freenode.net">Freenode</a>, for a chat!</p>
+<p>Communications in all Cartridge and Mezzanine spaces are expected to
+conform to the <a class="reference external" href="https://www.djangoproject.com/conduct/">Django Code of Conduct</a>.</p>
+</section>
+<section id="sites-using-cartridge">
+<h2>Sites Using Cartridge<a class="headerlink" href="#sites-using-cartridge" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.ripematernity.com">Ripe Maternity</a></p></li>
+<li><p><a class="reference external" href="http://shop.cottonon.com">Cotton On</a></p></li>
+<li><p><a class="reference external" href="http://store.coopers.com.au">Coopers Store</a></p></li>
+<li><p><a class="reference external" href="http://sheerethic.com">Sheer Ethic</a></p></li>
+<li><p><a class="reference external" href="http://tindie.com">tindie.com</a></p></li>
+<li><p><a class="reference external" href="http://rosslaird.com/shop">Ross A. Laird</a></p></li>
+<li><p><a class="reference external" href="http://www.pinktwig.ca/shop">Pink Twig</a></p></li>
+<li><p><a class="reference external" href="http://parfumeplanet.com">Parfume Planet</a></p></li>
+<li><p><a class="reference external" href="http://lifeisgoodforall.co.uk/">Life is Good</a></p></li>
+<li><p><a class="reference external" href="http://bldg92.org/">Brooklyn Navy Yard</a></p></li>
+<li><p><a class="reference external" href="http://asia.cottonon.com/">Cotton On Asia</a></p></li>
+<li><p><a class="reference external" href="https://manai.co.uk">Manai Glitter</a></p></li>
+<li><p><a class="reference external" href="http://tacticalbags.ru">Tactical Bags</a></p></li>
+<li><p><a class="reference external" href="http://charleskoll.com">Charles Koll Jewelry</a></p></li>
+<li><p><a class="reference external" href="http://puraforceremedies.com/">Puraforce Remedies</a></p></li>
+<li><p><a class="reference external" href="http://www.adrln.com/">Adrenaline</a></p></li>
+<li><p><a class="reference external" href="http://thepeculiarstore.com">The Peculiar Store</a></p></li>
+<li><p><a class="reference external" href="http://www.kisanhub.com/">KisanHub</a></p></li>
+<li><p><a class="reference external" href="http://kegbot.org">Kegbot</a></p></li>
+<li><p><a class="reference external" href="http://www.amblitec.com">Amblitec</a></p></li>
+<li><p><a class="reference external" href="http://www.zigzagbags.com.au">ZigZag Bags</a></p></li>
+<li><p><a class="reference external" href="http://www.jnkbows.com">Justine &amp; Katie’s Bowtique</a></p></li>
+<li><p><a class="reference external" href="http://www.theartrebellion.com/">The Art Rebellion</a></p></li>
+<li><p><a class="reference external" href="https://www.engineeredarts.co.uk">Engineered Arts</a></p></li>
+<li><p><a class="reference external" href="https://lipmanart.com/">Lipman Art</a></p></li>
+<li><p><a class="reference external" href="https://www.zhackers.com">ZHackers</a></p></li>
+<li><p><a class="reference external" href="http://potrilloalpie.com/">Potrillo al Pie</a></p></li>
+<li><p><a class="reference external" href="http://you-name-it.net">You Name It</a></p></li>
+<li><p><a class="reference external" href="https://www.wfsltd.com.au">Warwick Friendly Society Pharmacies</a></p></li>
+</ul>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Overview</a><ul>
+<li><a class="reference internal" href="#features">Features</a></li>
+<li><a class="reference internal" href="#dependencies">Dependencies</a></li>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#contributing">Contributing</a></li>
+<li><a class="reference internal" href="#language-translations">Language Translations</a></li>
+<li><a class="reference internal" href="#third-party-modules">Third-party Modules</a></li>
+<li><a class="reference internal" href="#donating">Donating</a></li>
+<li><a class="reference internal" href="#support">Support</a></li>
+<li><a class="reference internal" href="#sites-using-cartridge">Sites Using Cartridge</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="index.html"
+                          title="previous chapter">Cartridge</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="components.html"
+                          title="next chapter">Components</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/overview.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="components.html" title="Components"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Cartridge"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Cartridge 1.3.4 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Overview</a></li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2009 - 2022, Stephen McDonald.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+    </div>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-52596-13']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+  </body>
+</html>

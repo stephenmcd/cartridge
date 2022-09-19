@@ -1,0 +1,409 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Components &#8212; Cartridge 1.3.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mezzanine.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Integration" href="integration.html" />
+    <link rel="prev" title="Overview" href="overview.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="integration.html" title="Integration"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="overview.html" title="Overview"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Cartridge 1.3.4 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Components</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="components">
+<h1>Components<a class="headerlink" href="#components" title="Permalink to this heading">¶</a></h1>
+<p>The following section describes the various components of Cartridge and the Django models used.</p>
+<section id="categories">
+<h2>Categories<a class="headerlink" href="#categories" title="Permalink to this heading">¶</a></h2>
+<p>A category is the main approach for displaying products on the website.
+Categories in Cartridge are implemented as Mezzanine pages. Consult the
+<a class="reference external" href="http://mezzanine.jupo.org/docs/content-architecture.html#the-page-model">Mezzanine documentation</a> for a detailed overview of how pages are implemented in Mezzanine.</p>
+</section>
+<section id="products">
+<h2>Products<a class="headerlink" href="#products" title="Permalink to this heading">¶</a></h2>
+<p>Products are the cornerstone of Cartridge and are made up from three
+separate models. First, the model <code class="docutils literal notranslate"><span class="pre">Product</span></code> provides the container for
+storing the core attributes of a product. The other two models are
+<code class="docutils literal notranslate"><span class="pre">ProductImage</span></code> and <code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> which each contain a
+ForeignKeyField to <code class="docutils literal notranslate"><span class="pre">Product</span></code> and can be accessed via <code class="docutils literal notranslate"><span class="pre">Product.images</span></code>
+and <code class="docutils literal notranslate"><span class="pre">Product.variations</span></code> respectively.</p>
+<p>As with the <code class="docutils literal notranslate"><span class="pre">Category</span></code> model, the <code class="docutils literal notranslate"><span class="pre">Product</span></code> model inherits from the
+abstract model <code class="docutils literal notranslate"><span class="pre">Displayable</span></code>, which provides the model with features such as a URL/slug, and publish dates. It also inherits from the abstract model
+<code class="docutils literal notranslate"><span class="pre">Priced</span></code> which is discussed next. The fields provided by the <code class="docutils literal notranslate"><span class="pre">Priced</span></code>
+model are not editable via the admin. The rationale for this is discussed
+later in <a class="reference internal" href="#ref-denormalized-fields"><span class="std std-ref">Denormalized Fields</span></a>.</p>
+<section id="creating-custom-product-types">
+<h3>Creating Custom Product Types<a class="headerlink" href="#creating-custom-product-types" title="Permalink to this heading">¶</a></h3>
+<p>Sometimes it is helpful to subclass <code class="docutils literal notranslate"><span class="pre">Product</span></code> to create your own product types.</p>
+<blockquote>
+<div><p># models.py
+from django.db import models
+from cartridge.shop.models import Product</p>
+<dl class="simple">
+<dt>class MyProduct(Product):</dt><dd><p>my_field = models.CharField(max_length=60)</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>Don’t forget to register your subclass in the admin, or it will not be a
+selectable product type. Your simplest option is to just use <code class="docutils literal notranslate"><span class="pre">ProductAdmin</span></code>.</p>
+<blockquote>
+<div><p># admin.py
+from django.contrib import admin
+from cartridge.shop.admin import ProductAdmin
+from .models import MyProduct</p>
+<p>admin.site.register(MyProduct, ProductAdmin)</p>
+</div></blockquote>
+<p>One additional feature of note is optional custom product templates. You may
+create a template <code class="docutils literal notranslate"><span class="pre">shop/products/myproduct.html</span></code> to override
+<code class="docutils literal notranslate"><span class="pre">shop/product.html</span></code> for each particular custom product.</p>
+<p>For further details, see the <a class="reference external" href="http://mezzanine.jupo.org/docs/content-architecture.html#the-page-model">Mezzanine documentation</a> on
+subclassing <code class="docutils literal notranslate"><span class="pre">Page</span></code>, the mechanics of which are very similar.</p>
+</section>
+<section id="priced-items">
+<span id="ref-priced-items"></span><h3>Priced Items<a class="headerlink" href="#priced-items" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">Priced</span></code> abstract model provides common features for an item that
+has a price. It contains fields such as <code class="docutils literal notranslate"><span class="pre">Priced.unit_price</span></code> for the base
+price and three fields that control whether the given item is on sale:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Priced.sale_price</span></code> for the sale price</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Priced.sale_from</span></code> DateTimeField for the start of the sale</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Priced.sale_to</span></code> DateTimeField for the end of the sale</p></li>
+</ul>
+</div></blockquote>
+<p>The <code class="docutils literal notranslate"><span class="pre">Priced</span></code> model also contains several convenience methods:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Priced.on_sale()</span></code> for checking whether the current price is a sale price</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Priced.has_price()</span></code> for checking whether there is a current price at all</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Priced.price()</span></code> which returns the current price of either <code class="docutils literal notranslate"><span class="pre">Priced.unit_price</span></code> or <code class="docutils literal notranslate"><span class="pre">Priced.sale_price</span></code> if applicable</p></li>
+</ul>
+</div></blockquote>
+<p>The <code class="docutils literal notranslate"><span class="pre">Priced</span></code> abstract model is inherited by the <code class="docutils literal notranslate"><span class="pre">Product</span></code> model
+previously discussed and the <code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> model discussed next.</p>
+</section>
+<section id="product-variations">
+<h3>Product Variations<a class="headerlink" href="#product-variations" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> model represents a unique combination of options
+for a product. Consider a shirt that comes in two colours and three sizes:
+these combinations would be represented with a single <code class="docutils literal notranslate"><span class="pre">Product</span></code> instance for the shirt
+and six <code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> instances: one for each colour/size combination.
+These options are discussed below in <a class="reference internal" href="#ref-product-options"><span class="std std-ref">Product Options</span></a>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> model is editable via the admin as the inline
+<code class="docutils literal notranslate"><span class="pre">ProductVariationAdmin</span></code> for the <code class="docutils literal notranslate"><span class="pre">ProductAdmin</span></code> admin; however, the
+attribute <code class="docutils literal notranslate"><span class="pre">ProductVariationAdmin.extra</span></code> is set to <code class="docutils literal notranslate"><span class="pre">0</span></code> and therefore
+<code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> instances cannot be added via the admin. Instead, when
+editing <code class="docutils literal notranslate"><span class="pre">Product</span></code> instances via the admin, a list of check-boxes is
+provided with the form, for each type of option available such as colour
+and size, with a check-box provided for each individual option.
+When the <code class="docutils literal notranslate"><span class="pre">Product</span></code> instance is saved, a set of related <code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code>
+instances will be created for each combination of options that are checked.
+If no options are selected when creating a new <code class="docutils literal notranslate"><span class="pre">Product</span></code> instance, then
+a single <code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> instance will be created without any
+associated options. This means that a <code class="docutils literal notranslate"><span class="pre">Product</span></code> instances will <em>always</em>
+contains at least one related <code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> instance. All of this
+occurs via the <code class="docutils literal notranslate"><span class="pre">ProductAdmin.save_formset()</span></code> method and shows that the
+process of creating a new <code class="docutils literal notranslate"><span class="pre">Product</span></code> instance will always require two
+steps: first, creating the <code class="docutils literal notranslate"><span class="pre">Product</span></code> instance with its core attributes; and
+second, entering values for one or more related <code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code>
+instances that are automatically created for each combination of options.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> model is dynamically constructed from the abstract
+model <code class="docutils literal notranslate"><span class="pre">BaseProductVariation</span></code> which defines all of the functionality
+discussed in this section, but for convenience is referred to as the
+<code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> model. The process of dynamically constructing the
+<code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> model exists in order to create an OptionField for
+each of the types of configured options such as colour or size. Like the
+<code class="docutils literal notranslate"><span class="pre">Product</span></code> model, the <code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> model inherits from the
+abstract model <code class="docutils literal notranslate"><span class="pre">Priced</span></code>. However, the fields provided by the <code class="docutils literal notranslate"><span class="pre">Priced</span></code>
+model in this case are editable in the admin via the inline admin
+<code class="docutils literal notranslate"><span class="pre">ProductVariationAdmin</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> model also contains an <a class="reference external" href="http://en.wikipedia.org/wiki/Stock-keeping_unit">SKUField</a> <code class="docutils literal notranslate"><span class="pre">ProductVariation.sku</span></code>,
+which must be unique, and a ForeignKeyField <code class="docutils literal notranslate"><span class="pre">ProductVariation.image</span></code>
+which allows a <code class="docutils literal notranslate"><span class="pre">ProductImage</span></code> instance to optionally be related to the
+<code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> instance.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> model also contains a BooleanField
+<code class="docutils literal notranslate"><span class="pre">ProductVariation.default</span></code> which is used to specify which
+<code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> instance to use when displaying the related
+<code class="docutils literal notranslate"><span class="pre">Product</span></code> instance on the site. Only one <code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> instance
+can have this field set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, and this constraint is managed within
+the <code class="docutils literal notranslate"><span class="pre">ProductAdmin.save_formset()</span></code> method referred to above.</p>
+</section>
+<section id="product-images">
+<h3>Product Images<a class="headerlink" href="#product-images" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">ProductImage</span></code> model is a simple container for storing an image
+file against a related <code class="docutils literal notranslate"><span class="pre">Product</span></code> instance. It contains an ImageField
+<code class="docutils literal notranslate"><span class="pre">ProductImage.file</span></code> and a CharField <code class="docutils literal notranslate"><span class="pre">ProductImage.description</span></code> which
+gives the image a meaningful description. The description provides a means
+of identifying the image so that it can be easily selected as the related
+image for the <code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> model which contains a nullable
+(optional) reference to the <code class="docutils literal notranslate"><span class="pre">ProductImage</span></code> model via the ForeignKeyField
+<code class="docutils literal notranslate"><span class="pre">ProductVariation.image</span></code>.</p>
+</section>
+<section id="denormalized-fields">
+<span id="ref-denormalized-fields"></span><h3>Denormalized Fields<a class="headerlink" href="#denormalized-fields" title="Permalink to this heading">¶</a></h3>
+<p>Certain fields are duplicated for the <code class="docutils literal notranslate"><span class="pre">Product</span></code> model in order to avoid
+querying the database for <code class="docutils literal notranslate"><span class="pre">ProductImage</span></code> and <code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code>
+instances when a large number of products are being iterated through on the
+site and the product’s image or price need to be displayed. These duplicate fields
+are provided by the <code class="docutils literal notranslate"><span class="pre">Priced</span></code> abstract model from which both the <code class="docutils literal notranslate"><span class="pre">Product</span></code>
+and <code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> models inherit, as well a CharField
+<code class="docutils literal notranslate"><span class="pre">Product.image</span></code> which stores the location of the image in the related
+<code class="docutils literal notranslate"><span class="pre">ProductImage</span></code> instance that is determined to be the default for display.
+The values for these fields are set for the <code class="docutils literal notranslate"><span class="pre">Product</span></code> instance when the
+<code class="docutils literal notranslate"><span class="pre">ProductAdmin.save_formset()</span></code> method is run as referred to above. The
+<code class="docutils literal notranslate"><span class="pre">ProductVariation.default</span></code> field is used to determine which
+<code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> instance’s <code class="docutils literal notranslate"><span class="pre">Priced</span></code> fields are duplicated. The
+<code class="docutils literal notranslate"><span class="pre">ProductImage</span></code> related to the <code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> instance is used for
+the <code class="docutils literal notranslate"><span class="pre">Product.image</span></code> field if selected; otherwise, the first
+<code class="docutils literal notranslate"><span class="pre">ProductImage</span></code> instance related to the <code class="docutils literal notranslate"><span class="pre">Product</span></code> instance is used.</p>
+</section>
+<section id="product-options">
+<span id="ref-product-options"></span><h3>Product Options<a class="headerlink" href="#product-options" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">ProductOption</span></code> model provides a simple type and name for a
+selectable option for a <code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> instance (for example, Size:
+Small or Colour: Red). For performance and simplicity, these options don’t
+use a model relationship with the <code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> model but simply
+store the pool of available options. The configuration of available types
+such as colour and size is discussed in the section <a class="reference internal" href="configuration.html#ref-configuration"><span class="std std-ref">Configuration</span></a>.</p>
+</section>
+</section>
+<section id="discounts">
+<h2>Discounts<a class="headerlink" href="#discounts" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">Discount</span></code> abstract model provides common features for the reduction
+of a price. It contains fields for three types of discounts:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Discount.discount_deduct</span></code> for reducing by an amount</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Discount.discount_percent</span></code> for reducing by a percent</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Discount.discount_exact</span></code> for reducing to an amount</p></li>
+</ul>
+</div></blockquote>
+<p>The <code class="docutils literal notranslate"><span class="pre">Discount</span></code> model also contains a DateTimeField <code class="docutils literal notranslate"><span class="pre">Discount.valid_from</span></code>
+and a DateTimeField <code class="docutils literal notranslate"><span class="pre">Discount.valid_to</span></code>, which together define the start
+and end dates of the discount, and a ManyToManyField <code class="docutils literal notranslate"><span class="pre">Discount.categories</span></code>
+and a ManyToManyField <code class="docutils literal notranslate"><span class="pre">Discount.products</span></code>, which together define the
+applicable <code class="docutils literal notranslate"><span class="pre">Category</span></code> and <code class="docutils literal notranslate"><span class="pre">Product</span></code> instances for which the discount is applicable.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Discount</span></code> abstract model is inherited by the <code class="docutils literal notranslate"><span class="pre">DiscountCode</span></code> and
+<code class="docutils literal notranslate"><span class="pre">Sale</span></code> models discussed next.</p>
+<section id="discount-codes">
+<h3>Discount Codes<a class="headerlink" href="#discount-codes" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">DiscountCode</span></code> model provides a way for managing promotional codes
+that a customer can enter during the checkout process to receive a discount
+on an order. The <code class="docutils literal notranslate"><span class="pre">DiscountCode</span></code> model inherits from the <code class="docutils literal notranslate"><span class="pre">Discount</span></code>
+abstract model as referred to above and also contains fields such as
+<code class="docutils literal notranslate"><span class="pre">DiscountCode.code</span></code> for the promotional code to be entered,
+<code class="docutils literal notranslate"><span class="pre">DiscountCode.min_purchase</span></code> for specifying a minimum order total
+required for applying the discount, and a BooleanField
+<code class="docutils literal notranslate"><span class="pre">DiscountCode.free_shipping</span></code> which can be checked to provide free
+shipping for the discount code.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Discounts are applied to individual cart items when the discount code
+is assigned to one or more products (individually or by category) in the
+cart. If the discount code is not assigned to any products, the discount will be applied to the entire cart.</p>
+</div>
+</section>
+<section id="sales">
+<h3>Sales<a class="headerlink" href="#sales" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">Sale</span></code> model provides a way for managing discounts across
+selections of <code class="docutils literal notranslate"><span class="pre">Product</span></code> instances. Like the <code class="docutils literal notranslate"><span class="pre">DiscountCode</span></code> model, the
+<code class="docutils literal notranslate"><span class="pre">Sale</span></code> model inherits from the abstract model <code class="docutils literal notranslate"><span class="pre">Discount</span></code>; however, the
+<code class="docutils literal notranslate"><span class="pre">Sale</span></code> model does not provide any extra fields. Instead it acts as a bulk
+update tool such that when a <code class="docutils literal notranslate"><span class="pre">Sale</span></code> instance is created or updated, it
+modifies the <code class="docutils literal notranslate"><span class="pre">Product</span></code> and related <code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> instances
+according to the selections made for <code class="docutils literal notranslate"><span class="pre">Sale.categories</span></code> and
+<code class="docutils literal notranslate"><span class="pre">Sales.products</span></code>. When this occurs, the various sale fields discussed in
+<a class="reference internal" href="#ref-priced-items"><span class="std std-ref">Priced Items</span></a> such as <code class="docutils literal notranslate"><span class="pre">Priced.sale_price</span></code>, <code class="docutils literal notranslate"><span class="pre">Priced.sale_from</span></code>
+and  <code class="docutils literal notranslate"><span class="pre">Priced.sale_to</span></code> are updated according to the type of discount given
+for either <code class="docutils literal notranslate"><span class="pre">Sale.discount_deduct</span></code>, <code class="docutils literal notranslate"><span class="pre">Sale.discount_percent</span></code> or
+<code class="docutils literal notranslate"><span class="pre">Sale.discount_exact</span></code>, and the dates given for <code class="docutils literal notranslate"><span class="pre">Sale.valid_from</span></code> and
+<code class="docutils literal notranslate"><span class="pre">Sale.valid_to</span></code> respectively. <code class="docutils literal notranslate"><span class="pre">Sale.id</span></code> is also stored against
+<code class="docutils literal notranslate"><span class="pre">Product</span></code> and related <code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> instance such that if the
+<code class="docutils literal notranslate"><span class="pre">Sale</span></code> instance is updated or deleted the <code class="docutils literal notranslate"><span class="pre">Product</span></code> and related
+<code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> instances are updated with the relevant fields removed.
+This process occurs within the <code class="docutils literal notranslate"><span class="pre">Sale._clear()</span></code> method, which is called in
+both the <code class="docutils literal notranslate"><span class="pre">Sale.save()</span></code> and <code class="docutils literal notranslate"><span class="pre">Sale.delete()</span></code> methods.</p>
+<p>This goal of this architecture is to decouple the sale information for
+each <code class="docutils literal notranslate"><span class="pre">Product</span></code> instance from the actual <code class="docutils literal notranslate"><span class="pre">Sale</span></code> instance so that no
+database querying is required in order to display sale information for a
+<code class="docutils literal notranslate"><span class="pre">Product</span></code> instance.</p>
+</section>
+</section>
+<section id="carts">
+<h2>Carts<a class="headerlink" href="#carts" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">Cart</span></code> and related <code class="docutils literal notranslate"><span class="pre">CartItem</span></code> models represent a customer’s
+shopping cart. The <code class="docutils literal notranslate"><span class="pre">Cart</span></code> model provides the container for storing each
+<code class="docutils literal notranslate"><span class="pre">CartItem</span></code> instance. This model contains a customer manager <code class="docutils literal notranslate"><span class="pre">CartManager</span></code> which
+is assigned to <code class="docutils literal notranslate"><span class="pre">Cart.objects</span></code>. The <code class="docutils literal notranslate"><span class="pre">CartManager</span></code> contains the method
+<code class="docutils literal notranslate"><span class="pre">CartManager.from_request()</span></code> which, when given a request object, is
+responsible for creating a <code class="docutils literal notranslate"><span class="pre">Cart</span></code> instance and maintaining it across the
+session.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Cart</span></code> model contains the methods <code class="docutils literal notranslate"><span class="pre">Cart.add_item()</span></code> and
+<code class="docutils literal notranslate"><span class="pre">Cart.remove_item()</span></code> for modifying the cart, and also contains several
+convenience methods for use in templates that deal with the related
+<code class="docutils literal notranslate"><span class="pre">CartItem</span></code> instances, so as to avoid querying the database multiple times:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Cart.has_items()</span></code> for checking if the <code class="docutils literal notranslate"><span class="pre">Cart</span></code> instance has related <code class="docutils literal notranslate"><span class="pre">CartItem</span></code> instances</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Cart.total_quantity()</span></code> for retrieving the total quantity of all the related <code class="docutils literal notranslate"><span class="pre">CartItem</span></code> instances</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Cart.total_price()</span></code> for retrieving the total price of all the related <code class="docutils literal notranslate"><span class="pre">CartItem</span></code> instances</p></li>
+</ul>
+</div></blockquote>
+<p>The <code class="docutils literal notranslate"><span class="pre">CartItem</span></code> model represents each unique product in the customer’s <code class="docutils literal notranslate"><span class="pre">Cart</span></code> instance and inherits from the <code class="docutils literal notranslate"><span class="pre">SelectedProduct</span></code> abstract model discussed next.</p>
+<section id="selected-products">
+<h3>Selected Products<a class="headerlink" href="#selected-products" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">SelectedProduct</span></code> abstract model represents a unique product and set
+of selected options that has been selected by a customer. The
+<code class="docutils literal notranslate"><span class="pre">SelectedProduct</span></code> model is inherited by the <code class="docutils literal notranslate"><span class="pre">CartItem</span></code> model previously
+discussed and the <code class="docutils literal notranslate"><span class="pre">OrderItem</span></code> model discussed next.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">SelectedProduct</span></code> abstract model acts as a snapshot of a
+<code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> instance in that it does not contain a direct
+reference to the <code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> instance but rather copies information
+from it when the <code class="docutils literal notranslate"><span class="pre">SelectedProduct</span></code> instance is created. This is to ensure
+that any changes made to a <code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> instance do not affect
+existing <code class="docutils literal notranslate"><span class="pre">SelectedProduct</span></code> instances. The <code class="docutils literal notranslate"><span class="pre">SelectedProduct</span></code> model
+contains fields such as <code class="docutils literal notranslate"><span class="pre">SelectedProduct.sku</span></code>,
+<code class="docutils literal notranslate"><span class="pre">SelectedProduct.unit_price</span></code> and <code class="docutils literal notranslate"><span class="pre">SelectedProduct.description</span></code>, all of
+which are copied from the <code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> instance at creation time, with the <code class="docutils literal notranslate"><span class="pre">SelectedProduct.description</span></code> being created from the
+<code class="docutils literal notranslate"><span class="pre">ProductVariation</span></code> instances’s related <code class="docutils literal notranslate"><span class="pre">Product.title</span></code> as well as the
+selected options for the <code class="docutils literal notranslate"><span class="pre">SelectedProduct</span></code> instance. The
+<code class="docutils literal notranslate"><span class="pre">SelectedProduct</span></code> model also contains the IntegerField
+<code class="docutils literal notranslate"><span class="pre">SelectedProduct.quantity</span></code> for storing the selected quantity.</p>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Components</a><ul>
+<li><a class="reference internal" href="#categories">Categories</a></li>
+<li><a class="reference internal" href="#products">Products</a><ul>
+<li><a class="reference internal" href="#creating-custom-product-types">Creating Custom Product Types</a></li>
+<li><a class="reference internal" href="#priced-items">Priced Items</a></li>
+<li><a class="reference internal" href="#product-variations">Product Variations</a></li>
+<li><a class="reference internal" href="#product-images">Product Images</a></li>
+<li><a class="reference internal" href="#denormalized-fields">Denormalized Fields</a></li>
+<li><a class="reference internal" href="#product-options">Product Options</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#discounts">Discounts</a><ul>
+<li><a class="reference internal" href="#discount-codes">Discount Codes</a></li>
+<li><a class="reference internal" href="#sales">Sales</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#carts">Carts</a><ul>
+<li><a class="reference internal" href="#selected-products">Selected Products</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="overview.html"
+                          title="previous chapter">Overview</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="integration.html"
+                          title="next chapter">Integration</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/components.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="integration.html" title="Integration"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="overview.html" title="Overview"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Cartridge 1.3.4 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Components</a></li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2009 - 2022, Stephen McDonald.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+    </div>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-52596-13']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+  </body>
+</html>

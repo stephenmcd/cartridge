@@ -1,0 +1,322 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Configuration &#8212; Cartridge 1.3.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mezzanine.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Model Graph" href="model-graph.html" />
+    <link rel="prev" title="Integration" href="integration.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="model-graph.html" title="Model Graph"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="integration.html" title="Integration"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Cartridge 1.3.4 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Configuration</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="configuration">
+<span id="ref-configuration"></span><h1>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading">¶</a></h1>
+<p>The following section lists each of the settings that can be configured
+within Cartridge. Each setting is registered using the <code class="docutils literal notranslate"><span class="pre">mezzanine.conf</span></code>
+module which is discussed in
+<a class="reference external" href="http://mezzanine.jupo.org/docs/configuration.html">Mezzanine’s Configuration</a>.</p>
+<section id="default-settings">
+<h2>Default Settings<a class="headerlink" href="#default-settings" title="Permalink to this heading">¶</a></h2>
+<p>Cartridge defines the following settings:</p>
+<section id="shop-card-types">
+<span id="id1"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_CARD_TYPES</span></code><a class="headerlink" href="#shop-card-types" title="Permalink to this heading">¶</a></h3>
+<p>Sequence of available credit card types for payment.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">('Mastercard',</span> <span class="pre">'Visa',</span> <span class="pre">'Diners',</span> <span class="pre">'Amex')</span></code></p>
+</section>
+<section id="shop-cart-expiry-minutes">
+<span id="id2"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_CART_EXPIRY_MINUTES</span></code><a class="headerlink" href="#shop-cart-expiry-minutes" title="Permalink to this heading">¶</a></h3>
+<p>Number of minutes of inactivity until carts are abandoned.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">30</span></code></p>
+</section>
+<section id="shop-category-use-featured-image">
+<span id="id3"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_CATEGORY_USE_FEATURED_IMAGE</span></code><a class="headerlink" href="#shop-category-use-featured-image" title="Permalink to this heading">¶</a></h3>
+<p>Enable featured images in shop categories</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">False</span></code></p>
+</section>
+<section id="shop-checkout-account-required">
+<span id="id4"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_CHECKOUT_ACCOUNT_REQUIRED</span></code><a class="headerlink" href="#shop-checkout-account-required" title="Permalink to this heading">¶</a></h3>
+<p>If True, users must create a login for the checkout process.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">False</span></code></p>
+</section>
+<section id="shop-checkout-steps-confirmation">
+<span id="id5"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_CHECKOUT_STEPS_CONFIRMATION</span></code><a class="headerlink" href="#shop-checkout-steps-confirmation" title="Permalink to this heading">¶</a></h3>
+<p>If True, the checkout process has a final confirmation step before completion.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></p>
+</section>
+<section id="shop-checkout-steps-split">
+<span id="id6"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_CHECKOUT_STEPS_SPLIT</span></code><a class="headerlink" href="#shop-checkout-steps-split" title="Permalink to this heading">¶</a></h3>
+<p>If True, the checkout process is split into separate billing/shipping and payment steps.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></p>
+</section>
+<section id="shop-currency-locale">
+<span id="id7"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_CURRENCY_LOCALE</span></code><a class="headerlink" href="#shop-currency-locale" title="Permalink to this heading">¶</a></h3>
+<p>Controls the formatting of monetary values according to the locale module in the python standard library. If an empty string is used, will fall back to the system’s locale.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">''</span></code></p>
+</section>
+<section id="shop-default-shipping-value">
+<span id="id8"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_DEFAULT_SHIPPING_VALUE</span></code><a class="headerlink" href="#shop-default-shipping-value" title="Permalink to this heading">¶</a></h3>
+<p>Default cost of shipping when no custom shipping is implemented.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">10.0</span></code></p>
+</section>
+<section id="shop-default-tax-rate">
+<span id="id9"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_DEFAULT_TAX_RATE</span></code><a class="headerlink" href="#shop-default-tax-rate" title="Permalink to this heading">¶</a></h3>
+<p>Default tax rate in % when no custom tax handling is implemented.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">0.0</span></code></p>
+</section>
+<section id="shop-discount-field-in-cart">
+<span id="id10"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_DISCOUNT_FIELD_IN_CART</span></code><a class="headerlink" href="#shop-discount-field-in-cart" title="Permalink to this heading">¶</a></h3>
+<p>Discount codes can be entered on the cart page.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></p>
+</section>
+<section id="shop-discount-field-in-checkout">
+<span id="id11"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_DISCOUNT_FIELD_IN_CHECKOUT</span></code><a class="headerlink" href="#shop-discount-field-in-checkout" title="Permalink to this heading">¶</a></h3>
+<p>Discount codes can be entered on the first checkout step.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></p>
+</section>
+<section id="shop-handler-billing-shipping">
+<span id="id12"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_HANDLER_BILLING_SHIPPING</span></code><a class="headerlink" href="#shop-handler-billing-shipping" title="Permalink to this heading">¶</a></h3>
+<p>Dotted package path and class name of the function called upon submission of the billing/shipping checkout step. This is where shipping calculations can be performed and set using the function <code class="docutils literal notranslate"><span class="pre">cartridge.shop.utils.set_shipping</span></code>.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">'cartridge.shop.checkout.default_billship_handler'</span></code></p>
+</section>
+<section id="shop-handler-order">
+<span id="id13"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_HANDLER_ORDER</span></code><a class="headerlink" href="#shop-handler-order" title="Permalink to this heading">¶</a></h3>
+<p>Dotted package path and class name of the function that is called once an order is successful and all of the order object’s data has been created. This is where any custom order processing should be implemented.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">'cartridge.shop.checkout.default_order_handler'</span></code></p>
+</section>
+<section id="shop-handler-payment">
+<span id="id14"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_HANDLER_PAYMENT</span></code><a class="headerlink" href="#shop-handler-payment" title="Permalink to this heading">¶</a></h3>
+<p>Dotted package path and class name of the function that is called upon submission of the payment checkout step. This is where integration with a payment gateway should be implemented.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">'cartridge.shop.checkout.default_payment_handler'</span></code></p>
+</section>
+<section id="shop-handler-tax">
+<span id="id15"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_HANDLER_TAX</span></code><a class="headerlink" href="#shop-handler-tax" title="Permalink to this heading">¶</a></h3>
+<p>Dotted package path and class name of the function called upon submission of the billing/shipping checkout step. This is where tax calculations can be performed and set using the function <code class="docutils literal notranslate"><span class="pre">cartridge.shop.utils.set_tax</span></code>.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">'cartridge.shop.checkout.default_tax_handler'</span></code></p>
+</section>
+<section id="shop-option-admin-order">
+<span id="id16"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_OPTION_ADMIN_ORDER</span></code><a class="headerlink" href="#shop-option-admin-order" title="Permalink to this heading">¶</a></h3>
+<p>Sequence of indexes from the <code class="docutils literal notranslate"><span class="pre">SHOP_OPTION_TYPE_CHOICES</span></code> setting that control how the options should be ordered in the admin, eg given the default for <code class="docutils literal notranslate"><span class="pre">SHOP_OPTION_ADMIN_ORDER</span></code>, to order by Colour then Size we’d use (2, 1)</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">()</span></code></p>
+</section>
+<section id="shop-option-type-choices">
+<span id="id17"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_OPTION_TYPE_CHOICES</span></code><a class="headerlink" href="#shop-option-type-choices" title="Permalink to this heading">¶</a></h3>
+<p>Sequence of value/name pairs for types of product options (e.g. Size, Colour).</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">((1,</span> <span class="pre">'Size'),</span> <span class="pre">(2,</span> <span class="pre">'Colour'))</span></code></p>
+</section>
+<section id="shop-order-email-bcc">
+<span id="id18"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_ORDER_EMAIL_BCC</span></code><a class="headerlink" href="#shop-order-email-bcc" title="Permalink to this heading">¶</a></h3>
+<p>All order receipts will be BCCd to this address.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">''</span></code></p>
+</section>
+<section id="shop-order-email-subject">
+<span id="id19"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_ORDER_EMAIL_SUBJECT</span></code><a class="headerlink" href="#shop-order-email-subject" title="Permalink to this heading">¶</a></h3>
+<p>Subject to be used when sending the order receipt email.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">'Order</span> <span class="pre">Receipt'</span></code></p>
+</section>
+<section id="shop-order-from-email">
+<span id="id20"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_ORDER_FROM_EMAIL</span></code><a class="headerlink" href="#shop-order-from-email" title="Permalink to this heading">¶</a></h3>
+<p>Email address from which order receipts should be emailed.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">[dynamic]</span></code></p>
+</section>
+<section id="shop-order-status-choices">
+<span id="id21"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_ORDER_STATUS_CHOICES</span></code><a class="headerlink" href="#shop-order-status-choices" title="Permalink to this heading">¶</a></h3>
+<p>Sequence of value/name pairs for order statuses.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">((1,</span> <span class="pre">'Unprocessed'),</span> <span class="pre">(2,</span> <span class="pre">'Processed'))</span></code></p>
+</section>
+<section id="shop-payment-step-enabled">
+<span id="id22"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_PAYMENT_STEP_ENABLED</span></code><a class="headerlink" href="#shop-payment-step-enabled" title="Permalink to this heading">¶</a></h3>
+<p>If False, there is no payment step on the checkout process.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></p>
+</section>
+<section id="shop-per-page-category">
+<span id="id23"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_PER_PAGE_CATEGORY</span></code><a class="headerlink" href="#shop-per-page-category" title="Permalink to this heading">¶</a></h3>
+<p>Number of products to display per category page.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">12</span></code></p>
+</section>
+<section id="shop-product-sort-options">
+<span id="id24"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_PRODUCT_SORT_OPTIONS</span></code><a class="headerlink" href="#shop-product-sort-options" title="Permalink to this heading">¶</a></h3>
+<p>Sequence of description/field+direction pairs defining the options available for sorting a list of products.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">(('Recently</span> <span class="pre">added',</span> <span class="pre">'-date_added'),</span> <span class="pre">('Highest</span> <span class="pre">rated',</span> <span class="pre">'-rating_average'),</span> <span class="pre">('Least</span> <span class="pre">expensive',</span> <span class="pre">'unit_price'),</span> <span class="pre">('Most</span> <span class="pre">expensive',</span> <span class="pre">'-unit_price'))</span></code></p>
+</section>
+<section id="shop-tax-included">
+<span id="id25"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_TAX_INCLUDED</span></code><a class="headerlink" href="#shop-tax-included" title="Permalink to this heading">¶</a></h3>
+<p>If True, tax is already included in a product’s price.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">False</span></code></p>
+</section>
+<section id="shop-use-ratings">
+<span id="id26"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_USE_RATINGS</span></code><a class="headerlink" href="#shop-use-ratings" title="Permalink to this heading">¶</a></h3>
+<p>Show the product rating form, and allow browsing by rating.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></p>
+</section>
+<section id="shop-use-related-products">
+<span id="id27"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_USE_RELATED_PRODUCTS</span></code><a class="headerlink" href="#shop-use-related-products" title="Permalink to this heading">¶</a></h3>
+<p>Show related products in templates, and allow editing them in the admin.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></p>
+</section>
+<section id="shop-use-upsell-products">
+<span id="id28"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_USE_UPSELL_PRODUCTS</span></code><a class="headerlink" href="#shop-use-upsell-products" title="Permalink to this heading">¶</a></h3>
+<p>Show upsell products in templates, and allow editing them in the admin.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></p>
+</section>
+<section id="shop-use-variations">
+<span id="id29"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_USE_VARIATIONS</span></code><a class="headerlink" href="#shop-use-variations" title="Permalink to this heading">¶</a></h3>
+<p>Use product variations.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></p>
+</section>
+<section id="shop-use-wishlist">
+<span id="id30"></span><h3><code class="docutils literal notranslate"><span class="pre">SHOP_USE_WISHLIST</span></code><a class="headerlink" href="#shop-use-wishlist" title="Permalink to this heading">¶</a></h3>
+<p>Show the links to the wishlist, and allow adding products to it.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></p>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Configuration</a><ul>
+<li><a class="reference internal" href="#default-settings">Default Settings</a><ul>
+<li><a class="reference internal" href="#shop-card-types"><code class="docutils literal notranslate"><span class="pre">SHOP_CARD_TYPES</span></code></a></li>
+<li><a class="reference internal" href="#shop-cart-expiry-minutes"><code class="docutils literal notranslate"><span class="pre">SHOP_CART_EXPIRY_MINUTES</span></code></a></li>
+<li><a class="reference internal" href="#shop-category-use-featured-image"><code class="docutils literal notranslate"><span class="pre">SHOP_CATEGORY_USE_FEATURED_IMAGE</span></code></a></li>
+<li><a class="reference internal" href="#shop-checkout-account-required"><code class="docutils literal notranslate"><span class="pre">SHOP_CHECKOUT_ACCOUNT_REQUIRED</span></code></a></li>
+<li><a class="reference internal" href="#shop-checkout-steps-confirmation"><code class="docutils literal notranslate"><span class="pre">SHOP_CHECKOUT_STEPS_CONFIRMATION</span></code></a></li>
+<li><a class="reference internal" href="#shop-checkout-steps-split"><code class="docutils literal notranslate"><span class="pre">SHOP_CHECKOUT_STEPS_SPLIT</span></code></a></li>
+<li><a class="reference internal" href="#shop-currency-locale"><code class="docutils literal notranslate"><span class="pre">SHOP_CURRENCY_LOCALE</span></code></a></li>
+<li><a class="reference internal" href="#shop-default-shipping-value"><code class="docutils literal notranslate"><span class="pre">SHOP_DEFAULT_SHIPPING_VALUE</span></code></a></li>
+<li><a class="reference internal" href="#shop-default-tax-rate"><code class="docutils literal notranslate"><span class="pre">SHOP_DEFAULT_TAX_RATE</span></code></a></li>
+<li><a class="reference internal" href="#shop-discount-field-in-cart"><code class="docutils literal notranslate"><span class="pre">SHOP_DISCOUNT_FIELD_IN_CART</span></code></a></li>
+<li><a class="reference internal" href="#shop-discount-field-in-checkout"><code class="docutils literal notranslate"><span class="pre">SHOP_DISCOUNT_FIELD_IN_CHECKOUT</span></code></a></li>
+<li><a class="reference internal" href="#shop-handler-billing-shipping"><code class="docutils literal notranslate"><span class="pre">SHOP_HANDLER_BILLING_SHIPPING</span></code></a></li>
+<li><a class="reference internal" href="#shop-handler-order"><code class="docutils literal notranslate"><span class="pre">SHOP_HANDLER_ORDER</span></code></a></li>
+<li><a class="reference internal" href="#shop-handler-payment"><code class="docutils literal notranslate"><span class="pre">SHOP_HANDLER_PAYMENT</span></code></a></li>
+<li><a class="reference internal" href="#shop-handler-tax"><code class="docutils literal notranslate"><span class="pre">SHOP_HANDLER_TAX</span></code></a></li>
+<li><a class="reference internal" href="#shop-option-admin-order"><code class="docutils literal notranslate"><span class="pre">SHOP_OPTION_ADMIN_ORDER</span></code></a></li>
+<li><a class="reference internal" href="#shop-option-type-choices"><code class="docutils literal notranslate"><span class="pre">SHOP_OPTION_TYPE_CHOICES</span></code></a></li>
+<li><a class="reference internal" href="#shop-order-email-bcc"><code class="docutils literal notranslate"><span class="pre">SHOP_ORDER_EMAIL_BCC</span></code></a></li>
+<li><a class="reference internal" href="#shop-order-email-subject"><code class="docutils literal notranslate"><span class="pre">SHOP_ORDER_EMAIL_SUBJECT</span></code></a></li>
+<li><a class="reference internal" href="#shop-order-from-email"><code class="docutils literal notranslate"><span class="pre">SHOP_ORDER_FROM_EMAIL</span></code></a></li>
+<li><a class="reference internal" href="#shop-order-status-choices"><code class="docutils literal notranslate"><span class="pre">SHOP_ORDER_STATUS_CHOICES</span></code></a></li>
+<li><a class="reference internal" href="#shop-payment-step-enabled"><code class="docutils literal notranslate"><span class="pre">SHOP_PAYMENT_STEP_ENABLED</span></code></a></li>
+<li><a class="reference internal" href="#shop-per-page-category"><code class="docutils literal notranslate"><span class="pre">SHOP_PER_PAGE_CATEGORY</span></code></a></li>
+<li><a class="reference internal" href="#shop-product-sort-options"><code class="docutils literal notranslate"><span class="pre">SHOP_PRODUCT_SORT_OPTIONS</span></code></a></li>
+<li><a class="reference internal" href="#shop-tax-included"><code class="docutils literal notranslate"><span class="pre">SHOP_TAX_INCLUDED</span></code></a></li>
+<li><a class="reference internal" href="#shop-use-ratings"><code class="docutils literal notranslate"><span class="pre">SHOP_USE_RATINGS</span></code></a></li>
+<li><a class="reference internal" href="#shop-use-related-products"><code class="docutils literal notranslate"><span class="pre">SHOP_USE_RELATED_PRODUCTS</span></code></a></li>
+<li><a class="reference internal" href="#shop-use-upsell-products"><code class="docutils literal notranslate"><span class="pre">SHOP_USE_UPSELL_PRODUCTS</span></code></a></li>
+<li><a class="reference internal" href="#shop-use-variations"><code class="docutils literal notranslate"><span class="pre">SHOP_USE_VARIATIONS</span></code></a></li>
+<li><a class="reference internal" href="#shop-use-wishlist"><code class="docutils literal notranslate"><span class="pre">SHOP_USE_WISHLIST</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="integration.html"
+                          title="previous chapter">Integration</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="model-graph.html"
+                          title="next chapter">Model Graph</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/configuration.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="model-graph.html" title="Model Graph"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="integration.html" title="Integration"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Cartridge 1.3.4 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Configuration</a></li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2009 - 2022, Stephen McDonald.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+    </div>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-52596-13']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+  </body>
+</html>
