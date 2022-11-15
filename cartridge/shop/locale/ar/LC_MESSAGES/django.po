@@ -8,91 +8,92 @@ msgstr ""
 "Project-Id-Version: Cartridge\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-06 01:44+0200\n"
-"PO-Revision-Date: 2013-03-30 15:07+0000\n"
+"PO-Revision-Date: 2022-11-15 18:36+0300\n"
 "Last-Translator: Sebastián Ramírez Magrí <sebasmagri@gmail.com>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Language-Team: \n"
+"X-Generator: Poedit 2.3\n"
 
 #: admin.py:84
 msgid "Product filters"
-msgstr ""
+msgstr "تصفية المنتجات"
 
 #: admin.py:137
 msgid "Current variations"
-msgstr ""
+msgstr "الخيارات الحالية"
 
 #: admin.py:170
 msgid "Other products"
-msgstr ""
+msgstr "منتجات أخرى"
 
 #: admin.py:185
 msgid "Create new variations"
-msgstr ""
+msgstr "أنشئ خيارات أخرى"
 
 #: admin.py:324
 msgid "Items"
-msgstr ""
+msgstr "العناصر"
 
 #: admin.py:366
 msgid "Billing details"
-msgstr ""
+msgstr "معلومات الدفع"
 
 #: admin.py:367
 msgid "Shipping details"
-msgstr ""
+msgstr "معلومات الشحن"
 
 #: admin.py:420 admin.py:459
 msgid "Apply to product and/or products in categories"
-msgstr ""
+msgstr "طبق على المنتج أو على المنتجات في التصنيفات"
 
 #: admin.py:424 admin.py:463
 msgid "Reduce unit price by"
-msgstr ""
+msgstr "اخفض سعر الوحدة بـ"
 
 #: admin.py:427
 msgid "Sale period"
-msgstr ""
+msgstr "فترة التخفيضات"
 
 #: admin.py:467
 msgid "Valid for"
-msgstr ""
+msgstr "صالحة لـ"
 
 #: checkout.py:40
 msgid "Flat rate shipping"
-msgstr ""
+msgstr "تسعيرة شحن موحدة"
 
 #: checkout.py:62
 msgid "Incl."
-msgstr ""
+msgstr "شامل."
 
 #: checkout.py:62 checkout.py:65
 msgid "VAT"
-msgstr ""
+msgstr "ض. ق. م"
 
 #: checkout.py:206
 msgid "Details"
-msgstr ""
+msgstr "التفاصيل"
 
 #: checkout.py:210
 msgid "Address"
-msgstr ""
+msgstr "العنوان"
 
 #: checkout.py:213
 msgid "Payment"
-msgstr ""
+msgstr "الدفع"
 
 #: checkout.py:218
 msgid "Confirmation"
-msgstr ""
+msgstr "التأكيد"
 
 #: defaults.py:14
 msgid "Controls the ordering and grouping of the admin menu."
-msgstr "للتحكم في ترتيب وتجميع قائمة الإشراف."
+msgstr "للتحكم في ترتيب وتجميع قائمة المدير."
 
 #: defaults.py:18 management/commands/product_db.py:40
 msgid "Content"
@@ -104,7 +105,7 @@ msgstr "مكتبة الوسائط"
 
 #: defaults.py:27
 msgid "Shop"
-msgstr ""
+msgstr "المتجر"
 
 #: defaults.py:36
 msgid "Site"
@@ -120,251 +121,254 @@ msgid ""
 "form. Each model should be in the format ``app_label.model_name``. Only "
 "models that subclass ``mezzanine.core.models.Displayable`` should be used."
 msgstr ""
+"تسلسل الوحدات التي ستعرض افتراضيا في نموذج البحث. كل وحدة يجب أن تكون في "
+"هيئة ``app_label.model_name``. يجب استخدام الوحدات الفرع عن صنف ``mezzanine."
+"core.models.Displayable`` فقط."
 
 #: defaults.py:78
 msgid "Sequence of setting names available within templates."
-msgstr ""
+msgstr "تسلسل أسماء الإعدادات داخل القوالب."
 
 #: defaults.py:116
 msgid "Enable featured images in shop categories"
-msgstr ""
+msgstr "فعّل الصور المختارة في تصنيفات المتجر"
 
 #: defaults.py:123
 msgid "Checkout account required"
-msgstr ""
+msgstr "يتطلب حساب لمرحلة الدفع"
 
 #: defaults.py:124
 msgid "If True, users must create a login for the checkout process."
-msgstr ""
+msgstr "إن فُعّل، سيتطلب تسجيل الدخول لعملية الدفع."
 
 #: defaults.py:147
 msgid "Payment Enabled"
-msgstr ""
+msgstr "الدفع مفعّل"
 
 #: defaults.py:148
 msgid "If False, there is no payment step on the checkout process."
-msgstr ""
+msgstr "إن لم يُفعّل، لن يكون هناك مرحلة للدفع في عملية الشراء."
 
 #: defaults.py:155
 msgid "Currency Locale"
-msgstr ""
+msgstr "العملة"
 
 #: defaults.py:166
 msgid "Default Shipping Cost"
-msgstr ""
+msgstr "سعر الشحن الافتراضي"
 
 #: defaults.py:167
 msgid "Default cost of shipping when no custom shipping is implemented."
-msgstr ""
+msgstr "سعر الشحن الافتراضي عندما لا يوضع شحن خاص."
 
 #: defaults.py:174
 msgid "Default Tax Rate"
-msgstr ""
+msgstr "النسبة الافتراضية للضريبة"
 
 #: defaults.py:175
 msgid "Default tax rate in % when no custom tax handling is implemented."
-msgstr ""
+msgstr "نسبة الضريبة بـ % عندما لا يوضع معالجة خاصة للضرائب."
 
 #: defaults.py:182
 msgid "Discount in Cart"
-msgstr ""
+msgstr "الخصم في السلة"
 
 #: defaults.py:183
 msgid "Discount codes can be entered on the cart page."
-msgstr ""
+msgstr "يمكن إدخال رموز الخصم في صفحة السلة."
 
 #: defaults.py:190
 msgid "Discount in Checkout"
-msgstr ""
+msgstr "الخصم في مرحلة الدفع"
 
 #: defaults.py:191
 msgid "Discount codes can be entered on the first checkout step."
-msgstr ""
+msgstr "يمكن إدخال رموز الخصم في أول مرحلة الدفع."
 
 #: defaults.py:198
 msgid "Billing & Shipping Handler"
-msgstr ""
+msgstr "معالج الدفع والشحن"
 
 #: defaults.py:209
 msgid "Tax Handler"
-msgstr ""
+msgstr "معالج الضرائب"
 
 #: defaults.py:220
 msgid "Order Handler"
-msgstr ""
+msgstr "معالج الطلبات"
 
 #: defaults.py:231
 msgid "Payment Handler"
-msgstr ""
+msgstr "معالج الدفع"
 
 #: defaults.py:245
 msgid "Size"
-msgstr ""
+msgstr "الحجم"
 
 #: defaults.py:246
 msgid "Colour"
-msgstr ""
+msgstr "اللون"
 
 #: defaults.py:262
 msgid "Order Email Subject"
-msgstr ""
+msgstr "موضوع بريد الطلب"
 
 #: defaults.py:263
 msgid "Subject to be used when sending the order receipt email."
-msgstr ""
+msgstr "الموضوع لاستخدامه عند إرسال وصل بالطلب."
 
 #: defaults.py:265
 msgid "Order Receipt"
-msgstr ""
+msgstr "وصْل الطلب"
 
 #: defaults.py:271
 msgid "From Email"
-msgstr ""
+msgstr "البريد المرسٍل"
 
 #: defaults.py:272
 msgid "Email address from which order receipts should be emailed."
-msgstr ""
+msgstr "عنوان البريد الذي سترسل منه إيصالات الطلب."
 
 #: defaults.py:279
 msgid "BCC receipts to"
-msgstr ""
+msgstr "مستقبلي النسخة الخفية من الإيصال"
 
 #: defaults.py:280
 msgid "All order receipts will be BCCd to this address."
-msgstr ""
+msgstr "سترسل نسخة خفية من كل إيصالات الطلبات لهذا البريد."
 
 #: defaults.py:290
 msgid "Unprocessed"
-msgstr ""
+msgstr "غير معالج"
 
 #: defaults.py:291
 msgid "Processed"
-msgstr ""
+msgstr "معالج"
 
 #: defaults.py:297
 msgid "Products Per Category Page"
-msgstr ""
+msgstr "عدد المنتجات في كل صفحة تصنيف"
 
 #: defaults.py:298
 msgid "Number of products to display per category page."
-msgstr ""
+msgstr "عدد المنتجات لعرضها في كل صفحة تصنيف."
 
 #: defaults.py:309
 msgid "Recently added"
-msgstr ""
+msgstr "أضيف حديثا"
 
 #: defaults.py:310
 msgid "Highest rated"
-msgstr ""
+msgstr "الأعلى تقييما"
 
 #: defaults.py:311
 msgid "Least expensive"
-msgstr ""
+msgstr "الأقل سعرا"
 
 #: defaults.py:312
 msgid "Most expensive"
-msgstr ""
+msgstr "الأغلى سعرا"
 
 #: defaults.py:318
 msgid "Tax included"
-msgstr ""
+msgstr "شامل الضرائب"
 
 #: defaults.py:326
 msgid "Use product variations"
-msgstr ""
+msgstr "استخدم خيارات المنتج"
 
 #: defaults.py:334
 msgid "Use product ratings"
-msgstr ""
+msgstr "استخدم تقييم المنتج"
 
 #: defaults.py:342
 msgid "Use product wishlist"
-msgstr ""
+msgstr "استخدم قائمة الرغبات"
 
 #: defaults.py:350
 msgid "Use related products"
-msgstr ""
+msgstr "استخدم المنتجات المتعلقة"
 
 #: defaults.py:359
 msgid "Use upsell products"
-msgstr ""
+msgstr "استخدم منتجات البيع التشجيعي"
 
 #: fields.py:64 management/commands/product_db.py:42
 msgid "SKU"
-msgstr ""
+msgstr "رمز الوحدة"
 
 #: forms.py:33 templates/shop/product.html:105
 msgid "The selected options are currently unavailable."
-msgstr ""
+msgstr "الخيارات المحددة غير متوفرة حاليا."
 
 #: forms.py:34
 msgid "The selected options are currently not in stock."
-msgstr ""
+msgstr "الخيرات المحددة غير متوفرة حاليا في المخزون."
 
 #: forms.py:35
 msgid "The selected quantity is currently unavailable."
-msgstr ""
+msgstr "الكمية المحددة غير متوفرة حاليا."
 
 #: forms.py:45 forms.py:143 models.py:698
 msgid "Quantity"
-msgstr ""
+msgstr "الكمية"
 
 #: forms.py:287
 msgid "The discount code entered is invalid."
-msgstr ""
+msgstr "رمز الخصم المدخل غير صالح."
 
 #: forms.py:303 models.py:919
 msgid "Free shipping"
-msgstr ""
+msgstr "شحن مجاني"
 
 #: forms.py:328
 msgid "My delivery details are the same as my billing details"
-msgstr ""
+msgstr "معلومات التوصيل هي نفسها معلومات الفوترة"
 
 #: forms.py:331
 msgid "Remember my address for next time"
-msgstr ""
+msgstr "تذكر عنواني للمرة القادمة"
 
 #: forms.py:333
 msgid "Cardholder name"
-msgstr ""
+msgstr "اسم حامل البطاقة"
 
 #: forms.py:335
 msgid "Card type"
-msgstr ""
+msgstr "نوع البطاقة"
 
 #: forms.py:339
 msgid "Card number"
-msgstr ""
+msgstr "رقم البطاقة"
 
 #: forms.py:341
 msgid "Card expiry month"
-msgstr ""
+msgstr "شهر انتهاء البطاقة"
 
 #: forms.py:345
 msgid "Card expiry year"
-msgstr ""
+msgstr "عام انتهاء البطاقة"
 
 #: forms.py:347
 msgid "CCV"
-msgstr ""
+msgstr "CCV"
 
 #: forms.py:349
 msgid ""
 "A security code, usually the last 3 digits found on the back of your card."
-msgstr ""
+msgstr "رمز أمان، غالباً آخر 3 أرقام على الوجه الخلفي للبطاقة."
 
 #: forms.py:455
 msgid "A valid expiry date is required."
-msgstr ""
+msgstr "تاريخ الانتهاء مطلوب."
 
 #: forms.py:584
 msgid "Only one variation can be checked as the default."
-msgstr ""
+msgstr "يمكن تحديد خيار واحد كافتراضي."
 
 #: forms.py:600
 msgid "Please enter a value for only one type of reduction."
-msgstr ""
+msgstr "حدد قيمة لنوع واحد من التخفيض."
 
 #: management/commands/product_db.py:39 models.py:775
 msgid "Title"
@@ -377,113 +381,113 @@ msgstr "الوصف"
 #: management/commands/product_db.py:43 models.py:111 models.py:171
 #: models.py:182 models.py:241
 msgid "Image"
-msgstr ""
+msgstr "الصورة"
 
 #: management/commands/product_db.py:44
 msgid "Category"
-msgstr ""
+msgstr "الفئة"
 
 #: management/commands/product_db.py:45
 msgid "Sub-Category"
-msgstr ""
+msgstr "الفئة الفرعية"
 
 #: management/commands/product_db.py:47
 msgid "Number in Stock"
-msgstr ""
+msgstr "العدد في المخزون"
 
 #: management/commands/product_db.py:48 templates/shop/cart.html:27
 #: templates/shop/includes/order_details.html:40
 #: templates/shop/includes/order_details_rtl.html:44
 msgid "Unit Price"
-msgstr ""
+msgstr "سعر الوحدة"
 
 #: management/commands/product_db.py:49
 msgid "Sale Price"
-msgstr ""
+msgstr "سعر التخفيض"
 
 #: management/commands/product_db.py:50
 msgid "Sale Start Date"
-msgstr ""
+msgstr "تاريخ بدء التخفيض"
 
 #: management/commands/product_db.py:51
 msgid "Sale Start Time"
-msgstr ""
+msgstr "وقت بدء التخفيض"
 
 #: management/commands/product_db.py:52
 msgid "Sale End Date"
-msgstr ""
+msgstr "تاريخ انتهاء التخفيض"
 
 #: management/commands/product_db.py:53
 msgid "Sale End Time"
-msgstr ""
+msgstr "وقت انتهاء التخفيض"
 
 #: management/commands/product_db.py:56
 msgid "product"
-msgstr ""
+msgstr "المنتج"
 
 #: management/commands/product_db.py:83
 msgid "Import/Export products from a csv file."
-msgstr ""
+msgstr "تصدير أو استيراد المنتجات من ملف csv."
 
 #: management/commands/product_db.py:92
 msgid "Import products from csv file."
-msgstr ""
+msgstr "استيراد المنتجات من ملف csv."
 
 #: management/commands/product_db.py:100
 msgid "Export products from csv file."
-msgstr ""
+msgstr "تصدير المنتجات من ملف csv."
 
 #: management/commands/product_db.py:108
 msgid "need to import or export"
-msgstr ""
+msgstr "بحاجة للاستيراد أو التصدير"
 
 #: management/commands/product_db.py:160
 msgid "Importing .."
-msgstr ""
+msgstr "يستورد .."
 
 #: management/commands/product_db.py:206
 msgid "Exporting .."
-msgstr ""
+msgstr "يصدر .."
 
 #: models.py:42 models.py:699
 msgid "Unit price"
-msgstr ""
+msgstr "سعر الوحدة"
 
 #: models.py:44
 msgid "Sale price"
-msgstr ""
+msgstr "سعر التخفيض"
 
 #: models.py:45
 msgid "Sale start"
-msgstr ""
+msgstr "بداية التخفيض"
 
 #: models.py:46
 msgid "Sale end"
-msgstr ""
+msgstr "نهاية التخفيض"
 
 #: models.py:48
 msgid "Number in stock"
-msgstr ""
+msgstr "العدد في المخزون"
 
 #: models.py:110
 msgid "Available for purchase"
-msgstr ""
+msgstr "المتاح للشراء"
 
 #: models.py:113 models.py:399
 msgid "Product categories"
-msgstr ""
+msgstr "فئات المنتج"
 
 #: models.py:115
 msgid "Date added"
-msgstr ""
+msgstr "تاريخ الإضافة"
 
 #: models.py:117
 msgid "Related products"
-msgstr ""
+msgstr "منتجات متعلقة"
 
 #: models.py:120
 msgid "Upsell products"
-msgstr ""
+msgstr "منتجات تشجيعية"
 
 #: models.py:122
 msgid "Rating"
@@ -491,15 +495,15 @@ msgstr "تقييم"
 
 #: models.py:129
 msgid "Product"
-msgstr ""
+msgstr "المنتج"
 
 #: models.py:130 models.py:373 models.py:777
 msgid "Products"
-msgstr ""
+msgstr "المنتجات"
 
 #: models.py:183
 msgid "Images"
-msgstr ""
+msgstr "الصور"
 
 #: models.py:200
 msgid "Type"
@@ -511,19 +515,19 @@ msgstr "الأسم"
 
 #: models.py:209
 msgid "Product option"
-msgstr ""
+msgstr "خيارا المنتج"
 
 #: models.py:210 models.py:379
 msgid "Product options"
-msgstr ""
+msgstr "خيارات المنتج"
 
 #: models.py:238
 msgid "Default"
-msgstr ""
+msgstr "الافتراضي"
 
 #: models.py:290
 msgid "SKU is not unique"
-msgstr ""
+msgstr "إن رمز الوحدة ليس فريداً"
 
 #: models.py:363
 msgid "Featured Image"
@@ -531,61 +535,62 @@ msgstr "الصورة الرئيسية"
 
 #: models.py:383 models.py:816
 msgid "Sale"
-msgstr ""
+msgstr "تخفيضات"
 
 #: models.py:385
 msgid "Minimum price"
-msgstr ""
+msgstr "السعر الأدنى"
 
 #: models.py:386
 msgid "Maximum price"
-msgstr ""
+msgstr "السعر الأعلى"
 
 #: models.py:388
 msgid "Combined"
-msgstr ""
+msgstr "مجموعاً"
 
 #: models.py:391
 msgid ""
 "If checked, products must match all specified filters, otherwise products "
 "can match any specified filter."
 msgstr ""
+"إن حدد، فإن كل المنتجات يجب أن تطابق كل المرشحات، وإلا فإنها ستطابق أي مرشح."
 
 #: models.py:398
 msgid "Product category"
-msgstr ""
+msgstr "فئة المنتج"
 
 #: models.py:452 models.py:461
 msgid "First name"
-msgstr ""
+msgstr "الاسم"
 
 #: models.py:453 models.py:462
 msgid "Last name"
-msgstr ""
+msgstr "الكنية"
 
 #: models.py:454 models.py:463
 msgid "Street"
-msgstr ""
+msgstr "الشارع"
 
 #: models.py:455 models.py:464
 msgid "City/Suburb"
-msgstr ""
+msgstr "المدينة"
 
 #: models.py:456 models.py:465
 msgid "State/Region"
-msgstr ""
+msgstr "المنطقة"
 
 #: models.py:457 models.py:466
 msgid "Zip/Postcode"
-msgstr ""
+msgstr "الرمز البريدي"
 
 #: models.py:458 models.py:467
 msgid "Country"
-msgstr ""
+msgstr "البلد"
 
 #: models.py:459 models.py:468
 msgid "Phone"
-msgstr ""
+msgstr "الهاتف"
 
 #: models.py:460
 msgid "Email"
@@ -593,47 +598,47 @@ msgstr "البريد الالكتروني"
 
 #: models.py:469
 msgid "Additional instructions"
-msgstr ""
+msgstr "تعليمات إضافية"
 
 #: models.py:470
 msgid "Time"
-msgstr ""
+msgstr "الوقت"
 
 #: models.py:473
 msgid "Shipping type"
-msgstr ""
+msgstr "نوع الشحن"
 
 #: models.py:474
 msgid "Shipping total"
-msgstr ""
+msgstr "مجموع الشحن"
 
 #: models.py:475
 msgid "Tax type"
-msgstr ""
+msgstr "نوع الضريبة"
 
 #: models.py:476
 msgid "Tax total"
-msgstr ""
+msgstr "مجموع الضريبة"
 
 #: models.py:477
 msgid "Item total"
-msgstr ""
+msgstr "مجموع العناصر"
 
 #: models.py:478 models.py:947
 msgid "Discount code"
-msgstr ""
+msgstr "رمز التخفيض"
 
 #: models.py:479
 msgid "Discount total"
-msgstr ""
+msgstr "مجموع التخفيض"
 
 #: models.py:480
 msgid "Order total"
-msgstr ""
+msgstr "مجموع الطلب"
 
 #: models.py:482
 msgid "Transaction ID"
-msgstr ""
+msgstr "رمز المعاملة"
 
 #: models.py:486
 msgid "Status"
@@ -642,19 +647,19 @@ msgstr "الحالة"
 #: models.py:591 templates/admin/shop/order/change_form.html:15
 #: templates/shop/complete.html:69
 msgid "Download PDF invoice"
-msgstr ""
+msgstr "نزّل فاتورة PDF"
 
 #: models.py:600
 msgid "Last updated"
-msgstr ""
+msgstr "آخر تحديث"
 
 #: models.py:700
 msgid "Total price"
-msgstr ""
+msgstr "السعر الاجمالي"
 
 #: models.py:776
 msgid "Active"
-msgstr ""
+msgstr "نشط"
 
 #: models.py:782
 msgid "Categories"
@@ -662,70 +667,71 @@ msgstr "فئات"
 
 #: models.py:784
 msgid "Reduce by amount"
-msgstr ""
+msgstr "اخفض بمقدار"
 
 #: models.py:786
 msgid "Reduce by percent"
-msgstr ""
+msgstr "اخفض بنسبة مئوية"
 
 #: models.py:788
 msgid "Reduce to amount"
-msgstr ""
+msgstr "اخفض إلى مقدار"
 
 #: models.py:789
 msgid "Valid from"
-msgstr ""
+msgstr "صالح من"
 
 #: models.py:790
 msgid "Valid to"
-msgstr ""
+msgstr "صالح إلى"
 
 #: models.py:817
 msgid "Sales"
-msgstr ""
+msgstr "تخفيضات"
 
 #: models.py:917
 msgid "Code"
-msgstr ""
+msgstr "الرمز"
 
 #: models.py:918
 msgid "Minimum total purchase"
-msgstr ""
+msgstr "الحد الأدنى للشراء"
 
 #: models.py:921
 msgid "Uses remaining"
-msgstr ""
+msgstr "يستخدم المتبقي"
 
 #: models.py:925
 msgid ""
 "If you wish to limit the number of times a code may be used, set this value. "
 "It will be decremented upon each use."
 msgstr ""
+"إن رغبت بتحديد عدد مرات استخدام الرمز، حدد القيمة. ستنقص عند كل استخدام."
 
 #: models.py:948
 msgid "Discount codes"
-msgstr ""
+msgstr "رموز التخفيضات"
 
 #: payment/egate.py:56 payment/stripe_api.py:47
 msgid "A general error occured: "
-msgstr ""
+msgstr "حدث خطأ عام: "
 
 #: payment/egate.py:59
 msgid "Transaction declined: "
-msgstr ""
+msgstr "رُفضت المعاملة: "
 
 #: payment/stripe_api.py:45
 msgid "Transaction declined"
-msgstr ""
+msgstr "رُفضت المعاملة"
 
 #: templates/accounts/account_profile_update.html:6
 msgid "View past orders"
-msgstr ""
+msgstr "أظهر الطلبات السابقة"
 
 #: templates/admin/shop/order/change_form.html:17
 #: templates/shop/complete.html:72 templates/shop/order_history.html:38
 msgid "Re-send order email"
-msgstr ""
+msgstr "أعد إرسال بريد الطلب"
 
 #: templates/admin/shop/product/change_form.html:7
 msgid ""
@@ -733,52 +739,54 @@ msgid ""
 "continue editing' below. You'll then be able to edit the price and other "
 "attributes for each variation individually."
 msgstr ""
+"حدد كل خيارات التحقق المطلوبة ثم اضغط 'احفظ وتابع التحرير' أدناه. يمكنك "
+"بعدها تحرير السعر وغيرها من الخواص لكل خيار على حدة."
 
 #: templates/email/order_receipt.txt:5 templates/email/receipt.html:3
 #: templates/email/receipt_rtl.html:3
 msgid "Dear"
-msgstr ""
+msgstr "عزيزي"
 
 #: templates/email/order_receipt.txt:7 templates/email/receipt.html:4
 #: templates/email/receipt_rtl.html:4
 msgid "Your order has been successful. Details are below."
-msgstr ""
+msgstr "تم الطلب بنجاح. التفاصيل أدناه."
 
 #: templates/email/order_receipt.txt:9
 #: templates/shop/includes/order_details.html:7
 #: templates/shop/includes/order_details_rtl.html:8
 msgid "Order ID:"
-msgstr ""
+msgstr "رمز الطلب:"
 
 #: templates/email/order_receipt.txt:11
 msgid "Billing Details:"
-msgstr ""
+msgstr "عنوان الفاتورة:"
 
 #: templates/email/order_receipt.txt:16
 msgid "Shipping Details:"
-msgstr ""
+msgstr "عنوان الشحن:"
 
 #: templates/email/order_receipt.txt:21
 msgid "Items Ordered:"
-msgstr ""
+msgstr "الأشياء المطلوبة:"
 
 #: templates/email/order_receipt.txt:23
 msgid "each"
-msgstr ""
+msgstr "لكل"
 
 #: templates/pages/category.html:46
 msgid "Sort by"
-msgstr ""
+msgstr "رتب حسب"
 
 #: templates/pages/category.html:76 templates/shop/cart.html:94
 #: templates/shop/product.html:99 templates/shop/product.html:149
 msgid "On sale:"
-msgstr ""
+msgstr "داخل التخفيض:"
 
 #: templates/pages/category.html:80 templates/shop/cart.html:98
 #: templates/shop/product.html:153
 msgid "Coming soon"
-msgstr ""
+msgstr "سيأتي لاحقا"
 
 #: templates/shop/billing_shipping.html:17
 #, python-format
@@ -788,73 +796,77 @@ msgid ""
 "<a href=\"%(login_url)s?next=%(next)s\">log in</a> or\n"
 "<a href=\"%(signup_url)s?next=%(next)s\">sign up</a>.\n"
 msgstr ""
+"\n"
+"إن كان لديك حساب أو رغبت بإنشاء واحد جديد\n"
+"<a href=\"%(login_url)s?next=%(next)s\">سجل الدخول</a> أو\n"
+"<a href=\"%(signup_url)s?next=%(next)s\">سجّل</a>.\n"
 
 #: templates/shop/billing_shipping.html:30 templates/shop/confirmation.html:10
 #: templates/shop/includes/order_details.html:15
 #: templates/shop/includes/order_details_rtl.html:15
 msgid "Billing Details"
-msgstr ""
+msgstr "تفاصيل الفوترة"
 
 #: templates/shop/billing_shipping.html:35
 msgid "Delivery Details"
-msgstr ""
+msgstr "تفاصيل التوصيل"
 
 #: templates/shop/cart.html:4 templates/shop/cart.html:5
 #: templates/shop/cart.html:10
 msgid "Your Cart"
-msgstr ""
+msgstr "سلتك"
 
 #: templates/shop/cart.html:26 templates/shop/includes/order_details.html:39
 #: templates/shop/includes/order_details_rtl.html:45
 msgid "Item"
-msgstr ""
+msgstr "العنصر"
 
 #: templates/shop/cart.html:28 templates/shop/includes/order_details.html:41
 #: templates/shop/includes/order_details_rtl.html:43
 #: templates/shop/order_history.html:20
 msgid "Qty"
-msgstr ""
+msgstr "الكمية"
 
 #: templates/shop/cart.html:29 templates/shop/includes/order_details.html:42
 #: templates/shop/includes/order_details_rtl.html:42
 msgid "Price"
-msgstr ""
+msgstr "السعر"
 
 #: templates/shop/cart.html:30
 msgid "Remove?"
-msgstr ""
+msgstr "إزالة؟"
 
 #: templates/shop/cart.html:64 templates/shop/includes/user_panel.html:10
 msgid "Return to Checkout"
-msgstr ""
+msgstr "عد إلى الدفع"
 
 #: templates/shop/cart.html:64 templates/shop/includes/user_panel.html:10
 msgid "Go to Checkout"
-msgstr ""
+msgstr "إذهب إلى الدفع"
 
 #: templates/shop/cart.html:66
 msgid "Update Cart"
-msgstr ""
+msgstr "حدّث السلة"
 
 #: templates/shop/cart.html:73
 msgid "Apply"
-msgstr ""
+msgstr "طبّق"
 
 #: templates/shop/cart.html:80
 msgid "You may also like:"
-msgstr ""
+msgstr "ربما تحب هذه أيضا:"
 
 #: templates/shop/cart.html:111
 msgid "Your Cart is empty."
-msgstr ""
+msgstr "سلتك فارغة."
 
 #: templates/shop/checkout.html:4 templates/shop/checkout.html:5
 msgid "Checkout"
-msgstr ""
+msgstr "الدفع"
 
 #: templates/shop/checkout.html:5
 msgid "Step"
-msgstr ""
+msgstr "الخطوة"
 
 #: templates/shop/checkout.html:5
 msgid "of"
@@ -862,185 +874,185 @@ msgstr "من"
 
 #: templates/shop/checkout.html:25 templates/shop/complete.html:58
 msgid "Complete"
-msgstr ""
+msgstr "تمت"
 
 #: templates/shop/checkout.html:40
 msgid "Next"
-msgstr ""
+msgstr "التالي"
 
 #: templates/shop/checkout.html:42
 msgid "Back"
-msgstr ""
+msgstr "السابق"
 
 #: templates/shop/checkout.html:46
 msgid "Your cart is empty."
-msgstr ""
+msgstr "سلتك فارغة."
 
 #: templates/shop/checkout.html:47
 msgid ""
 "This may be due to your session timing out after a period of inactivity."
-msgstr ""
+msgstr "ربما هذا بسبب انتهاء الجلسة بعد فترة من الخمول."
 
 #: templates/shop/checkout.html:48
 msgid "We apologize for the inconvenience."
-msgstr ""
+msgstr "نعتذر عن إقلاق راحتكم."
 
 #: templates/shop/checkout.html:50 templates/shop/wishlist.html:44
 msgid "Continue Shopping"
-msgstr ""
+msgstr "تابع التسوق"
 
 #: templates/shop/checkout.html:75
 msgid "Edit Cart"
-msgstr ""
+msgstr "عدّل السلة"
 
 #: templates/shop/complete.html:6 templates/shop/complete.html:52
 msgid "Order Complete"
-msgstr ""
+msgstr "تم الطلب"
 
 #: templates/shop/complete.html:62
 msgid "Thank you for shopping with us! Your order is complete."
-msgstr ""
+msgstr "شكرا لتسوقك معنا! اكتمل طلبك."
 
 #: templates/shop/complete.html:63
 msgid "We've sent you a receipt via email."
-msgstr ""
+msgstr "لقد أرسلنا لك إيصالاً بالبريد."
 
 #: templates/shop/complete.html:64
 msgid "You can also view your invoice using one of the links below."
-msgstr ""
+msgstr "يمكنك أيضا عرض فاتورتك باستخدام أحد الروابط أدناه."
 
 #: templates/shop/complete.html:71
 msgid "View invoice in your browser"
-msgstr ""
+msgstr "عرض الفاتورة في المتصفح"
 
 #: templates/shop/confirmation.html:25
 #: templates/shop/includes/order_details.html:16
 #: templates/shop/includes/order_details_rtl.html:16
 msgid "Shipping Details"
-msgstr ""
+msgstr "تفاصيل الشحن"
 
 #: templates/shop/includes/order_details.html:12
 #: templates/shop/includes/order_details_rtl.html:12
 msgid "Your Details"
-msgstr ""
+msgstr "تفاصيلك"
 
 #: templates/shop/includes/order_details.html:36
 #: templates/shop/includes/order_details_rtl.html:36
 msgid "Items Ordered"
-msgstr ""
+msgstr "العناصر المطلوبة"
 
 #: templates/shop/includes/order_totals.html:4
 #: templates/shop/includes/order_totals.txt:2
 msgid "Sub total"
-msgstr ""
+msgstr "المجموع الجزئي"
 
 #: templates/shop/includes/order_totals.html:12
 #: templates/shop/includes/order_totals.txt:4
 msgid "Discount"
-msgstr ""
+msgstr "التخفيض"
 
 #: templates/shop/includes/order_totals.html:23
 #: templates/shop/includes/order_totals.txt:8
 msgid "Tax"
-msgstr ""
+msgstr "الضريبة"
 
 #: templates/shop/includes/order_totals.html:34
 #: templates/shop/includes/order_totals.txt:6
 msgid "Shipping"
-msgstr ""
+msgstr "الشحن"
 
 #: templates/shop/includes/order_totals.html:39
 #: templates/shop/includes/order_totals.txt:9
 msgid "Total"
-msgstr ""
+msgstr "المجموع"
 
 #: templates/shop/includes/payment_fields.html:3
 msgid "Payment Details"
-msgstr ""
+msgstr "تفاصيل الدفع"
 
 #: templates/shop/includes/payment_fields.html:8
 msgid "Card Expiry"
-msgstr ""
+msgstr "انتهاء البطاقة"
 
 #: templates/shop/includes/user_panel.html:5
 #, python-format
 msgid "1 item"
 msgid_plural "%(cart_quantity)s items"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
+msgstr[0] "لا عناصر %(cart_quantity)s"
+msgstr[1] "عنصر %(cart_quantity)s واحد"
+msgstr[2] "عنصران %(cart_quantity)s إثنان"
+msgstr[3] "%(cart_quantity)s عناصر"
+msgstr[4] "%(cart_quantity)s عنصراً"
+msgstr[5] "%(cart_quantity)s عنصر"
 
 #: templates/shop/includes/user_panel.html:6
 msgid "in cart"
-msgstr ""
+msgstr "في السلة"
 
 #: templates/shop/includes/user_panel.html:16
 #, python-format
 msgid "Wishlist contains 1 item"
 msgid_plural " Wishlist contains %(wishlist_count)s items"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
+msgstr[0] "لا تحوي قائمة الرغبات أي عنصر %(wishlist_count)s"
+msgstr[1] " تحوي قائمة الرغبات %(wishlist_count)s عنصراً واحداً"
+msgstr[2] " تحوي قائمة الرغبات %(wishlist_count)s  إثنين"
+msgstr[3] " %(wishlist_count)s عناصر في قائمة الرغبات"
+msgstr[4] " %(wishlist_count)s عنصراً في قائمة الرغبات"
+msgstr[5] " %(wishlist_count)s عنصر في قائمة الرغبات"
 
 #: templates/shop/order_history.html:4 templates/shop/order_history.html:5
 #: templates/shop/order_history.html:9
 msgid "Order History"
-msgstr ""
+msgstr "سجلات الطلب"
 
 #: templates/shop/order_history.html:19
 msgid "Date"
-msgstr ""
+msgstr "التاريخ"
 
 #: templates/shop/order_history.html:21
 msgid "Paid"
-msgstr ""
+msgstr "مدفوعة"
 
 #: templates/shop/order_history.html:35
 msgid "Download PDF"
-msgstr ""
+msgstr "نزّل PDF"
 
 #: templates/shop/order_history.html:37
 msgid "View invoice"
-msgstr ""
+msgstr "اعرض الفاتورة"
 
 #: templates/shop/order_history.html:48
 msgid "You have not ordered anything from us yet."
-msgstr ""
+msgstr "لم تشتري مننا أي شيء بعد."
 
 #: templates/shop/product.html:118 templates/shop/wishlist.html:34
 msgid "Buy"
-msgstr ""
+msgstr "اشتر"
 
 #: templates/shop/product.html:120
 msgid "Save for later"
-msgstr ""
+msgstr "احفظ لوقت لاحق"
 
 #: templates/shop/product.html:125
 msgid "This product is currently unavailable."
-msgstr ""
+msgstr "هذا المنتج غير متاح حالياً."
 
 #: templates/shop/product.html:135
 msgid "Related Products"
-msgstr ""
+msgstr "منتجات متعلقة"
 
 #: templates/shop/wishlist.html:4 templates/shop/wishlist.html:5
 #: templates/shop/wishlist.html:9
 msgid "Your Wishlist"
-msgstr ""
+msgstr "قائمة الرغبات"
 
 #: templates/shop/wishlist.html:35
 msgid "Remove"
-msgstr ""
+msgstr "أزل"
 
 #: templates/shop/wishlist.html:42
 msgid "Your wishlist is empty."
-msgstr ""
+msgstr "قائمة الرغبات فارغة."
 
 #: utils.py:104
 #, python-format
@@ -1049,31 +1061,33 @@ msgid ""
 "need to set the locale for your system, or configure the "
 "SHOP_CURRENCY_LOCALE setting in your settings module."
 msgstr ""
+"حُدد تنسيق محلي غير مناسب لـ SHOP_CURRENCY_LOCALE: '%s'. عليك ضبط الإعدادات "
+"المحلية لنظامك، أو ضبط إعداد SHOP_CURRENCY_LOCALE في ملف إعدادات."
 
 #: views.py:76 views.py:134
 msgid "Item added to cart"
-msgstr ""
+msgstr "أضيف العنصر للسلة"
 
 #: views.py:83
 msgid "Item added to wishlist"
-msgstr ""
+msgstr "أضيف العنصر لقائمة الرغبات"
 
 #: views.py:139
 msgid "Item removed from wishlist"
-msgstr ""
+msgstr "أزيل العنصر من قائمة الرغبات"
 
 #: views.py:183
 msgid "Your cart has expired"
-msgstr ""
+msgstr "انتهت صلاحية سلتك"
 
 #: views.py:190
 msgid "Cart updated"
-msgstr ""
+msgstr "حُدثت سلتك"
 
 #: views.py:454
 #, python-format
 msgid "The order email for order ID %s has been re-sent"
-msgstr ""
+msgstr "أعيد إرسال بريد الطلب %s"
 
 #~ msgctxt "commercial meaning"
 #~ msgid "Order"
